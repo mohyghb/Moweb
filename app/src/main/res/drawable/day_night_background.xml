@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <solid android:color="@color/MoBackground"/>
+
+    <padding android:top="@dimen/card_content_padding"
+        android:bottom="@dimen/card_content_padding"
+        android:right="@dimen/card_content_padding"
+        android:left="@dimen/card_content_padding"/>
+
+
+</shape>

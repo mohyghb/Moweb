@@ -1,0 +1,18 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:innerRadius="0dp"
+    android:shape="rectangle"
+    android:thicknessRatio="0"
+    android:thickness="1in"
+    android:useLevel="true" >
+    <solid android:color="@android:color/transparent" />
+
+    <stroke
+        android:width="2dp"
+        android:color="@color/tabs_icon_color"/>
+
+    <padding android:left="@dimen/padding_for_tab_icon" android:right="@dimen/padding_for_tab_icon"
+        android:bottom="@dimen/padding_for_tab_icon" android:top="@dimen/padding_for_tab_icon"/>
+
+    <corners android:radius="5dp"/>
+
+</shape>

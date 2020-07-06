@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "777634757272",
+    "firebase_url": "https://mowebplatform.firebaseio.com",
+    "project_id": "mowebplatform",
+    "storage_bucket": "mowebplatform.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:777634757272:android:14bedba642905c9fdc2eed",
+        "android_client_info": {
+          "package_name": "com.moofficial.moweb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "777634757272-u88humfr4vp8dgg6kkks489um3qj5h7v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moofficial.moweb",
+            "certificate_hash": "9ce625ff98a326ec0baf45af98f763f202c78477"
+          }
+        },
+        {
+          "client_id": "777634757272-7i1pi1i7bbubqbqtc5s3v34bp0to6bgg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCExH9SHmQob6bW0VN6ak_XNxQ6b8KOPXM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "777634757272-7i1pi1i7bbubqbqtc5s3v34bp0to6bgg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

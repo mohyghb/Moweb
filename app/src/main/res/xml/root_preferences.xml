@@ -1,0 +1,41 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="General" app:iconSpaceReserved="false">
+        <ListPreference
+            app:key="@string/search_engine"
+            app:title="@string/search_engine_title"
+            app:summary="@string/search_engine_summary"
+            app:entries="@array/search_engine_entries"
+            app:entryValues="@array/search_engine_values"
+            app:iconSpaceReserved="false"/>
+
+        <ListPreference
+            app:key="@string/theme_version"
+            app:title="@string/theme_version_title"
+            app:summary="@string/theme_version_summary"
+            app:entries="@array/theme_version_entries"
+            app:entryValues="@array/theme_version_values"
+            app:iconSpaceReserved="false"/>
+
+        <SwitchPreference
+            android:key="@string/auto_complete"
+            app:title="@string/auto_complete_title"
+            app:summary="@string/auto_complete_summary"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Security" app:iconSpaceReserved="false">
+
+        <SwitchPreference
+            android:key="@string/history_enabled"
+            app:title="@string/history_enabled_title"
+            app:summary="@string/history_enabled_summary"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"/>
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

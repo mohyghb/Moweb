@@ -1,0 +1,3 @@
+rootProject.name='Moweb'
+include ':app'
+include ':MoInteractable'

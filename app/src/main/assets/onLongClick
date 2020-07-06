@@ -1,0 +1,31 @@
+var hasHighlights = false;
+var elementHighlighted;
+
+
+
+document.addEventListener('touchstart', function (event) {
+
+                            event = event || window.event;
+                            var target = event.target || event.srcElement;
+                            var innerText = target.innerText;
+                            var title = target.title;
+
+                            while (target) {
+                              if (target instanceof HTMLAnchorElement) {
+                                mowebelement.hrefClick(target.getAttribute('href'),target.innerText,target.textContent);
+                                break;
+                              }
+                              target = target.parentNode;
+                            }
+
+        });
+
+
+document.addEventListener('touchend', function (event) {
+                            mowebelement.onTouchEnd();
+        });
+
+
+
+
+

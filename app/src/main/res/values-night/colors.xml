@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <color name="colorPrimary">#64b5f6</color>
+    <color name="colorPrimaryDark">#1565c0</color>
+    <color name="colorAccent">#bbdefb</color>
+
+    <color name="divider_color">@color/colorPrimaryDark</color>
+
+    <color name="error_color">#cf6679</color>
+
+    <color name="snack_bar_text">@color/MoBlack</color>
+
+    <color name="setting_toolbar_background">@color/MaterialDark</color>
+
+
+    <color name="color_text_enabled">@color/colorPrimary</color>
+    <color name="color_text_disabled">@color/MoWhite</color>
+
+    <color name="tabs_icon_color">@color/colorPrimary</color>
+
+    <color name="color_card_sent">@color/MoBlack</color>
+
+
+    <color name="notification_text_color">@android:color/black</color>
+
+
+
+    <color name="MoBackground">@color/MaterialGrey</color>
+
+    <color name="search_bar_color">#84A6B5</color>
+
+</resources>
