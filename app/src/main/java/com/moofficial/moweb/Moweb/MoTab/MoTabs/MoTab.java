@@ -32,6 +32,7 @@ import com.moofficial.moweb.MoUrl.MoUrlUtils;
 import com.moofficial.moweb.Moweb.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoGoogle.MoGoogle;
 import com.moofficial.moweb.Moweb.MoHistory.MoHistoryManager;
+import com.moofficial.moweb.Moweb.MoHistory.MoStackTabHistory.MoStackTabHistory;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
@@ -50,6 +51,7 @@ public class MoTab implements  MoSavable, MoLoadable, MoViewDisplayable {
     // DATA
     private MoTab parentTab;
     private MoWebView moWebView;
+    private MoStackTabHistory stackTabHistory = new MoStackTabHistory();
     private String url;
     private MoBitmap moBitmap;
     private boolean isUpToDate;
@@ -62,6 +64,7 @@ public class MoTab implements  MoSavable, MoLoadable, MoViewDisplayable {
     private TextInputEditText searchText;
     private View searchBar;
     private CardView showTabsButton;
+    private TextView tabsNumber;
     private ProgressBar progressBar;
     private View errorLayout;
     private boolean captureImage = true;
@@ -113,6 +116,7 @@ public class MoTab implements  MoSavable, MoLoadable, MoViewDisplayable {
         initSearchBar();
         initSuggestion();
         initErrorLayout();
+        initStackTabHistory();
         this.tabType = new MoTabType(MoTabType.TYPE_NORMAL,getWebView());
     }
 
@@ -213,9 +217,7 @@ public class MoTab implements  MoSavable, MoLoadable, MoViewDisplayable {
      */
     private void initTabsButton() {
         //tabs button
-        TextView tabs = view.findViewById(R.id.tabs_button);
-        tabs.setText(MoTabsManager.size()+"");
-
+        this.tabsNumber = view.findViewById(R.id.tabs_button);
         this.showTabsButton = view.findViewById(R.id.tabs_button_card_view);
         this.showTabsButton.setOnClickListener(view -> {
             MoTabController.instance.onTabsButtonPressed();
@@ -230,14 +232,16 @@ public class MoTab implements  MoSavable, MoLoadable, MoViewDisplayable {
     }
 
 
+    /**
+     * inits the error layout
+     */
     private void initErrorLayout(){
         this.errorLayout = this.view.findViewById(R.id.tab_error_layout);
     }
 
-
-//    private void initSearchEngine(){
-//        this.searchEngine = MoSearchEngine.getPrefSearchEngine(this.context);
-//    }
+    private void initStackTabHistory(){
+        this.stackTabHistory.setWebView(this.moWebView);
+    }
 
 
 
@@ -249,8 +253,8 @@ public class MoTab implements  MoSavable, MoLoadable, MoViewDisplayable {
      * @param superBackPressed super.onBackPressed in main activity
      */
     public void onBackPressed(Runnable superBackPressed){
-        if(this.moWebView.getWebView() != null && this.moWebView.getWebView().canGoBack()){
-            this.moWebView.getWebView().goBack();
+        if(this.stackTabHistory.canGoBack()){
+            this.stackTabHistory.goBack();
         }else if(parentTab!=null){
             // we can go back to the parent tab
             try {
@@ -271,9 +275,11 @@ public class MoTab implements  MoSavable, MoLoadable, MoViewDisplayable {
      * @param u update this.url to u
      */
     public void updateUrl(String u){
+        // adds it to the stack history
+        this.stackTabHistory.add(u);
         // update url
         this.url = u;
-        // remove focus from search text
+        // remove focus from search
         this.searchText.clearFocus();
         // set the text for url
         this.searchText.setText(url);
@@ -341,20 +347,25 @@ public class MoTab implements  MoSavable, MoLoadable, MoViewDisplayable {
 
     /**
      * this is for main view (showing the web in main activity)
+     * this method is called when you are trying to set the scene to
+     * this tab
      * @return a view of web search
      */
+    @SuppressLint("SetTextI18n")
     public View getZeroPaddingView(){
         // make the search bar visible
         searchBar.setVisibility(View.VISIBLE);
-
+        // make sure the tab count is corrects
+        this.tabsNumber.setText(MoTabsManager.size()+"");
+        // making the view padding zero
         this.view.setPadding(0,0,0,0);
-
         // loading the url if it has not been loaded yet
         if(!this.isUpToDate) {
             this.isUpToDate = true;
             moWebView.getWebView().loadUrl(this.url);
         }
-
+        // if the parent view is not null, make it null so
+        // we can set it to another parent view
         if(view.getParent() != null) {
             ((ViewGroup)view.getParent()).removeView(view); // <- fix
         }
@@ -401,6 +412,7 @@ public class MoTab implements  MoSavable, MoLoadable, MoViewDisplayable {
         String[] c = MoFile.loadable(data);
         this.url = c[0];
         this.moBitmap = new MoBitmap(c[1],context);
+        this.stackTabHistory = new MoStackTabHistory(c[2],context);
         this.init();
     }
 
@@ -412,7 +424,7 @@ public class MoTab implements  MoSavable, MoLoadable, MoViewDisplayable {
      */
     @Override
     public String getData() {
-        return MoFile.getData(this.url,this.moBitmap.getData());
+        return MoFile.getData(this.url,this.moBitmap.getData(),this.stackTabHistory.getData());
     }
 
     /**

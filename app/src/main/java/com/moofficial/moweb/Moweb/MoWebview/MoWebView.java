@@ -89,20 +89,6 @@ public class MoWebView {
         webSettings.setBuiltInZoomControls(true);
         // disabling the zoom buttons
         webSettings.setDisplayZoomControls(false);
-
-
-//        webView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-//            @Override
-//            public void onScrollChange(View view, int x, int y, int oldX, int oldY) {
-//                if(y<=6){
-//                    Toast.makeText(context,"hit top",Toast.LENGTH_SHORT).show();
-//                    appbar.setVisibility(View.VISIBLE);
-//                }else{
-//                    appbar.setVisibility(View.GONE);
-//                }
-//            }
-//        });
-
     }
 
 
@@ -138,13 +124,30 @@ public class MoWebView {
         }
     }
 
-    // sets the visibility of the web view
+    /**
+     * sets the visibility of the web view to v
+     * @param v
+     */
     public void setVisibility(int v){
         this.webView.setVisibility(v);
     }
 
 
+    /**
+     * returns the tab that this web view belongs to
+     * @return
+     */
     public MoTab getTab() {
         return tab;
     }
+
+    /**
+     * loads the url into the web view
+     * @param url of the page they are trying to go
+     */
+    public void loadUrl(String url){
+        this.webView.loadUrl(url);
+    }
+
+
 }

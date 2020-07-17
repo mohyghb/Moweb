@@ -2,6 +2,7 @@ package com.moofficial.moweb.Moweb.MoTab;
 
 import android.app.Activity;
 import android.content.Context;
+import android.widget.Toast;
 
 import com.moofficial.moweb.MoBitmap.MoBitmapSaver;
 import com.moofficial.moweb.MoIO.MoFile;
@@ -11,6 +12,7 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabExceptions.MoTabNotFoundException;
 import com.moofficial.moweb.Moweb.MoTab.MoTabType.MoTabType;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoIncognitoTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
+import com.moofficial.moweb.R;
 
 import java.util.ArrayList;
 
@@ -172,6 +174,15 @@ public class MoTabsManager {
         MoTabController.instance.notifyRemoved(type);
     }
 
+    /**
+     * removes the tab bitmap previews that were
+     * previously saved on the internal storage
+     * we need to remove them so they don't take space as
+     * they continue to search in our app
+     * @param index
+     * @param context
+     * @param tabs
+     */
     private static void removeTabStuff(int index,Context context,ArrayList<MoTab> tabs){
         // deleting the bitmap used to show user
         tabs.get(index).deleteWebViewBitmap(
@@ -204,6 +215,12 @@ public class MoTabsManager {
         MoTabController.instance.setIndex(tabs.size() - 1,MoTabType.TYPE_NORMAL);
     }
 
+    /**
+     * adds a normal tab with a parent
+     * @param context
+     * @param url
+     * @param parentTab
+     */
     public static void addTab(Context context, String url,MoTab parentTab) {
         MoTabsManager.newTab(context, url,parentTab);
         MoTabController.instance.setIndex(tabs.size() - 1,MoTabType.TYPE_NORMAL);
@@ -211,7 +228,7 @@ public class MoTabsManager {
 
 
     /**
-     *
+     * adds incognito tab with no parent tab
      * @param a
      * @param url
      */
@@ -221,7 +238,7 @@ public class MoTabsManager {
     }
 
     /**
-     *
+     * adds incognito tab with parent tab
      * @param a
      * @param url
      * @param parentTab
@@ -232,12 +249,23 @@ public class MoTabsManager {
     }
 
 
-
+    /**
+     * selects the tab to be the one that the user
+     * is currently viewing
+     * @param tab
+     * @throws MoTabNotFoundException
+     */
     public static void selectTab(MoTab tab) throws MoTabNotFoundException {
         MoTabController.instance.setIndex(getIndexOf(tab),tab.getType());
     }
 
 
+    /**
+     * returns the index of tab based on its type
+     * @param tab
+     * @return
+     * @throws MoTabNotFoundException
+     */
     private static int getIndexOf(MoTab tab) throws MoTabNotFoundException {
         switch (tab.getType()){
             case MoTabType.TYPE_INCOGNITO:
@@ -248,6 +276,13 @@ public class MoTabsManager {
         throw new MoTabNotFoundException();
     }
 
+    /**
+     * returns the index of tab from a list of tabs
+     * @param t
+     * @param ts
+     * @return
+     * @throws MoTabNotFoundException
+     */
     private static int getIndexOf(MoTab t, ArrayList<MoTab> ts) throws MoTabNotFoundException{
         for(int i =0; i < ts.size(); i++){
             if(t==ts.get(i)){
@@ -256,5 +291,28 @@ public class MoTabsManager {
         }
         throw new MoTabNotFoundException();
     }
+
+    /**
+     * removes all the normal tabs
+     * from our database
+     */
+    public static void clearAllNormalTabs(Context context){
+        for(int i = tabs.size()-1; i>=0;i--){
+            remove(i,context,MoTabType.TYPE_NORMAL);
+        }
+        Toast.makeText(context,context.getString(R.string.toast_closed_all_normal_tabs),Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * removes all the incognito tabs
+     * from our database
+     */
+    public static void clearAllIncognitoTabs(Context context){
+        for(int i = incognitoTabs.size()-1; i>=0;i--){
+            remove(i,context,MoTabType.TYPE_INCOGNITO);
+        }
+        Toast.makeText(context,context.getString(R.string.toast_closed_all_incognito_tabs),Toast.LENGTH_SHORT).show();
+    }
+
 
 }

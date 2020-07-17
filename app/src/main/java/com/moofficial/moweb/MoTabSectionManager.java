@@ -22,6 +22,8 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabRecyclerAdapter;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 
+import java.lang.reflect.Parameter;
+
 public class MoTabSectionManager {
 
     private final Activity mainActivity;
@@ -127,6 +129,16 @@ public class MoTabSectionManager {
                         }),
                         new Pair<>(mainActivity.getString(R.string.NewIncognitoTab), menuItem -> {
                             MoTabsManager.addIncognitoTab(mainActivity,MoSearchEngine.instance.homePage());
+                            return false;
+                        }),
+                        new Pair<>(mainActivity.getString(R.string.Clear_All_Normal_Tabs), menuItem -> {
+                            MoTabsManager.clearAllNormalTabs(mainActivity);
+                            this.tabsRecyclerView.notifyDataSetChanged();
+                            return false;
+                        }),
+                        new Pair<>(mainActivity.getString(R.string.Clear_All_Incognito_Tabs), menuItem -> {
+                            MoTabsManager.clearAllIncognitoTabs(mainActivity);
+                            this.incognitoTabsRecyclerView.notifyDataSetChanged();
                             return false;
                         })
         );

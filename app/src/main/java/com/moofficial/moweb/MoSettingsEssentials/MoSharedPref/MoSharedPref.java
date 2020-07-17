@@ -1,4 +1,4 @@
-package com.moofficial.moweb.MoSharedPref;
+package com.moofficial.moweb.MoSettingsEssentials.MoSharedPref;
 
 import android.content.Context;
 import android.content.SharedPreferences;

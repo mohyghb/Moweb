@@ -3,23 +3,16 @@ package com.moofficial.moweb;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.moofficial.moweb.MoAnimation.MoAnimation;
 import com.moofficial.moweb.MoLog.MoLog;
 import com.moofficial.moweb.MoSection.MoSectionManager;
-import com.moofficial.moweb.MoSharedPref.MoSharedPref;
-import com.moofficial.moweb.Moweb.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoServices.MoSaverBackgroundService;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;

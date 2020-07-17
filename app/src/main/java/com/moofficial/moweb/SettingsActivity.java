@@ -3,17 +3,15 @@ package com.moofficial.moweb;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-import com.moofficial.moweb.MoSharedPref.MoSharedPref;
-import com.moofficial.moweb.MoTheme.MoTheme;
+import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
+import com.moofficial.moweb.MoSettingsEssentials.MoTheme.MoTheme;
 import com.moofficial.moweb.Moweb.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
@@ -67,6 +65,11 @@ public class SettingsActivity extends AppCompatActivity {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
         }
 
+        @Override
+        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+            this.activity = getActivity();
+        }
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {

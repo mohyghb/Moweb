@@ -3,9 +3,8 @@ package com.moofficial.moweb.Moweb.MoHistory;
 import android.content.Context;
 
 import com.moofficial.moweb.MoIO.MoFile;
-import com.moofficial.moweb.MoLog.MoLog;
 import com.moofficial.moweb.MoReadWrite.MoReadWrite;
-import com.moofficial.moweb.MoSharedPref.MoSharedPref;
+import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
 import com.moofficial.moweb.R;
 

@@ -1,12 +1,10 @@
-package com.moofficial.moweb.MoTheme;
+package com.moofficial.moweb.MoSettingsEssentials.MoTheme;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.preference.PreferenceManager;
 
-import com.moofficial.moweb.MoSharedPref.MoSharedPref;
+import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
 import com.moofficial.moweb.R;
 
 public class MoTheme {

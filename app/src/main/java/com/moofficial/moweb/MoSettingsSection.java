@@ -3,11 +3,10 @@ package com.moofficial.moweb;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 
-import com.moofficial.moweb.MoSharedPref.MoSharedPref;
-import com.moofficial.moweb.MoTheme.MoTheme;
+import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
+import com.moofficial.moweb.MoSettingsEssentials.MoTheme.MoTheme;
 import com.moofficial.moweb.Moweb.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;

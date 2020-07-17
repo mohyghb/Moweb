@@ -1,13 +1,9 @@
 package com.moofficial.moweb.Moweb.MoSearchEngines;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
-import androidx.preference.PreferenceManager;
-
-import com.moofficial.moweb.MoSharedPref.MoSharedPref;
+import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
 import com.moofficial.moweb.MoUrl.MoUrlUtils;
-import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
 import com.moofficial.moweb.R;
 

@@ -21,9 +21,15 @@
     <!--pop up menus-->
     <string name="Settings">Settings</string>
     <string name="History">History</string>
+    <string name="Clear_All_Normal_Tabs">Close All Tabs</string>
+    <string name="Clear_All_Incognito_Tabs">Close All Incognito Tabs</string>
     <string name="NewTab">New Tab</string>
     <string name="NewIncognitoTab">New Incognito Tab</string>
 
+
+    <!--toast texts-->
+    <string name="toast_closed_all_normal_tabs">All normal tabs were closed!</string>
+    <string name="toast_closed_all_incognito_tabs">All incognito tabs were closed!</string>
 
     <!--changing the search engine-->
     <string name="search_engine">search_engine_pref</string>

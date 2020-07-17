@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class MoFile {
@@ -15,10 +16,11 @@ public class MoFile {
 
 
     /**
-     * makes it easier to use MoSavable
-     * @param params
-     * @return x
-     */
+     //     * makes it easier to use MoSavable
+     //     * @param sepKey
+     //     * @param params
+     //     * @return
+     //     */
     public static String getData(Object ... params){
         JSONObject jsonObject = new JSONObject();
         for(int i = 0; i < params.length; i++){
@@ -32,16 +34,18 @@ public class MoFile {
                 e.printStackTrace();
             }
         }
-        // saving the length for later on
-        try {
-            jsonObject.put(LENGTH,params.length);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        addLengthToJson(jsonObject, params.length);
         return jsonObject.toString();
     }
 
-
+    private static void addLengthToJson(JSONObject jsonObject, int length) {
+        // saving the length for later on
+        try {
+            jsonObject.put(LENGTH, length);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     /**
@@ -63,17 +67,40 @@ public class MoFile {
             }
         }
         // saving the size for later on
-        try {
-            jsonObject.put(LENGTH,list.size());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        addLengthToJson(jsonObject, list.size());
         return jsonObject.toString();
     }
 
 
+    public static String getData(MoSavable ... list){
+        return getData(new ArrayList<>(Arrays.asList(list)));
+    }
 
 
+    /**
+     * converts data of a set into json object and then into
+     * an string
+     * @param set
+     * @return
+     */
+    public static String getData(Iterable<?> set){
+        JSONObject jsonObject = new JSONObject();
+        int i = 0;
+        for(Object o: set){
+            try {
+                if(o!=null){
+                    jsonObject.put(i+"",o.toString());
+                }else{
+                    jsonObject.put(i+"",NULL);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            i++;
+        }
+        addLengthToJson(jsonObject,i);
+        return jsonObject.toString();
+    }
 
 
 
