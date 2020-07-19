@@ -4,9 +4,10 @@ import android.content.Context;
 
 import androidx.core.util.Pair;
 
-import com.moofficial.moweb.MoIO.MoFile;
-import com.moofficial.moweb.MoIO.MoLoadable;
-import com.moofficial.moweb.MoIO.MoSavable;
+import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
+import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
+import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
+
 
 // a pair that can be saved
 public class MoPair <F,S> implements MoSavable, MoLoadable {

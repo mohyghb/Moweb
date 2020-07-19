@@ -3,7 +3,7 @@ package com.moofficial.moweb.Moweb.MoWebview;
 import android.content.Context;
 import android.webkit.JavascriptInterface;
 
-import com.moofficial.moweb.MoUrl.MoUrlUtils;
+import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;

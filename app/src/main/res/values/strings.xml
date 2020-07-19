@@ -1,6 +1,20 @@
 <resources>
     <string name="app_name">Moweb</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="cancel">cancel</string>
+    <string name="delete">delete</string>
+    <string name="done">done</string>
+
+
+    <!--tab more button options-->
+    <!--we also need to add (new tab) and (new incognito tab)-->
+    <string name="find_in_page">Find</string>
+    <string name="history">History</string>
+    <string name="downloads">Downloads</string>
+    <string name="settings">Settings</string>
+    <string name="home">Home</string>
+
+
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
@@ -66,12 +80,18 @@
     <string name="auto_complete_summary">Enable/Disable auto complete when typing into search bars</string>
 
 
-
     <!--enable history-->
     <string name="history_enabled">history_enabled_pref</string>
     <string name="history_enabled_title">History</string>
     <string name="history_enabled_summary">Enable/Disable history for your browsing</string>
 
+
+    <!--home page settings-->
+    <string name="home_page">home_page_pref</string>
+    <string name="home_page_hint_edit_text">Add home page</string>
+    <string name="home_page_title">Home Page</string>
+    <string name="home_page_summary">Opens this page when open a new tab or when you click on the home button. If this is disabled, 
+        then the appropriate home page for a search engine is chosen to be the home page</string>
 
 
 </resources>

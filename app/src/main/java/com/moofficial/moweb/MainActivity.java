@@ -10,7 +10,8 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
-import com.moofficial.moweb.MoAnimation.MoAnimation;
+import com.moofficial.moessentials.MoEssentials.MoAnimation.MoAnimation;
+
 import com.moofficial.moweb.MoLog.MoLog;
 import com.moofficial.moweb.MoSection.MoSectionManager;
 import com.moofficial.moweb.Moweb.MoServices.MoSaverBackgroundService;

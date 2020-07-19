@@ -9,6 +9,7 @@
     <color name="divider_color">@color/colorPrimaryDark</color>
 
     <color name="error_color">#cf6679</color>
+    <color name="delete_item_low_transparency_color">#7ECF6679</color>
 
     <color name="snack_bar_text">@color/MoBlack</color>
 

@@ -2,9 +2,9 @@ package com.moofficial.moweb.MoSection;
 
 import android.content.Context;
 
-import com.moofficial.moweb.MoIO.MoLoadable;
-import com.moofficial.moweb.MoIO.MoSavable;
-import com.moofficial.moweb.MoReadWrite.MoReadWrite;
+import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
+import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
+import com.moofficial.moessentials.MoEssentials.MoReadWrite.MoReadWrite;
 
 
 public class MoSectionManager implements MoSavable, MoLoadable {

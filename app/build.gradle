@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -47,4 +49,6 @@ dependencies {
 
     implementation 'org.jsoup:jsoup:1.10.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    implementation project(":MoEssentials-release")
 }

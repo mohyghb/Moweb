@@ -21,6 +21,7 @@
 <!--    <color name="Not_Dark_Green">@color/colorAccent_DarkMode</color>-->
 
 
+
     <color name="setting_toolbar_background">@android:color/white</color>
 
 
@@ -32,6 +33,7 @@
     <color name="resumeButton">#2196f3</color>
 
     <color name="error_color">#E24444</color>
+    <color name="delete_item_low_transparency_color">#88E24444</color>
 
     <color name="snack_bar_text">@color/MoWhite</color>
 

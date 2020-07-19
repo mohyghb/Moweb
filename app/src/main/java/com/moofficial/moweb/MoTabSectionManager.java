@@ -3,26 +3,23 @@ package com.moofficial.moweb;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Pair;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import com.moofficial.moessentials.MoEssentials.MoPopUpMenu.MoPopUpMenu;
+import com.moofficial.moessentials.MoEssentials.MoRecyclerView.MoRecyclerView;
 import com.moofficial.moweb.MoInflatorView.MoInflaterView;
-import com.moofficial.moweb.MoLog.MoLog;
-import com.moofficial.moweb.MoPopUpMenu.MoPopUpMenu;
-import com.moofficial.moweb.MoRecyclerView.MoRecyclerView;
+
+
 import com.moofficial.moweb.MoSection.MoSectionManager;
-import com.moofficial.moweb.Moweb.MoGoogle.MoGoogle;
 import com.moofficial.moweb.Moweb.MoHistory.MoHistoryManager;
+import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabRecyclerAdapter;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
-
-import java.lang.reflect.Parameter;
 
 public class MoTabSectionManager {
 
@@ -48,6 +45,7 @@ public class MoTabSectionManager {
         this.changeContentView = changeContentView;
         this.showInGrid = true;
         MoHistoryManager.load(this.mainActivity);
+        MoHomePageManager.load(this.mainActivity);
         this.init();
     }
 
@@ -171,8 +169,8 @@ public class MoTabSectionManager {
     private void changeGrid() {
         initNormalAdapter();
         initIncognitoAdapter();
-        this.tabsRecyclerView.switchView(showInGrid, mAdapter);
-        this.incognitoTabsRecyclerView.switchView(showInGrid, mIncognitoAdapter);
+        this.tabsRecyclerView.switchViewMode(showInGrid, mAdapter);
+        this.incognitoTabsRecyclerView.switchViewMode(showInGrid, mIncognitoAdapter);
     }
 
     /**

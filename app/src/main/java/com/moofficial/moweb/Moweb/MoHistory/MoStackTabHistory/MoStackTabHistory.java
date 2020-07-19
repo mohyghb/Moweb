@@ -3,9 +3,10 @@ package com.moofficial.moweb.Moweb.MoHistory.MoStackTabHistory;
 
 import android.content.Context;
 
-import com.moofficial.moweb.MoIO.MoFile;
-import com.moofficial.moweb.MoIO.MoLoadable;
-import com.moofficial.moweb.MoIO.MoSavable;
+
+import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
+import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
+import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebView;
 
 import java.util.Arrays;
@@ -69,7 +70,11 @@ public class MoStackTabHistory implements MoSavable, MoLoadable {
     @Override
     public void load(String data, Context context) {
         String[] c = MoFile.loadable(data);
-        this.stack.addAll(Arrays.asList(c));
+        if(MoFile.isValidData(c)){
+            String[] stk = MoFile.loadable(c[0]);
+            this.stack.addAll(Arrays.asList(stk));
+        }
+
     }
 
     @Override

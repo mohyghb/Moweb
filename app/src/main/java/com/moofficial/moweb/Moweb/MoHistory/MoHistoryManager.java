@@ -2,8 +2,9 @@ package com.moofficial.moweb.Moweb.MoHistory;
 
 import android.content.Context;
 
-import com.moofficial.moweb.MoIO.MoFile;
-import com.moofficial.moweb.MoReadWrite.MoReadWrite;
+
+import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
+import com.moofficial.moessentials.MoEssentials.MoReadWrite.MoReadWrite;
 import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
 import com.moofficial.moweb.R;
@@ -107,12 +108,15 @@ public class MoHistoryManager {
             return;
         }
         String[] com = MoFile.loadable(MoReadWrite.readFile(HISTORY_FILE,c));
-        // load them in backwards
-        for(String s: com){
-            if(!s.isEmpty()){
-                MoHistory h = new MoHistory();
-                h.load(s,c);
-                histories.add(h);
+        if(MoFile.isValidData(com)){
+            String[] his = MoFile.loadable(com[0]);
+            // load them in backwards
+            for(String s: his){
+                if(!s.isEmpty()){
+                    MoHistory h = new MoHistory();
+                    h.load(s,c);
+                    histories.add(h);
+                }
             }
         }
     }

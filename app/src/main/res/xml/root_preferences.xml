@@ -25,6 +25,11 @@
             app:defaultValue="true"
             app:iconSpaceReserved="false"/>
 
+        <Preference android:key="@string/home_page"
+            android:title="@string/home_page_title"
+            android:summary="@string/home_page_summary"
+            app:iconSpaceReserved="false"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory app:title="Security" app:iconSpaceReserved="false">

@@ -67,7 +67,7 @@
 
     <include
         android:id="@+id/tab_search_bar"
-        layout="@layout/app_bar_search"
+        layout="@layout/tab_search_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

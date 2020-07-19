@@ -4,9 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
+import com.moofficial.moessentials.MoEssentials.MoReadWrite.MoReadWrite;
 import com.moofficial.moweb.MoBitmap.MoBitmapSaver;
-import com.moofficial.moweb.MoIO.MoFile;
-import com.moofficial.moweb.MoReadWrite.MoReadWrite;
+
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabExceptions.MoTabNotFoundException;
 import com.moofficial.moweb.Moweb.MoTab.MoTabType.MoTabType;
@@ -110,11 +111,14 @@ public class MoTabsManager {
         tabs = new ArrayList<>();
         String data = MoReadWrite.readFile(TABS_FILE,context);
         String[] components = MoFile.loadable(data);
-        for(String t: components){
-            if(!t.isEmpty()) {
-                MoTab tab = new MoTab(context);
-                tab.load(t, context);
-                tabs.add(tab);
+        if(MoFile.isValidData(components)){
+            String[] tbs = MoFile.loadable(components[0]);
+            for(String t: tbs){
+                if(!t.isEmpty()) {
+                    MoTab tab = new MoTab(context);
+                    tab.load(t, context);
+                    tabs.add(tab);
+                }
             }
         }
     }

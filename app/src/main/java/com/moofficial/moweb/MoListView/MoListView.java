@@ -7,7 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 
-import com.moofficial.moweb.MoAnimation.MoAnimation;
+import com.moofficial.moessentials.MoEssentials.MoAnimation.MoAnimation;
 
 import java.util.List;
 
@@ -124,7 +124,7 @@ public class MoListView <T>{
             this.listView.setVisibility(View.GONE);
         }else{
             if(animation){
-                MoAnimation.animateNoTag(listView,View.VISIBLE,MoAnimation.LEFT_TO_RIGHT);
+                MoAnimation.animateNoTag(listView,View.VISIBLE, MoAnimation.LEFT_TO_RIGHT);
             }
             this.listView.setVisibility(View.VISIBLE);
         }

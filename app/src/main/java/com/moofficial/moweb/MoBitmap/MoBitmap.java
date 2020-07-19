@@ -3,9 +3,10 @@ package com.moofficial.moweb.MoBitmap;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.moofficial.moweb.MoIO.MoFile;
-import com.moofficial.moweb.MoIO.MoLoadable;
-import com.moofficial.moweb.MoIO.MoSavable;
+
+import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
+import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
+import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
 import com.moofficial.moweb.MoId.MoId;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 

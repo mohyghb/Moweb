@@ -1,9 +1,11 @@
-package com.moofficial.moweb.MoUrl;
+package com.moofficial.moweb.Moweb.MoUrl;
 
 import android.content.Context;
+import android.webkit.URLUtil;
 
-import com.moofficial.moweb.MoIO.MoLoadable;
-import com.moofficial.moweb.MoIO.MoSavable;
+
+import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
+import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -42,6 +44,15 @@ public class MoURL implements MoSavable, MoLoadable {
 
     public void setUrl(URL url) {
         this.url = url;
+    }
+
+
+    /**
+     * returns true if the url is not null and valid url
+     * @return
+     */
+    public boolean isValid(){
+        return this.url!=null && URLUtil.isValidUrl(this.urlString);
     }
 
     /**

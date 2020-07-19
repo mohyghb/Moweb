@@ -1,6 +1,7 @@
 package com.moofficial.moweb;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ImageButton;
@@ -8,6 +9,7 @@ import android.widget.ImageButton;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
@@ -40,6 +42,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 
         private Activity activity;
+        private Preference homePagePref;
 
         public SettingsFragment(Activity a){
             this.activity = a;
@@ -47,6 +50,21 @@ public class SettingsActivity extends AppCompatActivity {
 
         public SettingsFragment(){}
 
+
+        private void init(){
+            initHomePagePref();
+        }
+
+        private void initHomePagePref() {
+            this.homePagePref = findPreference(activity.getString(R.string.home_page));
+            if (this.homePagePref != null) {
+                this.homePagePref.setOnPreferenceClickListener(preference -> {
+                    Intent i = new Intent(activity, HomePageActivity.class);
+                    activity.startActivity(i);
+                    return false;
+                });
+            }
+        }
 
         @Override
         public void onResume() {
@@ -69,6 +87,7 @@ public class SettingsActivity extends AppCompatActivity {
         public void onActivityCreated(@Nullable Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
             this.activity = getActivity();
+            init();
         }
 
         @Override

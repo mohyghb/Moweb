@@ -149,5 +149,41 @@ public class MoWebView {
         this.webView.loadUrl(url);
     }
 
+    /**
+     * finds all the texts that are applicable
+     * to the search string and calls find listener
+     * multiple times when it is updating
+     * @param s
+     * @param findListener
+     */
+    public void findAllAsync(String s, WebView.FindListener findListener){
+        this.webView.post(() -> {
+            webView.findAllAsync(s);
+            this.webView.setFindListener(findListener);
+        });
+    }
+
+    /**
+     * moves to the next find item
+     */
+    public void findNext(){
+        this.webView.findNext(true);
+    }
+
+    /**
+     * moves to the previous find item
+     */
+    public void findPrevious(){
+        this.webView.findNext(false);
+    }
+
+
+    /**
+     * clears the matches from find
+     */
+    public void clearMatches(){
+        this.webView.clearMatches();
+    }
+
 
 }

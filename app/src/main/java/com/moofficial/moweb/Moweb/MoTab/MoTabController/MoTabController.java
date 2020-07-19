@@ -2,10 +2,11 @@ package com.moofficial.moweb.Moweb.MoTab.MoTabController;
 
 import android.content.Context;
 
-import com.moofficial.moweb.MoIO.MoFile;
-import com.moofficial.moweb.MoIO.MoLoadable;
-import com.moofficial.moweb.MoIO.MoSavable;
-import com.moofficial.moweb.MoReadWrite.MoReadWrite;
+
+import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
+import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
+import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
+import com.moofficial.moessentials.MoEssentials.MoReadWrite.MoReadWrite;
 import com.moofficial.moweb.MoSection.MoSectionManager;
 import com.moofficial.moweb.Moweb.MoTab.MoTabType.MoTabType;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;

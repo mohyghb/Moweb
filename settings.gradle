@@ -1,3 +1,4 @@
+include ':MoEssentials-release'
 rootProject.name='Moweb'
 include ':app'
 include ':MoInteractable'

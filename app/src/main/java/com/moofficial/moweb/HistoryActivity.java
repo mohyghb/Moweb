@@ -29,9 +29,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuItemCompat;
 
-import com.moofficial.moweb.MoAnimation.MoAnimation;
-import com.moofficial.moweb.MoPopUpMenu.MoPopUpMenu;
-import com.moofficial.moweb.MoRecyclerView.MoRecyclerView;
+
+import com.moofficial.moessentials.MoEssentials.MoPopUpMenu.MoPopUpMenu;
+
+import com.moofficial.moessentials.MoEssentials.MoRecyclerView.MoRecyclerView;
 import com.moofficial.moweb.MoSearch.MoSearchViewFormatter;
 import com.moofficial.moweb.Moweb.MoHistory.MoHistory;
 import com.moofficial.moweb.Moweb.MoHistory.MoHistoryManager;
@@ -61,6 +62,7 @@ public class HistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_history);
         MoHistoryManager.load(this);
         init();
+
     }
 
     private void init() {
@@ -102,8 +104,8 @@ public class HistoryActivity extends AppCompatActivity {
 
     private void initFirstDateTile(){
         MoHistory history = MoHistoryManager.getLastHistory();
+        firstDateTile = findViewById(R.id.date_tile);
         if(history!=null){
-            firstDateTile = findViewById(R.id.date_tile);
             firstDateTile.setVisibility(View.VISIBLE);
             firstDateTile.setText(history.getDate());
         }else{

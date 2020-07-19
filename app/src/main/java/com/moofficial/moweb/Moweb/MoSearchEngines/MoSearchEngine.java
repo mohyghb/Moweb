@@ -3,7 +3,7 @@ package com.moofficial.moweb.Moweb.MoSearchEngines;
 import android.content.Context;
 
 import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
-import com.moofficial.moweb.MoUrl.MoUrlUtils;
+import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
 import com.moofficial.moweb.R;
 

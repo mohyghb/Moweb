@@ -10,7 +10,8 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
-import com.moofficial.moweb.MoPermissions.MoPermission;
+import com.moofficial.moessentials.MoEssentials.MoPermissions.MoPermission;
+
 
 public class MoChromeClient extends WebChromeClient {
 
