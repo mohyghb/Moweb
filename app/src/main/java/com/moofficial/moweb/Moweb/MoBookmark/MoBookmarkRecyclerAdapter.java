@@ -12,6 +12,8 @@ import com.moofficial.moessentials.MoEssentials.MoDelete.MoListDeletable;
 import com.moofficial.moessentials.MoEssentials.MoDelete.MoListDelete;
 import com.moofficial.moessentials.MoEssentials.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoPreviewable.MoPreviewAdapter;
+import com.moofficial.moessentials.MoEssentials.MoSearchable.MoSearchableItem;
+import com.moofficial.moessentials.MoEssentials.MoSearchable.MoSearchableList;
 import com.moofficial.moessentials.MoEssentials.MoSelectable.MoSelectableItem;
 import com.moofficial.moessentials.MoEssentials.MoSelectable.MoSelectableUtils;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageViewHolder;
@@ -19,7 +21,8 @@ import com.moofficial.moweb.R;
 
 import java.util.List;
 
-public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHolder,MoBookmark> implements MoListDeletable {
+public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHolder,MoBookmark>
+        implements MoListDeletable, MoSearchableList {
 
 
     private MoListDelete moListDelete;
@@ -122,6 +125,11 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
 
     @Override
     public List<? extends MoSelectableItem> getSelectedItems() {
+        return dataSet;
+    }
+
+    @Override
+    public List<? extends MoSearchableItem> getSearchableItems() {
         return dataSet;
     }
 }

@@ -41,7 +41,7 @@ import com.moofficial.moweb.Moweb.MoUrl.MoURL;
 import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
 import com.moofficial.moweb.Moweb.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoHistory.MoHistoryManager;
-import com.moofficial.moweb.Moweb.MoHistory.MoStackTabHistory.MoStackTabHistory;
+import com.moofficial.moweb.Moweb.MoWebview.MoStackTabHistory.MoStackTabHistory;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
@@ -361,7 +361,7 @@ public class MoTab implements MoSavable, MoLoadable, MoViewDisplayable {
      */
     public void updateUrl(String u){
         // adds it to the stack history
-        this.stackTabHistory.add(u);
+        this.stackTabHistory.add();
         // update url
         this.url.setUrlString(u);
         // remove focus from search

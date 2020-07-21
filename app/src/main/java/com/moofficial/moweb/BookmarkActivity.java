@@ -6,7 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.moofficial.moessentials.MoEssentials.MoDelete.MoListDelete;
 import com.moofficial.moessentials.MoEssentials.MoRecyclerView.MoRecyclerView;
+import com.moofficial.moessentials.MoEssentials.MoSearchable.MoSearchable;
+import com.moofficial.moessentials.MoEssentials.MoViews.MoListViewSync;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkRecyclerAdapter;
@@ -16,6 +19,9 @@ public class BookmarkActivity extends AppCompatActivity {
 
     private MoRecyclerView recyclerView;
     private MoBookmarkRecyclerAdapter recyclerAdapter;
+    private MoSearchable moSearchable;
+    private MoListDelete moListDelete;
+    private MoListViewSync listViewSync;
 
 
     @Override
@@ -28,6 +34,9 @@ public class BookmarkActivity extends AppCompatActivity {
     private void init(){
         initRecyclerAdapter();
         initRecyclerView();
+        initMoSearchable();
+//        initMoListDelete();
+//        initListViewSync();
     }
 
     private void initRecyclerAdapter(){
@@ -38,6 +47,13 @@ public class BookmarkActivity extends AppCompatActivity {
         this.recyclerView = new MoRecyclerView(this,R.id.bookmark_recycler_view,this.recyclerAdapter);
         this.recyclerView.show();
     }
+
+    private void initMoSearchable() {
+        this.moSearchable = new MoSearchable(this,findViewById(R.id.root_bookmark),this.recyclerAdapter);
+    }
+
+
+
 
 
     public static void startActivity(Context context){

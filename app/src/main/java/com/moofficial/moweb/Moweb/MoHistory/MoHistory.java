@@ -1,6 +1,7 @@
 package com.moofficial.moweb.Moweb.MoHistory;
 
 import android.content.Context;
+import android.webkit.WebHistoryItem;
 
 import com.moofficial.moessentials.MoEssentials.MoDate.MoDate;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
@@ -11,6 +12,9 @@ import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
 import com.moofficial.moweb.MoString.MoString;
 import com.moofficial.moweb.Moweb.MoUrl.MoURL;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
+
+import java.util.Collection;
+import java.util.List;
 
 public class MoHistory implements MoSavable, MoLoadable {
 
@@ -47,6 +51,10 @@ public class MoHistory implements MoSavable, MoLoadable {
     public MoHistory(MoDate date){
         this.dateTime = date;
         this.type = TYPE_DATE_TILE;
+    }
+
+    public MoHistory(Context c,String d){
+        this.load(d,c);
     }
 
 
@@ -141,7 +149,19 @@ public class MoHistory implements MoSavable, MoLoadable {
     }
 
 
-
+    /**
+     * copies a web history item into
+     * itself so it can be savable
+     * @param item
+     */
+    public MoHistory copy(WebHistoryItem item){
+        if(item == null)
+            return null;
+        this.title = item.getTitle();
+        this.url = new MoURL(item.getUrl());
+        // we can also get the fav icon from here
+        return this;
+    }
 
 
     /**
@@ -168,4 +188,17 @@ public class MoHistory implements MoSavable, MoLoadable {
     public String getData() {
         return MoFile.getData(url.getData(),this.dateTime.getData(),title,count,type);
     }
+
+    /**
+     * adds all the data to a list of history
+     * @param c
+     * @param list
+     * @param data
+     */
+    public static void addAll(Context c,List<MoHistory> list, String[] data){
+        for(String d:data){
+            list.add(new MoHistory(c,d));
+        }
+    }
+
 }

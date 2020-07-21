@@ -6,6 +6,7 @@ import com.moofficial.moessentials.MoEssentials.MoDate.MoDate;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
+import com.moofficial.moessentials.MoEssentials.MoSearchable.MoSearchableItem;
 import com.moofficial.moessentials.MoEssentials.MoSelectable.MoListSelectable;
 import com.moofficial.moessentials.MoEssentials.MoSelectable.MoSelectableItem;
 import com.moofficial.moweb.Moweb.MoServices.MoSaverBackgroundService;
@@ -18,7 +19,7 @@ import java.util.Objects;
  * a class which can be both a bookmark and a folder
  * based on the type that is given to it
  */
-public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem {
+public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSearchableItem {
 
 
     public static final int FOLDER = 0;
@@ -30,6 +31,7 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem {
     private int type = BOOKMARK;
     private ArrayList<MoBookmark> subBookmarks = new ArrayList<>();
     private boolean isSelected;
+    private boolean isSearched;
 
     public MoBookmark(String url,String name){
         this.name = name;
@@ -139,9 +141,12 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem {
 
     private void loadSubBookmarks(Context context, String data) {
         String[] d = MoFile.loadable(data);
-        for(String book: d){
-            subBookmarks.add(new MoBookmark(book,context));
+        if(MoFile.isValidData(d)){
+            for(String book: d){
+                subBookmarks.add(new MoBookmark(book,context));
+            }
         }
+
     }
 
     @Override
@@ -151,6 +156,7 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem {
 
 
 
+    // selectable
 
     @Override
     public boolean onSelect() {
@@ -171,5 +177,23 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem {
     @Override
     public Object getItem() {
         return this;
+    }
+
+    // searchable
+
+    @Override
+    public boolean updateSearchable(Object... objects) {
+        // TODO implement this
+        return false;
+    }
+
+    @Override
+    public boolean isSearchable() {
+        return this.isSearched;
+    }
+
+    @Override
+    public void setSearchable(boolean b) {
+        this.isSearched = b;
     }
 }

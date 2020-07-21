@@ -11,6 +11,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
 
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moweb.MoBitmap.MoBitmapUtils;
 
 import com.moofficial.moweb.MoTouchPosition.MoTouchPosition;
@@ -20,15 +21,16 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.R;
 
 public class MoWebView {
+
     //UI
-    private WebView webView;//private WebViewClient client;
+    private WebView webView;
     private MoWebClient client;
     private MoChromeClient chromeClient;
     private MoTab tab;
     private MoHitTestResultParser hitTestResultParser;
     private Context context;
     private MoTouchPosition touchPosition;
-    //private View appbar;
+
 
     public MoChromeClient getChromeClient() {
         return chromeClient;
@@ -42,7 +44,6 @@ public class MoWebView {
         this.tab = tab;
         this.context = c;
         this.client = new MoWebClient() {
-
 
             @Override
             protected void onUrlChanged(String u, boolean isReload) {
