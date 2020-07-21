@@ -8,7 +8,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.moofficial.moweb.MoLog.MoLog;
+
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -23,7 +23,7 @@
             android:orientation="horizontal">
 
             <include
-                layout="@layout/first_letter_cover"
+                layout="@layout/circular_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

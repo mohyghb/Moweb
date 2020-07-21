@@ -18,6 +18,7 @@
 
     <color name="color_text_enabled">@color/colorPrimary</color>
     <color name="color_text_disabled">@color/MoWhite</color>
+    <color name="color_text">@color/MoWhite</color>
 
     <color name="tabs_icon_color">@color/colorPrimary</color>
 

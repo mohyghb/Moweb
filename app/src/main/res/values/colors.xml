@@ -56,6 +56,7 @@
 
     <color name="color_text_enabled">#66bb6a</color>
     <color name="color_text_disabled">@color/MoBlack</color>
+    <color name="color_text">@color/MoBlack</color>
 
 
     <color name="color_card_sent">@color/MoWhite</color>

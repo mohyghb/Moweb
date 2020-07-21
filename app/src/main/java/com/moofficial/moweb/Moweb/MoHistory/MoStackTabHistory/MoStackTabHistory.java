@@ -17,7 +17,8 @@ import java.util.Stack;
 // it has a mutual connection with a mo web view
 public class MoStackTabHistory implements MoSavable, MoLoadable {
 
-    private Stack<String> stack = new Stack<>();
+    private Stack<String> backwardStack = new Stack<>();
+    private Stack<String> forwardStack = new Stack<>();
     private MoWebView webView;
 
     public MoStackTabHistory(){
@@ -35,8 +36,8 @@ public class MoStackTabHistory implements MoSavable, MoLoadable {
      * @param url
      */
     public void add(String url){
-        if(this.stack.isEmpty() || !this.stack.peek().equals(url)){
-            this.stack.add(url);
+        if(this.backwardStack.isEmpty() || !this.backwardStack.peek().equals(url)){
+            this.backwardStack.add(url);
         }
     }
 
@@ -53,32 +54,57 @@ public class MoStackTabHistory implements MoSavable, MoLoadable {
      * @return true if the stack has more than one url and the web view is not null
      */
     public boolean canGoBack(){
-        return this.webView.getWebView() != null && this.stack.size()>1;
+        return this.webView.getWebView() != null && this.backwardStack.size()>1;
     }
 
     /**
      * pops a url from the stack
      * and peeks the next url (which is basically the previous page)
      * into the web view
+     * adds it to the popped queue
      */
     public void goBack(){
-        this.stack.pop();
-        this.webView.loadUrl(this.stack.peek());
+        forwardStack.add(this.backwardStack.pop());
+        this.webView.loadUrl(this.backwardStack.peek());
     }
 
+    public boolean canGoForward(){
+        return this.webView.getWebView()!=null && this.forwardStack.size()>0;
+    }
+
+    /**
+     * adds this to the
+     */
+    public void goForward(){
+        this.webView.loadUrl(forwardStack.pop());
+    }
+
+
+    /**
+     * goes forward if it can
+     */
+    public void goForwardIfPossible(){
+        if(canGoForward()){
+            goForward();
+        }
+    }
 
     @Override
     public void load(String data, Context context) {
         String[] c = MoFile.loadable(data);
         if(MoFile.isValidData(c)){
             String[] stk = MoFile.loadable(c[0]);
-            this.stack.addAll(Arrays.asList(stk));
-        }
+            this.backwardStack.addAll(Arrays.asList(stk));
 
+            if(c.length > 1){
+                String[] p = MoFile.loadable(c[1]);
+                this.forwardStack.addAll(Arrays.asList(p));
+            }
+        }
     }
 
     @Override
     public String getData() {
-        return MoFile.getData(this.stack);
+        return MoFile.getData(this.backwardStack,this.forwardStack);
     }
 }

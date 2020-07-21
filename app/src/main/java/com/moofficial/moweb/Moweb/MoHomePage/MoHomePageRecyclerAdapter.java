@@ -12,10 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoAnimation.MoAnimation;
 import com.moofficial.moessentials.MoEssentials.MoDelete.MoListDeletable;
 import com.moofficial.moessentials.MoEssentials.MoDelete.MoListDelete;
+import com.moofficial.moessentials.MoEssentials.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoPreviewable.MoPreviewAdapter;
 import com.moofficial.moessentials.MoEssentials.MoSelectable.MoSelectableItem;
 import com.moofficial.moessentials.MoEssentials.MoSelectable.MoSelectableUtils;
-import com.moofficial.moweb.MoInflatorView.MoInflaterView;
+
 import com.moofficial.moweb.R;
 
 import java.util.List;

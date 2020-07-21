@@ -8,12 +8,14 @@ import android.widget.ImageButton;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.moofficial.moessentials.MoEssentials.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoRecyclerView.MoRecyclerView;
-import com.moofficial.moweb.MoInflatorView.MoInflaterView;
+
 
 
 import com.moofficial.moweb.MoSection.MoSectionManager;
+import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
@@ -44,8 +46,6 @@ public class MoTabSectionManager {
         this.mainView = MoInflaterView.inflate(R.layout.main_menu_layout,mainActivity);
         this.changeContentView = changeContentView;
         this.showInGrid = true;
-        MoHistoryManager.load(this.mainActivity);
-        MoHomePageManager.load(this.mainActivity);
         this.init();
     }
 

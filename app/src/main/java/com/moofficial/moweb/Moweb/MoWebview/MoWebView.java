@@ -12,7 +12,7 @@ import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.moofficial.moweb.MoBitmap.MoBitmapUtils;
-import com.moofficial.moweb.MoLog.MoLog;
+
 import com.moofficial.moweb.MoTouchPosition.MoTouchPosition;
 import com.moofficial.moweb.Moweb.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoClient.MoWebClient;
@@ -185,5 +185,38 @@ public class MoWebView {
         this.webView.clearMatches();
     }
 
+
+    /**
+     * returns the title of the web view
+     * @return
+     */
+    public String getTitle(){
+        return this.webView.getTitle();
+    }
+
+
+    /**
+     * if it can go forward from this url
+     * @return
+     */
+    public boolean canGoForward(){
+        return this.webView.canGoForward();
+    }
+
+    /**
+     * goes forward a url
+     */
+    public void goForward(){
+        this.webView.goForward();
+    }
+
+    /**
+     * goes forwards if it can
+     */
+    public void goForwardIfYouCan(){
+        if(canGoForward()){
+            goForward();
+        }
+    }
 
 }

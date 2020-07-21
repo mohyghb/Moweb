@@ -14,6 +14,7 @@ public class MoHomePageManager {
     private static ArrayList<MoHomePage> homePages = new ArrayList<>();
     private static Integer activeHomePageIndex = NONE_ACTIVATED;
 
+    //TODO: test the correctness of active home page index;
 
     /**
      *

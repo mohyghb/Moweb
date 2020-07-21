@@ -12,8 +12,12 @@ import android.webkit.WebView;
 
 import com.moofficial.moessentials.MoEssentials.MoAnimation.MoAnimation;
 
-import com.moofficial.moweb.MoLog.MoLog;
+
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moweb.MoSection.MoSectionManager;
+import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
+import com.moofficial.moweb.Moweb.MoHistory.MoHistoryManager;
+import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoServices.MoSaverBackgroundService;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
@@ -34,6 +38,11 @@ public class MainActivity extends AppCompatActivity {
         WebView.enableSlowWholeDocumentDraw();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // TODO optimize this so on runtime, it
+        //  doesn't take a lot of time to load the app
+        MoHistoryManager.load(this);
+        MoHomePageManager.load(this);
+        MoBookmarkManager.load(this);
         init();
 //        for(int i =0 ; i < 100; i++){
 //            MoHistoryManager.add("i"+i,"title " +i,this);

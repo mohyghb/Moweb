@@ -5,9 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Pair;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -24,17 +22,21 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
+import com.moofficial.moessentials.MoEssentials.MoInflatorView.MoInflaterView;
+import com.moofficial.moessentials.MoEssentials.MoInflatorView.MoViewDisplayable;
 import com.moofficial.moessentials.MoEssentials.MoKeyboardUtils.MoKeyboardUtils;
-import com.moofficial.moessentials.MoEssentials.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoRunnable;
 import com.moofficial.moessentials.MoEssentials.MoSearchable.MoSearchable;
+import com.moofficial.moweb.BookmarkActivity;
 import com.moofficial.moweb.MoBitmap.MoBitmap;
 import com.moofficial.moweb.MoBitmap.MoBitmapSaver;
 import com.moofficial.moweb.MoHTML.MoHTMLAsyncTask;
 
-import com.moofficial.moweb.MoInflatorView.MoInflaterView;
-import com.moofficial.moweb.MoInflatorView.MoViewDisplayable;
 
+import com.moofficial.moweb.MoPopupWindow.MoPopupItemBuilder;
+import com.moofficial.moweb.MoPopupWindow.MoPopupWindow;
+
+import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoUrl.MoURL;
 import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
 import com.moofficial.moweb.Moweb.MoClient.MoChromeClient;
@@ -63,7 +65,7 @@ public class MoTab implements MoSavable, MoLoadable, MoViewDisplayable {
     private MoBitmap moBitmap;
     private boolean isUpToDate;
     private MoTabType tabType;
-    private MoPopUpMenu morePopupMenu;
+    private MoPopupWindow moPopupWindow;
     private MoSearchable moSearchable;
     //private MoSearchEngine searchEngine;
 
@@ -258,20 +260,40 @@ public class MoTab implements MoSavable, MoLoadable, MoViewDisplayable {
     private void initMoreButton(){
         initMorePopupMenu();
         this.moreTabButton = this.view.findViewById(R.id.more_bar_button);
-        this.moreTabButton.setOnClickListener(view -> morePopupMenu.show(view));
+        this.moreTabButton.setOnClickListener(view -> moPopupWindow.show(view));
     }
 
     private void initMorePopupMenu(){
-        this.morePopupMenu = new MoPopUpMenu(this.context).setEntries(
-                new Pair<>(context.getString(R.string.find_in_page), new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        moSearchable.activateSpecialMode();
-                        return false;
-                    }
-                })
-        );
+        this.moPopupWindow = new MoPopupWindow(this.context)
+                .groupViewsHorizontally(
+                        new MoPopupItemBuilder(this.context)
+                                .buildImageButton(R.drawable.ic_baseline_chevron_right_24,
+                                        view-> stackTabHistory.goForwardIfPossible())
+                                .buildImageButton(R.drawable.ic_baseline_star_24,
+                                        R.drawable.ic_baseline_star_border_24, view -> bookmarkThisUrl(),
+                                        ()-> MoBookmarkManager.has(this.url.getUrlString()))
+                                .build()
+                )
+                .setViews(
+                        new MoPopupItemBuilder(this.context)
+                                .buildTextButton(R.string.find_in_page,
+                                        view -> moSearchable.activateSpecialMode())
+                                .buildTextButton(R.string.bookmark_title,
+                                        view-> BookmarkActivity.startActivity(this.context))
+                                .build()
+                );
     }
+
+    /**
+     * bookmarks or un-bookmarks this url
+     * that the tab is currently showing
+     */
+    private void bookmarkThisUrl(){
+        MoBookmarkManager.add(this.context,this.url.getUrlString(),this.moWebView.getTitle());
+    }
+
+
+
 
     private void initMoSearchable(){
         this.moSearchable = new MoSearchable(this.context,this.view,null){
