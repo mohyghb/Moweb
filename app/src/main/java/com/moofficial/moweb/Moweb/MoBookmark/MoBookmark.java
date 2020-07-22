@@ -6,10 +6,9 @@ import com.moofficial.moessentials.MoEssentials.MoDate.MoDate;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
+import com.moofficial.moessentials.MoEssentials.MoIO.MoSwitchSavable;
 import com.moofficial.moessentials.MoEssentials.MoSearchable.MoSearchableItem;
-import com.moofficial.moessentials.MoEssentials.MoSelectable.MoListSelectable;
 import com.moofficial.moessentials.MoEssentials.MoSelectable.MoSelectableItem;
-import com.moofficial.moweb.Moweb.MoServices.MoSaverBackgroundService;
 import com.moofficial.moweb.Moweb.MoUrl.MoURL;
 
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ import java.util.Objects;
  * a class which can be both a bookmark and a folder
  * based on the type that is given to it
  */
-public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSearchableItem {
+public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem, MoSearchableItem {
 
 
     public static final int FOLDER = 0;
@@ -32,6 +31,7 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSe
     private ArrayList<MoBookmark> subBookmarks = new ArrayList<>();
     private boolean isSelected;
     private boolean isSearched;
+    private boolean isSavable = true;
 
     public MoBookmark(String url,String name){
         this.name = name;
@@ -102,16 +102,19 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSe
 
 
     public void addBookmark(String url,String folder){
-        this.subBookmarks.add(MoBookmarkManager.makeBookmark(url,folder));
+        this.subBookmarks.add(MoBookmarkManager.buildBookmark(url,folder));
     }
 
     public void addFolder(String title){
-        this.subBookmarks.add(MoBookmarkManager.makeFolder(title));
+        this.subBookmarks.add(MoBookmarkManager.buildFolder(title));
     }
 
 
-    public boolean has(String url){
-        return this.url.getUrlString().equals(url);
+
+
+
+    public boolean isFolder(){
+        return this.type == FOLDER;
     }
 
 
@@ -142,11 +145,8 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSe
     private void loadSubBookmarks(Context context, String data) {
         String[] d = MoFile.loadable(data);
         if(MoFile.isValidData(d)){
-            for(String book: d){
-                subBookmarks.add(new MoBookmark(book,context));
-            }
+            MoBookmarkManager.loadInto(context,d,subBookmarks);
         }
-
     }
 
     @Override
@@ -195,5 +195,17 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSe
     @Override
     public void setSearchable(boolean b) {
         this.isSearched = b;
+    }
+
+    // savable
+
+    @Override
+    public boolean isSavable() {
+        return this.isSavable;
+    }
+
+    @Override
+    public void setSavable(boolean b) {
+        this.isSavable = b;
     }
 }

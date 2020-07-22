@@ -18,12 +18,17 @@ import java.util.List;
 // uses our standards to build various views
 public class MoPopupItemBuilder {
 
-    public static final int MO_ITEM_PADDING = MoDynamicUnit.convertDpToPixels(12f);
+    public static final int MO_ITEM_PADDING = MoDynamicUnit.convertDpToPixels(14f);
     public static final int MO_ICON_PADDING = MoDynamicUnit.convertDpToPixels(16f);
+
+    private final int TYPE_TEXT_BUTTON = 0;
+    private final int TYPE_IMAGE_BUTTON = 1;
 
 
     private Context context;
     private ArrayList<View> views = new ArrayList<>();
+    private int textButtonPadding = MO_ITEM_PADDING;
+    private int imageButtonPadding = MO_ICON_PADDING;
 
 
     public MoPopupItemBuilder(Context c){
@@ -31,7 +36,41 @@ public class MoPopupItemBuilder {
     }
 
 
+    public Context getContext() {
+        return context;
+    }
 
+    public MoPopupItemBuilder setContext(Context context) {
+        this.context = context;
+        return this;
+    }
+
+    public ArrayList<View> getViews() {
+        return views;
+    }
+
+    public MoPopupItemBuilder setViews(ArrayList<View> views) {
+        this.views = views;
+        return this;
+    }
+
+    public int getTextButtonPadding() {
+        return textButtonPadding;
+    }
+
+    public MoPopupItemBuilder setTextButtonPadding(int textButtonPadding) {
+        this.textButtonPadding = textButtonPadding;
+        return this;
+    }
+
+    public int getImageButtonPadding() {
+        return imageButtonPadding;
+    }
+
+    public MoPopupItemBuilder setImageButtonPadding(int imageButtonPadding) {
+        this.imageButtonPadding = imageButtonPadding;
+        return this;
+    }
 
     /**
      *
@@ -43,7 +82,7 @@ public class MoPopupItemBuilder {
     public MoPopupItemBuilder buildTextButton(String title, View.OnClickListener clickListener){
         TextView v = new TextView(context);
         v.setText(title);
-        finalViewBuild(v,clickListener);
+        finalViewBuild(v,clickListener,TYPE_IMAGE_BUTTON);
         return this;
     }
 
@@ -58,10 +97,10 @@ public class MoPopupItemBuilder {
      * @param clickListener
      * @return
      */
-    public MoPopupItemBuilder buildImageButton(int drawable, View.OnClickListener clickListener){
+    public MoPopupItemBuilder buildCheckedImageButton(int drawable, View.OnClickListener clickListener){
         ImageButton ib = new ImageButton(context);
         ib.setBackground(context.getDrawable(drawable));
-        finalViewBuild(ib,clickListener);
+        finalViewBuild(ib,clickListener,TYPE_IMAGE_BUTTON);
         return this;
     }
 
@@ -73,8 +112,8 @@ public class MoPopupItemBuilder {
      * @param isChecked
      * @return
      */
-    public MoPopupItemBuilder buildImageButton(int checked, int notChecked,
-                                               @NonNull View.OnClickListener clickListener, MoPopupCondition isChecked){
+    public MoPopupItemBuilder buildCheckedImageButton(int checked, int notChecked,
+                                                      @NonNull View.OnClickListener clickListener, MoPopupCondition isChecked){
         ImageButton ib = new ImageButton(context);
         ib.setBackground(isChecked.getCondition()?getDrawable(checked):getDrawable(notChecked));
         View.OnClickListener switchListener = new View.OnClickListener() {
@@ -86,7 +125,7 @@ public class MoPopupItemBuilder {
                 clickListener.onClick(view);
             }
         };
-        finalViewBuild(ib,switchListener);
+        finalViewBuild(ib,switchListener,TYPE_IMAGE_BUTTON);
         return this;
     }
 
@@ -96,9 +135,9 @@ public class MoPopupItemBuilder {
      * @param v
      * @param clickListener
      */
-    private void finalViewBuild(View v, View.OnClickListener clickListener) {
+    private void finalViewBuild(View v, View.OnClickListener clickListener,int type) {
         v.setOnClickListener(clickListener);
-        applyPadding(v,MO_ITEM_PADDING);
+        applyPadding(v,type);
         makeItRippleOnClick(v);
         views.add(v);
     }
@@ -118,9 +157,17 @@ public class MoPopupItemBuilder {
     /**
      *
      * @param v
-     * @param p
      */
-    private void applyPadding(View v,int p){
+    private void applyPadding(View v,int type){
+        int p = 0;
+        switch (type){
+            case TYPE_IMAGE_BUTTON:
+                p = MO_ICON_PADDING;
+                break;
+            case TYPE_TEXT_BUTTON:
+                p = MO_ITEM_PADDING;
+                break;
+        }
         v.setPadding(p,p,p,p);
     }
 

@@ -21,9 +21,9 @@ import java.util.List;
 public class MoPopupWindow {
 
     public static final int MAX_HEIGHT = 1200;
-    public static final int MAX_WIDTH  = 700;
+    public static final int MAX_WIDTH  = 800;
     public static final int MIN_HEIGHT = 400;
-    public static final int MIN_WIDTH  = 300;
+    public static final int MIN_WIDTH  = 500;
 
     private ArrayList<View> allViews = new ArrayList<>();
     private PopupWindow popupWindow;

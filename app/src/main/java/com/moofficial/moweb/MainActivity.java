@@ -16,7 +16,7 @@ import com.moofficial.moessentials.MoEssentials.MoAnimation.MoAnimation;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moweb.MoSection.MoSectionManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
-import com.moofficial.moweb.Moweb.MoHistory.MoHistoryManager;
+import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoServices.MoSaverBackgroundService;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;

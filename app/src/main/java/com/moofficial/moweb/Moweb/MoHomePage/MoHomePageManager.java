@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoReadWrite.MoReadWrite;
+import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 
 import java.util.ArrayList;
 
@@ -25,7 +26,7 @@ public class MoHomePageManager {
         MoHomePage p = new MoHomePage(url);
         if(!homePages.contains(p)){
             homePages.add(p);
-            activateOneIfNoneIsActivated();
+            activateOneIfNoneIsActivated(context);
             save(context);
             return true;
         }
@@ -51,9 +52,13 @@ public class MoHomePageManager {
     /**
      *
      */
-    public static void activateOneIfNoneIsActivated(){
+    public static void activateOneIfNoneIsActivated(Context c){
         if(activeHomePageIndex == NONE_ACTIVATED || activeHomePageIndex >= homePages.size()){
-            activeHomePageIndex = homePages.size()-1;
+            if(homePages.isEmpty()){
+                activeHomePageIndex = NONE_ACTIVATED;
+            }else{
+                activate(c,homePages.size()-1);
+            }
         }
     }
 
@@ -67,7 +72,7 @@ public class MoHomePageManager {
                 homePages.remove(i);
             }
         }
-        activateOneIfNoneIsActivated();
+        activateOneIfNoneIsActivated(context);
         save(context);
     }
 
@@ -111,7 +116,7 @@ public class MoHomePageManager {
                         }catch (Exception ignore){}
                     }
                 }
-                activateOneIfNoneIsActivated();
+                activateOneIfNoneIsActivated(context);
             }
         }
     }
@@ -124,5 +129,29 @@ public class MoHomePageManager {
     public static ArrayList<MoHomePage> get(){
         return homePages;
     }
+
+
+    /**
+     * returns the current activated home page
+     * TODO: this might cause index outta bound exception be careful
+     * @return
+     */
+    public static MoHomePage getCurrentActivatedHomePage(){
+        return homePages.get(activeHomePageIndex);
+    }
+
+    /**
+     * returns the home page url that the user has set up or
+     * the home page of the search engine of their choice
+     * @return
+     */
+    public static String getCurrentActivatedURL(){
+        if(activeHomePageIndex == NONE_ACTIVATED) {
+            return MoSearchEngine.instance.homePage();
+        }else{
+            return getCurrentActivatedHomePage().getUrl();
+        }
+    }
+
 
 }

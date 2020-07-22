@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 
 
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
-import com.moofficial.moweb.Moweb.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 

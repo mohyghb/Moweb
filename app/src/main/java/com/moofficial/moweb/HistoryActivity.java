@@ -1,42 +1,30 @@
 package com.moofficial.moweb;
 
-import android.animation.Animator;
-import android.animation.LayoutTransition;
-import android.os.Build;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.transition.TransitionManager;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.LayoutAnimationController;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.MenuItemCompat;
 
 
 import com.moofficial.moessentials.MoEssentials.MoPopUpMenu.MoPopUpMenu;
 
 import com.moofficial.moessentials.MoEssentials.MoRecyclerView.MoRecyclerView;
 import com.moofficial.moweb.MoSearch.MoSearchViewFormatter;
-import com.moofficial.moweb.Moweb.MoHistory.MoHistory;
-import com.moofficial.moweb.Moweb.MoHistory.MoHistoryManager;
-import com.moofficial.moweb.Moweb.MoHistory.MoHistoryRecyclerAdapter;
+import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistory;
+import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
+import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryRecyclerAdapter;
 
 public class HistoryActivity extends AppCompatActivity {
 
@@ -144,6 +132,10 @@ public class HistoryActivity extends AppCompatActivity {
 
 
 
+    public static void launch(Context c){
+        Intent i = new Intent(c,HistoryActivity.class);
+        c.startActivity(i);
+    }
 
 
 

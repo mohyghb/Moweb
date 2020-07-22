@@ -15,9 +15,6 @@ import com.moofficial.moessentials.MoEssentials.MoRecyclerView.MoRecyclerView;
 
 
 import com.moofficial.moweb.MoSection.MoSectionManager;
-import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
-import com.moofficial.moweb.Moweb.MoHistory.MoHistoryManager;
-import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabRecyclerAdapter;
@@ -122,11 +119,11 @@ public class MoTabSectionManager {
     private void initAddPopUpMenu(){
         addPopUpMenu = new MoPopUpMenu(mainActivity).setEntries(
                         new Pair<>(mainActivity.getString(R.string.NewTab), menuItem -> {
-                            MoTabsManager.addTab(mainActivity, MoSearchEngine.instance.homePage());
+                            MoTabsManager.addTab(mainActivity, MoSearchEngine.instance.homePage(),false);
                             return false;
                         }),
                         new Pair<>(mainActivity.getString(R.string.NewIncognitoTab), menuItem -> {
-                            MoTabsManager.addIncognitoTab(mainActivity,MoSearchEngine.instance.homePage());
+                            MoTabsManager.addIncognitoTab(mainActivity,MoSearchEngine.instance.homePage(),false);
                             return false;
                         }),
                         new Pair<>(mainActivity.getString(R.string.Clear_All_Normal_Tabs), menuItem -> {

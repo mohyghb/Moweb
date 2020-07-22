@@ -1,4 +1,4 @@
-package com.moofficial.moweb.Moweb.MoHistory;
+package com.moofficial.moweb.Moweb.MoWebview.MoHistory;
 
 import android.content.Context;
 import android.webkit.WebHistoryItem;
@@ -13,13 +13,12 @@ import com.moofficial.moweb.MoString.MoString;
 import com.moofficial.moweb.Moweb.MoUrl.MoURL;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
 
-import java.util.Collection;
 import java.util.List;
 
 public class MoHistory implements MoSavable, MoLoadable {
 
 
-    private final String SEP_KEY = "&mohis&tory&";
+
     private final float SUGGESTION_TOLERANCE = 0.7f;
 
     private final int TEXT_COUNT = 20;
@@ -145,7 +144,8 @@ public class MoHistory implements MoSavable, MoLoadable {
      * same as this url and title
      */
     public boolean isSame(String url,String title){
-        return this.url.getUrlString().equals(url) && this.title.equals(title);
+        return this.url.getUrlString().toLowerCase().equals(url.toLowerCase()) &&
+                this.title.toLowerCase().equals(title.toLowerCase());
     }
 
 

@@ -27,6 +27,16 @@ android {
         targetCompatibility = 1.8
     }
 
+
+    sourceSets {
+        main {
+            res.srcDirs =
+                    [
+                            'src/main/res/mo_layouts',
+                            'src/main/res'
+                    ]
+        }
+    }
 }
 
 dependencies {

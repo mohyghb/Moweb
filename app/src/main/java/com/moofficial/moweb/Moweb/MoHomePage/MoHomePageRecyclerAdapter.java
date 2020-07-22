@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.moofficial.moessentials.MoEssentials.MoAnimation.MoAnimation;
+import com.moofficial.moessentials.MoEssentials.MoDelete.MoDeleteUtils;
 import com.moofficial.moessentials.MoEssentials.MoDelete.MoListDeletable;
 import com.moofficial.moessentials.MoEssentials.MoDelete.MoListDelete;
 import com.moofficial.moessentials.MoEssentials.MoInflatorView.MoInflaterView;
@@ -41,8 +42,7 @@ public class MoHomePageRecyclerAdapter extends MoPreviewAdapter<MoHomePageViewHo
         radioButtonPress(holder, position);
         pressCard(holder, position);
         longPressCard(holder,position);
-        applyColorDelete(holder, homePage);
-
+        MoDeleteUtils.applyDeleteColor(this.context,holder.coverLayout,homePage);
     }
 
     private void hideRadioButton(@NonNull MoHomePageViewHolder holder) {
@@ -90,14 +90,6 @@ public class MoHomePageRecyclerAdapter extends MoPreviewAdapter<MoHomePageViewHo
             }
             return false;
         });
-    }
-
-    private void applyColorDelete(@NonNull MoHomePageViewHolder holder, MoHomePage homePage) {
-        if(homePage.isSelected()){
-            holder.coverLayout.setBackgroundColor(context.getColor(R.color.delete_item_low_transparency_color));
-        }else{
-            holder.coverLayout.setBackgroundColor(context.getColor(R.color.transparent));
-        }
     }
 
     @NonNull

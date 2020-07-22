@@ -209,46 +209,28 @@ public class MoTabsManager {
     }
 
 
-    /**
-     * adds a tab to the list and sets the content view to that tab
-     * @param context
-     * @param url
-     */
-    public static void addTab(Context context, String url) {
-        MoTabsManager.newTab(context, url,null);
-        MoTabController.instance.setIndex(tabs.size() - 1,MoTabType.TYPE_NORMAL);
-    }
+
 
     /**
      * adds a normal tab with a parent
      * @param context
      * @param url
-     * @param parentTab
      */
-    public static void addTab(Context context, String url,MoTab parentTab) {
-        MoTabsManager.newTab(context, url,parentTab);
+    public static void addTab(Context context, String url,boolean getCurrentAsParent) {
+        MoTabsManager.newTab(context, url,getCurrentAsParent?MoTabController.instance.getCurrent():null);
         MoTabController.instance.setIndex(tabs.size() - 1,MoTabType.TYPE_NORMAL);
     }
 
 
-    /**
-     * adds incognito tab with no parent tab
-     * @param a
-     * @param url
-     */
-    public static void addIncognitoTab(Activity a,String url){
-        MoTabsManager.newIncognitoTab(a,url,null);
-        MoTabController.instance.setIndex(incognitoTabs.size() - 1,MoTabType.TYPE_INCOGNITO);
-    }
+
 
     /**
      * adds incognito tab with parent tab
      * @param a
      * @param url
-     * @param parentTab
      */
-    public static void addIncognitoTab(Activity a,String url,MoTab parentTab){
-        MoTabsManager.newIncognitoTab(a,url,parentTab);
+    public static void addIncognitoTab(Activity a,String url,boolean getCurrentAsParent){
+        MoTabsManager.newIncognitoTab(a,url,getCurrentAsParent?MoTabController.instance.getCurrent():null);
         MoTabController.instance.setIndex(incognitoTabs.size() - 1,MoTabType.TYPE_INCOGNITO);
     }
 

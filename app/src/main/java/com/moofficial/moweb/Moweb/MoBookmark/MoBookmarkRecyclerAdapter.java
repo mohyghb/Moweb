@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.moofficial.moessentials.MoEssentials.MoDelete.MoDeleteUtils;
 import com.moofficial.moessentials.MoEssentials.MoDelete.MoListDeletable;
 import com.moofficial.moessentials.MoEssentials.MoDelete.MoListDelete;
 import com.moofficial.moessentials.MoEssentials.MoInflatorView.MoInflaterView;
@@ -37,6 +38,9 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
     @Override
     protected void onBindViewHolderDifferentVersion(@NonNull MoBookmarkViewHolder h, int i) {
         MoBookmark bookmark = dataSet.get(i);
+
+        if (wasDeleted(h, bookmark)) return;
+
         switch (bookmark.getType()){
             case MoBookmark.BOOKMARK:
                 h.url.setText(bookmark.getUrl());
@@ -49,6 +53,19 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
         }
         onClickListener(h, i);
         onLongClickListener(h, i);
+        MoDeleteUtils.applyDeleteColor(this.context,h.coverLayout,bookmark);
+    }
+
+    private boolean wasDeleted(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark) {
+        if(!bookmark.isSavable()){
+            // make it so that the user thinks it's gone (or deleted for the time being)
+            // then with the next load, everything will be right
+            h.itemView.setVisibility(View.GONE);
+            return true;
+        }else{
+            h.itemView.setVisibility(View.VISIBLE);
+        }
+        return false;
     }
 
     private void onLongClickListener(@NonNull MoBookmarkViewHolder h, int i) {

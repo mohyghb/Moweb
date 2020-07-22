@@ -2,12 +2,12 @@ package com.moofficial.moweb.Moweb.MoWebview.MoStackTabHistory;
 
 
 import android.content.Context;
+import android.widget.Toast;
 
 
 import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
-import com.moofficial.moweb.Moweb.MoHistory.MoHistory;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebView;
 
 import java.util.ArrayList;
@@ -18,6 +18,9 @@ import java.util.Arrays;
 // it has a mutual connection with a mo web view
 public class MoStackTabHistory implements MoSavable, MoLoadable {
 
+    // millisecond of double pressing the back button to jump back two goBacks
+    private final int DOUBLE_BACK_PRESS_TOLERANCE = 1200;
+
     private static final int ACTION_BACK = 0;
     private static final int ACTION_FORWARD = 1;
     private static final int ACTION_NULL = 2;
@@ -26,6 +29,7 @@ public class MoStackTabHistory implements MoSavable, MoLoadable {
     private int currentIndex = 0;
     private MoWebView webView;
     private int previousAction = ACTION_NULL;
+    private long lastBackPressed;
 
     public MoStackTabHistory(){
 
@@ -41,7 +45,7 @@ public class MoStackTabHistory implements MoSavable, MoLoadable {
      * than the last url added
      *
      */
-    public void add(){
+    public void update(){
         @SuppressWarnings("ConstantConditions")
         String url = webView.getWebView().copyBackForwardList().getCurrentItem().getUrl();
         if(url!=null && list.isEmpty() || !list.get(currentIndex).equals(url) && previousAction == ACTION_NULL){
@@ -72,7 +76,7 @@ public class MoStackTabHistory implements MoSavable, MoLoadable {
      * @return true if the stack has more than one url and the web view is not null
      */
     public boolean canGoBack(){
-        return this.webView.getWebView() != null && currentIndex>0;
+        return this.webView != null && currentIndex>0;
     }
 
     /**
@@ -84,11 +88,17 @@ public class MoStackTabHistory implements MoSavable, MoLoadable {
     public void goBack(){
         previousAction = ACTION_BACK;
         currentIndex--;
+        if(canGoBack()&& System.currentTimeMillis() - lastBackPressed <= DOUBLE_BACK_PRESS_TOLERANCE){
+            // go back one more
+            currentIndex--;
+            //Toast.makeText(this.webView.getContext(),"double press",Toast.LENGTH_SHORT).show();
+        }
         this.webView.loadUrl(getCurrentURL());
+        lastBackPressed = System.currentTimeMillis();
     }
 
     public boolean canGoForward(){
-        return this.webView.getWebView()!=null && currentIndex< list.size()-1;
+        return this.webView!=null && currentIndex< list.size()-1;
     }
 
     /**

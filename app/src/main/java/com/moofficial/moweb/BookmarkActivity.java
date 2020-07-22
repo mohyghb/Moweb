@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.moofficial.moessentials.MoEssentials.MoDelete.MoListDelete;
 import com.moofficial.moessentials.MoEssentials.MoRecyclerView.MoRecyclerView;
@@ -34,8 +35,8 @@ public class BookmarkActivity extends AppCompatActivity {
     private void init(){
         initRecyclerAdapter();
         initRecyclerView();
-        initMoSearchable();
-//        initMoListDelete();
+        //initMoSearchable();
+        initMoListDelete();
 //        initListViewSync();
     }
 
@@ -48,8 +49,20 @@ public class BookmarkActivity extends AppCompatActivity {
         this.recyclerView.show();
     }
 
-    private void initMoSearchable() {
-        this.moSearchable = new MoSearchable(this,findViewById(R.id.root_bookmark),this.recyclerAdapter);
+//    private void initMoSearchable() {
+//        this.moSearchable = new MoSearchable(this,findViewById(R.id.root_bookmark),this.recyclerAdapter);
+//    }
+
+    private void initMoListDelete(){
+        this.moListDelete = new MoListDelete(this,findViewById(R.id.root_bookmark),this.recyclerAdapter);
+        this.moListDelete.setCounterView(R.id.title_book_mark_activity," Selected")
+                         .setLoadTitleAfter(true)
+                         .setNormalViews(R.id.add_folder_floating_button,R.id.include_search_bar)
+                         .setUnNormalViews(R.id.include_bottom_delete)
+                         .setCancelButton(R.id.cancel_delete_mode)
+                         .setConfirmButton(R.id.delete_button_layout)
+        ;
+        this.moListDelete.setInvisible(View.GONE);
     }
 
 

@@ -19,6 +19,7 @@ import com.google.android.material.button.MaterialButton;
 import com.moofficial.moessentials.MoEssentials.MoInflatorView.MoInflaterView;
 import com.moofficial.moweb.MoClipboard.MoClipboard;
 
+import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoPopUpTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
@@ -54,7 +55,7 @@ public class MoHitTestResultParser {
         this.webView = webView;
         // for detecting when the user clicks an element
         this.elementDetection = new MoWebElementDetection(webView);
-        this.webView.getWebView().addJavascriptInterface(this.elementDetection,MoWebElementDetection.CLASS_NAME);
+        this.webView.addJavascriptInterface(this.elementDetection,MoWebElementDetection.CLASS_NAME);
         clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
     }
 
@@ -143,12 +144,12 @@ public class MoHitTestResultParser {
 
     // opens this url in new tab
     private void openInNewTab(){
-        MoTabsManager.addTab(context,href,webView.getTab());
+        MoTabsManager.addTab(context,href,true);
         dismissDialog();
     }
 
     private void openInNewIncognitoTab(){
-        MoTabsManager.addIncognitoTab((Activity) context,href,webView.getTab());
+        MoTabsManager.addIncognitoTab((Activity) context,href, true);
         dismissDialog();
     }
 
@@ -177,7 +178,7 @@ public class MoHitTestResultParser {
      * this method returns the text that is selected in web view
      */
     void onTextSelected(){
-        webView.getWebView().evaluateJavascript("(function(){return window.getSelection().toString()})()",
+        webView.evaluateJavascript("(function(){return window.getSelection().toString()})()",
                 value -> {
                     selectedText = value.replace("\"","");
                     smartTextSearch();

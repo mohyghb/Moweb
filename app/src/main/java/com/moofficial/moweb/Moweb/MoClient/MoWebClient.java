@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import java.net.URISyntaxException;
 
-public abstract class MoWebClient extends WebViewClient {
+public class MoWebClient extends WebViewClient {
 
 
     private static final String INTENT_URL = "intent:";
@@ -33,11 +33,8 @@ public abstract class MoWebClient extends WebViewClient {
     }
 
 
-    @Override
-    public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
-        onUrlChanged(url,isReload);
-        super.doUpdateVisitedHistory(view, url, isReload);
-    }
+
+
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
@@ -84,7 +81,6 @@ public abstract class MoWebClient extends WebViewClient {
 
 
 
-    protected abstract void onUrlChanged(String url, boolean isReload);
 
 
 }

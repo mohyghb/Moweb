@@ -19,12 +19,11 @@ public class MoIncognitoTab extends MoTab {
         a.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,WindowManager.LayoutParams.FLAG_SECURE);
     }
 
-    /**
-     * adds the search to search history
-     */
     @Override
-    public void addSearchToHistory(String title) {
+    protected void initWebView() {
         // we do not need to add anything to the search history
         // because this tab is incognito
+        moWebView.setSaveHistory(false);
+        super.initWebView();
     }
 }

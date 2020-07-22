@@ -142,7 +142,7 @@ public class MoWebElementDetection extends Object {
     }
 
 
-    boolean isValidDialog(){
+    boolean isValidDialog() {
         return isValidVar(href) || isValidVar(innerText);
     }
 

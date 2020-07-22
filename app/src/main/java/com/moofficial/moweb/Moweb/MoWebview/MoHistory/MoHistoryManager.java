@@ -1,4 +1,4 @@
-package com.moofficial.moweb.Moweb.MoHistory;
+package com.moofficial.moweb.Moweb.MoWebview.MoHistory;
 
 import android.content.Context;
 
@@ -37,7 +37,6 @@ public class MoHistoryManager {
         // history saving
         if(!historyEnabled)
             return;
-
         MoHistory last = getLastHistory();
         if(last!=null && last.isSame(url,title)){
             // if the provided url and title

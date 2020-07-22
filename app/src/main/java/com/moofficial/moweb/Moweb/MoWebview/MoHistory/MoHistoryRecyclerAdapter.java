@@ -1,4 +1,4 @@
-package com.moofficial.moweb.Moweb.MoHistory;
+package com.moofficial.moweb.Moweb.MoWebview.MoHistory;
 
 import android.content.Context;
 import android.view.View;
