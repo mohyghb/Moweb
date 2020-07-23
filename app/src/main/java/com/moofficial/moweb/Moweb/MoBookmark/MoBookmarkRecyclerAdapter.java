@@ -28,10 +28,20 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
 
     private MoListDelete moListDelete;
     private Context context;
+    private MoOnOpenFolderListener openFolderListener = folder -> {};
 
     public MoBookmarkRecyclerAdapter(Context context, List<MoBookmark> dataSet) {
         super(dataSet);
         this.context = context;
+    }
+
+    public MoOnOpenFolderListener getOpenFolderListener() {
+        return openFolderListener;
+    }
+
+    public MoBookmarkRecyclerAdapter setOpenFolderListener(MoOnOpenFolderListener openFolderListener) {
+        this.openFolderListener = openFolderListener;
+        return this;
     }
 
     @SuppressLint("SetTextI18n")
@@ -39,7 +49,7 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
     protected void onBindViewHolderDifferentVersion(@NonNull MoBookmarkViewHolder h, int i) {
         MoBookmark bookmark = dataSet.get(i);
 
-        if (wasDeleted(h, bookmark)) return;
+        if (wasDeleted(h, bookmark,i)) return;
 
         switch (bookmark.getType()){
             case MoBookmark.BOOKMARK:
@@ -51,12 +61,12 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
                 h.title.setText(bookmark.getName());
                 break;
         }
-        onClickListener(h, i);
+        onClickListener(h, bookmark,i);
         onLongClickListener(h, i);
         MoDeleteUtils.applyDeleteColor(this.context,h.coverLayout,bookmark);
     }
 
-    private boolean wasDeleted(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark) {
+    private boolean wasDeleted(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark,int po) {
         if(!bookmark.isSavable()){
             // make it so that the user thinks it's gone (or deleted for the time being)
             // then with the next load, everything will be right
@@ -78,13 +88,17 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
         });
     }
 
-    private void onClickListener(@NonNull MoBookmarkViewHolder h, int i) {
+    private void onClickListener(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark,int i) {
         h.cardView.setOnClickListener(view -> {
             if(moListDelete.isInActionMode()){
                 onSelect(i);
             }else{
-                // Todo
-                //  open this bookmark into a tab
+                if(bookmark.isFolder()){
+                    openFolderListener.openFolder(bookmark);
+                }else{
+                    // Todo
+                    //  open this bookmark into a tab
+                }
             }
         });
     }
@@ -113,6 +127,7 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
     public void deleteSelected() {
         for(int i = dataSet.size() - 1;i>=0;i--){
             if(dataSet.get(i).isSelected()){
+                MoBookmarkManager.removeFromAllPlaces(dataSet.get(i));
                 dataSet.remove(i);
             }
         }

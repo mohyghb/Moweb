@@ -26,7 +26,7 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
 
     private String name;
     private MoURL url;
-    private MoDate date;
+    private MoDate date = new MoDate();
     private int type = BOOKMARK;
     private ArrayList<MoBookmark> subBookmarks = new ArrayList<>();
     private boolean isSelected;

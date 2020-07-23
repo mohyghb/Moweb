@@ -77,13 +77,18 @@ public class MoBookmarkManager {
      */
     private static boolean add(Context context,MoBookmark bm){
         if(bm.isFolder() || !has(bm.getUrl())){
-            bookmarks.add(bm);
+            addToEveryField(bm);
             save(context);
-            Toast.makeText(context, "added bookmark", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Added bookmark", Toast.LENGTH_SHORT).show();
             return true;
         }else{
             return false;
         }
+    }
+
+    private static void addToEveryField(MoBookmark bm){
+        bookmarks.add(bm);
+        addToMap(bm);
     }
 
     /**
@@ -178,6 +183,11 @@ public class MoBookmarkManager {
 
     public static ArrayList<MoBookmark> getBookmarks(){
         return bookmarks;
+    }
+
+
+    public static void removeFromAllPlaces(MoBookmark bm){
+        mapOfBookmarks.remove(bm.getUrl());
     }
 
 //    /**

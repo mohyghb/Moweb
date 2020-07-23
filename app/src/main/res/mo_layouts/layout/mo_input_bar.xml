@@ -23,45 +23,23 @@
             android:orientation="horizontal">
 
 
-            <ImageButton
-                android:id="@+id/close_add_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="4dp"
-                android:src="@drawable/ic_chevron_left_black_30dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/add_bar_edit_text"
+                android:id="@+id/input_bar_edit_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:background="@color/transparent"
-                android:hint="@string/home_page_hint_edit_text"
-                android:imeOptions="actionSearch"
+                android:hint="@string/add_folder_in_bookmark_hint_dialog"
+                android:imeOptions="actionDone"
                 android:inputType="textWebEditText"
                 android:padding="8dp"
                 android:singleLine="true"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/add_add_bar"
-                app:layout_constraintStart_toEndOf="@id/close_add_bar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageButton
-                android:id="@+id/add_add_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="4dp"
-                android:src="@drawable/ic_add_black_24dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

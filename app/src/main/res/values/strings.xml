@@ -94,6 +94,7 @@
 
     <!--Bookmark-->
     <string name="bookmark_title">Bookmarks</string>
+    <string name="add_folder_in_bookmark_hint_dialog">Enter a name</string>
 
 
 </resources>

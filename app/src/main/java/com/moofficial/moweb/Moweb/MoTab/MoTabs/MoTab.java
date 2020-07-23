@@ -263,9 +263,11 @@ public class MoTab implements MoSavable, MoLoadable {
 
 
     private void initMoreButton(){
-        initMorePopupMenu();
         this.moreTabButton = this.view.findViewById(R.id.more_bar_button);
-        this.moreTabButton.setOnClickListener(view -> moPopupWindow.show(view));
+        this.moreTabButton.setOnClickListener(view -> {
+            initMorePopupMenu();
+            moPopupWindow.show(view);
+        });
     }
 
     private void initMorePopupMenu(){

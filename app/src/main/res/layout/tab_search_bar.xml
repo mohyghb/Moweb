@@ -9,7 +9,7 @@
 
     <include
         android:id="@+id/tab_find_bar"
-        layout="@layout/find_bar"
+        layout="@layout/mo_find_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
