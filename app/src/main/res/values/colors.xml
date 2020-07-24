@@ -37,13 +37,16 @@
 
     <color name="snack_bar_text">@color/MoWhite</color>
 
-    <color name="MoBlack">#212427</color>
-    <color name="MoDarkGrey">#292929</color>
+
+
+    <color name="MoBlack">#E9212427</color>
     <color name="MaterialDark">#121212</color>
-    <color name="MaterialGrey">#1C1C1C</color>
-    <color name="MaterialWhite">#E3E3E3</color>
-    <color name="MoWhite">#FAFAFA</color>
+    <color name="MaterialGrey">#232323</color>
+    <color name="MaterialWhite">#F2E3E3E3</color>
+    <color name="MoWhite">#F2FAFAFA</color>
     <color name="MoWhite_v2">#FCFCFC</color>
+    <color name="MoWhite_v3">#DCDCDC</color>
+    <color name="MoGrey">#F28E8E8E</color>
 
 <!--    <color name="MaterialDark">#121212</color>-->
 <!--    <color name="MaterialGrey">#1A1A1A</color>-->

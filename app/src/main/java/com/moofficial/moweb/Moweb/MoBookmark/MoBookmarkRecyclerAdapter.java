@@ -127,8 +127,7 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
     public void deleteSelected() {
         for(int i = dataSet.size() - 1;i>=0;i--){
             if(dataSet.get(i).isSelected()){
-                MoBookmarkManager.removeFromAllPlaces(dataSet.get(i));
-                dataSet.remove(i);
+                MoBookmarkManager.remove(dataSet.get(i));
             }
         }
         MoBookmarkManager.save(context);

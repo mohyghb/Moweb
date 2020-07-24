@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+import static com.moofficial.moweb.Moweb.MoBookmark.MoBookmark.BOOKMARK;
 import static com.moofficial.moweb.Moweb.MoBookmark.MoBookmark.FOLDER;
 
 public class MoBookmarkManager {
@@ -19,6 +20,7 @@ public class MoBookmarkManager {
 
     private static ArrayList<MoBookmark> bookmarks = new ArrayList<>();
     private static HashMap<String,MoBookmark> mapOfBookmarks = new HashMap<>();
+    private static HashMap<String,MoBookmark> mapOfFolders = new HashMap<>();
 
     /**
      * adds the url to bookmark
@@ -48,7 +50,7 @@ public class MoBookmarkManager {
      * @param url
      */
     @SuppressWarnings("ConstantConditions")
-    private static void remove(Context context,String url){
+    static void remove(Context context,String url){
         if(has(url)){
             mapOfBookmarks.get(url).setSavable(false);
             Toast.makeText(context, "Removed " + url, Toast.LENGTH_SHORT).show();
@@ -76,16 +78,28 @@ public class MoBookmarkManager {
      * @return
      */
     private static boolean add(Context context,MoBookmark bm){
-        if(bm.isFolder() || !has(bm.getUrl())){
+        boolean addThisBookmark = false;
+        switch (bm.getType()){
+            case FOLDER:
+                addThisBookmark = !hasFolder(bm.getName());
+                break;
+            case BOOKMARK:
+                addThisBookmark = !has(bm.getUrl());
+                break;
+        }
+        if(addThisBookmark){
             addToEveryField(bm);
             save(context);
-            Toast.makeText(context, "Added bookmark", Toast.LENGTH_SHORT).show();
             return true;
-        }else{
-            return false;
         }
+        return false;
     }
 
+
+    /**
+     *
+     * @param bm
+     */
     private static void addToEveryField(MoBookmark bm){
         bookmarks.add(bm);
         addToMap(bm);
@@ -136,8 +150,13 @@ public class MoBookmarkManager {
      * @param b
      */
     public static void addToMap(MoBookmark b){
-        if(!b.isFolder()){
-            mapOfBookmarks.put(b.getUrl(),b);
+        switch (b.getType()){
+            case FOLDER:
+                mapOfFolders.put(b.getName(),b);
+                break;
+            case BOOKMARK:
+                mapOfBookmarks.put(b.getUrl(),b);
+                break;
         }
     }
 
@@ -151,6 +170,17 @@ public class MoBookmarkManager {
     public static boolean has(String url){
         return mapOfBookmarks.containsKey(url) && Objects.requireNonNull(mapOfBookmarks.get(url)).isSavable();
     }
+
+    /**
+     * returns true if there was a folder with
+     * this title
+     * @param title
+     * @return
+     */
+    public static boolean hasFolder(String title){
+        return mapOfFolders.containsKey(title) && Objects.requireNonNull(mapOfFolders.get(title)).isSavable();
+    }
+
 
     /**
      * makes the url standard
@@ -186,27 +216,30 @@ public class MoBookmarkManager {
     }
 
 
-    public static void removeFromAllPlaces(MoBookmark bm){
-        mapOfBookmarks.remove(bm.getUrl());
+
+
+
+    /**
+     * removes the bookmark completely
+     */
+    private static void remove(HashMap<String,MoBookmark> map,String key){
+        if(map.containsKey(key)){
+            Objects.requireNonNull(map.get(key)).setSavable(false);
+            map.remove(key);
+        }
     }
 
-//    /**
-//     * removes the bookmark with url from the bookmark list
-//     * @param url
-//     * @param bookmarkList
-//     * @return
-//     */
-//    static boolean remove(String url, List<MoBookmark> bookmarkList){
-//        for(int i = 0;i < bookmarkList.size();i++){
-//            MoBookmark bookmark = bookmarkList.get(i);
-//            if(bookmark.getType() == FOLDER){
-//                return bookmark.remove(url);
-//            }else if(bookmark.getUrl().equals(url)){
-//                bookmarkList.remove(i);
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+    public static void remove(MoBookmark bm){
+        switch (bm.getType()){
+            case BOOKMARK:
+                remove(mapOfBookmarks,bm.getUrl());
+                break;
+            case FOLDER:
+                remove(mapOfFolders,bm.getName());
+                break;
+        }
+
+    }
+
 
 }

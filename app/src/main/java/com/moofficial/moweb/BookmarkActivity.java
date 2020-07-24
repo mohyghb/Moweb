@@ -12,18 +12,24 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.moofficial.moessentials.MoEssentials.MoDelete.MoListDelete;
+import com.moofficial.moessentials.MoEssentials.MoDelete.MoOnDeleteFinished;
+import com.moofficial.moessentials.MoEssentials.MoDialog.MoDialogBuilder;
+import com.moofficial.moessentials.MoEssentials.MoDialog.MoOnDialogTextInputListener;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
 import com.moofficial.moessentials.MoEssentials.MoRecyclerView.MoRecyclerView;
+import com.moofficial.moessentials.MoEssentials.MoSearchable.MoOnSearchFinished;
 import com.moofficial.moessentials.MoEssentials.MoSearchable.MoSearchable;
+import com.moofficial.moessentials.MoEssentials.MoSearchable.MoSearchableItem;
+import com.moofficial.moessentials.MoEssentials.MoSearchable.MoSearchableList;
 import com.moofficial.moessentials.MoEssentials.MoViews.MoListViewSync;
-import com.moofficial.moweb.MoDialog.MoDialogBuilder;
-import com.moofficial.moweb.MoDialog.MoOnDialogTextInputListener;
+import com.moofficial.moweb.MoAppbar.MoAppbarUtils;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkRecyclerAdapter;
 import com.moofficial.moweb.Moweb.MoBookmark.MoOnOpenFolderListener;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 public class BookmarkActivity extends AppCompatActivity implements MoOnOpenFolderListener {
@@ -37,6 +43,7 @@ public class BookmarkActivity extends AppCompatActivity implements MoOnOpenFolde
     private TextView title;
     private FloatingActionButton createNewFileButton;
     private Stack<MoBookmark> folders = new Stack<>();
+    private View parentView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,13 +79,28 @@ public class BookmarkActivity extends AppCompatActivity implements MoOnOpenFolde
 
 
     private void init(){
+        parentView = findViewById(R.id.root_bookmark);
+        removeUnsavableBookmarks();
         initCreateNewFile();
         initTitle();
         initRecyclerAdapter();
         initRecyclerView();
-        //initMoSearchable();
+        initMoSearchable();
         initMoListDelete();
         initListViewSync();
+        MoAppbarUtils.sync(parentView,R.id.mo_appbar,
+                R.id.mo_collapsing_toolbar,
+                R.id.title_book_mark_activity,
+                R.id.menu_app_bar_title);
+    }
+
+    private void removeUnsavableBookmarks(){
+        List<MoBookmark> bookmarks = getCurrentFolderBookmarks();
+        for(int i = bookmarks.size()-1;i>=0;i--){
+            if(!bookmarks.get(i).isSavable()){
+                bookmarks.remove(i);
+            }
+        }
     }
 
     private void initCreateNewFile(){
@@ -121,15 +143,55 @@ public class BookmarkActivity extends AppCompatActivity implements MoOnOpenFolde
         this.recyclerView.show();
     }
 
-//    private void initMoSearchable() {
-//        this.moSearchable = new MoSearchable(this,findViewById(R.id.root_bookmark),this.recyclerAdapter);
-//    }
+    private void initMoSearchable() {
+        this.moSearchable = new MoSearchable(this, parentView, new MoSearchableList() {
+            @Override
+            public List<? extends MoSearchableItem> getSearchableItems() {
+                return getCurrentFolderBookmarks();
+            }
+
+            @Override
+            public void notifyItemChanged(int i) {
+
+            }
+
+            @Override
+            public void notifyDataSetChanged() {
+
+            }
+        });
+        this.moSearchable.setShowNothingWhenSearchEmpty(false)
+                .setSearchOnTextChanged(true)
+                .setSearchTextView(R.id.search_edit_text)
+                .setSearchButton(R.id.menu_app_bar_search_button)
+                .setNormalViews(R.id.include_app_bar,R.id.add_folder_floating_button)
+                .setUnNormalViews(R.id.include_search_bar)
+                .setCancelButton(R.id.close_search_bar)
+                .setClearSearch(R.id.clear_search_bar)
+                .setActivity(this)
+                .setOnSearchFinished(list -> {
+                    //noinspection unchecked
+                    updateRecyclerAdapter((ArrayList<MoBookmark>) list);
+                })
+        ;
+    }
+
+    private void updateRecyclerAdapter(ArrayList<MoBookmark> list) {
+        recyclerAdapter.setDataSet(list);
+        runOnUiThread(() -> recyclerAdapter.notifyDataSetChanged());
+    }
 
     private void initMoListDelete(){
-        this.moListDelete = new MoListDelete(this,findViewById(R.id.root_bookmark),this.recyclerAdapter);
+        this.moListDelete = new MoListDelete(this,parentView,this.recyclerAdapter);
         this.moListDelete.setCounterView(R.id.title_book_mark_activity," Selected")
+                         .setOnDeleteFinished(new MoOnDeleteFinished() {
+                             @Override
+                             public void onDeleteFinished() {
+                                 updateRecyclerAdapter(getCurrentFolderBookmarks());
+                             }
+                         })
                          .setLoadTitleAfter(true)
-                         .setNormalViews(R.id.add_folder_floating_button,R.id.include_search_bar)
+                         .setNormalViews(R.id.add_folder_floating_button,R.id.include_combination)
                          .setUnNormalViews(R.id.include_bottom_delete)
                          .setCancelButton(R.id.cancel_delete_mode)
                          .setConfirmButton(R.id.delete_button_layout)
@@ -139,7 +201,7 @@ public class BookmarkActivity extends AppCompatActivity implements MoOnOpenFolde
 
 
     private void initListViewSync(){
-        this.listViewSync = new MoListViewSync(this.moListDelete);
+        this.listViewSync = new MoListViewSync(this.moListDelete,this.moSearchable);
     }
 
 

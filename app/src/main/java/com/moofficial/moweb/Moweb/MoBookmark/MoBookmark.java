@@ -8,6 +8,7 @@ import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoSwitchSavable;
 import com.moofficial.moessentials.MoEssentials.MoSearchable.MoSearchableItem;
+import com.moofficial.moessentials.MoEssentials.MoSearchable.MoSearchableUtils;
 import com.moofficial.moessentials.MoEssentials.MoSelectable.MoSelectableItem;
 import com.moofficial.moweb.Moweb.MoUrl.MoURL;
 
@@ -30,7 +31,7 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
     private int type = BOOKMARK;
     private ArrayList<MoBookmark> subBookmarks = new ArrayList<>();
     private boolean isSelected;
-    private boolean isSearched;
+    private boolean isSearched = true;
     private boolean isSavable = true;
 
     public MoBookmark(String url,String name){
@@ -183,8 +184,8 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
 
     @Override
     public boolean updateSearchable(Object... objects) {
-        // TODO implement this
-        return false;
+        this.isSearched = MoSearchableUtils.isSearchable(true,objects,this.name,this.url.getUrlString());
+        return isSearchable();
     }
 
     @Override

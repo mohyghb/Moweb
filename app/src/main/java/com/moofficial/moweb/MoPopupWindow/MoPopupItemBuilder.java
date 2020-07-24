@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.moofficial.moweb.MoDynamicUnit.MoDynamicUnit;
+import com.moofficial.moessentials.MoEssentials.MoDynamicUnit.MoDynamicUnit;
 
 import java.util.ArrayList;
 import java.util.List;

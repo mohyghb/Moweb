@@ -7,7 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColor">@color/MoBlack</item>
-        <item name="materialCardViewStyle">@style/MoCardStyle</item>
+        <item name="materialCardViewStyle">@style/MoMaterialCardViewStyleBright</item>
         <item name="android:listViewStyle">@style/MoListStyle</item>
         <item name="recyclerViewStyle">@style/MoListStyle</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationStyle</item>
@@ -23,9 +23,9 @@
         <item name="android:backgroundTint">@color/MoWhite</item>
     </style>
 
-    <style name="MoCardStyle" parent="Widget.MaterialComponents.CardView">
-        <item name="android:backgroundTint">@color/MoWhite_v2</item>
-        <item name="cardElevation">@dimen/card_elevation</item>
+    <style name="MoMaterialCardViewStyleBright" parent="Widget.MaterialComponents.CardView">
+        <item name="android:backgroundTint">@color/MoWhite_v3</item>
+        <item name="cardElevation">3dp</item>
     </style>
 
     <style name="MoBottomNavigationStyleLight" parent="Widget.MaterialComponents.BottomNavigationView">
@@ -56,13 +56,6 @@
 
 
 
-    <style name="MoReceivedMessageCard" parent="Widget.MaterialComponents.CardView">
-        <item name="android:backgroundTint">@color/colorAccent</item>
-    </style>
-
-    <style name="MoSentMessageCard" parent="Widget.MaterialComponents.CardView">
-        <item name="android:backgroundTint">@color/MoWhite</item>
-    </style>
 
 
     <style name="MoSearchAppBarCard" parent="Widget.MaterialComponents.CardView">
