@@ -6,8 +6,7 @@ import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-
-import com.moofficial.moessentials.MoEssentials.MoAnimation.MoAnimation;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoAnimation.MoAnimation;
 
 import java.util.List;
 

@@ -24,7 +24,7 @@
     </style>
 
     <style name="MoMaterialCardViewStyleBright" parent="Widget.MaterialComponents.CardView">
-        <item name="android:backgroundTint">@color/MoWhite_v3</item>
+        <item name="android:backgroundTint">@color/MoWhite_v2</item>
         <item name="cardElevation">3dp</item>
     </style>
 

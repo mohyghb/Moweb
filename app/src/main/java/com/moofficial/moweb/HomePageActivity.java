@@ -1,16 +1,14 @@
 package com.moofficial.moweb;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.moofficial.moessentials.MoEssentials.MoDelete.MoListDelete;
-import com.moofficial.moessentials.MoEssentials.MoRecyclerView.MoRecyclerView;
-import com.moofficial.moessentials.MoEssentials.MoSelectable.MoListSelectable;
-import com.moofficial.moweb.Moweb.MoHomePage.MoHomePage;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoListDelete;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageRecyclerAdapter;
 
@@ -57,8 +55,8 @@ public class HomePageActivity extends AppCompatActivity {
     private void initMoListDeletable(){
         this.moListDelete = new MoListDelete(this,findViewById(R.id.root_home_page_view),this.recyclerAdapter)
                 .setCounterView(R.id.title_home_page," Selected")
-                .setUnNormalViews(R.id.include_bottom_delete)
-                .setNormalViews(R.id.include_add_bar)
+                .addUnNormalViews(R.id.include_bottom_delete)
+                .addNormalViews(R.id.include_add_bar)
                 .setConfirmButton(R.id.delete_button_layout)
                 .setCancelButton(R.id.cancel_delete_mode);
         this.moListDelete.setShowOneActionAtTime(true);

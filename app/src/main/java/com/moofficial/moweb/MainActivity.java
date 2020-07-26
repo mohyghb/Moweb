@@ -1,29 +1,28 @@
 package com.moofficial.moweb;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
-import com.moofficial.moessentials.MoEssentials.MoAnimation.MoAnimation;
-
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoAnimation.MoAnimation;
 import com.moofficial.moweb.MoSection.MoSectionManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
-import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoServices.MoSaverBackgroundService;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoWebUtils;
+import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 
-import static com.moofficial.moweb.MoSection.MoSectionManager.*;
+import static com.moofficial.moweb.MoSection.MoSectionManager.IN_TAB_VIEW;
+import static com.moofficial.moweb.MoSection.MoSectionManager.TABS_VIEW;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // TODO optimize this so on runtime, it
         //  doesn't take a lot of time to load the app
+
+
         MoHistoryManager.load(this);
         MoHomePageManager.load(this);
         MoBookmarkManager.load(this);
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+//
     private void init() {
         MoAnimation.initAllAnimations(this);
         rootView = findViewById(R.id.root_view);

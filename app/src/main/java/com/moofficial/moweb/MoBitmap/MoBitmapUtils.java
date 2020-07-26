@@ -1,21 +1,13 @@
 package com.moofficial.moweb.MoBitmap;
 
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.view.View;
-import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 
-import com.moofficial.moessentials.MoEssentials.MoDynamicUnit.MoDynamicUnit;
-
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoDynamicUnit.MoDynamicUnit;
 
 public class MoBitmapUtils {
 

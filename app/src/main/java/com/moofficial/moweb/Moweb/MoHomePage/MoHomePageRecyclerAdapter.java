@@ -3,21 +3,18 @@ package com.moofficial.moweb.Moweb.MoHomePage;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.moofficial.moessentials.MoEssentials.MoAnimation.MoAnimation;
-import com.moofficial.moessentials.MoEssentials.MoDelete.MoDeleteUtils;
-import com.moofficial.moessentials.MoEssentials.MoDelete.MoListDeletable;
-import com.moofficial.moessentials.MoEssentials.MoDelete.MoListDelete;
-import com.moofficial.moessentials.MoEssentials.MoInflatorView.MoInflaterView;
-import com.moofficial.moessentials.MoEssentials.MoPreviewable.MoPreviewAdapter;
-import com.moofficial.moessentials.MoEssentials.MoSelectable.MoSelectableItem;
-import com.moofficial.moessentials.MoEssentials.MoSelectable.MoSelectableUtils;
-
+import com.moofficial.moessentials.MoEssentials.MoUI.MoAnimation.MoAnimation;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoPreviewable.MoPreviewAdapter;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoDeleteUtils;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoListDeletable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoListDelete;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSelectable.MoSelectableItem;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSelectable.MoSelectableUtils;
 import com.moofficial.moweb.R;
 
 import java.util.List;

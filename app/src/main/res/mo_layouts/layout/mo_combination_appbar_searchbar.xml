@@ -4,10 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <include
+    <com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoBars.MoSearchBar
         android:id="@+id/include_search_bar"
-        layout="@layout/mo_search_bar"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -15,9 +14,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <include
-        android:id="@+id/include_app_bar"
-        layout="@layout/mo_app_bar_menu"
+    <com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoBars.MoToolBar
+        android:id="@+id/include_tool_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

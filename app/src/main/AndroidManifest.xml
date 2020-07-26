@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".BookmarkActivity"></activity>
+
+        <activity android:name=".BookmarkActivity"/>
         <activity android:name=".HomePageActivity" />
         <activity
             android:name=".SettingsActivity"

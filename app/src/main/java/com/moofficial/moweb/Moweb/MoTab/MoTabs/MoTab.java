@@ -22,26 +22,20 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
-import com.moofficial.moessentials.MoEssentials.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoKeyboardUtils.MoKeyboardUtils;
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoRunnable;
-import com.moofficial.moessentials.MoEssentials.MoSearchable.MoSearchable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSearchable.MoSearchable;
 import com.moofficial.moweb.BookmarkActivity;
 import com.moofficial.moweb.HistoryActivity;
 import com.moofficial.moweb.MoBitmap.MoBitmap;
 import com.moofficial.moweb.MoBitmap.MoBitmapSaver;
 import com.moofficial.moweb.MoHTML.MoHTMLAsyncTask;
-
-
 import com.moofficial.moweb.MoPopupWindow.MoPopupItemBuilder;
 import com.moofficial.moweb.MoPopupWindow.MoPopupWindow;
-
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
-import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
-import com.moofficial.moweb.Moweb.MoUrl.MoURL;
-import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
 import com.moofficial.moweb.Moweb.MoClient.MoChromeClient;
-import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
+import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
@@ -50,6 +44,9 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabExceptions.MoTabNotFoundException;
 import com.moofficial.moweb.Moweb.MoTab.MoTabSuggestion;
 import com.moofficial.moweb.Moweb.MoTab.MoTabType.MoTabType;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
+import com.moofficial.moweb.Moweb.MoUrl.MoURL;
+import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
+import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebView;
 import com.moofficial.moweb.R;
 
@@ -324,8 +321,8 @@ public class MoTab implements MoSavable, MoLoadable {
                 .setUpFind(R.id.up_find_bar_button)
                 .setDownFind(R.id.down_find_bar_button)
                 .setCancelButton(R.id.close_find_bar)
-                .setNormalViews(R.id.tab_search_bar_card_view,R.id.suggestion_tab_card_view,R.id.tab_progress)
-                .setUnNormalViews(R.id.tab_find_bar)
+                .addNormalViews(R.id.tab_search_bar_card_view,R.id.suggestion_tab_card_view,R.id.tab_progress)
+                .addUnNormalViews(R.id.tab_find_bar)
                 .setOnSearchListener(s -> {
                     this.moWebView.findAllAsync(s, (index, size, finishedFinding) -> {
                         //disable or enable the buttons based on the index and size

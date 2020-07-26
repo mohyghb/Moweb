@@ -2,16 +2,12 @@ package com.moofficial.moweb.MoPopupWindow;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.moofficial.moessentials.MoEssentials.MoInflatorView.MoInflaterView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moweb.R;
 
 import java.util.ArrayList;

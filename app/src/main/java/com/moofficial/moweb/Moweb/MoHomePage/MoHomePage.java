@@ -5,7 +5,7 @@ import android.content.Context;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
-import com.moofficial.moessentials.MoEssentials.MoSelectable.MoSelectableItem;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSelectable.MoSelectableItem;
 import com.moofficial.moweb.Moweb.MoUrl.MoURL;
 
 import java.util.Objects;
