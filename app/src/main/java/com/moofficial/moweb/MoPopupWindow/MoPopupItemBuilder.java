@@ -97,7 +97,7 @@ public class MoPopupItemBuilder {
      * @param clickListener
      * @return
      */
-    public MoPopupItemBuilder buildCheckedImageButton(int drawable, View.OnClickListener clickListener){
+    public MoPopupItemBuilder buildImageButton(int drawable, View.OnClickListener clickListener){
         ImageButton ib = new ImageButton(context);
         ib.setBackground(context.getDrawable(drawable));
         finalViewBuild(ib,clickListener,TYPE_IMAGE_BUTTON);

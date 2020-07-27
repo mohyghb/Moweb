@@ -27,9 +27,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:contentScrim="@color/setting_toolbar_background"
-                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+                app:layout_scrollFlags="scroll|enterAlways|exitUntilCollapsed"
+                app:titleEnabled="false"
+                app:toolbarId="@+id/home_page_tool_bar">
 
-                app:toolbarId="@+id/toolbar">
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/home_page_tool_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/MoWhite"
+                    android:theme="?attr/actionBarTheme"
+                    android:layout_gravity="bottom"
+                    app:contentInsetEnd="0dp"
+                    app:contentInsetStart="0dp"
+                    app:contentInsetEndWithActions="0dp">
+
+                    <com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoAddBar
+                        android:id="@+id/include_add_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.appcompat.widget.Toolbar>
 
                 <TextView
                     android:id="@+id/title_home_page"
@@ -39,14 +59,14 @@
                     android:fontFamily="sans-serif-thin"
                     android:text="@string/home_page_title"
                     android:textSize="50sp" />
+
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
-
+            android:paddingBottom="?attr/actionBarSize"
             android:fillViewport="true"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
@@ -55,13 +75,7 @@
                 android:layout_height="match_parent"
                 tools:context=".HomePageActivity">
 
-                <com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoBars.MoAddBar
-                    android:id="@+id/include_add_bar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+
 
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -71,7 +85,7 @@
                     android:layout_marginTop="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/include_add_bar" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

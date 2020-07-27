@@ -9,11 +9,11 @@ import android.widget.Toast;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoBasicActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoDialog.MoDialogBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoDialog.MoOnDialogTextInputListener;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoBars.MoBottomBars.MoBottomDeleteBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoBars.MoSearchBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoCardBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewGroupUtils.MoAppbar.MoAppbarUtils;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoBottomBars.MoBottomDeleteBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoSearchBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoListDelete;
@@ -42,7 +42,7 @@ public class BookmarkActivity extends MoBasicActivity implements MoOnOpenFolderL
     private MoSearchBar searchBar;
     private MoToolBar toolBar;
     private MoCardRecyclerView cardRecyclerView;
-    private MoBottomDeleteBar moBottomDeleteBar;
+    private MoBottomDeleteBar bottomDeleteBar;
     private View combinationBar;
 
 
@@ -58,18 +58,18 @@ public class BookmarkActivity extends MoBasicActivity implements MoOnOpenFolderL
 
         combinationBar = toolbar.addToolbar(R.layout.mo_combination_appbar_searchbar);
 
-        moBottomDeleteBar = new MoBottomDeleteBar(this);
-        linearBottom.addView(moBottomDeleteBar.goGone());
-
+        bottomDeleteBar = new MoBottomDeleteBar(this);
+        linearBottom.addView(bottomDeleteBar.goGone());
 
 
         cardRecyclerView = new MoCardRecyclerView(this).makeCardRound();
         cardRecyclerView.customize(new MoCardBuilder(this)
                 .setBackgroundColorId(R.color.transparent),cardRecyclerView.CId());
 
-
         linearNested.addView(cardRecyclerView);
+
     }
+
 
     private void initClass(){
         initSearchBar();
@@ -82,10 +82,10 @@ public class BookmarkActivity extends MoBasicActivity implements MoOnOpenFolderL
         initMoSearchable();
         initMoListDelete();
         initListViewSync();
-        MoAppbarUtils.sync(getRootView(),appBarLayout.getId(),
-                collapsingToolbarLayout.getId(),
-                title.getId(),
-                toolBar.TVId());
+        MoAppbarUtils.sync(appBarLayout,
+                collapsingToolbarLayout,
+                title,
+                findViewById(toolBar.TVId()));
     }
 
 
@@ -120,6 +120,8 @@ public class BookmarkActivity extends MoBasicActivity implements MoOnOpenFolderL
 
     private void initSearchBar(){
         this.searchBar = findViewById(R.id.include_search_bar);
+        searchBar.customize(new MoCardBuilder(this)
+                .setBackgroundColorId(R.color.transparent),searchBar.CVId());
     }
 
     private void initToolBar(){
@@ -192,8 +194,9 @@ public class BookmarkActivity extends MoBasicActivity implements MoOnOpenFolderL
         this.moSearchable.setShowNothingWhenSearchEmpty(false)
                 .setSearchOnTextChanged(true)
                 .setSearchTextView(searchBar.ETId())
+                .setAppBarLayout(appBarLayout)
                 .setSearchButton(toolBar.MId())
-                .addNormalViews(R.id.include_tool_bar)
+                .addNormalViews(R.id.include_tool_bar,floatingActionButton.getView().getId())
                 .addUnNormalViews(R.id.include_search_bar)
                 .setCancelButton(searchBar.LBId())
                 .setClearSearch(searchBar.RBId())
@@ -214,20 +217,12 @@ public class BookmarkActivity extends MoBasicActivity implements MoOnOpenFolderL
         this.moListDelete = new MoListDelete(this,getRootView(),this.recyclerAdapter);
         this.moListDelete.setCounterView(title.getId()," Selected")
                          .setOnDeleteFinished(() -> updateRecyclerAdapter(getCurrentFolderBookmarks()))
-                         .setOnDeleteChanged(b -> {
-                             if(b){
-                                 // then it is in delete mode
-                                 appBarLayout.setExpanded(true,true);
-                                 MoAppbarUtils.disableToolBarScrolling(collapsingToolbarLayout);
-                             }else{
-                                 MoAppbarUtils.enableToolBarScrolling(collapsingToolbarLayout);
-                             }
-                         })
+                         .setOnCanceledListener(() -> updateRecyclerAdapter(getCurrentFolderBookmarks()))
                          .setLoadTitleAfter(true)
-                         .addNormalViews(combinationBar,floatingActionButton.getView())
-                         .addUnNormalViews(moBottomDeleteBar)
-                         .setCancelButton(moBottomDeleteBar.CId())
-                         .setConfirmButton(moBottomDeleteBar.DId())
+                         .addNormalViews(toolBar.LId(),toolBar.MId(),toolBar.RId(),floatingActionButton.getView().getId())
+                         .addUnNormalViews(bottomDeleteBar)
+                         .setCancelButton(bottomDeleteBar.CBId())
+                         .setConfirmButton(bottomDeleteBar.DBId())
         ;
         this.moListDelete.setInvisible(View.GONE);
     }

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPreviewable.MoPreviewAdapter;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoDeleteUtils;
@@ -60,6 +61,7 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
                 h.title.setText(bookmark.getName());
                 break;
         }
+        h.imageTextLogo.setText(MoString.getSignature(bookmark.getName()));
         onClickListener(h, bookmark,i);
         onLongClickListener(h, i);
         MoDeleteUtils.applyDeleteColor(this.context,h.coverLayout,bookmark);

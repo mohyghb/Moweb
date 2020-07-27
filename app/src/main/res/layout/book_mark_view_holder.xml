@@ -15,6 +15,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         app:cardCornerRadius="@dimen/mo_style_card_corner"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,14 +37,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <include
-                    android:id="@+id/include_circular_profile"
-                    layout="@layout/circular_profile"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                <com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoImageTextLogo
+                    android:id="@+id/include_logo"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"/>
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -54,7 +55,7 @@
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/include_circular_profile"
+                    app:layout_constraintStart_toEndOf="@id/include_logo"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView

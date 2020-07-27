@@ -38,7 +38,7 @@ public class MoWebView implements MoSavable,MoLoadable {
             super.doUpdateVisitedHistory(view, url, isReload);
             onUpdateUrlListener.onUrlUpdate(url,isReload);
             stackTabHistory.update();
-            if(saveHistory){
+            if(saveHistory && !isReload){
                 MoHistoryManager.add(url,view.getTitle(),context);
             }
             // save history
@@ -289,6 +289,14 @@ public class MoWebView implements MoSavable,MoLoadable {
 
     public void setFindListener(WebView.FindListener findListener){
         wv.setFindListener(findListener);
+    }
+
+    /**
+     * reloads/refreshes the web page
+     * (url that we are currently on)
+     */
+    public void reload(){
+        wv.reload();
     }
 
     /**

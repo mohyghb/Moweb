@@ -19,6 +19,7 @@ import android.widget.TextView;
 import androidx.cardview.widget.CardView;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.moofficial.moessentials.MoEssentials.MoConnections.MoShare;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
@@ -271,11 +272,12 @@ public class MoTab implements MoSavable, MoLoadable {
         this.moPopupWindow = new MoPopupWindow(this.context)
                 .groupViewsHorizontally(
                         new MoPopupItemBuilder(this.context)
-                                .buildCheckedImageButton(R.drawable.ic_baseline_chevron_right_24,
+                                .buildImageButton(R.drawable.ic_baseline_chevron_right_24,
                                         view-> moWebView.goForwardIfYouCan())
                                 .buildCheckedImageButton(R.drawable.ic_baseline_star_24,
                                         R.drawable.ic_baseline_star_border_24, view -> bookmarkThisUrl(),
                                         ()-> MoBookmarkManager.has(this.url.getUrlString()))
+                                .buildImageButton(R.drawable.ic_baseline_refresh_24, view-> moWebView.reload())
                                 .build()
                 )
                 .setViews(
@@ -288,6 +290,7 @@ public class MoTab implements MoSavable, MoLoadable {
                                         view -> search(MoHomePageManager.getCurrentActivatedURL()))
                                 .buildTextButton(R.string.history,
                                         view-> HistoryActivity.launch(this.context))
+                                .buildTextButton(R.string.share, view -> MoShare.share(this.context,this.url.getUrlString()))
                                 .build()
                 );
     }
@@ -519,7 +522,7 @@ public class MoTab implements MoSavable, MoLoadable {
     // when the user presses search button
     private void onSearch(TextView textView,int actionId,KeyEvent event){
         if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) ||
-                (actionId == EditorInfo.IME_ACTION_GO) || actionId == EditorInfo.IME_ACTION_DONE) {
+                (actionId == EditorInfo.IME_ACTION_SEARCH)) {
             // then we need to search
             this.search(textView.getText().toString());
         }

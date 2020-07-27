@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.View;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
+import com.moofficial.moessentials.MoEssentials.MoConnections.MoShare;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moweb.MoClipboard.MoClipboard;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoPopUpTab;
@@ -156,12 +156,7 @@ public class MoHitTestResultParser {
     }
 
     private void shareLink(){
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, href);
-        sendIntent.setType("text/html");
-        Intent shareIntent = Intent.createChooser(sendIntent, "Choose an app");
-        context.startActivity(shareIntent);
+        MoShare.share(this.context,this.href);
         dismissDialog();
     }
 

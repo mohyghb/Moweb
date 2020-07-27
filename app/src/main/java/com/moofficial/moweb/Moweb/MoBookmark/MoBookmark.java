@@ -49,6 +49,7 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
     }
 
 
+
     public String getName() {
         return name;
     }

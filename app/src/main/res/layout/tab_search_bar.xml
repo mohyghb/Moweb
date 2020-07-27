@@ -70,6 +70,7 @@
                 android:background="@color/transparent"
                 android:hint="@android:string/search_go"
                 android:inputType="textWebEditText"
+                android:imeOptions="actionSearch"
                 android:padding="8dp"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
