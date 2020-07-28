@@ -10,6 +10,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
 import com.moofficial.moweb.MoBitmap.MoBitmapUtils;
@@ -70,6 +71,7 @@ public class MoWebView implements MoSavable,MoLoadable {
     private MoOnReceivedError onErrorReceived = (view, request, error) -> {};
     private boolean captureBitmap = true;
     private boolean saveHistory = true;
+    private boolean isInDesktopMode = false;
 
 
 
@@ -183,6 +185,7 @@ public class MoWebView implements MoSavable,MoLoadable {
         // user long presses over an element of web view
         initStackTabHistory();
         initHitTestResult();
+        enableCorrectMode();
     }
 
 
@@ -379,13 +382,49 @@ public class MoWebView implements MoSavable,MoLoadable {
         return this;
     }
 
+
+    /**
+     * enables the desktop mode for this web view
+     */
+    public void enableDesktopMode(){
+        MoWebUtils.setDesktopMode(this.wv,true);
+        this.isInDesktopMode = true;
+    }
+
+    /**
+     * disables the desktop mode for this web view
+     */
+    public void disableDesktopMode(){
+        MoWebUtils.setDesktopMode(this.wv,false);
+        this.isInDesktopMode = false;
+    }
+
+    public void enableCorrectMode(){
+        if(this.isInDesktopMode){
+            this.enableDesktopMode();
+        }else{
+            this.disableDesktopMode();
+        }
+    }
+
+    public void enableReverseMode(){
+        this.isInDesktopMode = !this.isInDesktopMode;
+        enableCorrectMode();
+    }
+
+    public boolean isInDesktopMode(){
+        return this.isInDesktopMode;
+    }
+
     @Override
     public void load(String s, Context context) {
-        this.stackTabHistory.load(s,context);
+        String[] c = MoFile.loadable(s);
+        this.stackTabHistory.load(c[0],context);
+        this.isInDesktopMode = Boolean.parseBoolean(c[1]);
     }
 
     @Override
     public String getData() {
-        return this.stackTabHistory.getData();
+        return MoFile.getData(this.stackTabHistory.getData(),this.isInDesktopMode);
     }
 }

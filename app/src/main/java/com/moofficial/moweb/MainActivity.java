@@ -18,7 +18,7 @@ import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoServices.MoSaverBackgroundService;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
-import com.moofficial.moweb.Moweb.MoWebUtils;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 
 import static com.moofficial.moweb.MoSection.MoSectionManager.IN_TAB_VIEW;

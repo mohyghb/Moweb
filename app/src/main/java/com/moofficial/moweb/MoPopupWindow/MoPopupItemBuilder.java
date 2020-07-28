@@ -74,21 +74,29 @@ public class MoPopupItemBuilder {
 
     /**
      *
-
      * @param title
      * @param clickListener
      * @return
      */
-    public MoPopupItemBuilder buildTextButton(String title, View.OnClickListener clickListener){
+    public MoPopupItemBuilder buildTextButton(String title,int icon ,View.OnClickListener clickListener){
         TextView v = new TextView(context);
         v.setText(title);
+        v.setCompoundDrawablesWithIntrinsicBounds(0,0,icon,0);
         finalViewBuild(v,clickListener,TYPE_IMAGE_BUTTON);
         return this;
+    }
+
+    public MoPopupItemBuilder buildTextButton(String title, View.OnClickListener clickListener){
+        return buildTextButton(title,0,clickListener);
     }
 
     // overloaded method of buildTextButton
     public MoPopupItemBuilder buildTextButton(int title, View.OnClickListener clickListener){
         return buildTextButton(getString(title),clickListener);
+    }
+
+    public MoPopupItemBuilder buildTextButton(int title,int icon ,View.OnClickListener clickListener){
+        return buildTextButton(getString(title),icon,clickListener);
     }
 
     /**

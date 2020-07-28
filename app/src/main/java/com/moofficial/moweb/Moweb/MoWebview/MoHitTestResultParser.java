@@ -156,7 +156,7 @@ public class MoHitTestResultParser {
     }
 
     private void shareLink(){
-        MoShare.share(this.context,this.href);
+        new MoShare().setText(this.href).shareText(this.context);
         dismissDialog();
     }
 

@@ -290,7 +290,11 @@ public class MoTab implements MoSavable, MoLoadable {
                                         view -> search(MoHomePageManager.getCurrentActivatedURL()))
                                 .buildTextButton(R.string.history,
                                         view-> HistoryActivity.launch(this.context))
-                                .buildTextButton(R.string.share, view -> MoShare.share(this.context,this.url.getUrlString()))
+                                .buildTextButton(R.string.share, view -> new MoShare().setText(this.url.getUrlString()).shareText(this.context))
+                                .buildTextButton(R.string.desktop_mode,moWebView.isInDesktopMode()?
+                                        R.drawable.ic_baseline_check_box_24:R.drawable.ic_baseline_check_box_outline_blank_24 , view -> {
+                                    moWebView.enableReverseMode();
+                                })
                                 .build()
                 );
     }

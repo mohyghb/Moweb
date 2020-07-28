@@ -115,9 +115,13 @@ public class MoTabsManager {
             String[] tbs = MoFile.loadable(components[0]);
             for(String t: tbs){
                 if(!t.isEmpty()) {
-                    MoTab tab = new MoTab(context);
-                    tab.load(t, context);
-                    tabs.add(tab);
+                    try{
+                        MoTab tab = new MoTab(context);
+                        tab.load(t, context);
+                        tabs.add(tab);
+                    }catch(Exception e){
+                        Toast.makeText(context,"Caught exception while trying to load tabs",Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         }
