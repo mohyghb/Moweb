@@ -6,11 +6,12 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Toast;
 
-import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoBasicActivity;
+import androidx.annotation.Nullable;
+
+import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoOriginalActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoDialog.MoDialogBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoDialog.MoOnDialogTextInputListener;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoCardBuilder;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewGroupUtils.MoAppbar.MoAppbarUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoBottomBars.MoBottomDeleteBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoSearchBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
@@ -24,14 +25,17 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSearchable.MoSear
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkRecyclerAdapter;
-import com.moofficial.moweb.Moweb.MoBookmark.MoOnOpenFolderListener;
+import com.moofficial.moweb.Moweb.MoBookmark.MoOnOpenBookmarkListener;
+import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class BookmarkActivity extends MoBasicActivity implements MoOnOpenFolderListener {
+public class BookmarkActivity extends MoOriginalActivity implements MoOnOpenBookmarkListener {
 
+
+    public static final int EDIT_BOOKMARK_REQUEST = 3;
 
     private MoRecyclerView recyclerView;
     private MoBookmarkRecyclerAdapter recyclerAdapter;
@@ -54,20 +58,13 @@ public class BookmarkActivity extends MoBasicActivity implements MoOnOpenFolderL
     }
 
     private void initUI() {
-        makeActivityRound();
-
         combinationBar = toolbar.addToolbar(R.layout.mo_combination_appbar_searchbar);
-
         bottomDeleteBar = new MoBottomDeleteBar(this);
         linearBottom.addView(bottomDeleteBar.goGone());
-
-
         cardRecyclerView = new MoCardRecyclerView(this).makeCardRound();
-        cardRecyclerView.customize(new MoCardBuilder(this)
-                .setBackgroundColorId(R.color.transparent),cardRecyclerView.CId());
-
+//        cardRecyclerView.customize(new MoCardBuilder(this)
+//                .setBackgroundColorId(R.color.transparent),cardRecyclerView.CId());
         linearNested.addView(cardRecyclerView);
-
     }
 
 
@@ -82,10 +79,7 @@ public class BookmarkActivity extends MoBasicActivity implements MoOnOpenFolderL
         initMoSearchable();
         initMoListDelete();
         initListViewSync();
-        MoAppbarUtils.sync(appBarLayout,
-                collapsingToolbarLayout,
-                title,
-                findViewById(toolBar.TVId()));
+        syncTitle(findViewById(toolBar.TVId()));
     }
 
 
@@ -95,7 +89,7 @@ public class BookmarkActivity extends MoBasicActivity implements MoOnOpenFolderL
      * @return
      */
     private ArrayList<MoBookmark> getCurrentFolderBookmarks(){
-        return folders.isEmpty()?MoBookmarkManager.getBookmarks():folders.peek().getSubBookmarks();
+        return folders.isEmpty()?MoBookmarkManager.getAll():folders.peek().getSubBookmarks();
     }
 
     /**
@@ -158,6 +152,7 @@ public class BookmarkActivity extends MoBasicActivity implements MoOnOpenFolderL
                     }
                 }
         ));
+        floatingActionButton.show();
     }
 
     private void initTitle(){
@@ -166,7 +161,7 @@ public class BookmarkActivity extends MoBasicActivity implements MoOnOpenFolderL
 
     private void initRecyclerAdapter(){
         this.recyclerAdapter = new MoBookmarkRecyclerAdapter(this, getCurrentFolderBookmarks())
-                .setOpenFolderListener(this);
+                .setOpenBookmarkListener(this);
     }
 
     private void initRecyclerView(){
@@ -204,6 +199,8 @@ public class BookmarkActivity extends MoBasicActivity implements MoOnOpenFolderL
                 .setOnSearchFinished(list -> {
                     //noinspection unchecked
                     updateRecyclerAdapter((ArrayList<MoBookmark>) list);
+                }).setOnSearchCanceled(() -> {
+                    updateRecyclerAdapter(getCurrentFolderBookmarks());
                 })
         ;
     }
@@ -237,11 +234,6 @@ public class BookmarkActivity extends MoBasicActivity implements MoOnOpenFolderL
 
 
 
-    public static void startActivity(Context context){
-        Intent i = new Intent(context,BookmarkActivity.class);
-        context.startActivity(i);
-    }
-
     @Override
     public void openFolder(MoBookmark folder) {
         if(listViewSync.hasAction()){
@@ -249,6 +241,12 @@ public class BookmarkActivity extends MoBasicActivity implements MoOnOpenFolderL
         }
         folders.add(folder);
         initClass();
+    }
+
+    @Override
+    public void openBookmark(MoBookmark bookmark) {
+        MoTabsManager.addTab(this,bookmark.getUrl(),false);
+        finish();
     }
 
 
@@ -261,6 +259,26 @@ public class BookmarkActivity extends MoBasicActivity implements MoOnOpenFolderL
             initClass();
         }else{
             super.onBackPressed();
+        }
+    }
+
+
+    public static void startActivity(Context context){
+        Intent i = new Intent(context,BookmarkActivity.class);
+        context.startActivity(i);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case EDIT_BOOKMARK_REQUEST:
+                if(resultCode == RESULT_OK){
+                    initClass();
+                    Toast.makeText(this,"Updated...",Toast.LENGTH_SHORT).show();
+                    MoBookmarkManager.save(this);
+                }
+                break;
         }
     }
 }

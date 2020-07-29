@@ -122,16 +122,6 @@ public class MoTabSectionManager {
                         new Pair<>(mainActivity.getString(R.string.NewIncognitoTab), menuItem -> {
                             MoTabsManager.addIncognitoTab(mainActivity,MoSearchEngine.instance.homePage(),false);
                             return false;
-                        }),
-                        new Pair<>(mainActivity.getString(R.string.Clear_All_Normal_Tabs), menuItem -> {
-                            MoTabsManager.clearAllNormalTabs(mainActivity);
-                            this.tabsRecyclerView.notifyDataSetChanged();
-                            return false;
-                        }),
-                        new Pair<>(mainActivity.getString(R.string.Clear_All_Incognito_Tabs), menuItem -> {
-                            MoTabsManager.clearAllIncognitoTabs(mainActivity);
-                            this.incognitoTabsRecyclerView.notifyDataSetChanged();
-                            return false;
                         })
         );
     }
@@ -151,6 +141,16 @@ public class MoTabSectionManager {
                 new Pair<>(mainActivity.getString(R.string.History), menuItem -> {
                     Intent in = new Intent(mainActivity,HistoryActivity.class);
                     mainActivity.startActivity(in);
+                    return false;
+                }),
+                new Pair<>(mainActivity.getString(R.string.Clear_All_Normal_Tabs), menuItem -> {
+                    MoTabsManager.clearAllNormalTabs(mainActivity);
+                    this.tabsRecyclerView.notifyDataSetChanged();
+                    return false;
+                }),
+                new Pair<>(mainActivity.getString(R.string.Clear_All_Incognito_Tabs), menuItem -> {
+                    MoTabsManager.clearAllIncognitoTabs(mainActivity);
+                    this.incognitoTabsRecyclerView.notifyDataSetChanged();
                     return false;
                 })
         );

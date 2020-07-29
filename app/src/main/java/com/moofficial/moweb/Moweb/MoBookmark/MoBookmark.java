@@ -28,6 +28,8 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
     private MoURL url;
     private MoDate date = new MoDate();
     private int type = BOOKMARK;
+    // mutual relationship
+    private MoBookmark parent;
     private ArrayList<MoBookmark> subBookmarks = new ArrayList<>();
     private boolean isSelected;
     private boolean isSearched = true;
@@ -81,8 +83,8 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
         return url.getUrlString();
     }
 
-    public MoBookmark setUrl(MoURL url) {
-        this.url = url;
+    public MoBookmark setUrl(String url) {
+        this.url = new MoURL(url);
         return this;
     }
 
@@ -95,25 +97,45 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
         return this;
     }
 
+    public MoBookmark getParent() {
+        return parent;
+    }
 
+    public MoBookmark setParent(MoBookmark parent) {
+        this.parent = parent;
+        return this;
+    }
+
+    public boolean isSearched() {
+        return isSearched;
+    }
+
+    public MoBookmark setSearched(boolean searched) {
+        isSearched = searched;
+        return this;
+    }
 
     public int subBookMarkSize(){
         return this.subBookmarks.size();
     }
 
 
-    public void addBookmark(String url,String folder){
-        this.subBookmarks.add(MoBookmarkManager.buildBookmark(url,folder));
+    public void addBookmark(MoBookmark b){
+        b.setParent(this);
+        this.subBookmarks.add(b);
     }
 
-    public void addFolder(String title){
-        this.subBookmarks.add(MoBookmarkManager.buildFolder(title));
+    public void removeBookmark(MoBookmark b){
+        if(subBookmarks.contains(b)){
+            b.setParent(null);
+            subBookmarks.remove(b);
+        }
     }
 
 
 
 
-
+    public boolean hasParent(){ return this.parent!=null;}
     public boolean isFolder(){
         return this.type == FOLDER;
     }

@@ -31,6 +31,6 @@
 
     <color name="MoBackground">@color/MaterialGrey</color>
 
-    <color name="search_bar_color">#84A6B5</color>
+    <color name="search_bar_color">#021D29</color>
 
 </resources>

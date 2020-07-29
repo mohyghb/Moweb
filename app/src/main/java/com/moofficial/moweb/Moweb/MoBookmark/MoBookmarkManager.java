@@ -3,6 +3,7 @@ package com.moofficial.moweb.Moweb.MoBookmark;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.moofficial.moessentials.MoEssentials.MoConnections.MoShare;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoReadWrite.MoReadWrite;
 
@@ -211,12 +212,13 @@ public class MoBookmarkManager {
     }
 
 
-    public static ArrayList<MoBookmark> getBookmarks(){
+    public static ArrayList<MoBookmark> getAll(){
         return bookmarks;
     }
 
-
-
+    public static ArrayList<MoBookmark> getFolders(){
+        return new ArrayList<>(mapOfFolders.values());
+    }
 
 
     /**
@@ -229,6 +231,10 @@ public class MoBookmarkManager {
         }
     }
 
+    /**
+     * removes the bookmark based on their type
+     * @param bm
+     */
     public static void remove(MoBookmark bm){
         switch (bm.getType()){
             case BOOKMARK:
@@ -238,7 +244,80 @@ public class MoBookmarkManager {
                 remove(mapOfFolders,bm.getName());
                 break;
         }
+    }
 
+
+    public static MoBookmark getBookmark(String url){
+        return mapOfBookmarks.get(url);
+    }
+
+    public static MoBookmark getFolder(String name){
+        return mapOfFolders.get(name);
+    }
+
+
+    /**
+     * shares the bookmark
+     * if this is a folder, we share all the bookmarks that are in that folder
+     * (we do not iterate through all the folders inside that folder as well
+     *  we just search the surface for any bookmark, and we get those url)
+     * @param context
+     * @param b
+     */
+    public static void shareBookmark(Context context,MoBookmark b){
+        switch (b.getType()){
+            case FOLDER:
+                new MoShare().setText(MoBookmarkUtils.getCombinedSurfaceUrl(b)).shareText(context);
+                break;
+            case BOOKMARK:
+                new MoShare().setText(b.getUrl()).shareText(context);
+                break;
+        }
+    }
+
+
+
+    // for editing
+
+    /**
+     * edits the url of the bookmark
+     * we first remove it from the map in case the url has changed
+     * then update the the new bookmark with our new values
+     * @param b
+     * @param originalUrl
+     */
+    public static void edit(MoBookmark b,String originalUrl){
+        mapOfBookmarks.remove(originalUrl);
+        addToMap(b);
+    }
+
+    /**
+     * moves all bookmarks in b to the folder
+     * @param bs
+     * @param folder
+     */
+    public static void moveToFolder(MoBookmark folder,MoBookmark ... bs){
+
+        for(MoBookmark b: bs){
+            moveTo(folder, b);
+        }
+    }
+
+    private static void moveTo(MoBookmark folder, MoBookmark b) {
+        if(folder!=null && b!=null){
+            removeFromParent(b);
+            // then add this b to the new folder
+            folder.addBookmark(b);
+        }
+    }
+
+    private static void removeFromParent(MoBookmark b) {
+        // we first remove this bookmark from its parent
+        if(b.hasParent()){
+            b.getParent().removeBookmark(b);
+        }else{
+            bookmarks.remove(b);
+        }
     }
 
 

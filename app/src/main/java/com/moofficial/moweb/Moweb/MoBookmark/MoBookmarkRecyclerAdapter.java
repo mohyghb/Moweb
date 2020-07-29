@@ -1,7 +1,9 @@
 package com.moofficial.moweb.Moweb.MoBookmark;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -10,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPreviewable.MoPreviewAdapter;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoDeleteUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoListDeletable;
@@ -18,6 +21,8 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSearchable.MoSear
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSearchable.MoSearchableList;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSelectable.MoSelectableItem;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSelectable.MoSelectableUtils;
+import com.moofficial.moweb.BookmarkActivity;
+import com.moofficial.moweb.EditBookmarkActivity;
 import com.moofficial.moweb.R;
 
 import java.util.List;
@@ -28,19 +33,40 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
 
     private MoListDelete moListDelete;
     private Context context;
-    private MoOnOpenFolderListener openFolderListener = folder -> {};
+    private boolean disableLongClick = false;
+    private MoOnOpenBookmarkListener openBookmarkListener = new MoOnOpenBookmarkListener() {
+        @Override
+        public void openFolder(MoBookmark folder) {
+
+        }
+
+        @Override
+        public void openBookmark(MoBookmark bookmark) {
+
+        }
+    };
+
 
     public MoBookmarkRecyclerAdapter(Context context, List<MoBookmark> dataSet) {
         super(dataSet);
         this.context = context;
     }
 
-    public MoOnOpenFolderListener getOpenFolderListener() {
-        return openFolderListener;
+    public MoOnOpenBookmarkListener getOpenBookmarkListener() {
+        return openBookmarkListener;
     }
 
-    public MoBookmarkRecyclerAdapter setOpenFolderListener(MoOnOpenFolderListener openFolderListener) {
-        this.openFolderListener = openFolderListener;
+    public MoBookmarkRecyclerAdapter setOpenBookmarkListener(MoOnOpenBookmarkListener openBookmarkListener) {
+        this.openBookmarkListener = openBookmarkListener;
+        return this;
+    }
+
+    public boolean isDisableLongClick() {
+        return disableLongClick;
+    }
+
+    public MoBookmarkRecyclerAdapter setDisableLongClick(boolean disableLongClick) {
+        this.disableLongClick = disableLongClick;
         return this;
     }
 
@@ -63,7 +89,7 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
         }
         h.imageTextLogo.setText(MoString.getSignature(bookmark.getName()));
         onClickListener(h, bookmark,i);
-        onLongClickListener(h, i);
+        onLongClickListener(h, bookmark,i);
         MoDeleteUtils.applyDeleteColor(this.context,h.coverLayout,bookmark);
     }
 
@@ -79,26 +105,49 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
         return false;
     }
 
-    private void onLongClickListener(@NonNull MoBookmarkViewHolder h, int i) {
-        h.cardView.setOnLongClickListener(view -> {
-            if(!moListDelete.isInActionMode()){
-                moListDelete.setDeleteMode(true);
-                onSelect(i);
-            }
-            return false;
-        });
+    private void onLongClickListener(@NonNull MoBookmarkViewHolder h, MoBookmark b,int i) {
+        if(!disableLongClick){
+            h.cardView.setOnLongClickListener(view -> {
+                MoPopUpMenu p =new MoPopUpMenu(context).setEntries(
+                        new Pair<>(context.getString(R.string.share), menuItem -> {
+                            MoBookmarkManager.shareBookmark(context,b);
+                            return false;
+                        }),
+                        new Pair<>(context.getString(R.string.delete), menuItem -> {
+                            activateDeleteMode(i);
+                            return false;
+                        })
+                );
+                if(!b.isFolder()){
+                    p.addEntry( new Pair<>(context.getString(R.string.edit), menuItem -> {
+                        EditBookmarkActivity.startActivityForResult((Activity) context,b,
+                                BookmarkActivity.EDIT_BOOKMARK_REQUEST);
+                        return false;
+                    }));
+                }
+                p.show(view);
+                return true;
+            });
+        }
     }
+
+    private void activateDeleteMode(int i) {
+        if(!moListDelete.isInActionMode()){
+            moListDelete.setDeleteMode(true);
+            onSelect(i);
+        }
+    }
+
 
     private void onClickListener(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark,int i) {
         h.cardView.setOnClickListener(view -> {
-            if(moListDelete.isInActionMode()){
+            if(moListDelete!=null && moListDelete.isInActionMode()){
                 onSelect(i);
             }else{
                 if(bookmark.isFolder()){
-                    openFolderListener.openFolder(bookmark);
+                    openBookmarkListener.openFolder(bookmark);
                 }else{
-                    // Todo
-                    //  open this bookmark into a tab
+                    openBookmarkListener.openBookmark(bookmark);
                 }
             }
         });

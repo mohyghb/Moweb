@@ -28,13 +28,14 @@
         app:cardElevation="@dimen/card_elevation_search_bar"
         app:layout_constraintBottom_toTopOf="@id/tab_progress"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/search_bar_color"
+        android:backgroundTint="@color/search_bar_color">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/suggestion_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/search_bar_color" />
+            android:layout_height="wrap_content" />
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
@@ -44,10 +45,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        app:cardElevation="@dimen/card_elevation_search_bar"
-        app:contentPadding="4dp"
         android:background="@color/search_bar_color"
         android:backgroundTint="@color/search_bar_color"
+        app:cardElevation="@dimen/card_elevation_search_bar"
+        app:contentPadding="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -69,8 +70,8 @@
                 android:layout_marginEnd="8dp"
                 android:background="@color/transparent"
                 android:hint="@android:string/search_go"
-                android:inputType="textWebEditText"
                 android:imeOptions="actionSearch"
+                android:inputType="textWebEditText"
                 android:padding="8dp"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
