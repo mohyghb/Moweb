@@ -10,7 +10,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoI
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoMarginBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoSearchBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoCardRecyclerView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSearchable.MoSearchable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSearchable.MoSearchableItem;
@@ -111,7 +111,7 @@ public class BookmarkFolderChooserActivity extends MoOriginalActivity implements
                 .setOpenBookmarkListener(this)
                 .setDisableLongClick(true)
         ;
-        recyclerView = new MoRecyclerView(this,cardRecyclerView.RVId(),recyclerAdapter);
+        recyclerView = new MoRecyclerView(this,cardRecyclerView.getRecyclerView(),recyclerAdapter);
         recyclerView.show();
     }
 

@@ -132,6 +132,10 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
         }
     }
 
+    public boolean isEmpty(){
+        return subBookmarks.isEmpty();
+    }
+
 
 
 

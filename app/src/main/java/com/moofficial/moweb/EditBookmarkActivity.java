@@ -12,7 +12,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoM
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoAcceptDenyLayout;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoInputBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoButton;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoButton;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkUtils;
@@ -64,10 +64,8 @@ public class EditBookmarkActivity extends MoOriginalActivity {
         initFolder();
 
         // adding the content to nested linear layout
-        linearNested.addView(titleInput, MoMarginBuilder.getLinearParams(new MoMarginBuilder().setTop(8)
-                .convertValuesToDp()));
-        linearNested.addView(urlInput, MoMarginBuilder.getLinearParams(new MoMarginBuilder().setTop(8)
-                .convertValuesToDp()));
+        linearNested.addView(titleInput, MoMarginBuilder.getLinearParams(0,8,0,0));
+        linearNested.addView(urlInput, MoMarginBuilder.getLinearParams(0,8,0,0));
         linearNested.addView(folderButton, MoMarginBuilder.getLinearParams(0,8,0,0));
 
     }
@@ -104,6 +102,7 @@ public class EditBookmarkActivity extends MoOriginalActivity {
 
     private void initToolbar(){
         this.moToolBar = new MoToolBar(this).onlyTitleAndLeftButtonVisible();
+        moToolBar.getCardView().makeTransparent();
         toolbar.addToolbar(moToolBar);
     }
 

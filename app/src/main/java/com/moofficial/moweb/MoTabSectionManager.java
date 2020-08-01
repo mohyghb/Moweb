@@ -72,7 +72,7 @@ public class MoTabSectionManager {
      */
     private void initRecyclerView() {
         initNormalAdapter();
-        tabsRecyclerView = new MoRecyclerView(mainView.findViewById(R.id.recycler_tabs_view),mAdapter)
+        tabsRecyclerView = new MoRecyclerView(mainActivity,mainView.findViewById(R.id.recycler_tabs_view),mAdapter)
                 .setOrientation(LinearLayoutManager.HORIZONTAL);
         tabsRecyclerView.show();
     }
@@ -84,7 +84,7 @@ public class MoTabSectionManager {
 
     private void initIncognitoRecyclerView(){
         initIncognitoAdapter();
-        incognitoTabsRecyclerView = new MoRecyclerView(mainView.findViewById(R.id.recycler_incognito_tabs),mIncognitoAdapter)
+        incognitoTabsRecyclerView = new MoRecyclerView(mainActivity,mainView.findViewById(R.id.recycler_incognito_tabs),mIncognitoAdapter)
                 .setOrientation(LinearLayoutManager.HORIZONTAL);
         incognitoTabsRecyclerView.show();
         //incognitoTabsRecyclerView.scrollTo(MoTabController.instance.getIndex());

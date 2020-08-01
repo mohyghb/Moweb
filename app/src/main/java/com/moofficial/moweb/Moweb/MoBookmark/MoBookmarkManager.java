@@ -15,13 +15,19 @@ import java.util.Objects;
 import static com.moofficial.moweb.Moweb.MoBookmark.MoBookmark.BOOKMARK;
 import static com.moofficial.moweb.Moweb.MoBookmark.MoBookmark.FOLDER;
 
+// TODO test the new version of the bookmark implementation
 public class MoBookmarkManager {
 
     private static final String FILE_NAME = "bookmarkfile";
+    private static final String MAIN_FOLDER_NAME = "Bookmarks";
 
-    private static ArrayList<MoBookmark> bookmarks = new ArrayList<>();
+    private static MoBookmark mainFolder = buildFolder(MAIN_FOLDER_NAME);
     private static HashMap<String,MoBookmark> mapOfBookmarks = new HashMap<>();
     private static HashMap<String,MoBookmark> mapOfFolders = new HashMap<>();
+
+    public static MoBookmark getMainFolder(){
+        return mainFolder;
+    }
 
     /**
      * adds the url to bookmark
@@ -102,7 +108,7 @@ public class MoBookmarkManager {
      * @param bm
      */
     private static void addToEveryField(MoBookmark bm){
-        bookmarks.add(bm);
+        mainFolder.addBookmark(bm);
         addToMap(bm);
     }
 
@@ -111,7 +117,7 @@ public class MoBookmarkManager {
      * @param context
      */
     public static void save(Context context){
-        MoReadWrite.saveFile(FILE_NAME, MoFile.getData(bookmarks),context);
+        MoReadWrite.saveFile(FILE_NAME, MoFile.getData(mainFolder.getSubBookmarks()),context);
     }
 
     /**
@@ -120,10 +126,14 @@ public class MoBookmarkManager {
      * @param c
      */
     public static void load(Context c){
-        if(bookmarks.isEmpty()){
+        if(mainFolder.isEmpty()){
             String[] d = MoFile.loadable(MoReadWrite.readFile(FILE_NAME,c));
             if(MoFile.isValidData(d)) {
-                loadInto(c, MoFile.loadable(d[0]),bookmarks);
+                // since we are just saving the sub bookmarks
+                // we only have to load the bookmarks back in
+                // (mainFolder.load(d[0],c);) not needed
+
+                loadInto(c, MoFile.loadable(d[0]), mainFolder.getSubBookmarks());
             }
         }
     }
@@ -213,7 +223,7 @@ public class MoBookmarkManager {
 
 
     public static ArrayList<MoBookmark> getAll(){
-        return bookmarks;
+        return mainFolder.getSubBookmarks();
     }
 
     public static ArrayList<MoBookmark> getFolders(){
@@ -244,6 +254,13 @@ public class MoBookmarkManager {
                 remove(mapOfFolders,bm.getName());
                 break;
         }
+    }
+
+    public static void clear(Context c){
+//        mapOfFolders.clear();
+//        mapOfBookmarks.clear();
+//        mainFolder.clear();
+        save(c);
     }
 
 
@@ -315,8 +332,6 @@ public class MoBookmarkManager {
         // we first remove this bookmark from its parent
         if(b.hasParent()){
             b.getParent().removeBookmark(b);
-        }else{
-            bookmarks.remove(b);
         }
     }
 

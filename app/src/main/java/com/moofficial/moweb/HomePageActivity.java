@@ -48,7 +48,7 @@ public class HomePageActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView(){
-        this.recyclerView = new MoRecyclerView(this,R.id.home_page_recycler_view,this.recyclerAdapter);
+        this.recyclerView = new MoRecyclerView(this,findViewById(R.id.home_page_recycler_view),this.recyclerAdapter);
         this.recyclerView.show();
     }
 

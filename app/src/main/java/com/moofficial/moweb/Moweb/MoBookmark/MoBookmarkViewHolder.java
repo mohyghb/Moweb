@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoImageTextLogo;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoImageTextLogo;
 import com.moofficial.moweb.R;
 
 public class MoBookmarkViewHolder extends RecyclerView.ViewHolder {

@@ -102,7 +102,9 @@
 
     <!--Bookmark-->
     <string name="bookmark_title">Bookmarks</string>
-    <string name="add_folder_in_bookmark_hint_dialog">Enter a name</string>
+    <string name="add_folder_in_bookmark_hint_dialog">Folder name</string>
+    <string name="new_folder">New Folder</string>
+    <string name="new_folder_message">Enter the name of the folder and press done</string>
 
 
 </resources>

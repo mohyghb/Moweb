@@ -99,7 +99,7 @@ public class HistoryActivity extends AppCompatActivity {
 
 
     private void initRecyclerView(){
-        historyRecyclerView = new MoRecyclerView(HistoryActivity.this,R.id.history_recycler_view,
+        historyRecyclerView = new MoRecyclerView(HistoryActivity.this,findViewById(R.id.history_recycler_view),
                 new MoHistoryRecyclerAdapter(MoHistoryManager.getHistoriesWithDateTiles(count),
                         HistoryActivity.this));
         historyRecyclerView.setReverseLayout(true);

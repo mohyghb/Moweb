@@ -33,7 +33,7 @@
 
 
     <style name="MoImageButton_Style_Dark" parent="Widget.AppCompat.ImageButton">
-        <item name="android:tint">@color/colorPrimary</item>
+        <item name="android:tint">@color/MoWhite</item>
     </style>
 
 

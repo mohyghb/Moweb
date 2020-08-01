@@ -26,14 +26,14 @@ import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
 import com.moofficial.moessentials.MoEssentials.MoKeyboardUtils.MoKeyboardUtils;
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoRunnable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupItemBuilder;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupWindow;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSearchable.MoSearchable;
 import com.moofficial.moweb.BookmarkActivity;
 import com.moofficial.moweb.HistoryActivity;
 import com.moofficial.moweb.MoBitmap.MoBitmap;
 import com.moofficial.moweb.MoBitmap.MoBitmapSaver;
 import com.moofficial.moweb.MoHTML.MoHTMLAsyncTask;
-import com.moofficial.moweb.MoPopupWindow.MoPopupItemBuilder;
-import com.moofficial.moweb.MoPopupWindow.MoPopupWindow;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
@@ -296,7 +296,7 @@ public class MoTab implements MoSavable, MoLoadable {
                                     moWebView.enableReverseMode();
                                 })
                                 .build()
-                );
+                ).build();
     }
 
     /**

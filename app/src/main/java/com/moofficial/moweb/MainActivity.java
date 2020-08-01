@@ -129,9 +129,13 @@ public class MainActivity extends AppCompatActivity {
     // save the tabs before leaving the app
     @Override
     protected void onStop() {
-        MoLog.print("on stop called");
         saveState();
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     /**
