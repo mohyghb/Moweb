@@ -10,6 +10,7 @@
     <string name="url">URL</string>
     <string name="folder_chooser_title">Choose a folder</string>
     <string name="save">Save</string>
+    <string name="select">Select</string>
 
 
     <!--tab more button options-->

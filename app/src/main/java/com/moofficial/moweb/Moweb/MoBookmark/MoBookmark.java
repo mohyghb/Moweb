@@ -12,6 +12,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSelectable.MoSele
 import com.moofficial.moweb.Moweb.MoUrl.MoURL;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Objects;
 
 /**
@@ -30,7 +31,10 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
     private int type = BOOKMARK;
     // mutual relationship
     private MoBookmark parent;
-    private ArrayList<MoBookmark> subBookmarks = new ArrayList<>();
+    // contains
+    private ArrayList<MoBookmark> subs = new ArrayList<>();
+    private ArrayList<MoBookmark> subFolders = new ArrayList<>();
+
     private boolean isSelected;
     private boolean isSearched = true;
     private boolean isSavable = true;
@@ -51,6 +55,23 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
     }
 
 
+    public MoBookmark setUrl(MoURL url) {
+        this.url = url;
+        return this;
+    }
+
+    public ArrayList<MoBookmark> getSubFolders() {
+        return subFolders;
+    }
+
+    public MoBookmark setSubFolders(ArrayList<MoBookmark> subFolders) {
+        this.subFolders = subFolders;
+        return this;
+    }
+
+    public boolean containsSubFolder(MoBookmark b){
+        return this.subFolders.contains(b);
+    }
 
     public String getName() {
         return name;
@@ -70,12 +91,12 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
         return this;
     }
 
-    public ArrayList<MoBookmark> getSubBookmarks() {
-        return subBookmarks;
+    public ArrayList<MoBookmark> getSubs() {
+        return subs;
     }
 
-    public MoBookmark setSubBookmarks(ArrayList<MoBookmark> subBookmarks) {
-        this.subBookmarks = subBookmarks;
+    public MoBookmark setSubs(ArrayList<MoBookmark> subs) {
+        this.subs = subs;
         return this;
     }
 
@@ -106,6 +127,8 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
         return this;
     }
 
+
+
     public boolean isSearched() {
         return isSearched;
     }
@@ -115,25 +138,38 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
         return this;
     }
 
-    public int subBookMarkSize(){
-        return this.subBookmarks.size();
+    public int size(){
+        return this.subs.size();
     }
 
 
-    public void addBookmark(MoBookmark b){
+    public void add(MoBookmark b){
         b.setParent(this);
-        this.subBookmarks.add(b);
+        this.subs.add(b);
+        addToSubFolder(b);
     }
 
-    public void removeBookmark(MoBookmark b){
-        if(subBookmarks.contains(b)){
-            b.setParent(null);
-            subBookmarks.remove(b);
+    private void addToSubFolder(MoBookmark b) {
+        if(b.isFolder()){
+            subFolders.add(b);
         }
     }
 
+    public void remove(MoBookmark b){
+        b.setParent(null);
+        subs.remove(b);
+        removeFromSubFolder(b);
+    }
+
+    private void removeFromSubFolder(MoBookmark b) {
+        if(b.isFolder()){
+            subFolders.remove(b);
+        }
+    }
+
+
     public boolean isEmpty(){
-        return subBookmarks.isEmpty();
+        return subs.isEmpty();
     }
 
 
@@ -144,14 +180,37 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
         return this.type == FOLDER;
     }
 
+    /**
+     * removes all the sub folders of this folder
+     * from this folder
+     * @param set set of folders
+     */
+    public void removeAllTheSubFoldersRecursive(HashSet<MoBookmark> set){
+        // base case
+        if(subFolders.isEmpty() || !isFolder()){
+            return;
+        }
+        for(MoBookmark folder:subFolders){
+            folder.removeAllTheSubFoldersRecursive(set);
+            set.remove(folder);
+        }
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof MoBookmark)) return false;
         MoBookmark that = (MoBookmark) o;
-        return getUrl().equals(that.getUrl()) &&
-                this.name.equals(that.name) && this.type == that.type;
+        if(that.type == this.type && this.name.equals(that.name)){
+            if(type == BOOKMARK){
+                return getUrl().equals(that.getUrl());
+            }else{
+                return true;
+            }
+        }else{
+            return false;
+        }
+
     }
 
     @Override
@@ -161,24 +220,27 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
 
     @Override
     public void load(String s, Context context) {
-        String[] c = MoFile.loadable(s);
-        url = new MoURL(c[0],context);
-        date = new MoDate(c[1],context);
-        name = c[2];
-        type = Integer.parseInt(c[3]);
-        loadSubBookmarks(context, c[4]);
+        try{
+            String[] c = MoFile.loadable(s);
+            url = new MoURL(c[0],context);
+            date = new MoDate(c[1],context);
+            name = c[2];
+            type = Integer.parseInt(c[3]);
+            loadSubBookmarks(context, c[4]);
+        }catch(Exception ignore){}
+
     }
 
     private void loadSubBookmarks(Context context, String data) {
         String[] d = MoFile.loadable(data);
         if(MoFile.isValidData(d)){
-            MoBookmarkManager.loadInto(context,d,subBookmarks);
+            MoBookmarkManager.loadInto(context,d,this);
         }
     }
 
     @Override
     public String getData() {
-        return MoFile.getData(url,date,name,type,subBookmarks);
+        return MoFile.getData(url,date,name,type, subs);
     }
 
 

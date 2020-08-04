@@ -7,9 +7,8 @@
 
 
 
-    <include
+    <com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoFindBar
         android:id="@+id/tab_find_bar"
-        layout="@layout/mo_find_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -17,7 +16,8 @@
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"/>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/suggestion_tab_card_view"

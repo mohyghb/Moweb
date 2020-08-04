@@ -26,6 +26,7 @@ import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
 import com.moofficial.moessentials.MoEssentials.MoKeyboardUtils.MoKeyboardUtils;
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoRunnable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoFindBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupItemBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupWindow;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSearchable.MoSearchable;
@@ -65,6 +66,7 @@ public class MoTab implements MoSavable, MoLoadable {
     private MoTabType tabType;
     private MoPopupWindow moPopupWindow;
     private MoSearchable moSearchable;
+
     //private MoSearchEngine searchEngine;
 
     // UI
@@ -77,6 +79,7 @@ public class MoTab implements MoSavable, MoLoadable {
     private ProgressBar progressBar;
     private ImageButton moreTabButton;
     private View errorLayout;
+    private MoFindBar moFindBar;
     private boolean captureImage = true;
     // suggestions
     private MoTabSuggestion suggestion;
@@ -308,10 +311,14 @@ public class MoTab implements MoSavable, MoLoadable {
     }
 
 
+    private void initMoFindBar(){
+        this.moFindBar = view.findViewById(R.id.tab_find_bar);
+    }
 
 
     private void initMoSearchable(){
-        this.moSearchable = new MoSearchable(this.context,this.view,null){
+        initMoFindBar();
+        this.moSearchable = new MoSearchable(this.context,this.view){
             @Override
             public void onUpFindPressed() {
                 moWebView.findPrevious();
@@ -324,12 +331,12 @@ public class MoTab implements MoSavable, MoLoadable {
 
         };
         this.moSearchable.setSearchOnTextChanged(true)
-                .setSearchTextView(R.id.find_edit_text)
-                .setUpFind(R.id.up_find_bar_button)
-                .setDownFind(R.id.down_find_bar_button)
-                .setCancelButton(R.id.close_find_bar)
+                .setSearchTextView(moFindBar.getEditText())
+                .setUpFind(moFindBar.getMiddleButton())
+                .setDownFind(moFindBar.getRightButton())
+                .setCancelButton(moFindBar.LId())
                 .addNormalViews(R.id.tab_search_bar_card_view,R.id.suggestion_tab_card_view,R.id.tab_progress)
-                .addUnNormalViews(R.id.tab_find_bar)
+                .addUnNormalViews(moFindBar)
                 .setOnSearchListener(s -> {
                     this.moWebView.findAllAsync(s, (index, size, finishedFinding) -> {
                         //disable or enable the buttons based on the index and size

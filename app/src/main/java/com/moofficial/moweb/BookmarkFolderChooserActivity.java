@@ -1,12 +1,10 @@
 package com.moofficial.moweb;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoOriginalActivity;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoImageButtonBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoMarginBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoSearchBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
@@ -22,11 +20,13 @@ import com.moofficial.moweb.Moweb.MoBookmark.MoOnOpenBookmarkListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class BookmarkFolderChooserActivity extends MoOriginalActivity implements MoOnOpenBookmarkListener {
 
 
     public static final String CHOSEN_FOLDER_TAG = "chosen_folder";
+    public static final String EXTRA_FOLDER_NAME = "extrafoldername";
 
     private MoRecyclerView recyclerView;
     private MoBookmarkRecyclerAdapter recyclerAdapter;
@@ -34,21 +34,22 @@ public class BookmarkFolderChooserActivity extends MoOriginalActivity implements
     private MoSearchable moSearchable;
     private MoSearchBar searchBar;
     private MoToolBar moToolBar;
+    private MoBookmark currentBookmark;
+    private ArrayList<MoBookmark> allPossibleFolders,showingFolders = new ArrayList<>();
 
     @Override
     protected void init() {
+        currentBookmark = MoBookmarkManager.getFolder(Objects.requireNonNull(getIntent().
+                getExtras()).getString(EXTRA_FOLDER_NAME));
         initUI();
         initClass();
     }
 
     private void initUI(){
         setTitle(R.string.folder_chooser_title);
-        moToolBar = new MoToolBar(this);
-        moToolBar.getMiddleButton().setVisibility(View.GONE);
-        moToolBar.customize(new MoImageButtonBuilder(this).setIcon(R.drawable.ic_baseline_search_24),moToolBar.RId());
+        initMoToolbar();
+        initMoSearchbar();
 
-        searchBar = new MoSearchBar(this);
-        searchBar.setVisibility(View.GONE);
         toolbar.addToolbar(moToolBar);
         toolbar.addToolbar(searchBar);
 
@@ -58,8 +59,24 @@ public class BookmarkFolderChooserActivity extends MoOriginalActivity implements
         syncTitle(moToolBar.getTitle());
     }
 
+    private void initMoSearchbar() {
+        searchBar = new MoSearchBar(this);
+        searchBar.getMaterialCardView().makeTransparent();
+        searchBar.setVisibility(View.GONE);
+    }
+
+    private void initMoToolbar() {
+        moToolBar = new MoToolBar(this);
+        moToolBar.getMiddleButton().setVisibility(View.GONE);
+        moToolBar.getCardView().makeTransparent();
+        moToolBar.setRightIcon(R.drawable.ic_baseline_search_24);
+    }
+
 
     private void initClass(){
+        allPossibleFolders = MoBookmarkManager.getFolders(this.currentBookmark);
+        MoBookmarkManager.sortAlphabetically(allPossibleFolders);
+        showingFolders.addAll(allPossibleFolders);
         initRecyclerView();
         initSearch();
     }
@@ -69,7 +86,7 @@ public class BookmarkFolderChooserActivity extends MoOriginalActivity implements
         moSearchable = new MoSearchable(this, toolbar.getView(), new MoSearchableList() {
             @Override
             public List<? extends MoSearchableItem> getSearchableItems() {
-                return MoBookmarkManager.getFolders();
+                return allPossibleFolders;
             }
 
             @Override
@@ -91,7 +108,7 @@ public class BookmarkFolderChooserActivity extends MoOriginalActivity implements
                 .setSearchTextView(searchBar.ETId())
                 .setClearSearch(searchBar.RBId())
                 .setCancelButton(searchBar.LBId())
-                .setOnSearchCanceled(() -> updateAdapter(MoBookmarkManager.getFolders()))
+                .setOnSearchCanceled(() -> updateAdapter(allPossibleFolders))
                 .setOnSearchFinished(list -> {
                     //noinspection unchecked
                     runOnUiThread(() -> updateAdapter((ArrayList<MoBookmark>)list));
@@ -107,7 +124,7 @@ public class BookmarkFolderChooserActivity extends MoOriginalActivity implements
 
     private void initRecyclerView() {
 
-        recyclerAdapter = new MoBookmarkRecyclerAdapter(this, MoBookmarkManager.getFolders())
+        recyclerAdapter = new MoBookmarkRecyclerAdapter(this, showingFolders)
                 .setOpenBookmarkListener(this)
                 .setDisableLongClick(true)
         ;
@@ -142,13 +159,11 @@ public class BookmarkFolderChooserActivity extends MoOriginalActivity implements
     }
 
 
-    public static void startActivity(Context context){
-        Intent i = new Intent(context,BookmarkFolderChooserActivity.class);
-        context.startActivity(i);
-    }
 
-    public static void startActivityForResult(Activity a,int code){
+
+    public static void startActivityForResult(Activity a,MoBookmark b,int code){
         Intent i = new Intent(a,BookmarkFolderChooserActivity.class);
+        i.putExtra(EXTRA_FOLDER_NAME,b.getName());
         a.startActivityForResult(i,code);
     }
 

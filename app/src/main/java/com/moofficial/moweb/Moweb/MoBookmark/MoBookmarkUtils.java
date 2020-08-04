@@ -8,7 +8,7 @@ public class MoBookmarkUtils {
 
     public static String getCombinedSurfaceUrl(MoBookmark b){
         StringBuilder sb = new StringBuilder();
-        for(MoBookmark book : b.getSubBookmarks()){
+        for(MoBookmark book : b.getSubs()){
             if(!book.isFolder()){
                 sb.append(book.getUrl()).append("\n");
             }

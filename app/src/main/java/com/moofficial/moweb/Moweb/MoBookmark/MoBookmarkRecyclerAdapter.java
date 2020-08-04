@@ -15,23 +15,24 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterVi
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPreviewable.MoPreviewAdapter;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoDeleteUtils;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoListDeletable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoListDelete;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSearchable.MoSearchableItem;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSearchable.MoSearchableList;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSelectable.MoSelectableItem;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSelectable.MoListSelectable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSelectable.MoSelectableList;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSelectable.MoSelectableUtils;
 import com.moofficial.moweb.BookmarkActivity;
 import com.moofficial.moweb.EditBookmarkActivity;
 import com.moofficial.moweb.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
+// TODO: REMOVE MO DELETABLE AND REPLACE IT WITH MO SELECTABLE
 public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHolder,MoBookmark>
-        implements MoListDeletable, MoSearchableList {
+        implements MoSearchableList , MoSelectableList<MoBookmark> {
 
 
-    private MoListDelete moListDelete;
+    private MoListSelectable<MoBookmark> moListSelectable;
     private Context context;
     private boolean disableLongClick = false;
     private MoOnOpenBookmarkListener openBookmarkListener = new MoOnOpenBookmarkListener() {
@@ -45,12 +46,16 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
 
         }
     };
+    private ArrayList<MoBookmark> selectedItems = new ArrayList<>();
 
 
     public MoBookmarkRecyclerAdapter(Context context, List<MoBookmark> dataSet) {
         super(dataSet);
         this.context = context;
     }
+
+
+
 
     public MoOnOpenBookmarkListener getOpenBookmarkListener() {
         return openBookmarkListener;
@@ -83,7 +88,7 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
                 h.title.setText(bookmark.getName());
                 break;
             case MoBookmark.FOLDER:
-                h.url.setText(bookmark.subBookMarkSize()+" items");
+                h.url.setText(bookmark.size()+" items");
                 h.title.setText(bookmark.getName());
                 break;
         }
@@ -113,37 +118,50 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
                             MoBookmarkManager.shareBookmark(context,b);
                             return false;
                         }),
-                        new Pair<>(context.getString(R.string.delete), menuItem -> {
-                            activateDeleteMode(i);
+//                        new Pair<>(context.getString(R.string.delete), menuItem -> {
+//                            activateDeleteMode(i);
+//                            return false;
+//                        }),
+                        new Pair<>(context.getString(R.string.edit), menuItem -> {
+                            EditBookmarkActivity.startActivityForResult((Activity) context,b,
+                                    BookmarkActivity.EDIT_BOOKMARK_REQUEST);
+                            return false;
+                        }),
+                        new Pair<>(context.getString(R.string.select),menuItem -> {
+                            activateSelectMode(i);
                             return false;
                         })
                 );
-                if(!b.isFolder()){
-                    p.addEntry( new Pair<>(context.getString(R.string.edit), menuItem -> {
-                        EditBookmarkActivity.startActivityForResult((Activity) context,b,
-                                BookmarkActivity.EDIT_BOOKMARK_REQUEST);
-                        return false;
-                    }));
-                }
                 p.show(view);
                 return true;
             });
         }
     }
 
-    private void activateDeleteMode(int i) {
-        if(!moListDelete.isInActionMode()){
-            moListDelete.setDeleteMode(true);
+    private void activateSelectMode(int i){
+        if(!moListSelectable.isInActionMode()){
+            moListSelectable.activateSpecialMode();
             onSelect(i);
         }
     }
 
+//    private void activateDeleteMode(int i) {
+//        if(!moListDelete.isInActionMode()){
+//            moListDelete.setDeleteMode(true);
+//            onSelect(i);
+//        }
+//    }
+
 
     private void onClickListener(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark,int i) {
         h.cardView.setOnClickListener(view -> {
-            if(moListDelete!=null && moListDelete.isInActionMode()){
+//            if(moListDelete!=null && moListDelete.isInActionMode()){
+//                onSelect(i);
+//            }else
+            if(moListSelectable!=null && moListSelectable.isInActionMode()){
                 onSelect(i);
-            }else{
+            }
+            else{
                 if(bookmark.isFolder()){
                     openBookmarkListener.openFolder(bookmark);
                 }else{
@@ -163,17 +181,22 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
         return new MoBookmarkViewHolder(v);
     }
 
-    @Override
-    public void setMoDelete(MoListDelete moListDelete) {
-        this.moListDelete = moListDelete;
-    }
+//    @Override
+//    public void setMoDelete(MoListDelete moListDelete) {
+//        this.moListDelete = moListDelete;
+//    }
+//
+//    @Override
+//    public void setListSelectable(MoListSelectable s) {
+//        this.moListSelectable = s;
+//    }
+//
+//    @Override
+//    public void notifySituationChanged() {
+//        notifyDataSetChanged();
+//    }
 
-    @Override
-    public void notifySituationChanged() {
-        notifyDataSetChanged();
-    }
-
-    @Override
+    //@Override
     public void deleteSelected() {
         for(int i = dataSet.size() - 1;i>=0;i--){
             if(dataSet.get(i).isSelected()){
@@ -182,32 +205,38 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
         }
         MoBookmarkManager.save(context);
     }
-
-    @Override
-    public int size() {
-        return getItemCount();
-    }
-
+//
+//    @Override
+//    public int size() {
+//        return getItemCount();
+//    }
+//
     @Override
     public void selectAllElements() {
-        MoSelectableUtils.selectAllItems(dataSet,this.moListDelete);
+        MoSelectableUtils.selectAllItems(dataSet,this.moListSelectable);
     }
 
     @Override
     public void deselectAllElements() {
-        MoSelectableUtils.deselectAllItems(dataSet,this.moListDelete);
+        MoSelectableUtils.deselectAllItems(dataSet,this.moListSelectable);
     }
 
     @Override
+    public void setListSelectable(MoListSelectable<MoBookmark> moListSelectable) {
+        this.moListSelectable = moListSelectable;
+    }
+
+    //@Override
     public void onSelect(int i) {
-        moListDelete.notifySizeChange(dataSet.get(i).onSelect());
+        moListSelectable.onSelect(dataSet.get(i));
         notifyItemChanged(i);
     }
 
     @Override
-    public List<? extends MoSelectableItem> getSelectedItems() {
-        return dataSet;
+    public List<MoBookmark> getSelectedItems() {
+        return selectedItems;
     }
+
 
     @Override
     public List<? extends MoSearchableItem> getSearchableItems() {

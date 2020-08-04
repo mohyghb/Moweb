@@ -3,7 +3,6 @@ package com.moofficial.moweb;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -91,7 +90,12 @@ public class BookmarkActivity extends MoOriginalActivity implements MoOnOpenBook
     private void initListSelectableToolbar(){
         this.moListSelectableToolbar = new MoToolBar(this)
                 .hideLeft()
-                .setRightIcon(R.drawable.ic_baseline_folder_24);
+                .setRightIcon(R.drawable.ic_baseline_folder_24).setRightOnClickListener(view -> {
+
+                }).setMiddleIcon(R.drawable.ic_baseline_delete_24)
+                .setMiddleOnClickListener(view -> {
+
+                });
         this.moListSelectableToolbar.getCardView().makeTransparent();
     }
 
@@ -106,7 +110,7 @@ public class BookmarkActivity extends MoOriginalActivity implements MoOnOpenBook
         initMoListDelete();
         initMoListSelectable();
         initListViewSync();
-        syncTitle(findViewById(moToolBar.TVId()));
+        syncTitle(moToolBar.getTitle(),moListSelectableToolbar.getTitle());
     }
 
 
@@ -116,7 +120,7 @@ public class BookmarkActivity extends MoOriginalActivity implements MoOnOpenBook
      * @return
      */
     private ArrayList<MoBookmark> getCurrentFolderBookmarks(){
-        return folders.peek().getSubBookmarks();
+        return folders.peek().getSubs();
     }
 
     /**
@@ -129,12 +133,6 @@ public class BookmarkActivity extends MoOriginalActivity implements MoOnOpenBook
     }
 
 
-    private void createNewFolder(String s){
-        getCurrentFolderBookmarks().add(MoBookmarkManager.buildFolder(s));
-        MoBookmarkManager.save(this);
-        recyclerView.notifyItemAddedLastPosition();
-        Toast.makeText(this,String.format("Folder %s was created!",s),Toast.LENGTH_SHORT).show();
-    }
 
 
 
@@ -185,14 +183,16 @@ public class BookmarkActivity extends MoOriginalActivity implements MoOnOpenBook
     }
 
     private void createFolder(MoInputBar folderInput, DialogInterface dialogInterface) {
-        String s = folderInput.getInputText();
+        String s = folderInput.getInputText().trim();
+        if(s.isEmpty()){
+            Toast.makeText(this,"Name can not be empty",Toast.LENGTH_SHORT).show();
+        }
         if(MoBookmarkManager.hasFolder(s)){
             Toast.makeText(this,"Folder " +s + " already exits",Toast.LENGTH_SHORT).show();
             return;
         }
 
-        getCurrentFolderBookmarks().add(MoBookmarkManager.buildFolder(s));
-        MoBookmarkManager.save(this);
+        MoBookmarkManager.createFolder(this,s,folders.peek());
         recyclerView.notifyItemAddedLastPosition();
         Toast.makeText(this,String.format("Folder %s was created!",s),Toast.LENGTH_SHORT).show();
         dialogInterface.dismiss();
@@ -213,10 +213,11 @@ public class BookmarkActivity extends MoOriginalActivity implements MoOnOpenBook
     }
 
     private void initMoSearchable() {
+        ArrayList<MoBookmark> everything = MoBookmarkManager.getEverything();
         this.moSearchable = new MoSearchable(this, getRootView(), new MoSearchableList() {
             @Override
             public List<? extends MoSearchableItem> getSearchableItems() {
-                return getCurrentFolderBookmarks();
+                return everything;
             }
 
             @Override
@@ -243,7 +244,10 @@ public class BookmarkActivity extends MoOriginalActivity implements MoOnOpenBook
                     //noinspection unchecked
                     updateRecyclerAdapter((ArrayList<MoBookmark>) list);
                 }).setOnSearchCanceled(() -> {
-                    updateRecyclerAdapter(getCurrentFolderBookmarks());
+//                    if(!moListSelectable.isInActionMode()){
+                       // updateRecyclerAdapter(getCurrentFolderBookmarks());
+                    //}
+
                 })
         ;
     }
@@ -254,17 +258,17 @@ public class BookmarkActivity extends MoOriginalActivity implements MoOnOpenBook
     }
 
     private void initMoListDelete(){
-        this.moListDelete = new MoListDelete(this,getRootView(),this.recyclerAdapter);
-        this.moListDelete.setCounterView(title.getId()," Selected")
-                         .setOnDeleteFinished(() -> updateRecyclerAdapter(getCurrentFolderBookmarks()))
-                         .setOnCanceledListener(() -> updateRecyclerAdapter(getCurrentFolderBookmarks()))
-                         .setLoadTitleAfter(true)
-                         .addNormalViews(moToolBar.LId(), moToolBar.MId(), moToolBar.RId(),floatingActionButton.getView().getId())
-                         .addUnNormalViews(bottomDeleteBar)
-                         .setCancelButton(bottomDeleteBar.CBId())
-                         .setConfirmButton(bottomDeleteBar.DBId())
-        ;
-        this.moListDelete.setInvisible(View.GONE);
+//        this.moListDelete = new MoListDelete<MoBookmark>(this,getRootView(),this.recyclerAdapter);
+//        this.moListDelete.setCounterView(title.getId()," Selected")
+//                         .setOnDeleteFinished(() -> updateRecyclerAdapter(getCurrentFolderBookmarks()))
+//                         .setOnCanceledListener(() -> updateRecyclerAdapter(getCurrentFolderBookmarks()))
+//                         .setLoadTitleAfter(true)
+//                         .addNormalViews(moToolBar.LId(), moToolBar.MId(), moToolBar.RId(),floatingActionButton.getView().getId())
+//                         .addUnNormalViews(bottomDeleteBar)
+//                         .setCancelButton(bottomDeleteBar.CBId())
+//                         .setConfirmButton(bottomDeleteBar.DBId())
+//        ;
+//        this.moListDelete.setInvisible(View.GONE);
     }
 
     /**
@@ -272,17 +276,20 @@ public class BookmarkActivity extends MoOriginalActivity implements MoOnOpenBook
      * and then move it to another folder
      */
     private void initMoListSelectable(){
-        this.moListSelectable = new MoListSelectable(this,getRootView(),this.recyclerAdapter)
-                .addNormalViews(this.moToolBar)
+        this.moListSelectable = new MoListSelectable<MoBookmark>(this,getRootView(),this.recyclerAdapter)
+                .addNormalViews(this.moToolBar,this.floatingActionButton.getView())
                 .addUnNormalViews(this.moListSelectableToolbar)
+                .setCounterView(this.title)
                 .setConfirmImageButton(this.moListSelectableToolbar.getRightButton())
+                .setOnCanceledListener(() -> updateRecyclerAdapter(getCurrentFolderBookmarks()))
                 .setOnSelectFinishedListener(list -> {
                     Toast.makeText(this,list.size()+"",Toast.LENGTH_SHORT).show();
                 });
     }
 
     private void initListViewSync(){
-        this.listViewSync = new MoListViewSync(this.moListDelete,this.moSearchable,this.moListSelectable);
+        this.listViewSync = new MoListViewSync(this.moSearchable,this.moListSelectable)
+                .setPutOnHold(true);
     }
 
 
