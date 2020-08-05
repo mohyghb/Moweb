@@ -167,6 +167,18 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
         }
     }
 
+    /**
+     * returns the key used inside the maps
+     * to identify different bookmark types
+     * @return
+     */
+    public String getKey(){
+        if(this.isFolder()){
+            return name;
+        }else{
+            return getUrl();
+        }
+    }
 
     public boolean isEmpty(){
         return subs.isEmpty();
@@ -272,7 +284,15 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
 
     @Override
     public boolean updateSearchable(Object... objects) {
-        this.isSearched = MoSearchableUtils.isSearchable(true,objects,this.name,this.url.getUrlString());
+        switch (type){
+            case FOLDER:
+                this.isSearched = MoSearchableUtils.isSearchable(true,objects,this.name);
+                break;
+            case BOOKMARK:
+                this.isSearched = MoSearchableUtils.isSearchable(true,objects,this.name,this.url.getUrlString());
+                break;
+        }
+
         return isSearchable();
     }
 

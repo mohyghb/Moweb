@@ -71,15 +71,17 @@ public class EditBookmarkActivity extends MoOriginalActivity {
         initFolder();
 
         // adding the content to nested linear layout
-        linearNested.addView(titleInput, MoMarginBuilder.getLinearParams(0,8,0,0));
+        linearNested.addView(titleInput, MoMarginBuilder.getLinearParams(8));
         linearNested.addView(folderButton, MoMarginBuilder.getLinearParams(0,8,0,0));
 
     }
 
     private void initEditName() {
         titleInput = new MoInputBar(this)
-                .setTitle(getString(R.string.title))
+                .setHint(R.string.name_hint)
+                .setTitle(R.string.name)
                 .setText(editBookmark.getName());
+        titleInput.getCardView().makeCardRectangular();
         if(editBookmark.isFolder()){
             // we need to add a text watcher so
             // that it tells them if this is not acceptable
@@ -105,11 +107,12 @@ public class EditBookmarkActivity extends MoOriginalActivity {
     }
 
     private void initEditUrl() {
+        urlInput = new MoInputBar(this);
         if(!editBookmark.isFolder()){
-            urlInput = new MoInputBar(this)
-                    .setTitle(getString(R.string.url))
-                    .setText(editBookmark.getUrl());
-            linearNested.addView(urlInput, MoMarginBuilder.getLinearParams(0,8,0,0));
+            urlInput.setTitle(getString(R.string.url))
+                    .setHint(R.string.url_hint)
+                    .setText(editBookmark.getUrl()).getCardView().makeCardRectangular();
+            linearNested.addView(urlInput, MoMarginBuilder.getLinearParams(8));
         }
     }
 
@@ -121,8 +124,8 @@ public class EditBookmarkActivity extends MoOriginalActivity {
                 .setDescription(newFolderName)
                 .setOnButtonClickListener(view -> {
                     BookmarkFolderChooserActivity.startActivityForResult(EditBookmarkActivity.this,
-                            this.editBookmark,
-                            CHOOSE_FOLDER_REQUEST_CODE);
+                            CHOOSE_FOLDER_REQUEST_CODE,
+                            this.editBookmark);
                 });
     }
 
@@ -130,19 +133,30 @@ public class EditBookmarkActivity extends MoOriginalActivity {
         this.acceptDenyLayout = new MoAcceptDenyLayout(this);
         this.acceptDenyLayout.setAcceptButtonText(R.string.save)
                              .setOnAcceptClickedListener(view -> {
-                                setResultOkay();
-                                 MoBookmarkManager.editBookmark(editBookmark,originalKey,
-                                         titleInput.getInputText(),
-                                         editBookmark.isFolder()?"":urlInput.getInputText(),
-                                         newFolderName);
-                                 finish();
+                                 onSavePressed();
                              }).setOnDenyClickedListener(view -> {
                                 setResultCanceled();
                                 finish();
-                             });
+                             }).getCardView().makeTransparent()
+        ;
         linearBottom.addView(this.acceptDenyLayout);
     }
 
+    /**
+     * if we can validate all the fields, we save it
+     * otherwise we show them the error
+     */
+    private void onSavePressed() {
+        if(MoBookmarkManager.validateEditInputs(this,editBookmark,titleInput.getEditText(),
+                urlInput.getEditText(),originalKey)){
+            setResultOkay();
+            MoBookmarkManager.editBookmark(editBookmark,originalKey,
+                    titleInput.getInputText(),
+                    editBookmark.isFolder()?"":urlInput.getInputText(),
+                    newFolderName);
+            finish();
+        }
+    }
 
 
     private void initToolbar(){

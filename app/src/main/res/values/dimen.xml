@@ -33,4 +33,7 @@
 
     <item name="mo_fade_init_value" format="float" type="dimen">0.3</item>
 
+
+    <dimen name="mo_fading_edge_text">100dp</dimen>
+
 </resources>

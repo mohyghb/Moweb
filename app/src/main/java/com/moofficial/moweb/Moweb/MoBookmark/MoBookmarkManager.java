@@ -1,11 +1,13 @@
 package com.moofficial.moweb.Moweb.MoBookmark;
 
 import android.content.Context;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.moofficial.moessentials.MoEssentials.MoConnections.MoShare;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoReadWrite.MoReadWrite;
+import com.moofficial.moweb.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,16 +70,75 @@ public class MoBookmarkManager {
 
 
     /**
-     *
+     * creates a folder with title 'title' and runs onAddDone
+     * or returns and displays a message to user
      * @param c
      * @param title
      */
-    public static void createFolder(Context c,String title,MoBookmark parent){
+    public static void createFolder(Context c,String title,MoBookmark parent,Runnable onAddDone){
+        if (!canCreateThisFolder(c, title)) return;
         MoBookmark folder = buildFolder(title);
         addToMap(folder);
         parent.add(folder);
         save(c);
+        onAddDone.run();
     }
+
+    /**
+     * returns true if we can create a folder named
+     * title
+     * @param c context of the place
+     * @param title of the new folder
+     * @return true if this folder can be created
+     */
+    private static boolean canCreateThisFolder(Context c, String title) {
+        if(title.isEmpty()){
+            Toast.makeText(c,"Name can not be empty",Toast.LENGTH_SHORT).show();
+            return false;
+        }else if(MoBookmarkManager.hasFolder(title)){
+            Toast.makeText(c,"Folder " +title + " already exits",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+
+    public static boolean validateEditInputs(Context c,MoBookmark b, TextView name,TextView url,String originalKey){
+        String nameText = name.getText().toString();
+        int errors = 0;
+        switch (b.getType()){
+            case FOLDER:
+                if(nameText.isEmpty()){
+                    name.setError(c.getString(R.string.error_bookmark_empty_name));
+                    errors++;
+                }else if(!nameText.equals(originalKey) && hasFolder(nameText)){
+                    name.setError(c.getString(R.string.error_bookmark_folder_already_exist));
+                    errors++;
+                }
+                break;
+            case BOOKMARK:
+                String urlText = url.getText().toString();
+                if(nameText.isEmpty()){
+                    // it can not be empty
+                    name.setError(c.getString(R.string.error_bookmark_empty_name));
+                    errors++;
+                }
+                if(urlText.isEmpty()){
+                    url.setError(c.getString(R.string.error_bookmark_empty_url));
+                    errors++;
+                }else if(!originalKey.equals(urlText) && has(urlText)){
+                    // the url is not for this bookmark
+                    // and we have it somewhere else inside our
+                    // database, therefore, they can not change it
+                    // to this url
+                    url.setError(c.getString(R.string.error_bookmark_url_already_exist));
+                    errors++;
+                }
+                break;
+        }
+        return errors==0;
+    }
+
 
     /**
      * adds the bookmark if it does not exist or
@@ -242,13 +303,13 @@ public class MoBookmarkManager {
     /**
      * if this folder is inside the sub-folders, or
      * the parent is this folder, we do not want to include them inside the
-     * search. If you don't care about this, pass null,null
-     * @param currentFolder that we are in (we can not include the parent or the sub folders
+     * search. If you don't care about this, pass null
+     * @param bookmarks that we are trying to move (we can not include the parent or the sub folders
      *                      so we need to filter them out of the equation and we can not show itself)
      * @return all the folders that are applicable using those conditions
      */
-    public static ArrayList<MoBookmark> getFolders(MoBookmark currentFolder){
-        if(currentFolder == null){
+    public static ArrayList<MoBookmark> getFolders(MoBookmark ... bookmarks){
+        if(bookmarks == null || bookmarks.length == 0){
             return getFolders();
         }
         // we include all the folders except:
@@ -256,12 +317,16 @@ public class MoBookmarkManager {
         // 2- parent folder
         // 3- any sub folder under the current folder
         HashSet<MoBookmark> folders = new HashSet<>(mapOfFolders.values());
-        // removing the current folder from the set
-        folders.remove(currentFolder);
-        // removing the parent folder from set
-        folders.remove(currentFolder.getParent());
-        // recursively remove all the sub folders from the set
-        currentFolder.removeAllTheSubFoldersRecursive(folders);
+        for(MoBookmark b: bookmarks){
+            // removing the current folder from the set
+            if(b.isFolder()){
+                folders.remove(b);
+            }
+            // removing the parent folder from set
+            folders.remove(b.getParent());
+            // recursively remove all the sub folders from the set
+            b.removeAllTheSubFoldersRecursive(folders);
+        }
         return new ArrayList<>(folders);
     }
 
@@ -314,6 +379,16 @@ public class MoBookmarkManager {
         return mapOfFolders.get(name);
     }
 
+
+    public static MoBookmark get(int type,String key){
+        switch (type){
+            case FOLDER:
+                return getFolder(key);
+            case BOOKMARK:
+                return getBookmark(key);
+        }
+        return null;
+    }
 
     /**
      * shares the bookmark
@@ -410,6 +485,11 @@ public class MoBookmarkManager {
             b.getParent().remove(b);
         }
     }
+
+
+
+
+
 
 
 }

@@ -118,10 +118,6 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
                             MoBookmarkManager.shareBookmark(context,b);
                             return false;
                         }),
-//                        new Pair<>(context.getString(R.string.delete), menuItem -> {
-//                            activateDeleteMode(i);
-//                            return false;
-//                        }),
                         new Pair<>(context.getString(R.string.edit), menuItem -> {
                             EditBookmarkActivity.startActivityForResult((Activity) context,b,
                                     BookmarkActivity.EDIT_BOOKMARK_REQUEST);
@@ -198,19 +194,12 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
 
     //@Override
     public void deleteSelected() {
-        for(int i = dataSet.size() - 1;i>=0;i--){
-            if(dataSet.get(i).isSelected()){
-                MoBookmarkManager.remove(dataSet.get(i));
-            }
+        for(MoBookmark b: selectedItems){
+            MoBookmarkManager.remove(b);
         }
         MoBookmarkManager.save(context);
     }
-//
-//    @Override
-//    public int size() {
-//        return getItemCount();
-//    }
-//
+
     @Override
     public void selectAllElements() {
         MoSelectableUtils.selectAllItems(dataSet,this.moListSelectable);
@@ -230,6 +219,11 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
     public void onSelect(int i) {
         moListSelectable.onSelect(dataSet.get(i));
         notifyItemChanged(i);
+    }
+
+    @Override
+    public void notifySituationChanged() {
+        notifyDataSetChanged();
     }
 
     @Override

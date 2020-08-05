@@ -16,6 +16,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSearchable.MoSear
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkRecyclerAdapter;
+import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkUtils;
 import com.moofficial.moweb.Moweb.MoBookmark.MoOnOpenBookmarkListener;
 
 import java.util.ArrayList;
@@ -34,13 +35,13 @@ public class BookmarkFolderChooserActivity extends MoOriginalActivity implements
     private MoSearchable moSearchable;
     private MoSearchBar searchBar;
     private MoToolBar moToolBar;
-    private MoBookmark currentBookmark;
+    private MoBookmark[] currentBookmark;
     private ArrayList<MoBookmark> allPossibleFolders,showingFolders = new ArrayList<>();
 
     @Override
     protected void init() {
-        currentBookmark = MoBookmarkManager.getFolder(Objects.requireNonNull(getIntent().
-                getExtras()).getString(EXTRA_FOLDER_NAME));
+        currentBookmark = MoBookmarkUtils.decodeBookmarks(Objects.requireNonNull(getIntent().getExtras()).
+                getStringArray(EXTRA_FOLDER_NAME));
         initUI();
         initClass();
     }
@@ -161,9 +162,9 @@ public class BookmarkFolderChooserActivity extends MoOriginalActivity implements
 
 
 
-    public static void startActivityForResult(Activity a,MoBookmark b,int code){
+    public static void startActivityForResult(Activity a,int code,MoBookmark ... b){
         Intent i = new Intent(a,BookmarkFolderChooserActivity.class);
-        i.putExtra(EXTRA_FOLDER_NAME,b.getName());
+        i.putExtra(EXTRA_FOLDER_NAME, MoBookmarkUtils.encodeBookmarks(b));
         a.startActivityForResult(i,code);
     }
 

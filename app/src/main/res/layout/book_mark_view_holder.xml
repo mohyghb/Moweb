@@ -56,16 +56,25 @@
 
                     <TextView
                         android:id="@+id/title_bookmark"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="TextView" />
+                        android:text="TextView"
+                        android:requiresFadingEdge="horizontal"
+                        android:fadingEdgeLength="40dp"
+                        android:ellipsize="none"
+                        android:singleLine="true"
+                        />
 
                     <TextView
                         android:id="@+id/url_bookmark"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-light"
-                        android:text="TextView" />
+                        android:text="TextView"
+                        android:requiresFadingEdge="horizontal"
+                        android:fadingEdgeLength="40dp"
+                        android:singleLine="true"
+                        android:ellipsize="none"/>
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

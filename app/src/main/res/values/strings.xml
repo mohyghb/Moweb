@@ -103,9 +103,17 @@
 
     <!--Bookmark-->
     <string name="bookmark_title">Bookmarks</string>
+    <string name="name">Name</string>
+    <string name="name_hint">Enter a name</string>
+    <string name="url_hint">Enter a url</string>
     <string name="add_folder_in_bookmark_hint_dialog">Folder name</string>
     <string name="new_folder">New Folder</string>
     <string name="new_folder_message">Enter the name of the folder and press done</string>
+    <string name="error_bookmark_empty_name">Name can not be empty</string>
+    <string name="error_bookmark_empty_url">URL can not be empty</string>
+    <string name="error_bookmark_url_already_exist">URL already exist</string>
+    <string name="error_bookmark_folder_already_exist">Folder already exist</string>
+
 
 
 </resources>
