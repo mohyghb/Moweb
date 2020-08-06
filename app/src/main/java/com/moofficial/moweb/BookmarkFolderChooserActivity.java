@@ -2,9 +2,10 @@ package com.moofficial.moweb;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 
-import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoOriginalActivity;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoMarginBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoSearchBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class BookmarkFolderChooserActivity extends MoOriginalActivity implements MoOnOpenBookmarkListener {
+public class BookmarkFolderChooserActivity extends MoSmartActivity implements MoOnOpenBookmarkListener {
 
 
     public static final String CHOSEN_FOLDER_TAG = "chosen_folder";
@@ -47,6 +48,7 @@ public class BookmarkFolderChooserActivity extends MoOriginalActivity implements
     }
 
     private void initUI(){
+        disableToolbarAnimation();
         setTitle(R.string.folder_chooser_title);
         initMoToolbar();
         initMoSearchbar();
@@ -67,10 +69,12 @@ public class BookmarkFolderChooserActivity extends MoOriginalActivity implements
     }
 
     private void initMoToolbar() {
-        moToolBar = new MoToolBar(this);
-        moToolBar.getMiddleButton().setVisibility(View.GONE);
+        moToolBar = new MoToolBar(this)
+                .hideMiddle()
+                .setLeftOnClickListener(view -> onBackPressed())
+                .setRightIcon(R.drawable.ic_baseline_search_24);
         moToolBar.getCardView().makeTransparent();
-        moToolBar.setRightIcon(R.drawable.ic_baseline_search_24);
+        ;
     }
 
 
@@ -161,6 +165,9 @@ public class BookmarkFolderChooserActivity extends MoOriginalActivity implements
 
 
 
+    public static String getChosenFolder(Bundle extras) {
+        return extras.getString(CHOSEN_FOLDER_TAG);
+    }
 
     public static void startActivityForResult(Activity a,int code,MoBookmark ... b){
         Intent i = new Intent(a,BookmarkFolderChooserActivity.class);

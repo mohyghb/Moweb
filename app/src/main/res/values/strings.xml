@@ -11,6 +11,7 @@
     <string name="folder_chooser_title">Choose a folder</string>
     <string name="save">Save</string>
     <string name="select">Select</string>
+    <string name="yes">Yes</string>
 
 
     <!--tab more button options-->
@@ -113,6 +114,7 @@
     <string name="error_bookmark_empty_url">URL can not be empty</string>
     <string name="error_bookmark_url_already_exist">URL already exist</string>
     <string name="error_bookmark_folder_already_exist">Folder already exist</string>
+
 
 
 

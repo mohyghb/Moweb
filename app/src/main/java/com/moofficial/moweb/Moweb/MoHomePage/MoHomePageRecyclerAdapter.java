@@ -9,21 +9,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoAnimation.MoAnimation;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoPreviewable.MoPreviewAdapter;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoPreviewAdapter;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoDeleteUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoListDeletable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoListDelete;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSelectable.MoSelectableItem;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSelectable.MoSelectableUtils;
 import com.moofficial.moweb.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class MoHomePageRecyclerAdapter extends MoPreviewAdapter<MoHomePageViewHolder,MoHomePage> implements MoListDeletable {
+public class MoHomePageRecyclerAdapter extends MoPreviewAdapter<MoHomePageViewHolder,MoHomePage>
+        implements MoListDeletable<MoHomePage> {
 
 
     private Context context;
-    private MoListDelete moListDelete;
+    private MoListDelete<MoHomePage> moListDelete;
+    private List<MoHomePage> selectedItems = new ArrayList<>();
 
     public MoHomePageRecyclerAdapter(Context context, List<MoHomePage> dataSet) {
         super(dataSet);
@@ -125,7 +127,7 @@ public class MoHomePageRecyclerAdapter extends MoPreviewAdapter<MoHomePageViewHo
 
     @Override
     public void deselectAllElements() {
-        MoSelectableUtils.deselectAllItems(dataSet,this.moListDelete);
+        MoSelectableUtils.deselectAllItems(this.moListDelete);
     }
 
     @Override
@@ -138,7 +140,7 @@ public class MoHomePageRecyclerAdapter extends MoPreviewAdapter<MoHomePageViewHo
     }
 
     @Override
-    public List<? extends MoSelectableItem> getSelectedItems() {
-        return dataSet;
+    public List<MoHomePage> getSelectedItems() {
+        return selectedItems;
     }
 }

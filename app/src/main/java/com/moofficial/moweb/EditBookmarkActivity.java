@@ -9,9 +9,8 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoOriginalActivity;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoWindow.MoSoftInputBuilder;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoEditTextBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoMarginBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoAcceptDenyLayout;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoInputBar;
@@ -21,7 +20,9 @@ import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkUtils;
 
-public class EditBookmarkActivity extends MoOriginalActivity {
+import static com.moofficial.moweb.BookmarkFolderChooserActivity.getChosenFolder;
+
+public class EditBookmarkActivity extends MoSmartActivity {
 
     public static final String EXTRA_URL = "extra_url";
     public static final String EXTRA_NAME = "extra_name";
@@ -44,9 +45,9 @@ public class EditBookmarkActivity extends MoOriginalActivity {
 
     private void initOriginalKey() {
         Bundle b = getIntent().getExtras();
-        this.originalKey = b.getString(EXTRA_URL);
+        this.originalKey = getChosenFolder(b);
         if(originalKey == null){
-            this.originalKey  =b.getString(EXTRA_NAME);
+            this.originalKey  = getChosenFolder(b);
             editBookmark = MoBookmarkManager.getFolder(this.originalKey);
         }else{
             editBookmark = MoBookmarkManager.getBookmark(this.originalKey);
@@ -80,30 +81,25 @@ public class EditBookmarkActivity extends MoOriginalActivity {
         titleInput = new MoInputBar(this)
                 .setHint(R.string.name_hint)
                 .setTitle(R.string.name)
-                .setText(editBookmark.getName());
-        titleInput.getCardView().makeCardRectangular();
-        if(editBookmark.isFolder()){
-            // we need to add a text watcher so
-            // that it tells them if this is not acceptable
-            titleInput.customize(new MoEditTextBuilder(this).setWatcher(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                .setText(editBookmark.getName())
+                .addTextWatcher(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    if(MoBookmarkManager.hasFolder(charSequence.toString())){
-                        Toast.makeText(EditBookmarkActivity.this,"has this",Toast.LENGTH_SHORT).show();
                     }
-                }
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        MoBookmarkManager.validateEditInputs(EditBookmarkActivity.this,editBookmark,titleInput.getEditText(),
+                                urlInput.getEditText(),originalKey);
+                    }
 
-                @Override
-                public void afterTextChanged(Editable editable) {
+                    @Override
+                    public void afterTextChanged(Editable editable) {
 
-                }
-            }),titleInput.EDId());
-        }
+                    }
+                });
+        titleInput.getCardView().makeCardRectangular();
+
     }
 
     private void initEditUrl() {
@@ -111,7 +107,25 @@ public class EditBookmarkActivity extends MoOriginalActivity {
         if(!editBookmark.isFolder()){
             urlInput.setTitle(getString(R.string.url))
                     .setHint(R.string.url_hint)
-                    .setText(editBookmark.getUrl()).getCardView().makeCardRectangular();
+                    .setText(editBookmark.getUrl())
+                    .addTextWatcher(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                            MoBookmarkManager.validateEditInputs(EditBookmarkActivity.this,editBookmark,titleInput.getEditText(),
+                                    urlInput.getEditText(),originalKey);
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+
+                        }
+                    })
+                    .getCardView().makeCardRectangular();
             linearNested.addView(urlInput, MoMarginBuilder.getLinearParams(8));
         }
     }
@@ -132,14 +146,16 @@ public class EditBookmarkActivity extends MoOriginalActivity {
     private void initAcceptDeny(){
         this.acceptDenyLayout = new MoAcceptDenyLayout(this);
         this.acceptDenyLayout.setAcceptButtonText(R.string.save)
-                             .setOnAcceptClickedListener(view -> {
-                                 onSavePressed();
-                             }).setOnDenyClickedListener(view -> {
-                                setResultCanceled();
-                                finish();
-                             }).getCardView().makeTransparent()
-        ;
+                             .setOnAcceptClickedListener(view -> onSavePressed())
+                             .setOnDenyClickedListener(view -> onCanceledPressed())
+                             .getCardView().makeTransparent();
+
         linearBottom.addView(this.acceptDenyLayout);
+    }
+
+    private void onCanceledPressed() {
+        setResultCanceled();
+        finish();
     }
 
     /**
@@ -149,11 +165,13 @@ public class EditBookmarkActivity extends MoOriginalActivity {
     private void onSavePressed() {
         if(MoBookmarkManager.validateEditInputs(this,editBookmark,titleInput.getEditText(),
                 urlInput.getEditText(),originalKey)){
-            setResultOkay();
-            MoBookmarkManager.editBookmark(editBookmark,originalKey,
+            MoBookmarkManager.editBookmarkAndSave(this,
+                    editBookmark,
+                    originalKey,
                     titleInput.getInputText(),
                     editBookmark.isFolder()?"":urlInput.getInputText(),
                     newFolderName);
+            setResultOkay();
             finish();
         }
     }
@@ -187,8 +205,7 @@ public class EditBookmarkActivity extends MoOriginalActivity {
                 if(resultCode == RESULT_OK){
                     if (data != null) {
                         //noinspection ConstantConditions
-                        this.newFolderName = data.getExtras().
-                                getString(BookmarkFolderChooserActivity.CHOSEN_FOLDER_TAG);
+                        this.newFolderName = getChosenFolder(data.getExtras());
                         Toast.makeText(this,"Folder was changed to "
                                 +newFolderName,Toast.LENGTH_SHORT).show();
                         folderButton.setDescription(this.newFolderName);
@@ -199,11 +216,6 @@ public class EditBookmarkActivity extends MoOriginalActivity {
     }
 
 
-//    public static void startActivity(Context c,MoBookmark b){
-//        Intent i = new Intent(c,EditBookmarkActivity.class);
-//        i.putExtra(EXTRA_URL,b.getUrl());
-//        c.startActivity(i);
-//    }
 
     public static void startActivityForResult(Activity a, MoBookmark b,int code){
         Intent i = new Intent(a,EditBookmarkActivity.class);
@@ -214,4 +226,7 @@ public class EditBookmarkActivity extends MoOriginalActivity {
         }
         a.startActivityForResult(i,code);
     }
+
+
+
 }

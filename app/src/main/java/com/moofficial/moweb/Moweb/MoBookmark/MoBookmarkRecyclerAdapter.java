@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoPreviewable.MoPreviewAdapter;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoPreviewAdapter;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoDeleteUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSearchable.MoSearchableItem;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSearchable.MoSearchableList;
@@ -207,7 +207,7 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
 
     @Override
     public void deselectAllElements() {
-        MoSelectableUtils.deselectAllItems(dataSet,this.moListSelectable);
+        MoSelectableUtils.deselectAllItems(this.moListSelectable);
     }
 
     @Override

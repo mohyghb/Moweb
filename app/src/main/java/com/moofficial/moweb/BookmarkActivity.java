@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
+import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoMarginBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoPaddingBuilder;
@@ -32,12 +33,14 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Stack;
 
 public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmarkListener {
 
 
     public static final int EDIT_BOOKMARK_REQUEST = 3;
+    public static final int CHOOSE_FOLDER_REQUEST = 4;
 
     private MoRecyclerView recyclerView;
     private MoBookmarkRecyclerAdapter recyclerAdapter;
@@ -83,7 +86,8 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     }
 
     private void initToolBar(){
-        this.moToolBar = new MoToolBar(this);
+        this.moToolBar = new MoToolBar(this)
+                .setLeftOnClickListener(view -> onBackPressed());
         this.moToolBar.getCardView().makeTransparent();
     }
 
@@ -95,7 +99,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
                     // TODO TEST
                     MoBookmark[] m = new MoBookmark[recyclerAdapter.getSelectedItems().size()];
                     recyclerAdapter.getSelectedItems().toArray(m);
-                    BookmarkFolderChooserActivity.startActivityForResult(this,2, m);
+                    BookmarkFolderChooserActivity.startActivityForResult(this,CHOOSE_FOLDER_REQUEST, m);
 
                 }).setMiddleIcon(R.drawable.ic_baseline_delete_24)
                 .setMiddleOnClickListener(view -> {
@@ -317,14 +321,37 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
-            case EDIT_BOOKMARK_REQUEST:
-                if(resultCode == RESULT_OK){
+        if(resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case EDIT_BOOKMARK_REQUEST:
                     initClass();
-                    Toast.makeText(this,"Updated...",Toast.LENGTH_SHORT).show();
-                    MoBookmarkManager.save(this);
-                }
-                break;
+                    Toast.makeText(this, "Successfully updated!", Toast.LENGTH_SHORT).show();
+                    break;
+                case CHOOSE_FOLDER_REQUEST:
+                    if (data != null) {
+                        String newFolderName = BookmarkFolderChooserActivity.getChosenFolder(
+                            Objects.requireNonNull(data.getExtras()));
+                        String limitedVersion = MoString.getLimitedCount(newFolderName,16);
+                         new AlertDialog.Builder(this)
+                                .setTitle("Move to "  + limitedVersion)
+                                .setMessage("Do you want to move " +
+                                        recyclerAdapter.getSelectedItems().size() +
+                                        " items to " + limitedVersion +"?")
+                                .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
+                                    // move it to the new folder
+                                    MoBookmarkManager.moveToFolderAndSave(this,
+                                            MoBookmarkManager.getFolder(newFolderName),
+                                            recyclerAdapter.getSelectedItems());
+                                    // giving them progress update
+                                    Toast.makeText(BookmarkActivity.this,"Updated!",Toast.LENGTH_SHORT).show();
+                                    // done selecting
+                                    listViewSync.removeAction();
+                                }).setNegativeButton(R.string.cancel,null)
+                                .create()
+                                .show();
+                    }
+                    break;
+            }
         }
     }
 }

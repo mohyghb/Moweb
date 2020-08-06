@@ -194,6 +194,7 @@ public class MoBookmarkManager {
             String[] d = MoFile.loadable(MoReadWrite.readFile(FILE_NAME,c));
             if(MoFile.isValidData(d)) {
                  mainFolder.load(d[0],c);
+                 addToMap(mainFolder);
                 //loadInto(c, MoFile.loadable(d[0]), mainFolder.getSubBookmarks());
             }
         }
@@ -317,6 +318,9 @@ public class MoBookmarkManager {
         // 2- parent folder
         // 3- any sub folder under the current folder
         HashSet<MoBookmark> folders = new HashSet<>(mapOfFolders.values());
+        // adding the main folder
+        folders.add(mainFolder);
+
         for(MoBookmark b: bookmarks){
             // removing the current folder from the set
             if(b.isFolder()){
@@ -434,32 +438,59 @@ public class MoBookmarkManager {
 
 
     /**
+     * edits and saves the changes to the bookmark
+     * @param edit bookmark to be edited
+     * @param originalKey the original key used to find the bookmark inside the maps
+     * @param name new name of the bookmark
+     * @param url new url of the bookmark
+     * @param newFolderName new folder name of the bookmark
+     */
+    public static void editBookmarkAndSave(Context context,MoBookmark edit,String originalKey,
+                                           String name,String url,String newFolderName) {
+        editBookmark(edit, originalKey, name, url, newFolderName);
+        save(context);
+    }
+
+    /**
      *
-     * @param edit
-     * @param originalKey
-     * @param name
-     * @param url
-     * @param newFolderName
+     * edits the bookmark
+     * @param edit bookmark to be edited
+     * @param originalKey the original key used to find the bookmark inside the maps
+     * @param name new name of the bookmark
+     * @param url new url of the bookmark
+     * @param newFolderName new folder name of the bookmark
      */
     public static void editBookmark(MoBookmark edit,String originalKey,String name,String url,String newFolderName) {
         edit.setName(name);
         if(!edit.isFolder()){
             edit.setUrl(url);
         }
-        MoBookmarkManager.moveToFolder(MoBookmarkManager.getFolder(newFolderName),
-                edit);
+        MoBookmarkManager.moveTo(MoBookmarkManager.getFolder(newFolderName), edit);
         MoBookmarkManager.edit(edit,originalKey);
     }
+
 
     /**
      * moves all bookmarks in b to the folder
      * @param bs
      * @param folder
      */
-    public static void moveToFolder(MoBookmark folder,MoBookmark ... bs){
+    public static void moveToFolder(MoBookmark folder,Iterable<MoBookmark>  bs){
         for(MoBookmark b: bs){
             moveTo(folder, b);
         }
+    }
+    /**
+     * moves all bookmarks in b to the folder
+     * and saves the changes
+     * @param bs
+     * @param folder
+     */
+    public static void moveToFolderAndSave(Context c,MoBookmark folder,Iterable<MoBookmark>  bs){
+        for(MoBookmark b: bs){
+            moveTo(folder, b);
+        }
+        save(c);
     }
 
     /**
