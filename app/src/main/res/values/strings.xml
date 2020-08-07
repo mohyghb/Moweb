@@ -11,7 +11,10 @@
     <string name="folder_chooser_title">Choose a folder</string>
     <string name="save">Save</string>
     <string name="select">Select</string>
+    <string name="empty_selection_message">You need to select items first</string>
     <string name="yes">Yes</string>
+    <string name="open_in_tab">Open in tab</string>
+    <string name="open_in_incognito_tab">Open in incognito tab</string>
 
 
     <!--tab more button options-->
@@ -114,6 +117,7 @@
     <string name="error_bookmark_empty_url">URL can not be empty</string>
     <string name="error_bookmark_url_already_exist">URL already exist</string>
     <string name="error_bookmark_folder_already_exist">Folder already exist</string>
+    <string name="move_bookmarks">Move bookmarks</string>
 
 
 

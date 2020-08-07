@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoAnimation.MoAnimation;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletableInterface.MoListDeletable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletableUtils;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoPreviewAdapter;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoDeleteUtils;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoListDeletable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoListDelete;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSelectable.MoSelectableUtils;
 import com.moofficial.moweb.R;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class MoHomePageRecyclerAdapter extends MoPreviewAdapter<MoHomePageViewHo
 
 
     private Context context;
-    private MoListDelete<MoHomePage> moListDelete;
+    private MoDeletable<MoHomePage> moListDelete;
     private List<MoHomePage> selectedItems = new ArrayList<>();
 
     public MoHomePageRecyclerAdapter(Context context, List<MoHomePage> dataSet) {
@@ -41,7 +41,7 @@ public class MoHomePageRecyclerAdapter extends MoPreviewAdapter<MoHomePageViewHo
         radioButtonPress(holder, position);
         pressCard(holder, position);
         longPressCard(holder,position);
-        MoDeleteUtils.applyDeleteColor(this.context,holder.coverLayout,homePage);
+        MoDeletableUtils.applyDeleteColor(this.context,holder.coverLayout,homePage);
     }
 
     private void hideRadioButton(@NonNull MoHomePageViewHolder holder) {
@@ -100,14 +100,17 @@ public class MoHomePageRecyclerAdapter extends MoPreviewAdapter<MoHomePageViewHo
         return new MoHomePageViewHolder(v);
     }
 
+
+
+
     @Override
-    public void setMoDelete(MoListDelete moListDelete) {
-        this.moListDelete = moListDelete;
+    public void setListSelectable(MoSelectable<MoHomePage> s) {
+
     }
 
     @Override
-    public void notifySituationChanged() {
-        notifyDataSetChanged();
+    public void setMoDelete(MoDeletable<MoHomePage> moDeletable) {
+        this.moListDelete = moListDelete;
     }
 
     @Override
@@ -120,15 +123,6 @@ public class MoHomePageRecyclerAdapter extends MoPreviewAdapter<MoHomePageViewHo
         return this.getItemCount();
     }
 
-    @Override
-    public void selectAllElements() {
-        MoSelectableUtils.selectAllItems(dataSet,this.moListDelete);
-    }
-
-    @Override
-    public void deselectAllElements() {
-        MoSelectableUtils.deselectAllItems(this.moListDelete);
-    }
 
     @Override
     public void onSelect(int i) {

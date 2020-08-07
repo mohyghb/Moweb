@@ -3,6 +3,7 @@ package com.moofficial.moweb;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Pair;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -11,20 +12,22 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
+
+import com.moofficial.moessentials.MoEssentials.MoUI.MoDialog.MoDialogs;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoListViewSync;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableList;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoMarginBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoPaddingBuilder;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoBottomBars.MoBottomDeleteBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoInputBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoSearchBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardRecyclerView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoListDelete;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoListViewSync;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSearchable.MoSearchable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSearchable.MoSearchableItem;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSearchable.MoSearchableList;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSelectable.MoListSelectable;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkRecyclerAdapter;
@@ -46,8 +49,8 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     private MoBookmarkRecyclerAdapter recyclerAdapter;
 
     private MoSearchable moSearchable;
-    private MoListDelete<MoBookmark> moListDelete;
-    private MoListSelectable<MoBookmark> moListSelectable;
+    private MoDeletable<MoBookmark> moListDelete;
+    private MoSelectable<MoBookmark> moListSelectable;
     private MoToolBar moListSelectableToolbar;
     private MoListViewSync listViewSync;
     private MoSearchBar searchBar;
@@ -55,8 +58,9 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
 
     private Stack<MoBookmark> folders = new Stack<>();
     private MoCardRecyclerView cardRecyclerView;
-    private MoBottomDeleteBar bottomDeleteBar;
 
+
+    private int selectedFolderCount = 0;
 
 
     @Override
@@ -74,8 +78,6 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
         // then we need to disable the toolbar animation
         setupMultipleToolbars(moToolBar, moToolBar,searchBar,moListSelectableToolbar);
         disableToolbarAnimation();
-        bottomDeleteBar = new MoBottomDeleteBar(this);
-        linearBottom.addView(bottomDeleteBar.goGone());
         cardRecyclerView = new MoCardRecyclerView(this).makeCardRound();
         linearNested.addView(cardRecyclerView);
     }
@@ -94,19 +96,97 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     private void initListSelectableToolbar(){
         this.moListSelectableToolbar = new MoToolBar(this)
                 .showCheckBox()
+                .showExtraButton()
                 .hideLeft()
-                .setRightIcon(R.drawable.ic_baseline_folder_24).setRightOnClickListener(view -> {
-                    // TODO TEST
-                    MoBookmark[] m = new MoBookmark[recyclerAdapter.getSelectedItems().size()];
-                    recyclerAdapter.getSelectedItems().toArray(m);
-                    BookmarkFolderChooserActivity.startActivityForResult(this,CHOOSE_FOLDER_REQUEST, m);
-
-                }).setMiddleIcon(R.drawable.ic_baseline_delete_24)
-                .setMiddleOnClickListener(view -> {
-//                    recyclerAdapter.deleteSelected();
-//                    listViewSync.removeAction();
+                .setRightIcon(R.drawable.ic_baseline_more_vert_24)
+                .setRightOnClickListener(view -> {
+                    showSelectionPopupMenu();
+                })
+                .setMiddleIcon(R.drawable.ic_baseline_folder_24)
+                .setMiddleOnClickListener(view -> performMoveToAnotherFolder())
+                .setExtraIcon(R.drawable.ic_baseline_delete_24)
+                .setExtraOnClickListener(view -> {
+                    performDelete();
                 });
         this.moListSelectableToolbar.getCardView().makeTransparent();
+    }
+
+
+    /**
+     * shows a menu of what things you can do
+     * to the selected bookmarks/folders
+     */
+    private void showSelectionPopupMenu(){
+        MoPopUpMenu p = new MoPopUpMenu(this).setEntries(
+                new Pair<>(getString(R.string.share), menuItem -> performSelectionShare())
+        );
+        if(noFolderHasBeenSelected()){
+            p.setEntries(
+                    new Pair<>(getString(R.string.open_in_tab), menuItem -> {
+                        return false;
+                    }),
+                    new Pair<>(getString(R.string.open_in_incognito_tab), menuItem -> false)
+            );
+        }
+        p.show(moListSelectableToolbar.getRightButton());
+    }
+
+    /**
+     * shares all the selected bookmarks
+     * and the bookmarks inside the folders that
+     * are selected
+     */
+    private boolean performSelectionShare() {
+        if (nothingIsSelected()) return false;
+        MoBookmarkManager.shareBookmark(this,recyclerAdapter.getSelectedItems(),true);
+        return false;
+    }
+
+    /**
+     * launches an activity to find a new folder
+     * for the selected bookmarks/folders
+     * and if they select a new folder,
+     * we ask them if they want to do that
+     * and move all the selected bookmarks/folders
+     * to the new folder
+     */
+    private void performMoveToAnotherFolder() {
+        if (nothingIsSelected()) return;
+        MoBookmark[] m = new MoBookmark[recyclerAdapter.getSelectedItems().size()];
+        recyclerAdapter.getSelectedItems().toArray(m);
+        BookmarkFolderChooserActivity.startActivityForResult(this,CHOOSE_FOLDER_REQUEST, m);
+    }
+
+    /**
+     * deletes all the selected
+     * bookmarks/folders
+     * todo: ask them if they want to do it
+     */
+    private void performDelete() {
+        if (nothingIsSelected()) return;
+        MoDialogs.showAlertDialog(this,
+                "Delete " + recyclerAdapter.getSelectedItems().size() + " items",
+                "Do you want to delete these bookmarks/folders?",
+                (dialogInterface, i) -> {
+                    recyclerAdapter.deleteSelected();
+                    listViewSync.removeAction();
+                });
+    }
+
+    /**
+     *
+     * @return true if the selection array list is empty
+     */
+    private boolean nothingIsSelected() {
+        if(recyclerAdapter.getSelectedItems().isEmpty()){
+            Toast.makeText(this,R.string.empty_selection_message,Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
+    }
+
+    private boolean noFolderHasBeenSelected(){
+        return selectedFolderCount == 0;
     }
 
 
@@ -259,9 +339,24 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
      * and then move it to another folder
      */
     private void initMoListSelectable(){
-        this.moListSelectable = new MoListSelectable<>(this, getRootView(), this.recyclerAdapter)
+
+        this.moListSelectable = new MoSelectable<>(this, getRootView(), this.recyclerAdapter)
                 .addUnNormalViews(this.moListSelectableToolbar)
                 .setCounterView(this.title)
+                .setSelectAllCheckBox(moListSelectableToolbar.getCheckBox())
+                .setOnSelectListener(bookmark -> {
+                    if(bookmark.isFolder()){
+                        if(bookmark.isSelected()){
+                            selectedFolderCount++;
+                        }else{
+                            selectedFolderCount--;
+                        }
+                    }
+                })
+                .setOnEmptySelectionListener(() -> {
+                    listViewSync.removeAction();
+                    int i = 0;
+                })
                 .setOnCanceledListener(() -> recyclerAdapter.getSelectedItems().clear())
                 .setOnSelectFinishedListener(list -> {
                     Toast.makeText(this,list.size()+"",Toast.LENGTH_SHORT).show();
@@ -332,26 +427,24 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
                         String newFolderName = BookmarkFolderChooserActivity.getChosenFolder(
                             Objects.requireNonNull(data.getExtras()));
                         String limitedVersion = MoString.getLimitedCount(newFolderName,16);
-                         new AlertDialog.Builder(this)
-                                .setTitle("Move to "  + limitedVersion)
-                                .setMessage("Do you want to move " +
+                        MoDialogs.showAlertDialog(this, "Move to "  + limitedVersion,
+                                "Do you want to move " +
                                         recyclerAdapter.getSelectedItems().size() +
-                                        " items to " + limitedVersion +"?")
-                                .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
-                                    // move it to the new folder
-                                    MoBookmarkManager.moveToFolderAndSave(this,
-                                            MoBookmarkManager.getFolder(newFolderName),
-                                            recyclerAdapter.getSelectedItems());
-                                    // giving them progress update
-                                    Toast.makeText(BookmarkActivity.this,"Updated!",Toast.LENGTH_SHORT).show();
-                                    // done selecting
-                                    listViewSync.removeAction();
-                                }).setNegativeButton(R.string.cancel,null)
-                                .create()
-                                .show();
+                                        " items to " + limitedVersion +"?",
+                                (dialogInterface, i) -> moveSelectedToNewFolder(newFolderName));
                     }
                     break;
             }
         }
+    }
+
+    private void moveSelectedToNewFolder(String newFolderName) {
+        MoBookmarkManager.moveToFolderAndSave(this,
+                MoBookmarkManager.getFolder(newFolderName),
+                recyclerAdapter.getSelectedItems());
+        // giving them progress update
+        Toast.makeText(BookmarkActivity.this,"Updated!",Toast.LENGTH_SHORT).show();
+        // done selecting
+        listViewSync.removeAction();
     }
 }

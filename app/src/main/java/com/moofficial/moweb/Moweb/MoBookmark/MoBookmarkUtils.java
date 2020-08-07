@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.moofficial.moweb.R;
 
+import java.util.Arrays;
+
 public class MoBookmarkUtils {
 
     /**
@@ -12,12 +14,14 @@ public class MoBookmarkUtils {
      * @param b
      * @return
      */
-    public static String getCombinedSurfaceUrl(MoBookmark b){
+    public static String shareBookmarkText(boolean includeTitle,MoBookmark ... b){
+        return shareBookmarkText(Arrays.asList(b),includeTitle);
+    }
+
+    public static String shareBookmarkText(Iterable<MoBookmark> b, boolean includeTitle){
         StringBuilder sb = new StringBuilder();
-        for(MoBookmark book : b.getSubs()){
-            if(!book.isFolder()){
-                sb.append(book.getUrl()).append("\n");
-            }
+        for(MoBookmark book : b){
+            book.addSubBookmarkUrlRecursive(sb,includeTitle);
         }
         return sb.toString().trim();
     }

@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 if(MoTabsManager.isNotEmpty()) {
                   // if there is a tab inside
                   // we navigate back to tab controller index
+                    MoSectionManager.getInstance().setSection(IN_TAB_VIEW);
                     changeContentView();
                 } else {
                     super.onBackPressed();

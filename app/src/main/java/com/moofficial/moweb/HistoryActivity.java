@@ -17,7 +17,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
-import com.moofficial.moweb.MoSearch.MoSearchViewFormatter;
+
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistory;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryRecyclerAdapter;
@@ -63,11 +63,11 @@ public class HistoryActivity extends AppCompatActivity {
     private void initSearchView(){
         MenuItem searchItem = menu.findItem(R.id.app_bar_search);
         searchView = (SearchView) searchItem.getActionView();
-        new MoSearchViewFormatter()
-                .setSearchBackGroundResource(R.drawable.curved_top_day_night_background)
-                .setSearchHintText("search history")
-                .setSearchIconResource(R.drawable.ic_search_black_24dp,false,true)
-                .format(searchView);
+//        new MoSearchViewFormatter()
+//                .setSearchBackGroundResource(R.drawable.curved_top_day_night_background)
+//                .setSearchHintText("search history")
+//                .setSearchIconResource(R.drawable.ic_search_black_24dp,false,true)
+//                .format(searchView);
     }
 
     private void initToolbar(){

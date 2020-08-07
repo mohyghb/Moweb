@@ -104,7 +104,7 @@ public class MoBookmarkManager {
 
 
     public static boolean validateEditInputs(Context c,MoBookmark b, TextView name,TextView url,String originalKey){
-        String nameText = name.getText().toString();
+        String nameText = processName(name.getText().toString());
         int errors = 0;
         switch (b.getType()){
             case FOLDER:
@@ -117,7 +117,7 @@ public class MoBookmarkManager {
                 }
                 break;
             case BOOKMARK:
-                String urlText = url.getText().toString();
+                String urlText = processUrl(url.getText().toString());
                 if(nameText.isEmpty()){
                     // it can not be empty
                     name.setError(c.getString(R.string.error_bookmark_empty_name));
@@ -264,13 +264,22 @@ public class MoBookmarkManager {
     }
 
     /**
+     * makes the name standard
+     * @param name
+     * @return
+     */
+    private static String processName(String name){
+        return name.trim();
+    }
+
+    /**
      *
      * @param url
      * @param title
      * @return
      */
     public static MoBookmark buildBookmark(String url, String title){
-        return new MoBookmark(url,title);
+        return new MoBookmark(processUrl(url),title);
     }
 
     /**
@@ -279,7 +288,7 @@ public class MoBookmarkManager {
      * @return
      */
     public static MoBookmark buildFolder(String title){
-        return new MoBookmark(title.trim(), FOLDER);
+        return new MoBookmark(processName(title), FOLDER);
     }
 
 
@@ -288,9 +297,13 @@ public class MoBookmarkManager {
      * @return
      */
     public static ArrayList<MoBookmark> getEverything(){
-        ArrayList<MoBookmark> all = new ArrayList<>();
-        all.addAll(mapOfBookmarks.values());
+        ArrayList<MoBookmark> all = new ArrayList<>(mapOfBookmarks.values());
+        // making sure that mainFolder is not inside everything
+        // since main folder can not be deleted or edited
+        remove(mainFolder);
         all.addAll(mapOfFolders.values());
+        addToMap(mainFolder);
+        // then adding it again to the map of folders
         return all;
     }
 
@@ -318,9 +331,6 @@ public class MoBookmarkManager {
         // 2- parent folder
         // 3- any sub folder under the current folder
         HashSet<MoBookmark> folders = new HashSet<>(mapOfFolders.values());
-        // adding the main folder
-        folders.add(mainFolder);
-
         for(MoBookmark b: bookmarks){
             // removing the current folder from the set
             if(b.isFolder()){
@@ -402,17 +412,13 @@ public class MoBookmarkManager {
      * @param context
      * @param b
      */
-    public static void shareBookmark(Context context,MoBookmark b){
-        switch (b.getType()){
-            case FOLDER:
-                new MoShare().setText(MoBookmarkUtils.getCombinedSurfaceUrl(b)).shareText(context);
-                break;
-            case BOOKMARK:
-                new MoShare().setText(b.getUrl()).shareText(context);
-                break;
-        }
+    public static void shareBookmark(Context context,boolean includeTitle,MoBookmark ... b){
+        new MoShare().setText(MoBookmarkUtils.shareBookmarkText(includeTitle,b)).shareText(context);
     }
 
+    public static void shareBookmark(Context context,Iterable<MoBookmark> b,boolean includeTitle){
+        new MoShare().setText(MoBookmarkUtils.shareBookmarkText(b,includeTitle)).shareText(context);
+    }
 
 
     // for editing

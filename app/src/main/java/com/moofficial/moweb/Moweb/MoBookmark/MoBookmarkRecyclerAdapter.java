@@ -12,14 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletableUtils;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableList;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoPreviewAdapter;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoDeleteUtils;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSearchable.MoSearchableItem;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSearchable.MoSearchableList;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSelectable.MoListSelectable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSelectable.MoSelectableList;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSelectable.MoSelectableUtils;
 import com.moofficial.moweb.BookmarkActivity;
 import com.moofficial.moweb.EditBookmarkActivity;
 import com.moofficial.moweb.R;
@@ -27,12 +26,11 @@ import com.moofficial.moweb.R;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: REMOVE MO DELETABLE AND REPLACE IT WITH MO SELECTABLE
 public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHolder,MoBookmark>
-        implements MoSearchableList , MoSelectableList<MoBookmark> {
+        implements MoSearchableList, MoSelectableList<MoBookmark> {
 
 
-    private MoListSelectable<MoBookmark> moListSelectable;
+    private MoSelectable<MoBookmark> moSelectable;
     private Context context;
     private boolean disableLongClick = false;
     private MoOnOpenBookmarkListener openBookmarkListener = new MoOnOpenBookmarkListener() {
@@ -53,7 +51,6 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
         super(dataSet);
         this.context = context;
     }
-
 
 
 
@@ -95,7 +92,7 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
         h.imageTextLogo.setText(MoString.getSignature(bookmark.getName()));
         onClickListener(h, bookmark,i);
         onLongClickListener(h, bookmark,i);
-        MoDeleteUtils.applyDeleteColor(this.context,h.coverLayout,bookmark);
+        MoDeletableUtils.applyDeleteColor(this.context,h.coverLayout,bookmark);
     }
 
     private boolean wasDeleted(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark,int po) {
@@ -113,9 +110,13 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
     private void onLongClickListener(@NonNull MoBookmarkViewHolder h, MoBookmark b,int i) {
         if(!disableLongClick){
             h.cardView.setOnLongClickListener(view -> {
+                if(this.moSelectable.isInActionMode()){
+                    return false;
+                }
+
                 MoPopUpMenu p =new MoPopUpMenu(context).setEntries(
                         new Pair<>(context.getString(R.string.share), menuItem -> {
-                            MoBookmarkManager.shareBookmark(context,b);
+                            MoBookmarkManager.shareBookmark(context,true,b);
                             return false;
                         }),
                         new Pair<>(context.getString(R.string.edit), menuItem -> {
@@ -135,26 +136,17 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
     }
 
     private void activateSelectMode(int i){
-        if(!moListSelectable.isInActionMode()){
-            moListSelectable.activateSpecialMode();
+        if(!moSelectable.isInActionMode()){
+            moSelectable.activateSpecialMode();
             onSelect(i);
         }
     }
 
-//    private void activateDeleteMode(int i) {
-//        if(!moListDelete.isInActionMode()){
-//            moListDelete.setDeleteMode(true);
-//            onSelect(i);
-//        }
-//    }
 
 
     private void onClickListener(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark,int i) {
         h.cardView.setOnClickListener(view -> {
-//            if(moListDelete!=null && moListDelete.isInActionMode()){
-//                onSelect(i);
-//            }else
-            if(moListSelectable!=null && moListSelectable.isInActionMode()){
+            if(moSelectable !=null && moSelectable.isInActionMode()){
                 onSelect(i);
             }
             else{
@@ -177,22 +169,7 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
         return new MoBookmarkViewHolder(v);
     }
 
-//    @Override
-//    public void setMoDelete(MoListDelete moListDelete) {
-//        this.moListDelete = moListDelete;
-//    }
-//
-//    @Override
-//    public void setListSelectable(MoListSelectable s) {
-//        this.moListSelectable = s;
-//    }
-//
-//    @Override
-//    public void notifySituationChanged() {
-//        notifyDataSetChanged();
-//    }
 
-    //@Override
     public void deleteSelected() {
         for(MoBookmark b: selectedItems){
             MoBookmarkManager.remove(b);
@@ -200,31 +177,19 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
         MoBookmarkManager.save(context);
     }
 
-    @Override
-    public void selectAllElements() {
-        MoSelectableUtils.selectAllItems(dataSet,this.moListSelectable);
-    }
+
 
     @Override
-    public void deselectAllElements() {
-        MoSelectableUtils.deselectAllItems(this.moListSelectable);
-    }
-
-    @Override
-    public void setListSelectable(MoListSelectable<MoBookmark> moListSelectable) {
-        this.moListSelectable = moListSelectable;
+    public void setListSelectable(MoSelectable<MoBookmark> moSelectable) {
+        this.moSelectable = moSelectable;
     }
 
     //@Override
     public void onSelect(int i) {
-        moListSelectable.onSelect(dataSet.get(i));
+        moSelectable.onSelect(dataSet.get(i));
         notifyItemChanged(i);
     }
 
-    @Override
-    public void notifySituationChanged() {
-        notifyDataSetChanged();
-    }
 
     @Override
     public List<MoBookmark> getSelectedItems() {

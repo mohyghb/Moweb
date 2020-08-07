@@ -20,6 +20,8 @@ import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkUtils;
 
+import java.util.Objects;
+
 import static com.moofficial.moweb.BookmarkFolderChooserActivity.getChosenFolder;
 
 public class EditBookmarkActivity extends MoSmartActivity {
@@ -45,9 +47,9 @@ public class EditBookmarkActivity extends MoSmartActivity {
 
     private void initOriginalKey() {
         Bundle b = getIntent().getExtras();
-        this.originalKey = getChosenFolder(b);
+        this.originalKey = Objects.requireNonNull(b).getString(EXTRA_URL);
         if(originalKey == null){
-            this.originalKey  = getChosenFolder(b);
+            this.originalKey  = b.getString(EXTRA_NAME);
             editBookmark = MoBookmarkManager.getFolder(this.originalKey);
         }else{
             editBookmark = MoBookmarkManager.getBookmark(this.originalKey);
@@ -98,7 +100,7 @@ public class EditBookmarkActivity extends MoSmartActivity {
 
                     }
                 });
-        titleInput.getCardView().makeCardRectangular();
+        titleInput.getCardView().makeCardRecRound();
 
     }
 
@@ -125,7 +127,7 @@ public class EditBookmarkActivity extends MoSmartActivity {
 
                         }
                     })
-                    .getCardView().makeCardRectangular();
+                    .getCardView().makeCardRecRound();
             linearNested.addView(urlInput, MoMarginBuilder.getLinearParams(8));
         }
     }

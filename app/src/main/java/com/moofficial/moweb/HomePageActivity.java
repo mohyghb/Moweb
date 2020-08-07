@@ -7,8 +7,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoDelete.MoListDelete;
+import com.moofficial.moweb.Moweb.MoHomePage.MoHomePage;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageRecyclerAdapter;
 
@@ -16,7 +17,7 @@ public class HomePageActivity extends AppCompatActivity {
 
     private MoRecyclerView recyclerView;
     private MoHomePageRecyclerAdapter recyclerAdapter;
-    private MoListDelete moListDelete;
+    private MoDeletable<MoHomePage> moListDelete;
     private ImageButton backButton,addButton;
     private EditText editText;
 
@@ -53,7 +54,7 @@ public class HomePageActivity extends AppCompatActivity {
     }
 
     private void initMoListDeletable(){
-        this.moListDelete = new MoListDelete(this,findViewById(R.id.root_home_page_view),this.recyclerAdapter)
+        this.moListDelete = new MoDeletable<>(this,findViewById(R.id.root_home_page_view),this.recyclerAdapter)
                 .setCounterView(R.id.title_home_page," Selected")
                 .addUnNormalViews(R.id.include_bottom_delete)
                 .addNormalViews(R.id.include_add_bar)

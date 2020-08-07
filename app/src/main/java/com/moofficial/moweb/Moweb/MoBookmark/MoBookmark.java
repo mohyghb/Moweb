@@ -6,9 +6,9 @@ import com.moofficial.moessentials.MoEssentials.MoDate.MoDate;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoSwitchSavable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSearchable.MoSearchableItem;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSearchable.MoSearchableUtils;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoViews.MoSelectable.MoSelectableItem;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableUtils;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableItem;
 import com.moofficial.moweb.Moweb.MoUrl.MoURL;
 
 import java.util.ArrayList;
@@ -34,6 +34,7 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
     // contains
     private ArrayList<MoBookmark> subs = new ArrayList<>();
     private ArrayList<MoBookmark> subFolders = new ArrayList<>();
+    private ArrayList<MoBookmark> subBookmarks = new ArrayList<>();
 
     private boolean isSelected;
     private boolean isSearched = true;
@@ -101,6 +102,9 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
     }
 
     public String getUrl() {
+        if(this.url == null){
+            return "";
+        }
         return url.getUrlString();
     }
 
@@ -146,24 +150,34 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
     public void add(MoBookmark b){
         b.setParent(this);
         this.subs.add(b);
-        addToSubFolder(b);
+        addToRespectiveList(b);
     }
 
-    private void addToSubFolder(MoBookmark b) {
-        if(b.isFolder()){
-            subFolders.add(b);
+    private void addToRespectiveList(MoBookmark b) {
+        switch (b.getType()){
+            case FOLDER:
+                subFolders.add(b);
+                break;
+            case BOOKMARK:
+                subBookmarks.add(b);
+                break;
         }
     }
 
     public void remove(MoBookmark b){
         b.setParent(null);
         subs.remove(b);
-        removeFromSubFolder(b);
+        removeFromRespectiveList(b);
     }
 
-    private void removeFromSubFolder(MoBookmark b) {
-        if(b.isFolder()){
-            subFolders.remove(b);
+    private void removeFromRespectiveList(MoBookmark b) {
+        switch (b.getType()){
+            case FOLDER:
+                subFolders.remove(b);
+                break;
+            case BOOKMARK:
+                subBookmarks.remove(b);
+                break;
         }
     }
 
@@ -183,13 +197,38 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
     public boolean isEmpty(){
         return subs.isEmpty();
     }
-
-
-
-
     public boolean hasParent(){ return this.parent!=null;}
     public boolean isFolder(){
         return this.type == FOLDER;
+    }
+    public boolean isBookmark(){return this.type==BOOKMARK;}
+
+
+    /**
+     * recursively adds all the bookmarks
+     * that are available under the subs of this bookmark to
+     * the string builder. if include title is true, we also include the title
+     * inside the string builder
+     * @param sb string builder, keeping all the information inside one object
+     * @param includeTitle whether or not we should include the title of bookmark
+     */
+    public void addSubBookmarkUrlRecursive(StringBuilder sb,boolean includeTitle){
+        if(subs.isEmpty()){
+            return;
+        }
+        for(MoBookmark b: subs){
+            switch (b.getType()){
+                case FOLDER:
+                    b.addSubBookmarkUrlRecursive(sb,includeTitle);
+                    break;
+                case BOOKMARK:
+                    if(includeTitle){
+                        sb.append(b.getUrl()).append("\n");
+                    }
+                    sb.append(b.getUrl()).append("\n");
+                    break;
+            }
+        }
     }
 
     /**
