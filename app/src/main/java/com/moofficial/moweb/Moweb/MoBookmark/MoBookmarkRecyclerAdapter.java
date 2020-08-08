@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
@@ -18,15 +17,14 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoPreviewAdapter;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoPreviewSelectableAdapter;
 import com.moofficial.moweb.BookmarkActivity;
 import com.moofficial.moweb.EditBookmarkActivity;
 import com.moofficial.moweb.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHolder,MoBookmark>
+public class MoBookmarkRecyclerAdapter extends MoPreviewSelectableAdapter<MoBookmarkViewHolder,MoBookmark>
         implements MoSearchableList, MoSelectableList<MoBookmark> {
 
 
@@ -44,7 +42,6 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
 
         }
     };
-    private ArrayList<MoBookmark> selectedItems = new ArrayList<>();
 
 
     public MoBookmarkRecyclerAdapter(Context context, List<MoBookmark> dataSet) {
@@ -72,6 +69,15 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
         return this;
     }
 
+
+    @NonNull
+    @Override
+    public MoBookmarkViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v =  MoInflaterView.inflate(R.layout.book_mark_view_holder,parent.getContext());
+        v.setLayoutParams(getMatchWrapParams());
+        return new MoBookmarkViewHolder(v);
+    }
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onBindViewHolderDifferentVersion(@NonNull MoBookmarkViewHolder h, int i) {
@@ -79,7 +85,7 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
 
         if (wasDeleted(h, bookmark,i)) return;
 
-        switch (bookmark.getType()){
+        switch (bookmark.getType()) {
             case MoBookmark.BOOKMARK:
                 h.url.setText(bookmark.getUrl());
                 h.title.setText(bookmark.getName());
@@ -159,22 +165,12 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
         });
     }
 
-    @NonNull
-    @Override
-    public MoBookmarkViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v =  MoInflaterView.inflate(R.layout.book_mark_view_holder,parent.getContext());
-        RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        v.setLayoutParams(lp);
-        return new MoBookmarkViewHolder(v);
-    }
 
-
+    /**
+     * delete all the selected items
+     */
     public void deleteSelected() {
-        for(MoBookmark b: selectedItems){
-            MoBookmarkManager.remove(b);
-        }
-        MoBookmarkManager.save(context);
+        MoBookmarkManager.deleteSelectedBookmarks(this.context,this.selectedItems);
     }
 
 
@@ -184,16 +180,9 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewAdapter<MoBookmarkViewHo
         this.moSelectable = moSelectable;
     }
 
-    //@Override
+
     public void onSelect(int i) {
-        moSelectable.onSelect(dataSet.get(i));
-        notifyItemChanged(i);
-    }
-
-
-    @Override
-    public List<MoBookmark> getSelectedItems() {
-        return selectedItems;
+        moSelectable.onSelect(dataSet.get(i),i);
     }
 
 

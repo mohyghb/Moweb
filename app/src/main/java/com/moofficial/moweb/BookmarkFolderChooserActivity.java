@@ -88,7 +88,7 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
 
 
     private void initSearch() {
-        moSearchable = new MoSearchable(this, toolbar.getView(), new MoSearchableList() {
+        moSearchable = new MoSearchable(this, getGroupRootView(), new MoSearchableList() {
             @Override
             public List<? extends MoSearchableItem> getSearchableItems() {
                 return allPossibleFolders;

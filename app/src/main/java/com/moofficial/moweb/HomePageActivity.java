@@ -1,47 +1,93 @@
 package com.moofficial.moweb;
 
-import android.os.Bundle;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoMarginBuilder;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoBottomBars.MoBottomDeleteBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoInputBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePage;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageRecyclerAdapter;
 
-public class HomePageActivity extends AppCompatActivity {
+public class HomePageActivity extends MoSmartActivity {
 
     private MoRecyclerView recyclerView;
     private MoHomePageRecyclerAdapter recyclerAdapter;
     private MoDeletable<MoHomePage> moListDelete;
-    private ImageButton backButton,addButton;
-    private EditText editText;
+
+    // UI fields
+    private MoCardRecyclerView cardRecyclerView;
+    private MoInputBar moInputBar;
+    private MoToolBar moToolBar,moDeleteToolbar;
+    private MoBottomDeleteBar moBottomDeleteBar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_page);
-        init();
+    protected void init() {
+        initUI();
+        initClass();
     }
 
-    private void init(){
-        initViews();
+    private void initUI() {
+        setTitle(R.string.home_page_title);
+        initInputBar();
+        initCardRecyclerView();
+        initToolbars();
+        initBottomDeleteBar();
+        syncTitle(moDeleteToolbar.getTitle(),moToolBar.getTitle());
+        disableToolbarAnimation();
+    }
+
+    private void initBottomDeleteBar() {
+        moBottomDeleteBar = new MoBottomDeleteBar(this);
+        linearBottom.addView(moBottomDeleteBar.goGone());
+    }
+
+    private void initCardRecyclerView() {
+        cardRecyclerView = new MoCardRecyclerView(this).makeCardRound();
+        linearNested.addView(cardRecyclerView, MoMarginBuilder.getLinearParams(0,8,0,0));
+    }
+
+    private void initInputBar() {
+        moInputBar = new MoInputBar(this)
+                .setTitle(R.string.new_home_page)
+                .setDescription(R.string.new_home_page_description)
+                .showPositiveButton()
+                .showDescription()
+                .setPositiveButtonText(R.string.add)
+                .setPositiveClickListener(view -> {
+                    addHomePage();
+                })
+                .setHint(R.string.new_home_page_hint);
+        moInputBar.getCardView().makeCardRound();
+        moInputBar.getTextCardView().makeCardRecRound();
+        linearNested.addView(moInputBar);
+    }
+
+    private void initToolbars() {
+        moToolBar = new MoToolBar(this)
+                .setLeftOnClickListener(view -> onBackPressed())
+                .onlyTitleAndLeftButtonVisible();
+        moToolBar.getCardView().makeTransparent();
+        moDeleteToolbar = new MoToolBar(this)
+                .hideLeft()
+                .showCheckBox()
+                .hideMiddle()
+                .hideRight();
+        moDeleteToolbar.getCardView().makeTransparent();
+        setupMultipleToolbars(moToolBar,moToolBar,moDeleteToolbar);
+    }
+
+    private void initClass(){
         initRecyclerAdapter();
         initRecyclerView();
         initMoListDeletable();
     }
 
-    private void initViews(){
-        this.backButton = findViewById(R.id.close_add_bar);
-        this.backButton.setOnClickListener(view->finish());
-        this.addButton = findViewById(R.id.add_add_bar);
-        this.addButton.setOnClickListener(view->addHomePage());
-        this.editText = findViewById(R.id.add_bar_edit_text);
-    }
 
 
     private void initRecyclerAdapter(){
@@ -49,17 +95,17 @@ public class HomePageActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView(){
-        this.recyclerView = new MoRecyclerView(this,findViewById(R.id.home_page_recycler_view),this.recyclerAdapter);
+        this.recyclerView = new MoRecyclerView(this,cardRecyclerView.getRecyclerView(),this.recyclerAdapter);
         this.recyclerView.show();
     }
 
     private void initMoListDeletable(){
-        this.moListDelete = new MoDeletable<>(this,findViewById(R.id.root_home_page_view),this.recyclerAdapter)
-                .setCounterView(R.id.title_home_page," Selected")
-                .addUnNormalViews(R.id.include_bottom_delete)
-                .addNormalViews(R.id.include_add_bar)
-                .setConfirmButton(R.id.delete_button_layout)
-                .setCancelButton(R.id.cancel_delete_mode);
+        this.moListDelete = new MoDeletable<>(this,getGroupRootView(),this.recyclerAdapter);
+        this.moListDelete.setCounterView(title)
+                         .addUnNormalViews(moDeleteToolbar,moBottomDeleteBar)
+                         .addNormalViews(moToolBar,moInputBar)
+                         .setConfirmButton(moBottomDeleteBar.getDelete())
+                         .setCancelButton(moBottomDeleteBar.getCancel());
         this.moListDelete.setShowOneActionAtTime(true);
     }
 
@@ -68,7 +114,7 @@ public class HomePageActivity extends AppCompatActivity {
      * if it does not already exist
      */
     private void addHomePage(){
-        String url = this.editText.getText().toString();
+        String url = this.moInputBar.getInputText();
         if(url.isEmpty()){
             Toast.makeText(this,"Please enter an url",Toast.LENGTH_SHORT).show();
             return;
@@ -80,5 +126,6 @@ public class HomePageActivity extends AppCompatActivity {
             Toast.makeText(this,"Could not add the home page",Toast.LENGTH_SHORT).show();
         }
     }
+
 
 }

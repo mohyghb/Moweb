@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 
 import static com.moofficial.moweb.Moweb.MoBookmark.MoBookmark.BOOKMARK;
@@ -521,6 +522,18 @@ public class MoBookmarkManager {
         if(b.hasParent()){
             b.getParent().remove(b);
         }
+    }
+
+    /**
+     * deletes all the selected items inside the list
+     * @param c context
+     * @param list items that are selected
+     */
+    public static void deleteSelectedBookmarks(Context c, List<MoBookmark> list){
+        for(MoBookmark b: list){
+            MoBookmarkManager.remove(b);
+        }
+        save(c);
     }
 
 

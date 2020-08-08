@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoAnimation.MoAnimation;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
@@ -13,19 +12,18 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoD
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletableInterface.MoListDeletable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoPreviewAdapter;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoPreviewSelectableAdapter;
 import com.moofficial.moweb.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MoHomePageRecyclerAdapter extends MoPreviewAdapter<MoHomePageViewHolder,MoHomePage>
+public class MoHomePageRecyclerAdapter extends MoPreviewSelectableAdapter<MoHomePageViewHolder,MoHomePage>
         implements MoListDeletable<MoHomePage> {
 
 
     private Context context;
     private MoDeletable<MoHomePage> moListDelete;
-    private List<MoHomePage> selectedItems = new ArrayList<>();
+
 
     public MoHomePageRecyclerAdapter(Context context, List<MoHomePage> dataSet) {
         super(dataSet);
@@ -95,8 +93,7 @@ public class MoHomePageRecyclerAdapter extends MoPreviewAdapter<MoHomePageViewHo
     @Override
     public MoHomePageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v =  MoInflaterView.inflate(R.layout.home_page_view_holder,parent.getContext());
-        RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        v.setLayoutParams(lp);
+        v.setLayoutParams(getMatchWrapParams());
         return new MoHomePageViewHolder(v);
     }
 
@@ -104,13 +101,11 @@ public class MoHomePageRecyclerAdapter extends MoPreviewAdapter<MoHomePageViewHo
 
 
     @Override
-    public void setListSelectable(MoSelectable<MoHomePage> s) {
-
-    }
+    public void setListSelectable(MoSelectable<MoHomePage> s) {}
 
     @Override
     public void setMoDelete(MoDeletable<MoHomePage> moDeletable) {
-        this.moListDelete = moListDelete;
+        this.moListDelete = moDeletable;
     }
 
     @Override
@@ -126,15 +121,6 @@ public class MoHomePageRecyclerAdapter extends MoPreviewAdapter<MoHomePageViewHo
 
     @Override
     public void onSelect(int i) {
-        if(moListDelete!=null && moListDelete.isInActionMode()){
-            // then this should select the sms
-            moListDelete.notifySizeChange(dataSet.get(i).onSelect());
-            notifyItemChanged(i);
-        }
-    }
-
-    @Override
-    public List<MoHomePage> getSelectedItems() {
-        return selectedItems;
+        moListDelete.onSelect(dataSet.get(i),i);
     }
 }

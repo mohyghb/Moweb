@@ -318,7 +318,7 @@ public class MoTab implements MoSavable, MoLoadable {
 
     private void initMoSearchable(){
         initMoFindBar();
-        this.moSearchable = new MoSearchable(this.context,this.view){
+        this.moSearchable = new MoSearchable(this.context,(ViewGroup) this.view){
             @Override
             public void onUpFindPressed() {
                 moWebView.findPrevious();
@@ -328,7 +328,6 @@ public class MoTab implements MoSavable, MoLoadable {
             public void onDownFindPressed() {
                 moWebView.findNext();
             }
-
         };
         this.moSearchable.setSearchOnTextChanged(true)
                 .setSearchTextView(moFindBar.getEditText())

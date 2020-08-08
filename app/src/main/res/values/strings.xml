@@ -13,6 +13,7 @@
     <string name="select">Select</string>
     <string name="empty_selection_message">You need to select items first</string>
     <string name="yes">Yes</string>
+    <string name="add">Add</string>
     <string name="open_in_tab">Open in tab</string>
     <string name="open_in_incognito_tab">Open in incognito tab</string>
 
@@ -102,8 +103,15 @@
     <string name="home_page">home_page_pref</string>
     <string name="home_page_hint_edit_text">Add home page</string>
     <string name="home_page_title">Home Page</string>
-    <string name="home_page_summary">Opens this page when open a new tab or when you click on the home button. If this is disabled, 
+    <string name="home_page_summary">Opens this page when open a new tab or when you click on the home button. If this is disabled,
         then the appropriate home page for a search engine is chosen to be the home page</string>
+
+    <string name="new_home_page">New Home Page</string>
+    <string name="new_home_page_hint">Enter a URL</string>
+    <string name="new_home_page_description">Adds a new home page to your list of home pages.
+        Then you can select the desired home page for your needs</string>
+
+
 
     <!--Bookmark-->
     <string name="bookmark_title">Bookmarks</string>

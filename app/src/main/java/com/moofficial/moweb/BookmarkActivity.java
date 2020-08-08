@@ -297,7 +297,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     }
 
     private void initMoSearchable() {
-        this.moSearchable = new MoSearchable(this, getRootView(), new MoSearchableList() {
+        this.moSearchable = new MoSearchable(this, getGroupRootView(), new MoSearchableList() {
             @Override
             public List<? extends MoSearchableItem> getSearchableItems() {
                 return MoBookmarkManager.getEverything();
@@ -340,7 +340,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
      */
     private void initMoListSelectable(){
 
-        this.moListSelectable = new MoSelectable<>(this, getRootView(), this.recyclerAdapter)
+        this.moListSelectable = new MoSelectable<>(this, getGroupRootView(), this.recyclerAdapter)
                 .addUnNormalViews(this.moListSelectableToolbar)
                 .setCounterView(this.title)
                 .setSelectAllCheckBox(moListSelectableToolbar.getCheckBox())
@@ -364,7 +364,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     }
 
     private void initListViewSync(){
-        this.listViewSync = new MoListViewSync(this.moSearchable,this.moListSelectable)
+        this.listViewSync = new MoListViewSync(getGroupRootView(),this.moSearchable,this.moListSelectable)
                 .setPutOnHold(true)
                 .setSharedElements(this.moToolBar,this.floatingActionButton.getView())
                 .setOnEmptyOnHoldsListener(() -> {
