@@ -11,7 +11,6 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
 import com.moofficial.moweb.MoSection.MoSectionManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
-import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabRecyclerAdapter;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 
@@ -176,10 +175,10 @@ public class MoTabSectionManager {
     }
 
     public void update(){
-        this.mAdapter.notifyDataSetChanged();
-        this.incognitoTabsRecyclerView.notifyDataSetChanged();
-        this.tabsRecyclerView.smoothScrollTo(MoTabController.instance.getNormalIndex());
-        this.incognitoTabsRecyclerView.smoothScrollTo(MoTabController.instance.getIncognitoIndex());
+//        this.mAdapter.notifyDataSetChanged();
+//        this.incognitoTabsRecyclerView.notifyDataSetChanged();
+//        this.tabsRecyclerView.smoothScrollTo(MoTabController.instance.getNormalIndex());
+//        this.incognitoTabsRecyclerView.smoothScrollTo(MoTabController.instance.getIncognitoIndex());
     }
 
     public void onResume() {

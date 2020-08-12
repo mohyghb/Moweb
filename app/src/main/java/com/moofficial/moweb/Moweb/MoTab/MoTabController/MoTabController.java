@@ -71,19 +71,38 @@ public class MoTabController implements MoSavable, MoLoadable {
      * @param index
      */
     public void setIndex(int index, int type) {
+        pauseTheCurrentTab(index, type);
+        this.setType(type);
+        this.currentTabControl.setIndex(index);
+        // change the section to show the in tab view
+        MoSectionManager.getInstance().setSection(IN_TAB_VIEW);
+        changeContentView.run();
+    }
+
+    /**
+     * pauses the current tab if the type of the new
+     * selected tab is different
+     * or if the index of the new selected tab is different
+     * since we want to be able to show the web preview of all tabs
+     * if we just call web view onPause, the web view becomes a solid
+     * grey color, so we call onPause to stop any ongoing activity like playing
+     * music or video or other... and then call resume to bring back the web view
+     * and show a preview of it
+     * @param index
+     * @param type
+     */
+    private void pauseTheCurrentTab(int index, int type) {
         MoTab t = getCurrent();
         if(t!=null){
             if(index!=this.currentTabControl.getIndex() || t.getType()!=type){
                 // if the previous tab is not the current one
                 // then we should call on pause
                 t.onPause();
+                // we want to pause all the activities inside the web view
+                // but we also want to be able to show it to user about what is happening
+                t.onResume();
             }
         }
-        this.setType(type);
-        this.currentTabControl.setIndex(index);
-        // change the section to show the in tab view
-        MoSectionManager.getInstance().setSection(IN_TAB_VIEW);
-        changeContentView.run();
     }
 
     private void setType(int t){

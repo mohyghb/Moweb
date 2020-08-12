@@ -383,7 +383,7 @@ public class MoTab implements MoSavable, MoLoadable {
         //tabs button
         this.tabsNumber = view.findViewById(R.id.tabs_button);
         this.tabsNumber.setOnClickListener(view -> {
-            moWebView.getWebView().pauseTimers();
+            onBitmapUpdateListener.onBitmapUpdated();
             //moWebView.forceCaptureBitmapIfNotLoading();
             MoTabController.instance.onTabsButtonPressed();
         });

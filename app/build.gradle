@@ -3,6 +3,14 @@ apply plugin: 'com.google.gms.google-services'
 
 
 android {
+    signingConfigs {
+        release_version {
+            storeFile file('F:\\Mo_Ecosystem\\MoSign\\Moweb\\moweb_sig.jks')
+            storePassword 'morhamgha1378'
+            keyAlias 'moweb_alias'
+            keyPassword '!Dbdmrs1378'
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
 

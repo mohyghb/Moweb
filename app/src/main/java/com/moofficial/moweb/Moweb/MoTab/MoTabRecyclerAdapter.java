@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
@@ -86,6 +87,7 @@ public class MoTabRecyclerAdapter extends RecyclerView.Adapter<MoTabRecyclerAdap
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(TabViewHolder holder, int position) {
+        MoLog.print("recycler adapter: " + position);
         MoTab tab = tabs.get(position);
 
         // going inside the tab
@@ -96,10 +98,10 @@ public class MoTabRecyclerAdapter extends RecyclerView.Adapter<MoTabRecyclerAdap
 
         // updating the bitmap whenever it is possible
         tab.setOnBitmapUpdateListener(() -> {
-            if(!tab.isUpToDate() || tab.getMoWebView().isPaused()){
+           // if(!tab.isUpToDate() || tab.getMoWebView().isPaused()){
                 // only update if we are showing the bitmap currently
                 notifyItemChanged(position);
-            }
+         //   }
         });
 
 
@@ -107,7 +109,7 @@ public class MoTabRecyclerAdapter extends RecyclerView.Adapter<MoTabRecyclerAdap
         // as the preview, if not we load
         // in the image preview that we saved
         holder.linearLayout.removeAllViews();
-        if(tab.isUpToDate() && !tab.getMoWebView().isPaused()){
+        if(tab.isUpToDate()){
             MoTabUtils.transitionToListTabMode(context,tab.getMoWebView(),holder.linearLayout,rootView);
         }else{
             holder.background.setImageBitmap(tabs.get(position).getWebViewBitmap());

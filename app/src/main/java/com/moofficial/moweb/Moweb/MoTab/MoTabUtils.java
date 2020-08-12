@@ -19,8 +19,8 @@ public class MoTabUtils {
 
     @SuppressLint("ClickableViewAccessibility")
     public static void transitionToListTabMode(Context c, MoWebView m, ViewGroup viewGroup,ViewGroup root){
-        int height = c.getResources().getDisplayMetrics()
-                .heightPixels/2;
+        int height = (int)(c.getResources().getDisplayMetrics()
+                .heightPixels/2.25f);
         m.moveWebViewTo(viewGroup, ViewGroup.LayoutParams.MATCH_PARENT,height);
         m.getWebView().setOnTouchListener((view, motionEvent) -> true);
         m.getWebView().pauseTimers();
