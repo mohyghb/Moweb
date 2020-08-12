@@ -110,6 +110,9 @@
     <string name="new_home_page_hint">Enter a URL</string>
     <string name="new_home_page_description">Adds a new home page to your list of home pages.
         Then you can select the desired home page for your needs</string>
+    <string name="already_exist_home_page">You have already added this homepage</string>
+    <string name="malformed_url">URL is not recognizable</string>
+    <string name="add_home_page">Add Homepage</string>
 
 
 

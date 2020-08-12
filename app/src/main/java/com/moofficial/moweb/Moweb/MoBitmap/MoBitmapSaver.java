@@ -1,4 +1,4 @@
-package com.moofficial.moweb.MoBitmap;
+package com.moofficial.moweb.Moweb.MoBitmap;
 
 import android.content.Context;
 import android.graphics.Bitmap;

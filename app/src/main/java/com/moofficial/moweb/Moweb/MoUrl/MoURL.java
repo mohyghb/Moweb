@@ -23,7 +23,9 @@ public class MoURL implements MoSavable, MoLoadable {
         this.urlString = url;
         try {
             this.url = new URL(this.urlString);
-        } catch (MalformedURLException ignore) {}
+        } catch (MalformedURLException ignore) {
+            //ignore.printStackTrace();
+        }
     }
 
     public MoURL(String data,Context c){

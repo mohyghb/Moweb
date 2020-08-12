@@ -3,6 +3,7 @@ package com.moofficial.moweb.Moweb.MoWebview;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
+import android.view.ViewGroup;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -13,15 +14,14 @@ import android.webkit.WebView;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
-import com.moofficial.moweb.MoBitmap.MoBitmapUtils;
-
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moweb.MoTouchPosition.MoTouchPosition;
-import com.moofficial.moweb.Moweb.MoClient.MoChromeClient;
-import com.moofficial.moweb.Moweb.MoClient.MoWebClient;
+import com.moofficial.moweb.Moweb.MoBitmap.MoBitmap;
 import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
+import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
+import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoWebClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoStackTabHistory.MoStackTabHistory;
-import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnBitmapCapturedListener;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnReceivedError;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnUpdateUrlListener;
 
@@ -50,11 +50,13 @@ public class MoWebView implements MoSavable,MoLoadable {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            // save a bitmap of the content
-            captureBitmap();
+            MoLog.print("on page finished "+view.getProgress()+"" + url);
+            captureBitmapWithDelay(1200);
             // inject the js to web view
             evaluateJavascript(MoWebElementDetection.injectJs(context),null);
         }
+
+
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
             onErrorReceived.onReceivedError(view,request,error);
@@ -67,11 +69,13 @@ public class MoWebView implements MoSavable,MoLoadable {
     private MoTouchPosition touchPosition;
     private MoStackTabHistory stackTabHistory = new MoStackTabHistory();
     private MoOnUpdateUrlListener onUpdateUrlListener = (url, isReload) -> {};
-    private MoOnBitmapCapturedListener onBitmapCapturedListener = (b) -> {};
     private MoOnReceivedError onErrorReceived = (view, request, error) -> {};
+    private MoBitmap moBitmap;
     private boolean captureBitmap = true;
     private boolean saveHistory = true;
     private boolean isInDesktopMode = false;
+    private boolean isPaused = true;
+
 
 
 
@@ -124,14 +128,6 @@ public class MoWebView implements MoSavable,MoLoadable {
         return this;
     }
 
-    public MoOnBitmapCapturedListener getOnBitmapCapturedListener() {
-        return onBitmapCapturedListener;
-    }
-
-    public MoWebView setOnBitmapCapturedListener(MoOnBitmapCapturedListener onBitmapCapturedListener) {
-        this.onBitmapCapturedListener = onBitmapCapturedListener;
-        return this;
-    }
 
     public MoOnReceivedError getOnErrorReceived() {
         return onErrorReceived;
@@ -159,6 +155,16 @@ public class MoWebView implements MoSavable,MoLoadable {
         this.stackTabHistory = stackTabHistory;
         return this;
     }
+
+    public MoBitmap getMoBitmap() {
+        return moBitmap;
+    }
+
+    public MoWebView setMoBitmap(MoBitmap moBitmap) {
+        this.moBitmap = moBitmap;
+        return this;
+    }
+
 
     public boolean isCaptureBitmap() {
         return captureBitmap;
@@ -195,7 +201,6 @@ public class MoWebView implements MoSavable,MoLoadable {
 
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebView() {
-
         setWebViewClient(this.client);
         setWebChromeClient(this.chromeClient);
         WebSettings webSettings = getSettings();
@@ -240,13 +245,29 @@ public class MoWebView implements MoSavable,MoLoadable {
     /**
      * captures a bitmap from webview
      */
-    private void captureBitmap() {
+    public void captureBitmap() {
         if(captureBitmap){
-            postDelayed(() -> onBitmapCapturedListener.onBitmapCaptured(MoBitmapUtils.createBitmapFromView(wv,
-                    0, 0)), 100);
+            moBitmap.captureBitmap(this.wv);
         }
     }
 
+    public void captureBitmapWithDelay(long delay){
+        if(captureBitmap){
+            moBitmap.captureBitmapWithDelay(this.wv,delay);
+        }
+    }
+
+    public void captureBitmapIfNotLoading(){
+        if(captureBitmap){
+            moBitmap.captureBitmapIfNotLoading(this.wv);
+        }
+    }
+
+    public void forceCaptureBitmapIfNotLoading(){
+        if(captureBitmap){
+            moBitmap.forceCaptureBitmapIfNotLoading(this.wv);
+        }
+    }
 
 
 
@@ -348,10 +369,20 @@ public class MoWebView implements MoSavable,MoLoadable {
         }
     }
 
+    /**
+     * whether or not this web view can go back a
+     * URL or not
+     * @return
+     */
     public boolean canGoBack(){
         return stackTabHistory.canGoBack();
     }
 
+    /**
+     * goes back a page
+     * can throw EmptyStackException if the stack
+     * tab history is empty
+     */
     public void goBack(){
         this.stackTabHistory.goBack();
     }
@@ -399,6 +430,10 @@ public class MoWebView implements MoSavable,MoLoadable {
         this.isInDesktopMode = false;
     }
 
+    /**
+     * if isInDesktop mode, then we enable the desktop mode
+     * otherwise we disable the dektop mode
+     */
     public void enableCorrectMode(){
         if(this.isInDesktopMode){
             this.enableDesktopMode();
@@ -407,13 +442,66 @@ public class MoWebView implements MoSavable,MoLoadable {
         }
     }
 
+    /**
+     * reverse enables the correct mode
+     * if it is in desktop mode, it activates the
+     * phone mode and vice versa
+     */
     public void enableReverseMode(){
         this.isInDesktopMode = !this.isInDesktopMode;
         enableCorrectMode();
     }
 
+    /**
+     * destroys the web view of this class
+     */
+    public void destroyWebView(){
+        this.wv.destroy();
+    }
+
+
     public boolean isInDesktopMode(){
         return this.isInDesktopMode;
+    }
+    public boolean isLoading(){
+        return this.wv.getProgress()!=100;
+    }
+
+    /**
+     * moves the web view to the view group that is passed
+     * @param viewGroup
+     */
+    public void moveWebViewTo(ViewGroup viewGroup,int width, int height){
+        if(wv.getParent()!=null){
+            // it has a parent, remove the web view from the parent first
+            ((ViewGroup)wv.getParent()).removeView(this.wv);
+        }
+        viewGroup.addView(this.wv,new ViewGroup.LayoutParams(width,height));
+    }
+
+    public void moveWebViewTo(ViewGroup viewGroup){
+        moveWebViewTo(viewGroup,ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+    }
+
+
+
+    public void onResume(){
+        this.wv.onResume();
+        isPaused = false;
+    }
+
+    public void onPause(){
+        this.wv.onPause();
+        isPaused = true;
+    }
+
+    public void onDestroy(){
+        this.wv.destroy();
+    }
+
+    public boolean isPaused() {
+        return isPaused;
     }
 
     @Override

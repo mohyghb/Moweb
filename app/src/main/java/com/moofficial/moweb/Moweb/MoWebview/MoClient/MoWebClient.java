@@ -1,17 +1,12 @@
-package com.moofficial.moweb.Moweb.MoClient;
+package com.moofficial.moweb.Moweb.MoWebview.MoClient;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.view.KeyEvent;
-import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
-
 
 
 import java.net.URISyntaxException;

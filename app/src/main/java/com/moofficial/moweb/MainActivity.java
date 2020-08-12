@@ -3,8 +3,10 @@ package com.moofficial.moweb;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.transition.Slide;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,14 +14,15 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoAnimation.MoAnimation;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoSwitchers.MoSectionViewManager;
 import com.moofficial.moweb.MoSection.MoSectionManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoServices.MoSaverBackgroundService;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
-import com.moofficial.moweb.Moweb.MoWebview.MoWebUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebUtils;
 
 import static com.moofficial.moweb.MoSection.MoSectionManager.IN_TAB_VIEW;
 import static com.moofficial.moweb.MoSection.MoSectionManager.TABS_VIEW;
@@ -30,7 +33,10 @@ public class MainActivity extends AppCompatActivity {
     private MoTabSectionManager moTabSectionManager;
     private MoSettingsSection moSettingsSection;
     private ConstraintLayout rootView;
+    private MoSectionViewManager moSectionViewManager;
 
+
+    private LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,26 +46,29 @@ public class MainActivity extends AppCompatActivity {
         // TODO optimize this so on runtime, it
         //  doesn't take a lot of time to load the app
 
+        MoLog.printRunTime("history", () -> MoHistoryManager.load(this));
+        MoLog.printRunTime("home pages",()->MoHomePageManager.load(this));
+        MoLog.printRunTime("bookmarks",()->MoBookmarkManager.load(this));
 
-        MoHistoryManager.load(this);
-        MoHomePageManager.load(this);
-        MoBookmarkManager.load(this);
         init();
-//        for(int i =0 ; i < 100; i++){
-//            MoHistoryManager.add("i"+i,"title " +i,this);
-//        }
+
     }
 
 
-//
     private void init() {
         MoAnimation.initAllAnimations(this);
         rootView = findViewById(R.id.root_view);
-        loadState();
-        //MoWebUtils.requestWritePermission(this);
+        MoLog.printRunTime("load state ", this::loadState);
         this.moSettingsSection = new MoSettingsSection(this);
         this.moTabSectionManager = new MoTabSectionManager(
                 this,this::changeContentView);
+        this.linearLayout = findViewById(R.id.activity_main_linear_layout);
+        this.moSectionViewManager = new MoSectionViewManager(rootView)
+                .addSection(TABS_VIEW,moTabSectionManager.getMainView())
+                .addSection(IN_TAB_VIEW,linearLayout)
+                .setTransitionIn(new Slide())
+                .setTransitionOut(new Slide());
+
         changeContentView();
     }
 
@@ -83,15 +92,17 @@ public class MainActivity extends AppCompatActivity {
         //MoLog.print("this is changing afiosajujiogsoif");
         switch (MoSectionManager.getInstance().getSection()){
             case TABS_VIEW:
-                rootView.removeAllViews();
-                rootView.addView(moTabSectionManager.getMainView(),
-                        new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                moTabSectionManager.update();
+                moSectionViewManager.setActiveSection(TABS_VIEW);
                 break;
             case IN_TAB_VIEW:
                 if(!MoTabController.instance.isOutOfOptions()){
-                    rootView.removeAllViews();
-                    rootView.addView(MoTabController.instance.getCurrent().getZeroPaddingView(),
-                            new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                    //MoTabActivity.startActivity(this);
+                    linearLayout.removeAllViews();
+                    linearLayout.addView(MoTabController.instance.getCurrent().getZeroPaddingView(rootView), new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT));
+                    moSectionViewManager.setActiveSection(IN_TAB_VIEW);
+
                 }else{
                     MoSectionManager.getInstance().setSection(TABS_VIEW);
                     changeContentView();
@@ -105,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         moTabSectionManager.onResume();
+        MoTabController.instance.onResume();
     }
 
     @Override
@@ -137,6 +149,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MoTabController.instance.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MoTabController.instance.onPause();
     }
 
     /**
@@ -159,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         MoTabController.init(this,this::changeContentView,this::onTabsButtonPressed);
         MoTabController.instance.load("",this);
         // load back all the tabs
-        MoTabsManager.load(this);
+        MoLog.printRunTime("tabs",()->MoTabsManager.load(this));
     }
 
 
@@ -194,11 +213,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
-
+    public ConstraintLayout getRootView() {
+        return rootView;
+    }
 
 }

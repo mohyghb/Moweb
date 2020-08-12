@@ -41,6 +41,10 @@ public class MoHomePage implements MoSavable, MoLoadable, MoSelectableItem {
         return this;
     }
 
+    public boolean isValidUrl(){
+        return this.url.isValid();
+    }
+
     @Override
     public void load(String s, Context context) {
         String[] c = MoFile.loadable(s);

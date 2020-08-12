@@ -47,6 +47,7 @@ public class MoWebUtils {
 
         webSettings.setUserAgentString(newUserAgent);
         webSettings.setLoadWithOverviewMode(enabled);
+        webSettings.setUseWideViewPort(enabled);
         webView.reload();
 
     }

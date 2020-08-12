@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
@@ -27,20 +28,22 @@ public class MoTabRecyclerAdapter extends RecyclerView.Adapter<MoTabRecyclerAdap
     private final ArrayList<MoTab> tabs;
     private Context context;
     private boolean isInGrid;
+    private ViewGroup rootView;
 
 
     public static class TabViewHolder extends RecyclerView.ViewHolder {
 
-        private View tab;
         private ImageView background;
-        private CardView deleteButton;
         private TextView url;
+        private LinearLayout linearLayout;
+        private CardView cardView;
 
         public TabViewHolder(View v) {
             super(v);
             background = v.findViewById(R.id.web_view_bitmap);
-            deleteButton = v.findViewById(R.id.tab_delete_button);
             url = v.findViewById(R.id.tab_url_list_view);
+            linearLayout = v.findViewById(R.id.tab_mode_list_linear_layout);
+            cardView = v.findViewById(R.id.tab_mode_list_inner_card_view);
         }
 
         public void removeView(){
@@ -57,15 +60,21 @@ public class MoTabRecyclerAdapter extends RecyclerView.Adapter<MoTabRecyclerAdap
         this.isInGrid = isInGrid;
     }
 
+    public ViewGroup getRootView() {
+        return rootView;
+    }
+
+    public MoTabRecyclerAdapter setRootView(ViewGroup rootView) {
+        this.rootView = rootView;
+        return this;
+    }
+
     // Create new views (invoked by the layout manager)
     @Override
     public TabViewHolder onCreateViewHolder(ViewGroup parent,
                                             int viewType) {
         View v = MoInflaterView.inflate(R.layout.tab_mode_list,parent.getContext());
         if(!this.isInGrid){
-//            RecyclerView.LayoutParams lp;
-//            lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//            v.setLayoutParams(lp);
             v.setPadding(TAB_PADDING,TAB_PADDING,TAB_PADDING,TAB_PADDING);
         }else{
             v.setPadding(TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW);
@@ -77,18 +86,36 @@ public class MoTabRecyclerAdapter extends RecyclerView.Adapter<MoTabRecyclerAdap
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(TabViewHolder holder, int position) {
-        // replacing the view inside tabViewHolder with the tab at position
-//        MoViewUtils.replaceView(holder.tab,
-//                tabs.get(position).getPaddingView(TAB_PADDING,position,holder, () -> onRemove(position)));
-        holder.background.setImageBitmap(tabs.get(position).getWebViewBitmap());
-        holder.background.setOnClickListener(view -> {
-            // open up
-            MoTabController.instance.setIndex(position,tabs.get(position).getType());
+        MoTab tab = tabs.get(position);
+
+        // going inside the tab
+        holder.cardView.setOnClickListener(view -> {
+            MoTabController.instance.setIndex(position,
+                    tab.getType());
         });
 
-        holder.deleteButton.setOnClickListener(view -> {
-                onRemove(position);
+        // updating the bitmap whenever it is possible
+        tab.setOnBitmapUpdateListener(() -> {
+            if(!tab.isUpToDate() || tab.getMoWebView().isPaused()){
+                // only update if we are showing the bitmap currently
+                notifyItemChanged(position);
+            }
         });
+
+
+        // if its web view is loaded, then we just use that
+        // as the preview, if not we load
+        // in the image preview that we saved
+        holder.linearLayout.removeAllViews();
+        if(tab.isUpToDate() && !tab.getMoWebView().isPaused()){
+            MoTabUtils.transitionToListTabMode(context,tab.getMoWebView(),holder.linearLayout,rootView);
+        }else{
+            holder.background.setImageBitmap(tabs.get(position).getWebViewBitmap());
+            holder.background.setVisibility(View.VISIBLE);
+            holder.linearLayout.addView(holder.background);
+        }
+
+        // setting the url of the current tab
         holder.url.setText(tabs.get(position).getUrl());
     }
 

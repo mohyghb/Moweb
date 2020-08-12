@@ -71,6 +71,14 @@ public class MoTabController implements MoSavable, MoLoadable {
      * @param index
      */
     public void setIndex(int index, int type) {
+        MoTab t = getCurrent();
+        if(t!=null){
+            if(index!=this.currentTabControl.getIndex() || t.getType()!=type){
+                // if the previous tab is not the current one
+                // then we should call on pause
+                t.onPause();
+            }
+        }
         this.setType(type);
         this.currentTabControl.setIndex(index);
         // change the section to show the in tab view
@@ -140,6 +148,28 @@ public class MoTabController implements MoSavable, MoLoadable {
     // returns the incognito control index
     public int getIncognitoIndex(){
         return this.incognitoTabsControl.getIndex();
+    }
+
+
+    public void onPause(){
+        if(isOutOfOptions()){
+            return;
+        }
+        getCurrent().onPause();
+    }
+
+    public void onResume(){
+        if(isOutOfOptions()){
+            return;
+        }
+        getCurrent().onResume();
+    }
+
+    public void onDestroy(){
+        if(isOutOfOptions()){
+            return;
+        }
+        getCurrent().onDestroy();
     }
 
 

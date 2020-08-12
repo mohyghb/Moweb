@@ -1,5 +1,7 @@
 package com.moofficial.moweb;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.Toast;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
@@ -58,13 +60,30 @@ public class HomePageActivity extends MoSmartActivity {
                 .setDescription(R.string.new_home_page_description)
                 .showPositiveButton()
                 .showDescription()
-                .setPositiveButtonText(R.string.add)
+                .setPositiveButtonText(R.string.add_home_page)
                 .setPositiveClickListener(view -> {
                     addHomePage();
                 })
-                .setHint(R.string.new_home_page_hint);
+                .showDividerInvisible()
+                .setHint(R.string.new_home_page_hint)
+                .addTextWatcher(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        MoHomePageManager.validate(HomePageActivity.this,
+                                charSequence.toString(),moInputBar.getEditText());
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                    }
+                });
         moInputBar.getCardView().makeCardRound();
-        moInputBar.getTextCardView().makeCardRecRound();
         linearNested.addView(moInputBar);
     }
 

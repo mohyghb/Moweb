@@ -1,12 +1,12 @@
 package com.moofficial.moweb.Moweb.MoBookmark;
 
 import android.content.Context;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.moofficial.moessentials.MoEssentials.MoConnections.MoShare;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoReadWrite.MoReadWrite;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoEditText.MoEditText;
 import com.moofficial.moweb.R;
 
 import java.util.ArrayList;
@@ -104,8 +104,8 @@ public class MoBookmarkManager {
     }
 
 
-    public static boolean validateEditInputs(Context c,MoBookmark b, TextView name,TextView url,String originalKey){
-        String nameText = processName(name.getText().toString());
+    public static boolean validateEditInputs(Context c, MoBookmark b, MoEditText name, MoEditText url, String originalKey){
+        String nameText = processName(name.getInputText().toString());
         int errors = 0;
         switch (b.getType()){
             case FOLDER:
@@ -118,7 +118,7 @@ public class MoBookmarkManager {
                 }
                 break;
             case BOOKMARK:
-                String urlText = processUrl(url.getText().toString());
+                String urlText = processUrl(url.getInputText().toString());
                 if(nameText.isEmpty()){
                     // it can not be empty
                     name.setError(c.getString(R.string.error_bookmark_empty_name));

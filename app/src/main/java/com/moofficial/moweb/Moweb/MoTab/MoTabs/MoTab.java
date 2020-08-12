@@ -13,10 +13,9 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import androidx.cardview.widget.CardView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.moofficial.moessentials.MoEssentials.MoConnections.MoShare;
@@ -32,11 +31,10 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupItemBu
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupWindow;
 import com.moofficial.moweb.BookmarkActivity;
 import com.moofficial.moweb.HistoryActivity;
-import com.moofficial.moweb.MoBitmap.MoBitmap;
-import com.moofficial.moweb.MoBitmap.MoBitmapSaver;
 import com.moofficial.moweb.MoHTML.MoHTMLAsyncTask;
+import com.moofficial.moweb.Moweb.MoBitmap.MoBitmap;
+import com.moofficial.moweb.Moweb.MoBitmap.MoBitmapSaver;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
-import com.moofficial.moweb.Moweb.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
@@ -45,9 +43,12 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabExceptions.MoTabNotFoundException;
 import com.moofficial.moweb.Moweb.MoTab.MoTabSuggestion;
 import com.moofficial.moweb.Moweb.MoTab.MoTabType.MoTabType;
+import com.moofficial.moweb.Moweb.MoTab.MoTabUtils;
+import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoOnTabBitmapUpdateListener;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoUrl.MoURL;
 import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
+import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebView;
 import com.moofficial.moweb.R;
@@ -61,7 +62,9 @@ public class MoTab implements MoSavable, MoLoadable {
     protected MoWebView moWebView;
 
     private MoURL url;
-    private MoBitmap moBitmap;
+    private MoOnTabBitmapUpdateListener onBitmapUpdateListener = ()->{};
+    private MoBitmap moBitmap = new MoBitmap()
+            .setOnBitmapCapturedListener(b -> onBitmapUpdateListener.onBitmapUpdated());
     private boolean isUpToDate;
     private MoTabType tabType;
     private MoPopupWindow moPopupWindow;
@@ -74,10 +77,10 @@ public class MoTab implements MoSavable, MoLoadable {
     private View view;
     private TextInputEditText searchText;
     private View searchBar;
-    private CardView showTabsButton;
     private TextView tabsNumber;
     private ProgressBar progressBar;
     private ImageButton moreTabButton;
+    private LinearLayout webLinearLayout;
     private View errorLayout;
     private MoFindBar moFindBar;
     private boolean captureImage = true;
@@ -90,7 +93,6 @@ public class MoTab implements MoSavable, MoLoadable {
         this.context = context;
         this.url = new MoURL(url);
         init();
-        this.moBitmap = new MoBitmap();
         this.moWebView.loadUrl(this.url.getUrlString());
         this.isUpToDate = true;
     }
@@ -115,6 +117,146 @@ public class MoTab implements MoSavable, MoLoadable {
     }
 
 
+    public MoTab getParentTab() {
+        return parentTab;
+    }
+
+    public MoWebView getMoWebView() {
+        return moWebView;
+    }
+
+    public MoTab setMoWebView(MoWebView moWebView) {
+        this.moWebView = moWebView;
+        return this;
+    }
+
+    public MoTab setUrl(MoURL url) {
+        this.url = url;
+        return this;
+    }
+
+    public MoTab setMoBitmap(MoBitmap moBitmap) {
+        this.moBitmap = moBitmap;
+        return this;
+    }
+
+    public MoOnTabBitmapUpdateListener getOnBitmapUpdateListener() {
+        return onBitmapUpdateListener;
+    }
+
+    public MoTab setOnBitmapUpdateListener(MoOnTabBitmapUpdateListener onBitmapUpdateListener) {
+        this.onBitmapUpdateListener = onBitmapUpdateListener;
+        return this;
+    }
+
+    public boolean isUpToDate() {
+        return isUpToDate;
+    }
+
+    public MoTab setUpToDate(boolean upToDate) {
+        isUpToDate = upToDate;
+        return this;
+    }
+
+    public MoTabType getTabType() {
+        return tabType;
+    }
+
+    public MoTab setTabType(MoTabType tabType) {
+        this.tabType = tabType;
+        return this;
+    }
+
+    public MoPopupWindow getMoPopupWindow() {
+        return moPopupWindow;
+    }
+
+    public MoTab setMoPopupWindow(MoPopupWindow moPopupWindow) {
+        this.moPopupWindow = moPopupWindow;
+        return this;
+    }
+
+    public MoSearchable getMoSearchable() {
+        return moSearchable;
+    }
+
+    public MoTab setMoSearchable(MoSearchable moSearchable) {
+        this.moSearchable = moSearchable;
+        return this;
+    }
+
+    public TextInputEditText getSearchText() {
+        return searchText;
+    }
+
+    public MoTab setSearchText(TextInputEditText searchText) {
+        this.searchText = searchText;
+        return this;
+    }
+
+    public View getSearchBar() {
+        return searchBar;
+    }
+
+    public MoTab setSearchBar(View searchBar) {
+        this.searchBar = searchBar;
+        return this;
+    }
+
+    public TextView getTabsNumber() {
+        return tabsNumber;
+    }
+
+    public MoTab setTabsNumber(TextView tabsNumber) {
+        this.tabsNumber = tabsNumber;
+        return this;
+    }
+
+    public ProgressBar getProgressBar() {
+        return progressBar;
+    }
+
+    public MoTab setProgressBar(ProgressBar progressBar) {
+        this.progressBar = progressBar;
+        return this;
+    }
+
+    public ImageButton getMoreTabButton() {
+        return moreTabButton;
+    }
+
+    public MoTab setMoreTabButton(ImageButton moreTabButton) {
+        this.moreTabButton = moreTabButton;
+        return this;
+    }
+
+    public View getErrorLayout() {
+        return errorLayout;
+    }
+
+    public MoTab setErrorLayout(View errorLayout) {
+        this.errorLayout = errorLayout;
+        return this;
+    }
+
+    public MoFindBar getMoFindBar() {
+        return moFindBar;
+    }
+
+    public MoTab setMoFindBar(MoFindBar moFindBar) {
+        this.moFindBar = moFindBar;
+        return this;
+    }
+
+    public MoTabSuggestion getSuggestion() {
+        return suggestion;
+    }
+
+    public MoTab setSuggestion(MoTabSuggestion suggestion) {
+        this.suggestion = suggestion;
+        return this;
+    }
+
     /**
      * init the whole class
      */
@@ -124,8 +266,8 @@ public class MoTab implements MoSavable, MoLoadable {
             this.moWebView = new MoWebView(this.context);
         }
         initProgressBar();
-        initChromeClient();
         initWebView();
+        initWebLinearLayout();
         initSearchText();
         initTabsButton();
         initSearchBar();
@@ -152,24 +294,24 @@ public class MoTab implements MoSavable, MoLoadable {
 
     private void initProgressBar(){
         this.progressBar = this.view.findViewById(R.id.tab_progress);
-        this.progressBar.setProgress(0);
         this.progressBar.setMax(100);
+        this.progressBar.setIndeterminate(false);
+        this.progressBar.setProgress(0);
     }
 
-    private void initChromeClient(){
-        this.moWebView.setChromeClient(new MoChromeClient(this.context)
-                .setProgressBar(this.progressBar));
-    }
 
     @SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
     protected void initWebView(){
-
         moWebView.setWebView(view.findViewById(R.id.tab_web_view))
-                 .setOnBitmapCapturedListener(b -> moBitmap.setBitmap(b))
+                 .setMoBitmap(this.moBitmap)
+                 .setChromeClient(new MoChromeClient(this.context).setProgressBar(this.progressBar))
                  .setOnUpdateUrlListener((url, isReload) -> updateUrl(url))
-                 .setOnErrorReceived((view, request, error) -> onErrorReceived(request, error))
-        ;
+                 .setOnErrorReceived((view, request, error) -> onErrorReceived(request, error));
         moWebView.init();
+    }
+
+    private void initWebLinearLayout(){
+        this.webLinearLayout = view.findViewById(R.id.tab_linear_layout);
     }
 
     /**
@@ -240,8 +382,9 @@ public class MoTab implements MoSavable, MoLoadable {
     private void initTabsButton() {
         //tabs button
         this.tabsNumber = view.findViewById(R.id.tabs_button);
-        this.showTabsButton = view.findViewById(R.id.tabs_button_card_view);
-        this.showTabsButton.setOnClickListener(view -> {
+        this.tabsNumber.setOnClickListener(view -> {
+            moWebView.getWebView().pauseTimers();
+            //moWebView.forceCaptureBitmapIfNotLoading();
             MoTabController.instance.onTabsButtonPressed();
         });
     }
@@ -297,6 +440,9 @@ public class MoTab implements MoSavable, MoLoadable {
                                 .buildTextButton(R.string.desktop_mode,moWebView.isInDesktopMode()?
                                         R.drawable.ic_baseline_check_box_24:R.drawable.ic_baseline_check_box_outline_blank_24 , view -> {
                                     moWebView.enableReverseMode();
+                                })
+                                .buildTextButton("Destroy",view -> {
+                                    moWebView.destroyWebView();
                                 })
                                 .build()
                 ).build();
@@ -451,18 +597,16 @@ public class MoTab implements MoSavable, MoLoadable {
      * @return a view of web search
      */
     @SuppressLint("SetTextI18n")
-    public View getZeroPaddingView(){
+    public View getZeroPaddingView(ViewGroup root){
         // make the search bar visible
         searchBar.setVisibility(View.VISIBLE);
         // make sure the tab count is corrects
         this.tabsNumber.setText(MoTabsManager.size()+"");
         // making the view padding zero
         this.view.setPadding(0,0,0,0);
-        // loading the url if it has not been loaded yet
-        if(!this.isUpToDate) {
-            this.isUpToDate = true;
-            moWebView.loadUrl(this.url.getUrlString());
-        }
+        updateWebViewIfNotUpdated();
+        MoTabUtils.transitionToInTabMode(this.moWebView,this.webLinearLayout,root);
+        onResume();
         // if the parent view is not null, make it null so
         // we can set it to another parent view
         if(view.getParent() != null) {
@@ -471,13 +615,21 @@ public class MoTab implements MoSavable, MoLoadable {
         return view;
     }
 
+    private void updateWebViewIfNotUpdated() {
+        // loading the url if it has not been loaded yet
+        if(!this.isUpToDate) {
+            this.isUpToDate = true;
+            moWebView.loadUrl(this.url.getUrlString());
+        }
+    }
+
 
     /**
      * saves the bitmap for this webview
      * @param saver
      */
     public void saveWebViewBitmap(MoBitmapSaver saver){
-        saver.setFileName(this.moBitmap.getId().getSId());
+        saver.setFileName(this.moBitmap.stringifyId());
         saver.save(this.moBitmap.getBitmap());
     }
 
@@ -486,7 +638,7 @@ public class MoTab implements MoSavable, MoLoadable {
      * @param saver
      */
     public void deleteWebViewBitmap(MoBitmapSaver saver){
-        saver.setFileName(this.moBitmap.getId().getSId());
+        saver.setFileName(this.moBitmap.stringifyId());
         saver.delete();
     }
 
@@ -510,7 +662,7 @@ public class MoTab implements MoSavable, MoLoadable {
     public void load(String data, Context context) {
         String[] c = MoFile.loadable(data);
         this.url = new MoURL(c[0],context);
-        this.moBitmap = new MoBitmap(c[1],context);
+        this.moBitmap.load(c[1],context);
         this.moWebView = new MoWebView(context);
         this.moWebView.load(c[2],context);
         this.init();
@@ -525,6 +677,17 @@ public class MoTab implements MoSavable, MoLoadable {
     @Override
     public String getData() {
         return MoFile.getData(this.url,this.moBitmap,this.moWebView);
+    }
+
+    // set of functions for different events of activity
+    public void onPause(){
+        this.moWebView.onPause();
+    }
+    public void onResume(){
+        this.moWebView.onResume();
+    }
+    public void onDestroy(){
+        this.moWebView.onDestroy();
     }
 
 
@@ -545,8 +708,4 @@ public class MoTab implements MoSavable, MoLoadable {
 //        errorLayout.setVisibility(View.VISIBLE);
     }
 
-
-    public MoBitmap getMoBitmap() {
-        return moBitmap;
-    }
 }

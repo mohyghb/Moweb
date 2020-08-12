@@ -6,7 +6,7 @@ import android.widget.Toast;
 
 import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoReadWrite.MoReadWrite;
-import com.moofficial.moweb.MoBitmap.MoBitmapSaver;
+import com.moofficial.moweb.Moweb.MoBitmap.MoBitmapSaver;
 
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabExceptions.MoTabNotFoundException;
@@ -99,6 +99,7 @@ public class MoTabsManager {
      */
     public static void load(Context context) {
         tabs.clear();
+        // TODO UNCOMMENT THE RELOAD LINE
         //if(tabs.isEmpty()){
            reload(context);
         //}
@@ -130,20 +131,22 @@ public class MoTabsManager {
 
     /**
      * returns the motab at index
+     * returns null if the tabs are empty
      * @param index of the motab
      * @return the motab at index
      */
     public static MoTab getTab(int index){
-        return tabs.get(index);
+        return tabs.isEmpty()?null:tabs.get(index);
     }
 
     /**
      * returns the incognito tab at index
+     * return null if the incognito tabs are empty
      * @param index
      * @return
      */
     public static MoTab getIncognitoTab(int index){
-        return incognitoTabs.get(index);
+        return incognitoTabs.isEmpty()?null:incognitoTabs.get(index);
     }
 
 

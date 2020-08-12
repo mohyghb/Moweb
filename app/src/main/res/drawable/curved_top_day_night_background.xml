@@ -4,7 +4,7 @@
     <corners android:topRightRadius="@dimen/mo_style_card_corner"
         android:topLeftRadius="@dimen/mo_style_card_corner"/>
 
-    <solid android:color="@color/MoBackground"/>
+    <solid android:color="@color/search_bar_color"/>
 
     <padding android:top="@dimen/card_content_padding"
         android:bottom="@dimen/card_content_padding"

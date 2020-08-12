@@ -1,6 +1,5 @@
 package com.moofficial.moweb;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.util.Pair;
 import android.view.View;
@@ -8,7 +7,6 @@ import android.widget.ImageButton;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
 import com.moofficial.moweb.MoSection.MoSectionManager;
@@ -19,7 +17,7 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 
 public class MoTabSectionManager {
 
-    private final Activity mainActivity;
+    private final MainActivity mainActivity;
     private MoRecyclerView tabsRecyclerView;
     private MoRecyclerView incognitoTabsRecyclerView;
     private MoTabRecyclerAdapter mAdapter;
@@ -35,9 +33,9 @@ public class MoTabSectionManager {
     private MoPopUpMenu addPopUpMenu;
     private MoPopUpMenu morePopUpMenu;
 
-    public MoTabSectionManager(Activity mainActivity,Runnable changeContentView) {
+    public MoTabSectionManager(MainActivity mainActivity,Runnable changeContentView) {
         this.mainActivity = mainActivity;
-        this.mainView = MoInflaterView.inflate(R.layout.main_menu_layout,mainActivity);
+        this.mainView = mainActivity.findViewById(R.id.activity_main_include_main_menu);
         this.changeContentView = changeContentView;
         this.showInGrid = true;
         this.init();
@@ -63,7 +61,8 @@ public class MoTabSectionManager {
 
     // init the adapter fro normal tabs
     private void initNormalAdapter(){
-        this.mAdapter = new MoTabRecyclerAdapter(MoTabsManager.getTabs(),mainActivity,showInGrid);
+        this.mAdapter = new MoTabRecyclerAdapter(MoTabsManager.getTabs(),mainActivity,showInGrid)
+                .setRootView(mainActivity.getRootView());
     }
 
     /**
@@ -173,11 +172,14 @@ public class MoTabSectionManager {
      * @return
      */
     public View getMainView() {
+        return mainView;
+    }
+
+    public void update(){
         this.mAdapter.notifyDataSetChanged();
         this.incognitoTabsRecyclerView.notifyDataSetChanged();
         this.tabsRecyclerView.smoothScrollTo(MoTabController.instance.getNormalIndex());
         this.incognitoTabsRecyclerView.smoothScrollTo(MoTabController.instance.getIncognitoIndex());
-        return mainView;
     }
 
     public void onResume() {
