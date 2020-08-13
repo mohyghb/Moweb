@@ -29,6 +29,12 @@ public class MoSectionManager implements MoSavable, MoLoadable {
         this.section = IN_TAB_VIEW;
     }
 
+
+    public boolean isInTabView(){
+        return this.section == IN_TAB_VIEW;
+    }
+
+
     /**
      * loads a savable object into its class
      *

@@ -13,17 +13,17 @@ public class MoTabUtils {
         m.moveWebViewTo(viewGroup);
         // making the web view function properly
         // TODO: touch point listener should not be working anymore
-        m.getWebView().setOnTouchListener((view, motionEvent) -> false);
-        m.getWebView().resumeTimers();
+        m.setOnTouchListener((view, motionEvent) -> false);
+        m.resumeTimers();
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    public static void transitionToListTabMode(Context c, MoWebView m, ViewGroup viewGroup,ViewGroup root){
+    public static void transitionToListTabMode(Context c, MoWebView m, ViewGroup viewGroup){
         int height = (int)(c.getResources().getDisplayMetrics()
                 .heightPixels/2.25f);
         m.moveWebViewTo(viewGroup, ViewGroup.LayoutParams.MATCH_PARENT,height);
-        m.getWebView().setOnTouchListener((view, motionEvent) -> true);
-        m.getWebView().pauseTimers();
+        m.setOnTouchListener((view, motionEvent) -> true);
+        m.pauseTimers();
     }
 
 

@@ -3,9 +3,8 @@ package com.moofficial.moweb.Moweb.MoWebview;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
+import android.util.AttributeSet;
 import android.view.ViewGroup;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -25,15 +24,14 @@ import com.moofficial.moweb.Moweb.MoWebview.MoStackTabHistory.MoStackTabHistory;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnReceivedError;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnUpdateUrlListener;
 
-// a webview which has more helper functions
-public class MoWebView implements MoSavable,MoLoadable {
+// a web view which has more helper functions
+public class MoWebView extends WebView implements MoSavable,MoLoadable {
 
 
 
     private Context context;
-    private WebView wv;
+   // private WebView wv;
     private MoWebClient client = new MoWebClient() {
-
         @Override
         public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
             super.doUpdateVisitedHistory(view, url, isReload);
@@ -45,8 +43,6 @@ public class MoWebView implements MoSavable,MoLoadable {
             // save history
             MoWebView.this.url = url;
         }
-
-
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
@@ -55,8 +51,6 @@ public class MoWebView implements MoSavable,MoLoadable {
             // inject the js to web view
             evaluateJavascript(MoWebElementDetection.injectJs(context),null);
         }
-
-
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
             onErrorReceived.onReceivedError(view,request,error);
@@ -76,16 +70,27 @@ public class MoWebView implements MoSavable,MoLoadable {
     private boolean isInDesktopMode = false;
     private boolean isPaused = true;
 
-
-
-
-    public MoWebView(Context c) {
-        this.context = c;
+    public MoWebView(Context context) {
+        super(context);
+        this.context = context;
     }
 
-    public Context getContext() {
-        return context;
+    public MoWebView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.context = context;
     }
+
+    public MoWebView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        this.context = context;
+    }
+
+    public MoWebView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        this.context = context;
+    }
+
+
 
     public MoWebView setContext(Context context) {
         this.context = context;
@@ -209,24 +214,15 @@ public class MoWebView implements MoSavable,MoLoadable {
         webSettings.setBuiltInZoomControls(true);
         // disabling the zoom buttons
         webSettings.setDisplayZoomControls(false);
+        // if we have it inside cache, load it from there, else use network
+        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
     }
 
-    public void setWebViewClient(MoWebClient client) {
-        wv.setWebViewClient(client);
-    }
-
-    public void setWebChromeClient(WebChromeClient client) {
-        wv.setWebChromeClient(client);
-    }
-
-    public WebSettings getSettings(){
-        return wv.getSettings();
-    }
 
     private void initHitTestResult(){
         this.hitTestResultParser = new MoHitTestResultParser(this.context,this);
         // init touch position
-        this.touchPosition = new MoTouchPosition(wv).setLongClickListener(()->{
+        this.touchPosition = new MoTouchPosition(this).setLongClickListener(()->{
             boolean dialogCreated = hitTestResultParser.createDialog();
             if(!dialogCreated){
                 // only show the bottom search if dialog was not created
@@ -247,25 +243,25 @@ public class MoWebView implements MoSavable,MoLoadable {
      */
     public void captureBitmap() {
         if(captureBitmap){
-            moBitmap.captureBitmap(this.wv);
+            moBitmap.captureBitmap(this);
         }
     }
 
     public void captureBitmapWithDelay(long delay){
         if(captureBitmap){
-            moBitmap.captureBitmapWithDelay(this.wv,delay);
+            moBitmap.captureBitmapWithDelay(this,delay);
         }
     }
 
     public void captureBitmapIfNotLoading(){
         if(captureBitmap){
-            moBitmap.captureBitmapIfNotLoading(this.wv);
+            moBitmap.captureBitmapIfNotLoading(this);
         }
     }
 
     public void forceCaptureBitmapIfNotLoading(){
         if(captureBitmap){
-            moBitmap.forceCaptureBitmapIfNotLoading(this.wv);
+            moBitmap.forceCaptureBitmapIfNotLoading(this);
         }
     }
 
@@ -287,42 +283,6 @@ public class MoWebView implements MoSavable,MoLoadable {
         });
     }
 
-    public void post(Runnable r){
-        wv.post(r);
-    }
-
-    public void postDelayed(Runnable r, long delay){
-        wv.postDelayed(r,delay);
-    }
-
-    public String getUrl(){
-        return this.url;
-    }
-
-    public String getTitle(){
-        return wv.getTitle();
-    }
-
-    public void clearMatches(){
-        wv.clearMatches();
-    }
-
-    public void findAllAsync(String s){
-        wv.findAllAsync(s);
-    }
-
-    public void setFindListener(WebView.FindListener findListener){
-        wv.setFindListener(findListener);
-    }
-
-    /**
-     * reloads/refreshes the web page
-     * (url that we are currently on)
-     */
-    public void reload(){
-        wv.reload();
-    }
-
     /**
      * moves to the next find item
      */
@@ -337,9 +297,6 @@ public class MoWebView implements MoSavable,MoLoadable {
         findNext(false);
     }
 
-    public void findNext(boolean b){
-        wv.findNext(b);
-    }
 
 
 
@@ -388,29 +345,15 @@ public class MoWebView implements MoSavable,MoLoadable {
     }
 
 
-    public void evaluateJavascript(String js, ValueCallback<String> v){
-        wv.evaluateJavascript(js,v);
-
-    }
-
-
-    @SuppressLint("JavascriptInterface")
-    public void addJavascriptInterface(Object o, String name){
-        wv.addJavascriptInterface(o,name);
-    }
-
-
-    public void loadUrl(String url){
-        wv.loadUrl(url);
-    }
-
-    public WebView getWebView() {
-        return wv;
-    }
-
-    public MoWebView setWebView(WebView wv) {
-        this.wv = wv;
-        return this;
+    /**
+     * reloads the web view even if the
+     * cache mode is turned on
+     * if the url is not null and not empty
+     */
+    public void forceReloadFromNetwork(){
+        if(this.url!=null && !this.url.isEmpty()){
+            this.loadUrl(MoWebUtils.makeUrlUnique(this.url));
+        }
     }
 
 
@@ -418,7 +361,7 @@ public class MoWebView implements MoSavable,MoLoadable {
      * enables the desktop mode for this web view
      */
     public void enableDesktopMode(){
-        MoWebUtils.setDesktopMode(this.wv,true);
+        MoWebUtils.setDesktopMode(this,true);
         this.isInDesktopMode = true;
     }
 
@@ -426,7 +369,7 @@ public class MoWebView implements MoSavable,MoLoadable {
      * disables the desktop mode for this web view
      */
     public void disableDesktopMode(){
-        MoWebUtils.setDesktopMode(this.wv,false);
+        MoWebUtils.setDesktopMode(this,false);
         this.isInDesktopMode = false;
     }
 
@@ -456,7 +399,7 @@ public class MoWebView implements MoSavable,MoLoadable {
      * destroys the web view of this class
      */
     public void destroyWebView(){
-        this.wv.destroy();
+        destroy();
     }
 
 
@@ -464,7 +407,7 @@ public class MoWebView implements MoSavable,MoLoadable {
         return this.isInDesktopMode;
     }
     public boolean isLoading(){
-        return this.wv.getProgress()!=100;
+        return this.getProgress()!=100;
     }
 
     /**
@@ -472,11 +415,11 @@ public class MoWebView implements MoSavable,MoLoadable {
      * @param viewGroup
      */
     public void moveWebViewTo(ViewGroup viewGroup,int width, int height){
-        if(wv.getParent()!=null){
+        if(this.getParent()!=null){
             // it has a parent, remove the web view from the parent first
-            ((ViewGroup)wv.getParent()).removeView(this.wv);
+            ((ViewGroup)getParent()).removeView(this);
         }
-        viewGroup.addView(this.wv,new ViewGroup.LayoutParams(width,height));
+        viewGroup.addView(this,new ViewGroup.LayoutParams(width,height));
     }
 
     public void moveWebViewTo(ViewGroup viewGroup){
@@ -487,17 +430,17 @@ public class MoWebView implements MoSavable,MoLoadable {
 
 
     public void onResume(){
-        this.wv.onResume();
+        super.onResume();
         isPaused = false;
     }
 
     public void onPause(){
-        this.wv.onPause();
+        super.onPause();
         isPaused = true;
     }
 
     public void onDestroy(){
-        this.wv.destroy();
+        super.destroy();
     }
 
     public boolean isPaused() {

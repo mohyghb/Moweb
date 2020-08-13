@@ -26,6 +26,7 @@ import com.moofficial.moessentials.MoEssentials.MoKeyboardUtils.MoKeyboardUtils;
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoRunnable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableItem;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoFindBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupItemBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupWindow;
@@ -53,14 +54,13 @@ import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebView;
 import com.moofficial.moweb.R;
 
-
-public class MoTab implements MoSavable, MoLoadable {
+// TODO: ERROR THE URL IS SOME HOW CHANGED TO ABOUT:BLANK AFTER THE FIRST INIT
+public class MoTab implements MoSavable, MoLoadable, MoSelectableItem {
 
 
     // DATA
     private MoTab parentTab;
     protected MoWebView moWebView;
-
     private MoURL url;
     private MoOnTabBitmapUpdateListener onBitmapUpdateListener = ()->{};
     private MoBitmap moBitmap = new MoBitmap()
@@ -69,8 +69,10 @@ public class MoTab implements MoSavable, MoLoadable {
     private MoTabType tabType;
     private MoPopupWindow moPopupWindow;
     private MoSearchable moSearchable;
+    // suggestions
+    private MoTabSuggestion suggestion;
 
-    //private MoSearchEngine searchEngine;
+
 
     // UI
     private Context context;
@@ -84,17 +86,22 @@ public class MoTab implements MoSavable, MoLoadable {
     private View errorLayout;
     private MoFindBar moFindBar;
     private boolean captureImage = true;
-    // suggestions
-    private MoTabSuggestion suggestion;
+    private boolean isSelected = false;
 
 
 
     public MoTab(Context context, String url) {
-        this.context = context;
+        initContextView(context);
         this.url = new MoURL(url);
         init();
         this.moWebView.loadUrl(this.url.getUrlString());
         this.isUpToDate = true;
+    }
+
+    private void initContextView(Context context) {
+        this.context = context;
+        this.view = MoInflaterView.inflate(R.layout.tab, this.context);
+        this.moWebView = view.findViewById(R.id.tab_web_view);
     }
 
     public MoTab(String searchText,Context context){
@@ -103,7 +110,7 @@ public class MoTab implements MoSavable, MoLoadable {
 
     // for loading back tabs from saved files
     public MoTab(Context context){
-        this.context = context;
+        initContextView(context);
         this.isUpToDate = false;
     }
 
@@ -261,7 +268,6 @@ public class MoTab implements MoSavable, MoLoadable {
      * init the whole class
      */
     private void init(){
-        this.view = MoInflaterView.inflate(R.layout.tab,this.context);
         if(moWebView==null){
             this.moWebView = new MoWebView(this.context);
         }
@@ -275,6 +281,10 @@ public class MoTab implements MoSavable, MoLoadable {
         initErrorLayout();
         initMoreButton();
         initMoSearchable();
+        initTabType();
+    }
+
+    private void initTabType() {
         this.tabType = new MoTabType(MoTabType.TYPE_NORMAL,getWebView());
     }
 
@@ -302,8 +312,7 @@ public class MoTab implements MoSavable, MoLoadable {
 
     @SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
     protected void initWebView(){
-        moWebView.setWebView(view.findViewById(R.id.tab_web_view))
-                 .setMoBitmap(this.moBitmap)
+        moWebView.setMoBitmap(this.moBitmap)
                  .setChromeClient(new MoChromeClient(this.context).setProgressBar(this.progressBar))
                  .setOnUpdateUrlListener((url, isReload) -> updateUrl(url))
                  .setOnErrorReceived((view, request, error) -> onErrorReceived(request, error));
@@ -555,7 +564,7 @@ public class MoTab implements MoSavable, MoLoadable {
 
 
     public WebView getWebView() {
-        return moWebView.getWebView();
+        return moWebView;
     }
     public String getUrl() {
         return url.getUrlString();
@@ -663,7 +672,7 @@ public class MoTab implements MoSavable, MoLoadable {
         String[] c = MoFile.loadable(data);
         this.url = new MoURL(c[0],context);
         this.moBitmap.load(c[1],context);
-        this.moWebView = new MoWebView(context);
+        // GIVES ERROR
         this.moWebView.load(c[2],context);
         this.init();
     }
@@ -706,6 +715,27 @@ public class MoTab implements MoSavable, MoLoadable {
     public void onErrorReceived(WebResourceRequest request, WebResourceError error){
 //        moWebView.setVisibility(View.INVISIBLE);
 //        errorLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public boolean onSelect() {
+        this.isSelected = !this.isSelected;
+        return this.isSelected;
+    }
+
+    @Override
+    public void setSelected(boolean b) {
+        this.isSelected = b;
+    }
+
+    @Override
+    public boolean isSelected() {
+        return this.isSelected;
+    }
+
+    @Override
+    public Object getItem() {
+        return this;
     }
 
 }

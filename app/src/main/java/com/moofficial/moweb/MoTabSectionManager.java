@@ -7,11 +7,13 @@ import android.widget.ImageButton;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
 import com.moofficial.moweb.MoSection.MoSectionManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabRecyclerAdapter;
+import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 
 public class MoTabSectionManager {
@@ -19,7 +21,7 @@ public class MoTabSectionManager {
     private final MainActivity mainActivity;
     private MoRecyclerView tabsRecyclerView;
     private MoRecyclerView incognitoTabsRecyclerView;
-    private MoTabRecyclerAdapter mAdapter;
+    private MoTabRecyclerAdapter mTabAdapter;
     private MoTabRecyclerAdapter mIncognitoAdapter;
 
     private ImageButton addTabButton;
@@ -31,6 +33,9 @@ public class MoTabSectionManager {
 
     private MoPopUpMenu addPopUpMenu;
     private MoPopUpMenu morePopUpMenu;
+
+
+    private MoSelectable<MoTab> moTabMoSelectable;
 
     public MoTabSectionManager(MainActivity mainActivity,Runnable changeContentView) {
         this.mainActivity = mainActivity;
@@ -55,13 +60,18 @@ public class MoTabSectionManager {
         initMoreButton();
         initAddPopUpMenu();
         initMorePopUpMenu();
+        initMoTabSelectable();
+    }
+
+    private void initMoTabSelectable(){
+        this.moTabMoSelectable = new MoSelectable<>(mainActivity,mainActivity.getRootView(),mTabAdapter);
     }
 
 
     // init the adapter fro normal tabs
     private void initNormalAdapter(){
-        this.mAdapter = new MoTabRecyclerAdapter(MoTabsManager.getTabs(),mainActivity,showInGrid)
-                .setRootView(mainActivity.getRootView());
+        this.mTabAdapter = new MoTabRecyclerAdapter(MoTabsManager.getTabs(),mainActivity,showInGrid);
+        MoTabsManager.setTabRecyclerAdapter(mTabAdapter);
     }
 
     /**
@@ -70,7 +80,7 @@ public class MoTabSectionManager {
      */
     private void initRecyclerView() {
         initNormalAdapter();
-        tabsRecyclerView = new MoRecyclerView(mainActivity,mainView.findViewById(R.id.recycler_tabs_view),mAdapter)
+        tabsRecyclerView = new MoRecyclerView(mainActivity,mainView.findViewById(R.id.recycler_tabs_view), mTabAdapter)
                 .setOrientation(LinearLayoutManager.HORIZONTAL);
         tabsRecyclerView.show();
     }
@@ -78,6 +88,7 @@ public class MoTabSectionManager {
     // init the adapter for incognito tabs
     private void initIncognitoAdapter(){
         this.mIncognitoAdapter = new MoTabRecyclerAdapter(MoTabsManager.getIncognitoTabs(),mainActivity,showInGrid);
+        MoTabsManager.setIncognitoTabAdapter(mIncognitoAdapter);
     }
 
     private void initIncognitoRecyclerView(){
@@ -85,7 +96,6 @@ public class MoTabSectionManager {
         incognitoTabsRecyclerView = new MoRecyclerView(mainActivity,mainView.findViewById(R.id.recycler_incognito_tabs),mIncognitoAdapter)
                 .setOrientation(LinearLayoutManager.HORIZONTAL);
         incognitoTabsRecyclerView.show();
-        //incognitoTabsRecyclerView.scrollTo(MoTabController.instance.getIndex());
     }
 
     // init add tab button
@@ -161,7 +171,7 @@ public class MoTabSectionManager {
     private void changeGrid() {
         initNormalAdapter();
         initIncognitoAdapter();
-        this.tabsRecyclerView.switchViewMode(showInGrid, mAdapter);
+        this.tabsRecyclerView.switchViewMode(showInGrid, mTabAdapter);
         this.incognitoTabsRecyclerView.switchViewMode(showInGrid, mIncognitoAdapter);
     }
 
@@ -174,18 +184,5 @@ public class MoTabSectionManager {
         return mainView;
     }
 
-    public void update(){
-//        this.mAdapter.notifyDataSetChanged();
-//        this.incognitoTabsRecyclerView.notifyDataSetChanged();
-//        this.tabsRecyclerView.smoothScrollTo(MoTabController.instance.getNormalIndex());
-//        this.incognitoTabsRecyclerView.smoothScrollTo(MoTabController.instance.getIncognitoIndex());
-    }
-
-    public void onResume() {
-//        MoLog.print("onResume");
-//        if(this.mAdapter!=null){
-//            this.mAdapter.notifyDataSetChanged();
-//        }
-    }
 
 }

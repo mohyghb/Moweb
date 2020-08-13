@@ -16,7 +16,7 @@
         app:layout_constraintBottom_toTopOf="@id/tab_search_bar"
         app:layout_constraintStart_toStartOf="parent">
 
-        <WebView
+        <com.moofficial.moweb.Moweb.MoWebview.MoWebView
             android:id="@+id/tab_web_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

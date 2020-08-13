@@ -25,12 +25,25 @@ public class MoTabsManager {
 
     private static ArrayList<MoTab> tabs = new ArrayList<>();
     private static ArrayList<MoTab> incognitoTabs = new ArrayList<>();
+    private static MoTabRecyclerAdapter tabRecyclerAdapter,incognitoTabAdapter;
 
     public static ArrayList<MoTab> getTabs(){
         return tabs;
     }
     public static ArrayList<MoTab> getIncognitoTabs(){
         return incognitoTabs;
+    }
+    public static MoTabRecyclerAdapter getTabRecyclerAdapter() {
+        return tabRecyclerAdapter;
+    }
+    public static void setTabRecyclerAdapter(MoTabRecyclerAdapter tabRecyclerAdapter) {
+        MoTabsManager.tabRecyclerAdapter = tabRecyclerAdapter;
+    }
+    public static MoTabRecyclerAdapter getIncognitoTabAdapter() {
+        return incognitoTabAdapter;
+    }
+    public static void setIncognitoTabAdapter(MoTabRecyclerAdapter incognitoTabAdapter) {
+        MoTabsManager.incognitoTabAdapter = incognitoTabAdapter;
     }
 
 
@@ -169,6 +182,9 @@ public class MoTabsManager {
 
     /**
      * remove the tab from the list
+     * notify the recycler adapter, so they know that an item was removed
+     * and notify the tab controller so that it identifies a tab has been removed
+     * and manage the index properly
      * @param index of the tab to be removed from tabs
      * @param context  of the activity
      */
@@ -176,12 +192,13 @@ public class MoTabsManager {
         switch (type){
             case MoTabType.TYPE_NORMAL:
                 removeTabStuff(index,context,tabs);
+                notifyItemRemoved(index,tabRecyclerAdapter);
                 break;
-                case MoTabType.TYPE_INCOGNITO:
-                    removeTabStuff(index,context,incognitoTabs);
-                    break;
+            case MoTabType.TYPE_INCOGNITO:
+                removeTabStuff(index,context,incognitoTabs);
+                notifyItemRemoved(index,incognitoTabAdapter);
+                break;
         }
-        // so that tab controller identifies that a tab has been removed
         MoTabController.instance.notifyRemoved(type);
     }
 
@@ -225,10 +242,10 @@ public class MoTabsManager {
      */
     public static void addTab(Context context, String url,boolean getCurrentAsParent) {
         MoTabsManager.newTab(context, url,getCurrentAsParent?MoTabController.instance.getCurrent():null);
-        MoTabController.instance.setIndex(tabs.size() - 1,MoTabType.TYPE_NORMAL);
+        int index = tabs.size() - 1;
+        MoTabController.instance.setIndex(index,MoTabType.TYPE_NORMAL);
+        notifyItemInserted(index, tabRecyclerAdapter);
     }
-
-
 
 
     /**
@@ -238,8 +255,12 @@ public class MoTabsManager {
      */
     public static void addIncognitoTab(Activity a,String url,boolean getCurrentAsParent){
         MoTabsManager.newIncognitoTab(a,url,getCurrentAsParent?MoTabController.instance.getCurrent():null);
-        MoTabController.instance.setIndex(incognitoTabs.size() - 1,MoTabType.TYPE_INCOGNITO);
+        int index = incognitoTabs.size() - 1;
+        MoTabController.instance.setIndex(index,MoTabType.TYPE_INCOGNITO);
+        notifyItemInserted(index, incognitoTabAdapter);
     }
+
+
 
 
     /**
@@ -306,6 +327,33 @@ public class MoTabsManager {
         }
         Toast.makeText(context,context.getString(R.string.toast_closed_all_incognito_tabs),Toast.LENGTH_SHORT).show();
     }
+
+
+    // tab recycler methods
+
+    /**
+     * notifies the recycler adapter that an item has been inserted
+     * @param index of the item
+     * @param tabRecyclerAdapter corresponding adapter
+     */
+    private static void notifyItemInserted(int index, MoTabRecyclerAdapter tabRecyclerAdapter) {
+        if (tabRecyclerAdapter != null) {
+            tabRecyclerAdapter.notifyItemInserted(index);
+        }
+    }
+
+    /**
+     * notifies the recycler adapter that an item has been removed
+     * @param index of the item
+     * @param tabRecyclerAdapter corresponding adapter
+     */
+    private static void notifyItemRemoved(int index, MoTabRecyclerAdapter tabRecyclerAdapter) {
+        if (tabRecyclerAdapter != null) {
+            tabRecyclerAdapter.notifyItemRemoved(index);
+        }
+    }
+
+
 
 
 }

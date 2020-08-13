@@ -2,8 +2,6 @@ package com.moofficial.moweb.Moweb.MoWebview.MoStackTabHistory;
 
 
 import android.content.Context;
-import android.widget.Toast;
-
 
 import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
@@ -47,7 +45,7 @@ public class MoStackTabHistory implements MoSavable, MoLoadable {
      */
     public void update(){
         @SuppressWarnings("ConstantConditions")
-        String url = webView.getWebView().copyBackForwardList().getCurrentItem().getUrl();
+        String url = webView.copyBackForwardList().getCurrentItem().getUrl();
         if(url!=null && list.isEmpty() || !list.get(currentIndex).equals(url) && previousAction == ACTION_NULL){
             if(currentIndex!=list.size()-1 && previousAction==ACTION_NULL){
                 removeAfterCurrentIndex();

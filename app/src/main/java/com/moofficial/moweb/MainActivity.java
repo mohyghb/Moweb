@@ -68,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
                 .addSection(IN_TAB_VIEW,linearLayout)
                 .setTransitionIn(new Slide())
                 .setTransitionOut(new Slide());
-
         changeContentView();
+        int i = 0;
     }
 
 
@@ -89,18 +89,17 @@ public class MainActivity extends AppCompatActivity {
     // it is for the controller
     // do not call it inside main
     private void changeContentView(){
-        //MoLog.print("this is changing afiosajujiogsoif");
         switch (MoSectionManager.getInstance().getSection()){
             case TABS_VIEW:
-                moTabSectionManager.update();
                 moSectionViewManager.setActiveSection(TABS_VIEW);
                 break;
             case IN_TAB_VIEW:
                 if(!MoTabController.instance.isOutOfOptions()){
                     //MoTabActivity.startActivity(this);
                     linearLayout.removeAllViews();
-                    linearLayout.addView(MoTabController.instance.getCurrent().getZeroPaddingView(rootView), new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT));
+                    linearLayout.addView(MoTabController.instance.getCurrent().getZeroPaddingView(rootView),
+                            new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.MATCH_PARENT));
                     moSectionViewManager.setActiveSection(IN_TAB_VIEW);
 
                 }else{
@@ -115,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        moTabSectionManager.onResume();
         MoTabController.instance.onResume();
     }
 

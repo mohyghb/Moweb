@@ -43,6 +43,9 @@ public class MoBitmapSaver {
     }
 
     public void save(Bitmap bitmapImage) {
+        if(bitmapImage==null){
+            return;
+        }
         FileOutputStream fileOutputStream = null;
         try {
             fileOutputStream = new FileOutputStream(createFile());
