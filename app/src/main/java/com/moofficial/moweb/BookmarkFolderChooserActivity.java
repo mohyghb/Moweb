@@ -13,6 +13,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoM
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoSearchBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardRecyclerView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
@@ -124,7 +125,7 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
 
     private void updateAdapter(ArrayList<MoBookmark> l){
         recyclerAdapter.setDataSet(l);
-        recyclerView.notifyDataSetChanged();
+        recyclerAdapter.notifyDataSetChanged();
     }
 
     private void initRecyclerView() {
@@ -133,7 +134,7 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
                 .setOpenBookmarkListener(this)
                 .setDisableLongClick(true)
         ;
-        recyclerView = new MoRecyclerView(this,cardRecyclerView.getRecyclerView(),recyclerAdapter);
+        recyclerView = MoRecyclerUtils.get(cardRecyclerView.getRecyclerView(),recyclerAdapter);
         recyclerView.show();
     }
 

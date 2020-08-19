@@ -97,6 +97,7 @@
     <string name="history_enabled">history_enabled_pref</string>
     <string name="history_enabled_title">History</string>
     <string name="history_enabled_summary">Enable/Disable history for your browsing</string>
+    <string name="history_search_hint">Search title, url, or date…</string>
 
 
     <!--home page settings-->

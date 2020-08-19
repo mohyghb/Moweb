@@ -9,6 +9,7 @@ import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSwitchSavab
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableItem;
+import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoTabOpenable;
 import com.moofficial.moweb.Moweb.MoUrl.MoURL;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import java.util.Objects;
  * a class which can be both a bookmark and a folder
  * based on the type that is given to it
  */
-public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem, MoSearchableItem {
+public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem, MoSearchableItem, MoTabOpenable {
 
 
     public static final int FOLDER = 0;
@@ -351,5 +352,10 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
     @Override
     public void setSavable(boolean b) {
         this.isSavable = b;
+    }
+
+    @Override
+    public String getSearchString() {
+        return getUrl();
     }
 }

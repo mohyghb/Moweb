@@ -7,10 +7,14 @@ import android.widget.Toast;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoListViewSync;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableList;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoSearchBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistory;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
@@ -18,6 +22,7 @@ import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryRecyclerAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class HistoryActivity extends MoSmartActivity {
 
@@ -31,6 +36,7 @@ public class HistoryActivity extends MoSmartActivity {
     private MoSelectable<MoHistory> selectable;
     private MoToolBar selectBar;
     private MoListViewSync sync;
+    private MoSearchBar searchBar;
     private MoSearchable searchable;
 
     // toolbar
@@ -49,25 +55,30 @@ public class HistoryActivity extends MoSmartActivity {
     private void initUI(){
         setTitle(R.string.history);
         initRecyclerCardView();
-        initToolbars();
-        nestedScrollView.setScrollContainer(true);
-        nestedScrollView.setMeasureAllChildren(true);
+        initSearchBar();
+        initMoToolbar();
+        initSelectBar();
+        setupToolbars();
+
     }
 
     private void initRecyclerCardView() {
         cardRecyclerView = new MoCardRecyclerView(this);
-//        LinearLayout.LayoutParams params = MoMarginBuilder.getLinearParams(0,0,0,0);
-//        params.height = getResources().getDisplayMetrics().heightPixels;
         linearNested.addView(cardRecyclerView);
     }
 
 
 
-    private void initToolbars() {
-        initMoToolbar();
-        initSelectBar();
+    private void setupToolbars() {
         syncTitle(moToolBar.getTitle(),selectBar.getTitle());
-        setupMultipleToolbars(moToolBar,moToolBar,selectBar);
+        setupMultipleToolbars(moToolBar,moToolBar,selectBar,searchBar);
+    }
+
+    private void initSearchBar(){
+        this.searchBar = new MoSearchBar(this);
+        this.searchBar.setSearchHint(R.string.history_search_hint)
+                .getMaterialCardView()
+                .makeTransparent();
     }
 
     private void initSelectBar() {
@@ -81,12 +92,19 @@ public class HistoryActivity extends MoSmartActivity {
 
     /**
      * deletes the selected histories from
-     * the array adapter
+     * the array adapter and performs various
+     * updates
+     * toasts the error message if something goes wrong
      */
     private void performDeleteHistory() {
         try {
-            MoHistoryManager.remove(this,historyRecyclerAdapter.getSelectedItems(),allHistories);
+            // remove it from files, and the data set shown inside the recycler adapter
+            MoHistoryManager.remove(this,historyRecyclerAdapter.getSelectedItems(),historyRecyclerAdapter.getDataSet());
+            // notify the adapter that we have changed the data set
             historyRecyclerAdapter.notifyDataSetChanged();
+            // init history to make sure we have the correct history list
+            initHistory();
+            // if selectable is in action mode, we remove the action
             if(selectable.isInActionMode()){
                 sync.removeAction();
             }
@@ -122,8 +140,8 @@ public class HistoryActivity extends MoSmartActivity {
     }
 
     private void initRecyclerView(){
-        this.historyRecyclerView = new MoRecyclerView(this,
-                this.cardRecyclerView.getRecyclerView(),this.historyRecyclerAdapter);
+        this.historyRecyclerView = MoRecyclerUtils.get(this.cardRecyclerView.getRecyclerView(),this.historyRecyclerAdapter)
+                .setMaxHeight(getHeightPixels());
         this.historyRecyclerView.show();
     }
 
@@ -131,32 +149,50 @@ public class HistoryActivity extends MoSmartActivity {
         this.selectable = new MoSelectable<>(this,getGroupRootView(),this.historyRecyclerAdapter)
                 .setCounterView(title)
                 .setSelectAllCheckBox(selectBar.getCheckBox())
-                .addNormalViews(moToolBar)
                 .addUnNormalViews(selectBar)
                 .setAllItemsAreSelectable(false);
     }
 
+
     private void initSearchable(){
-//        this.searchable = new MoSearchable(this, getGroupRootView(), new MoSearchableList() {
-//            @Override
-//            public List<? extends MoSearchableItem> getSearchableItems() {
-//                return allHistories;
-//            }
-//
-//            @Override
-//            public void notifyItemChanged(int i) {
-//
-//            }
-//
-//            @Override
-//            public void notifyDataSetChanged() {
-//
-//            }
-//        });
+        this.searchable = new MoSearchable(this, getGroupRootView(), new MoSearchableList() {
+            @Override
+            public List<? extends MoSearchableItem> getSearchableItems() {
+                return allHistories;
+            }
+
+            @Override
+            public void notifyItemChanged(int i) {
+
+            }
+
+            @Override
+            public void notifyDataSetChanged() {
+
+            }
+        })
+                .setOnSearchFinished(list -> updateAdapter((List<MoHistory>) list))
+                .setOnSearchCanceled(() -> updateAdapter(allHistories))
+                .setSearchOnTextChanged(true)
+                .setActivity(this)
+                .setAppBarLayout(appBarLayout)
+                .setCancelSearch(searchBar.getLeftButton())
+                .setSearchButton(moToolBar.getMiddleButton())
+                .setClearSearch(searchBar.getRightButton())
+                .setSearchTextView(searchBar.getEditText())
+                .addUnNormalViews(searchBar);
     }
 
+    private void updateAdapter(List<MoHistory> histories){
+        historyRecyclerAdapter.setDataSet(histories);
+        runOnUiThread( ()-> historyRecyclerAdapter.notifyDataSetChanged());
+    }
+
+
     private void initSync(){
-        this.sync = new MoListViewSync(getGroupRootView(),this.selectable).setPutOnHold(true);
+        this.sync = new MoListViewSync(getGroupRootView(),this.selectable,this.searchable)
+                .setPutOnHold(true)
+                .setSharedElements(moToolBar);
     }
 
     @Override

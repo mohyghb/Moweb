@@ -9,13 +9,15 @@ import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSwitchSavable;
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableItem;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
 import com.moofficial.moweb.Moweb.MoUrl.MoURL;
 
 import java.util.List;
 
-public class MoHistory implements MoSwitchSavable, MoLoadable, MoSelectableItem {
+public class MoHistory implements MoSwitchSavable, MoLoadable, MoSelectableItem, MoSearchableItem {
 
 
 
@@ -40,6 +42,7 @@ public class MoHistory implements MoSwitchSavable, MoLoadable, MoSelectableItem 
     private int count = 1;
     private boolean isSavable = true;
     private boolean isSelected = false;
+    private boolean isSearched = true;
 
     public MoHistory(String url,String t) {
         this.url = new MoURL(url);
@@ -281,5 +284,22 @@ public class MoHistory implements MoSwitchSavable, MoLoadable, MoSelectableItem 
     @Override
     public boolean isSelectable() {
         return this.isTypeHistory();
+    }
+
+    @Override
+    public boolean updateSearchable(Object... objects) {
+        this.isSearched = MoSearchableUtils.isSearchable(true,objects,
+                getTitle(),getUrl(),getDate());
+        return this.isSearched;
+    }
+
+    @Override
+    public boolean isSearchable() {
+        return this.isSearched;
+    }
+
+    @Override
+    public void setSearchable(boolean b) {
+        this.isSearched = b;
     }
 }

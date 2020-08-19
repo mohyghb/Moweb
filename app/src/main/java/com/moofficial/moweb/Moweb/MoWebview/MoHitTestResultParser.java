@@ -148,7 +148,7 @@ public class MoHitTestResultParser {
     }
 
     private void openInNewIncognitoTab(){
-        MoTabsManager.addIncognitoTab((Activity) context,href, true);
+        MoTabsManager.addPrivateTab((Activity) context,href, true);
         dismissDialog();
     }
 

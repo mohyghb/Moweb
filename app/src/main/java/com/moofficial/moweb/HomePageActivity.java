@@ -11,6 +11,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.Mo
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoInputBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardRecyclerView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePage;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
@@ -114,7 +115,7 @@ public class HomePageActivity extends MoSmartActivity {
     }
 
     private void initRecyclerView(){
-        this.recyclerView = new MoRecyclerView(this,cardRecyclerView.getRecyclerView(),this.recyclerAdapter);
+        this.recyclerView = MoRecyclerUtils.get(cardRecyclerView.getRecyclerView(),this.recyclerAdapter);
         this.recyclerView.show();
     }
 
@@ -139,9 +140,9 @@ public class HomePageActivity extends MoSmartActivity {
             return;
         }
         boolean b = MoHomePageManager.add(this,url);
-        if(b){
-            recyclerView.notifyItemAddedLastPosition();
-        }else{
+        if(b) {
+            recyclerAdapter.notifyItemInsertedAtEnd();
+        }else {
             Toast.makeText(this,"Could not add the home page",Toast.LENGTH_SHORT).show();
         }
     }

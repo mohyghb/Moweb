@@ -25,12 +25,13 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.Mo
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoEditText.MoEditText;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkRecyclerAdapter;
 import com.moofficial.moweb.Moweb.MoBookmark.MoOnOpenBookmarkListener;
-import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
+import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -124,6 +125,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
         if(noFolderHasBeenSelected()){
             p.setEntries(
                     new Pair<>(getString(R.string.open_in_tab), menuItem -> {
+
                         return false;
                     }),
                     new Pair<>(getString(R.string.open_in_incognito_tab), menuItem -> false)
@@ -208,7 +210,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
      */
     private void openCloseFolder(){
         recyclerAdapter.setDataSet(getCurrentFolderBookmarks());
-        recyclerView.notifyDataSetChanged();
+        recyclerAdapter.notifyDataSetChanged();
         setTitle(getCurrentTitle());
     }
 
@@ -288,7 +290,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     private void createFolder(MoEditText folderInput, DialogInterface dialogInterface) {
         String s = folderInput.getInputText().trim();
         MoBookmarkManager.createFolder(this, s, folders.peek(), () -> {
-            recyclerView.notifyItemAddedLastPosition();
+            recyclerAdapter.notifyItemInserted(recyclerAdapter.getItemCount()-1);
             Toast.makeText(BookmarkActivity.this,
                     String.format("Folder %s was created!",s),Toast.LENGTH_SHORT).show();
             dialogInterface.dismiss();
@@ -305,8 +307,15 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
                 .setOpenBookmarkListener(this);
     }
 
+    /**
+     * we set the max height to the device height
+     * in pixel, since recycler views inside a nested scroll view
+     * have infinite height, and they load all the items at once
+     * if they don't have a definitive height
+     */
     private void initRecyclerView(){
-        this.recyclerView = new MoRecyclerView(this,this.cardRecyclerView.getRecyclerView(),this.recyclerAdapter);
+        this.recyclerView = MoRecyclerUtils.get(this.cardRecyclerView.getRecyclerView(),this.recyclerAdapter)
+                .setMaxHeight(getHeightPixels());
         this.recyclerView.show();
     }
 
@@ -404,7 +413,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
 
     @Override
     public void openBookmark(MoBookmark bookmark) {
-        MoTabsManager.addTab(this,bookmark.getUrl(),false);
+        MoTabController.instance.openUrlInCurrentTab(bookmark.getUrl(),true);
         finish();
     }
 

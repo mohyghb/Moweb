@@ -13,7 +13,7 @@ public class MoTabType implements MoSavable, MoLoadable {
 
 
     public static final int TYPE_NORMAL = 0;
-    public static final int TYPE_INCOGNITO = 1;
+    public static final int TYPE_PRIVATE = 1;
 
 
     private int type;
@@ -44,8 +44,8 @@ public class MoTabType implements MoSavable, MoLoadable {
                 case TYPE_NORMAL:
                     enableNormal();
                     break;
-                case TYPE_INCOGNITO:
-                    enableIncognito();
+                case TYPE_PRIVATE:
+                    enablePrivate();
                     break;
             }
         }
@@ -55,7 +55,7 @@ public class MoTabType implements MoSavable, MoLoadable {
      * this is used to make web view store no cache or any form data
      * which makes the browsing private
      */
-    private void enableIncognito(){
+    private void enablePrivate() {
         //Make sure No cookies are created
         CookieManager.getInstance().setAcceptCookie(false);
         //Make sure no caching is done
@@ -69,10 +69,9 @@ public class MoTabType implements MoSavable, MoLoadable {
         webView.getSettings().setSaveFormData(false);
     }
 
-    private void enableNormal(){
+    private void enableNormal() {
         CookieManager.getInstance().setAcceptCookie(true);
-        webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ONLY);
-        webView.getSettings().setAppCacheEnabled(true);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         webView.getSettings().setSaveFormData(true);
     }
 
@@ -105,7 +104,7 @@ public class MoTabType implements MoSavable, MoLoadable {
             case MoTabType.TYPE_NORMAL:
                 rs[0].run();
                 break;
-            case MoTabType.TYPE_INCOGNITO:
+            case MoTabType.TYPE_PRIVATE:
                 rs[1].run();
                 break;
         }

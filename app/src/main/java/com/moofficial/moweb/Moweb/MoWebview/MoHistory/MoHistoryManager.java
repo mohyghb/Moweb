@@ -136,8 +136,7 @@ public class MoHistoryManager {
      */
     public static ArrayList<MoHistory> getAllHistories(){
         ArrayList<MoHistory> all = new ArrayList<>();
-        for(int i = sortedBundles.size()-1;i>=0;i--){
-            MoHistoryBundle b = sortedBundles.get(i);
+        for(MoHistoryBundle b: sortedBundles){
             all.addAll(b.getHistories());
             all.add(b.getBundleDate());
         }

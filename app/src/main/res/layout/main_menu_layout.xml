@@ -66,14 +66,14 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <androidx.recyclerview.widget.RecyclerView
+                    <com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView
                         android:id="@+id/recycler_incognito_tabs"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/MoBlack"
                         android:backgroundTint="@color/MoBlack" />
 
-                    <androidx.recyclerview.widget.RecyclerView
+                    <com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView
                         android:id="@+id/recycler_tabs_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

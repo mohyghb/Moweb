@@ -14,7 +14,7 @@ public class MoIncognitoTab extends MoTab {
     public MoIncognitoTab(Activity a, String url) {
         super(a, url);
         // this makes sure that we are browsing incognito
-        super.setType(MoTabType.TYPE_INCOGNITO);
+        super.setType(MoTabType.TYPE_PRIVATE);
         // to make sure the user can not take screen shots
         a.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,WindowManager.LayoutParams.FLAG_SECURE);
     }

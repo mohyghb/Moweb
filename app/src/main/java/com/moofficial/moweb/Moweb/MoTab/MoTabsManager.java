@@ -26,14 +26,14 @@ public class MoTabsManager {
 
 
     private static ArrayList<MoTab> tabs = new ArrayList<>();
-    private static ArrayList<MoTab> incognitoTabs = new ArrayList<>();
+    private static ArrayList<MoTab> privateTabs = new ArrayList<>();
     private static MoTabRecyclerAdapter tabRecyclerAdapter,incognitoTabAdapter;
 
     public static ArrayList<MoTab> getTabs(){
         return tabs;
     }
-    public static ArrayList<MoTab> getIncognitoTabs(){
-        return incognitoTabs;
+    public static ArrayList<MoTab> getPrivateTabs(){
+        return privateTabs;
     }
     public static MoTabRecyclerAdapter getTabRecyclerAdapter() {
         return tabRecyclerAdapter;
@@ -44,7 +44,7 @@ public class MoTabsManager {
     public static MoTabRecyclerAdapter getIncognitoTabAdapter() {
         return incognitoTabAdapter;
     }
-    public static void setIncognitoTabAdapter(MoTabRecyclerAdapter incognitoTabAdapter) {
+    public static void setPrivateTabAdapter(MoTabRecyclerAdapter incognitoTabAdapter) {
         MoTabsManager.incognitoTabAdapter = incognitoTabAdapter;
     }
 
@@ -65,10 +65,10 @@ public class MoTabsManager {
      * @param a
      * @param url
      */
-    private static void newIncognitoTab(Activity a, String url, MoTab parentTab){
+    private static void newPrivateTab(Activity a, String url, MoTab parentTab){
         MoIncognitoTab t = new MoIncognitoTab(a,url);
         t.setParentTab(parentTab);
-        incognitoTabs.add(t);
+        privateTabs.add(t);
     }
 
 
@@ -78,8 +78,8 @@ public class MoTabsManager {
         return tabs.size();
     }
     // size of incognito tabs
-    public static int sizeIncognito(){
-        return incognitoTabs.size();
+    public static int sizePrivate(){
+        return privateTabs.size();
     }
 
 
@@ -102,7 +102,7 @@ public class MoTabsManager {
      * @param context
      */
     public static void load(Context context) {
-        if(tabs.isEmpty()){
+        if(tabs == null || tabs.isEmpty()){
            reload(context);
         }
     }
@@ -141,7 +141,7 @@ public class MoTabsManager {
      * @return
      */
     public static MoTab getIncognitoTab(int index){
-        return incognitoTabs.isEmpty()?null:incognitoTabs.get(index);
+        return privateTabs.isEmpty()?null: privateTabs.get(index);
     }
 
 
@@ -176,8 +176,8 @@ public class MoTabsManager {
                 removeTabStuff(index,context,tabs);
                 notifyItemRemoved(index,tabRecyclerAdapter);
                 break;
-            case MoTabType.TYPE_INCOGNITO:
-                removeTabStuff(index,context,incognitoTabs);
+            case MoTabType.TYPE_PRIVATE:
+                removeTabStuff(index,context, privateTabs);
                 notifyItemRemoved(index,incognitoTabAdapter);
                 break;
         }
@@ -231,10 +231,10 @@ public class MoTabsManager {
      * @param a
      * @param url
      */
-    public static void addIncognitoTab(Activity a,String url,boolean getCurrentAsParent){
-        MoTabsManager.newIncognitoTab(a,url,getCurrentAsParent?MoTabController.instance.getCurrent():null);
-        int index = incognitoTabs.size() - 1;
-        MoTabController.instance.setIndex(index,MoTabType.TYPE_INCOGNITO);
+    public static void addPrivateTab(Activity a, String url, boolean getCurrentAsParent){
+        MoTabsManager.newPrivateTab(a,url,getCurrentAsParent?MoTabController.instance.getCurrent():null);
+        int index = privateTabs.size() - 1;
+        MoTabController.instance.setIndex(index,MoTabType.TYPE_PRIVATE);
         notifyItemInserted(index, incognitoTabAdapter);
     }
 
@@ -260,8 +260,8 @@ public class MoTabsManager {
      */
     private static int getIndexOf(MoTab tab) throws MoTabNotFoundException {
         switch (tab.getType()){
-            case MoTabType.TYPE_INCOGNITO:
-                return getIndexOf(tab,incognitoTabs);
+            case MoTabType.TYPE_PRIVATE:
+                return getIndexOf(tab, privateTabs);
             case MoTabType.TYPE_NORMAL:
                 return getIndexOf(tab,tabs);
         }
@@ -300,9 +300,9 @@ public class MoTabsManager {
      * removes all the incognito tabs
      * from our database
      */
-    public static void clearAllIncognitoTabs(Context context){
-        for(int i = incognitoTabs.size()-1; i>=0;i--){
-            remove(i,context,MoTabType.TYPE_INCOGNITO);
+    public static void clearAllPrivateTabs(Context context){
+        for(int i = privateTabs.size()-1; i>=0; i--){
+            remove(i,context,MoTabType.TYPE_PRIVATE);
         }
         Toast.makeText(context,context.getString(R.string.toast_closed_all_incognito_tabs),Toast.LENGTH_SHORT).show();
     }

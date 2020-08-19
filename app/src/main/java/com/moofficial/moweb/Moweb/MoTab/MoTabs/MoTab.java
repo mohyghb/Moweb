@@ -445,7 +445,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
                                 .buildCheckedImageButton(R.drawable.ic_baseline_star_24,
                                         R.drawable.ic_baseline_star_border_24, view -> bookmarkThisUrl(),
                                         ()-> MoBookmarkManager.has(this.url.getUrlString()))
-                                .buildImageButton(R.drawable.ic_baseline_refresh_24, view-> moWebView.reload())
+                                .buildImageButton(R.drawable.ic_baseline_refresh_24, view-> moWebView.forceReloadFromNetwork())
                                 .build()
                 )
                 .setViews(
@@ -462,9 +462,6 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
                                 .buildTextButton(R.string.desktop_mode,moWebView.isInDesktopMode()?
                                         R.drawable.ic_baseline_check_box_24:R.drawable.ic_baseline_check_box_outline_blank_24 , view -> {
                                     moWebView.enableReverseMode();
-                                })
-                                .buildTextButton("Destroy",view -> {
-                                    moWebView.destroyWebView();
                                 })
                                 .build()
                 ).build();
@@ -565,11 +562,12 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
 
 
     /**
-     * does a google search and handles all the U.I changes
-     * @param s string of search
+     * does a search and handles all the U.I changes
+     * @param search string of search (can be url or just search text
+     *               we handle both cases)
      */
-    private void search(String s) {
-        updateUrl(MoSearchEngine.instance.getURL(s));
+    public void search(String search) {
+        updateUrl(MoSearchEngine.instance.getURL(search));
         // load it inside the web view
         this.moWebView.loadUrl(url.getUrlString());
         this.isUpToDate = true;

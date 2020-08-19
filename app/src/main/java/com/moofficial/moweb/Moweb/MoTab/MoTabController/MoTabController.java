@@ -2,6 +2,7 @@ package com.moofficial.moweb.Moweb.MoTab.MoTabController;
 
 import android.content.Context;
 
+import com.moofficial.moessentials.MoEssentials.MoContext.MoContext;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
@@ -14,7 +15,7 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import static com.moofficial.moweb.MoSection.MoSectionManager.IN_TAB_VIEW;
 
 // designed to know where the current tab is
-public class MoTabController implements MoSavable, MoLoadable {
+public class MoTabController extends MoContext implements MoSavable, MoLoadable {
 
     private static final String SEP_KEY = "&7&as&ifuyfd&";
     private static final String FILE_NAME = "mo_main_tab_file";
@@ -25,7 +26,7 @@ public class MoTabController implements MoSavable, MoLoadable {
     private MoControl incognitoTabsControl;
     private MoControl normalTabsControl;
 
-    private Context context;
+
     private Runnable changeContentView;
     private Runnable tabsButtonPressed;
 
@@ -39,14 +40,14 @@ public class MoTabController implements MoSavable, MoLoadable {
     }
 
     MoTabController(Context context, Runnable ccv, Runnable tbp){
-        this.context = context;
+        super(context);
         this.changeContentView = ccv;
         this.tabsButtonPressed = tbp;
         initTabControllers();
     }
 
     private void initTabControllers(){
-        this.incognitoTabsControl = new MoControl(0,MoTabType.TYPE_INCOGNITO);
+        this.incognitoTabsControl = new MoControl(0,MoTabType.TYPE_PRIVATE);
         this.normalTabsControl = new MoControl(0,MoTabType.TYPE_NORMAL);
         this.currentTabControl = this.normalTabsControl;
     }
@@ -128,7 +129,7 @@ public class MoTabController implements MoSavable, MoLoadable {
     public boolean isOutOfOptions(){
         return (MoTabsManager.size() == 0 && this.currentTabControl.getType() == MoTabType.TYPE_NORMAL)
                 ||
-                (MoTabsManager.sizeIncognito() == 0 && this.currentTabControl.getType() == MoTabType.TYPE_INCOGNITO);
+                (MoTabsManager.sizePrivate() == 0 && this.currentTabControl.getType() == MoTabType.TYPE_PRIVATE);
     }
 
     /**
@@ -143,8 +144,8 @@ public class MoTabController implements MoSavable, MoLoadable {
 
     public MoTab getCurrent(){
         switch (currentTabControl.getType()){
-            case MoTabType.TYPE_INCOGNITO:
-                setZeroIndexIfNotInBound(MoTabsManager.sizeIncognito());
+            case MoTabType.TYPE_PRIVATE:
+                setZeroIndexIfNotInBound(MoTabsManager.sizePrivate());
                 return MoTabsManager.getIncognitoTab(currentTabControl.getIndex());
                 case MoTabType.TYPE_NORMAL:
                     setZeroIndexIfNotInBound(MoTabsManager.size());
@@ -172,6 +173,25 @@ public class MoTabController implements MoSavable, MoLoadable {
     // returns the incognito control index
     public int getIncognitoIndex(){
         return this.incognitoTabsControl.getIndex();
+    }
+
+
+    /**
+     * opens the search string inside the current tab if possible
+     * or it opens a new tab if the boolean is true
+     * @param search search string to be opened inside a new tab
+     * @param createNewTabIfNoTabExists if no current tab exists, we open it inside
+     *                                  a new tab if this param is true
+     */
+    public void openUrlInCurrentTab(String search,boolean createNewTabIfNoTabExists){
+        MoTab t = getCurrent();
+        if(t!=null){
+            // open the url inside the t
+            t.search(search);
+        } else if(createNewTabIfNoTabExists){
+            // create a new tab
+            MoTabsManager.addTab(this.context,search,false);
+        }
     }
 
 

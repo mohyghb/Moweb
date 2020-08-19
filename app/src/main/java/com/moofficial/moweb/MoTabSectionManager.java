@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
 import com.moofficial.moweb.MoSection.MoSectionManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
@@ -80,20 +81,20 @@ public class MoTabSectionManager {
      */
     private void initRecyclerView() {
         initNormalAdapter();
-        tabsRecyclerView = new MoRecyclerView(mainActivity,mainView.findViewById(R.id.recycler_tabs_view), mTabAdapter)
+        tabsRecyclerView = MoRecyclerUtils.get(mainView.findViewById(R.id.recycler_tabs_view), mTabAdapter)
                 .setOrientation(LinearLayoutManager.HORIZONTAL);
         tabsRecyclerView.show();
     }
 
     // init the adapter for incognito tabs
     private void initIncognitoAdapter(){
-        this.mIncognitoAdapter = new MoTabRecyclerAdapter(MoTabsManager.getIncognitoTabs(),mainActivity,showInGrid);
-        MoTabsManager.setIncognitoTabAdapter(mIncognitoAdapter);
+        this.mIncognitoAdapter = new MoTabRecyclerAdapter(MoTabsManager.getPrivateTabs(),mainActivity,showInGrid);
+        MoTabsManager.setPrivateTabAdapter(mIncognitoAdapter);
     }
 
     private void initIncognitoRecyclerView(){
         initIncognitoAdapter();
-        incognitoTabsRecyclerView = new MoRecyclerView(mainActivity,mainView.findViewById(R.id.recycler_incognito_tabs),mIncognitoAdapter)
+        incognitoTabsRecyclerView = MoRecyclerUtils.get(mainView.findViewById(R.id.recycler_incognito_tabs),mIncognitoAdapter)
                 .setOrientation(LinearLayoutManager.HORIZONTAL);
         incognitoTabsRecyclerView.show();
     }
@@ -128,7 +129,7 @@ public class MoTabSectionManager {
                             return false;
                         }),
                         new Pair<>(mainActivity.getString(R.string.NewIncognitoTab), menuItem -> {
-                            MoTabsManager.addIncognitoTab(mainActivity,MoSearchEngine.instance.homePage(),false);
+                            MoTabsManager.addPrivateTab(mainActivity,MoSearchEngine.instance.homePage(),false);
                             return false;
                         })
         );
@@ -153,12 +154,12 @@ public class MoTabSectionManager {
                 }),
                 new Pair<>(mainActivity.getString(R.string.Clear_All_Normal_Tabs), menuItem -> {
                     MoTabsManager.clearAllNormalTabs(mainActivity);
-                    this.tabsRecyclerView.notifyDataSetChanged();
+                    this.mTabAdapter.notifyDataSetChanged();
                     return false;
                 }),
                 new Pair<>(mainActivity.getString(R.string.Clear_All_Incognito_Tabs), menuItem -> {
-                    MoTabsManager.clearAllIncognitoTabs(mainActivity);
-                    this.incognitoTabsRecyclerView.notifyDataSetChanged();
+                    MoTabsManager.clearAllPrivateTabs(mainActivity);
+                    this.mIncognitoAdapter.notifyDataSetChanged();
                     return false;
                 })
         );
@@ -169,10 +170,12 @@ public class MoTabSectionManager {
      * changes the grid view to list view and vice versa
      */
     private void changeGrid() {
-        initNormalAdapter();
-        initIncognitoAdapter();
-        this.tabsRecyclerView.switchViewMode(showInGrid, mTabAdapter);
-        this.incognitoTabsRecyclerView.switchViewMode(showInGrid, mIncognitoAdapter);
+//        initNormalAdapter();
+//        initIncognitoAdapter();
+        this.tabsRecyclerView.switchLayoutManager(showInGrid?MoRecyclerView.GRID_LAYOUT_MANAGER:
+                MoRecyclerView.LINEAR_LAYOUT_MANAGER);
+        this.incognitoTabsRecyclerView.switchLayoutManager(showInGrid?MoRecyclerView.GRID_LAYOUT_MANAGER:
+                MoRecyclerView.LINEAR_LAYOUT_MANAGER);
     }
 
     /**
