@@ -2,8 +2,8 @@ package com.moofficial.moweb.MoSection;
 
 import android.content.Context;
 
-import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
-import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
 import com.moofficial.moessentials.MoEssentials.MoReadWrite.MoReadWrite;
 
 

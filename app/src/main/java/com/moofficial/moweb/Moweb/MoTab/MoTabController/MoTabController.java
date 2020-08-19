@@ -2,10 +2,9 @@ package com.moofficial.moweb.Moweb.MoTab.MoTabController;
 
 import android.content.Context;
 
-
-import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
-import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
-import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
 import com.moofficial.moessentials.MoEssentials.MoReadWrite.MoReadWrite;
 import com.moofficial.moweb.MoSection.MoSectionManager;
 import com.moofficial.moweb.Moweb.MoTab.MoTabType.MoTabType;
@@ -71,9 +70,11 @@ public class MoTabController implements MoSavable, MoLoadable {
      * @param index
      */
     public void setIndex(int index, int type) {
-        pauseTheCurrentTab(index, type);
+        saveCurrentTabState(index, type);
         this.setType(type);
         this.currentTabControl.setIndex(index);
+        // save the changes
+        save(this.context);
         // change the section to show the in tab view
         MoSectionManager.getInstance().setSection(IN_TAB_VIEW);
         changeContentView.run();
@@ -91,16 +92,20 @@ public class MoTabController implements MoSavable, MoLoadable {
      * @param index
      * @param type
      */
-    private void pauseTheCurrentTab(int index, int type) {
+    private void saveCurrentTabState(int index, int type) {
         MoTab t = getCurrent();
         if(t!=null){
+            // if the previous tab is not the current one
+            // then we should call on pause
             if(index!=this.currentTabControl.getIndex() || t.getType()!=type){
-                // if the previous tab is not the current one
-                // then we should call on pause
                 t.onPause();
                 // we want to pause all the activities inside the web view
                 // but we also want to be able to show it to user about what is happening
                 t.onResume();
+                // we also want to save a preview by taking screenshot of the
+                // web view and reusing the bitmap if they close the app
+                // so we can show it later to the user
+                t.captureAndSaveWebViewBitmapAsync();
             }
         }
     }

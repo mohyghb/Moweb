@@ -4,56 +4,96 @@ import android.content.Context;
 import android.webkit.WebHistoryItem;
 
 import com.moofficial.moessentials.MoEssentials.MoDate.MoDate;
-import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
-import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
-import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
+import com.moofficial.moessentials.MoEssentials.MoDate.MoTimeUtils;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSwitchSavable;
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableItem;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
 import com.moofficial.moweb.Moweb.MoUrl.MoURL;
 
 import java.util.List;
 
-public class MoHistory implements MoSavable, MoLoadable {
+public class MoHistory implements MoSwitchSavable, MoLoadable, MoSelectableItem {
 
 
 
     private final float SUGGESTION_TOLERANCE = 0.7f;
-
+    // if the user keeps loading the same web site, we consider that
+    // to be the same and we optimize it for better history management
+    private final long HISTORY_ACCEPTANCE_LIMIT = 60 * 1000 * 10;
     private final int TEXT_COUNT = 20;
-
     public static final int TYPE_HISTORY = 0;
-    // date tile is used inside the recycler view
-    // to differentiate between different histories
-    public static final int TYPE_DATE_TILE = 1;
+    public static final int TYPE_DATE = 1;
+
+
+
 
 
     private MoURL url = new MoURL("");
     private MoDate dateTime = new MoDate();
     private String title = "";
+    private MoHistoryBundle parentBundle;
     private int type = TYPE_HISTORY;
     // how many times this is called in a row
     private int count = 1;
-
+    private boolean isSavable = true;
+    private boolean isSelected = false;
 
     public MoHistory(String url,String t) {
         this.url = new MoURL(url);
-        this.dateTime = new MoDate();
         this.title = t;
-        this.type = TYPE_HISTORY;
     }
 
     public MoHistory(){}
 
-    // constructor for a date tile
-    public MoHistory(MoDate date){
-        this.dateTime = date;
-        this.type = TYPE_DATE_TILE;
+    public MoHistory(int type){
+        this.type = type;
     }
+
 
     public MoHistory(Context c,String d){
         this.load(d,c);
     }
 
+
+    public int getCount() {
+        return count;
+    }
+
+    public MoHistory setCount(int count) {
+        this.count = count;
+        return this;
+    }
+
+    public MoHistory setUrl(MoURL url) {
+        this.url = url;
+        return this;
+    }
+
+    public MoHistory setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public MoHistory setType(int type) {
+        this.type = type;
+        return this;
+    }
+
+    public MoHistoryBundle getParentBundle() {
+        return parentBundle;
+    }
+
+    public MoHistory setParentBundle(MoHistoryBundle parentBundle) {
+        this.parentBundle = parentBundle;
+        return this;
+    }
 
     public String getUrl() {
         return url.getUrlString();
@@ -90,18 +130,10 @@ public class MoHistory implements MoSavable, MoLoadable {
         return this.title.charAt(0)+"";
     }
 
-    public int getType() {
-        return type;
+    public long getTimeInMillis(){
+        return this.dateTime.getTimeInMillis();
     }
 
-    public void setType(int type) {
-        this.type = type;
-    }
-
-
-    public boolean isDateTile(){
-        return this.type == TYPE_DATE_TILE;
-    }
 
     /**
      * increase the count by 1
@@ -146,6 +178,21 @@ public class MoHistory implements MoSavable, MoLoadable {
                 this.title.toLowerCase().equals(title.toLowerCase());
     }
 
+    /**
+     *
+     * @param h
+     * @return true if they are approximately the same
+     */
+    public boolean isApproximateSame(MoHistory h){
+        if(h.getUrl().equals(this.getUrl())){
+            // the urls are the same, check how different the
+            // time difference is
+            return !MoTimeUtils.isDifferenceMoreThanLimit(HISTORY_ACCEPTANCE_LIMIT,
+                    this.getDateTime(),h.getDateTime());
+        }
+        return false;
+    }
+
 
     /**
      * copies a web history item into
@@ -161,6 +208,13 @@ public class MoHistory implements MoSavable, MoLoadable {
         return this;
     }
 
+    public boolean isTypeHistory(){
+        return this.type == TYPE_HISTORY;
+    }
+
+    public boolean isTypeDate(){
+        return this.type == TYPE_DATE;
+    }
 
     /**
      * loads a savable object into its class
@@ -175,7 +229,6 @@ public class MoHistory implements MoSavable, MoLoadable {
         this.dateTime = new MoDate(com[1],context);
         this.title = com[2];
         this.count = Integer.parseInt(com[3]);
-        this.type = Integer.parseInt(com[4]);
     }
 
     /**
@@ -184,7 +237,7 @@ public class MoHistory implements MoSavable, MoLoadable {
      */
     @Override
     public String getData() {
-        return MoFile.getData(url.getData(),this.dateTime.getData(),title,count,type);
+        return MoFile.getData(url,dateTime,title,count);
     }
 
     /**
@@ -199,4 +252,34 @@ public class MoHistory implements MoSavable, MoLoadable {
         }
     }
 
+    @Override
+    public boolean isSavable() {
+        return this.isSavable;
+    }
+
+    @Override
+    public void setSavable(boolean b) {
+        this.isSavable = b;
+    }
+
+    @Override
+    public boolean onSelect() {
+        this.isSelected = !this.isSelected;
+        return this.isSelected;
+    }
+
+    @Override
+    public void setSelected(boolean b) {
+        this.isSelected = b;
+    }
+
+    @Override
+    public boolean isSelected() {
+        return this.isSelected;
+    }
+
+    @Override
+    public boolean isSelectable() {
+        return this.isTypeHistory();
+    }
 }

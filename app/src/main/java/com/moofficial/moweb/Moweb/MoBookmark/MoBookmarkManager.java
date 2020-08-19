@@ -4,7 +4,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.moofficial.moessentials.MoEssentials.MoConnections.MoShare;
-import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoReadWrite.MoReadWrite;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoEditText.MoEditText;
 import com.moofficial.moweb.R;
@@ -104,36 +104,43 @@ public class MoBookmarkManager {
     }
 
 
-    public static boolean validateEditInputs(Context c, MoBookmark b, MoEditText name, MoEditText url, String originalKey){
-        String nameText = processName(name.getInputText().toString());
+    public static boolean validateEditInputs(Context a, MoBookmark b,
+                                             MoEditText name, MoEditText url, String originalKey){
+        String nameText = processName(name.getInputText());
         int errors = 0;
         switch (b.getType()){
             case FOLDER:
                 if(nameText.isEmpty()){
-                    name.setError(c.getString(R.string.error_bookmark_empty_name));
+                    name.setError(a.getString(R.string.error_bookmark_empty_name));
                     errors++;
                 }else if(!nameText.equals(originalKey) && hasFolder(nameText)){
-                    name.setError(c.getString(R.string.error_bookmark_folder_already_exist));
+                    name.setError(a.getString(R.string.error_bookmark_folder_already_exist));
                     errors++;
+                }else{
+                    name.removeError();
                 }
                 break;
             case BOOKMARK:
-                String urlText = processUrl(url.getInputText().toString());
+                String urlText = processUrl(url.getInputText());
                 if(nameText.isEmpty()){
                     // it can not be empty
-                    name.setError(c.getString(R.string.error_bookmark_empty_name));
+                    name.setError(a.getString(R.string.error_bookmark_empty_name));
                     errors++;
+                }else{
+                    name.removeError();
                 }
                 if(urlText.isEmpty()){
-                    url.setError(c.getString(R.string.error_bookmark_empty_url));
+                    url.setError(a.getString(R.string.error_bookmark_empty_url));
                     errors++;
                 }else if(!originalKey.equals(urlText) && has(urlText)){
                     // the url is not for this bookmark
                     // and we have it somewhere else inside our
                     // database, therefore, they can not change it
                     // to this url
-                    url.setError(c.getString(R.string.error_bookmark_url_already_exist));
+                    url.setError(a.getString(R.string.error_bookmark_url_already_exist));
                     errors++;
+                }else{
+                    url.removeError();
                 }
                 break;
         }

@@ -47,6 +47,7 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewSelectableAdapter<MoBook
     public MoBookmarkRecyclerAdapter(Context context, List<MoBookmark> dataSet) {
         super(dataSet);
         this.context = context;
+        setHasStableIds(true);
     }
 
 
@@ -80,11 +81,9 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewSelectableAdapter<MoBook
 
     @SuppressLint("SetTextI18n")
     @Override
-    protected void onBindViewHolderDifferentVersion(@NonNull MoBookmarkViewHolder h, int i) {
+    protected void onBindViewHolderDifferentVersion(@NonNull MoBookmarkViewHolder h, int i, int i1) {
         MoBookmark bookmark = dataSet.get(i);
-
         if (wasDeleted(h, bookmark,i)) return;
-
         switch (bookmark.getType()) {
             case MoBookmark.BOOKMARK:
                 h.url.setText(bookmark.getUrl());
@@ -190,4 +189,6 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewSelectableAdapter<MoBook
     public List<? extends MoSearchableItem> getSearchableItems() {
         return dataSet;
     }
+
+
 }

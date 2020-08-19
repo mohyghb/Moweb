@@ -92,11 +92,12 @@ public class MoHitTestResultParser {
         // don't show anything if there is no selected text
         if(selectedText == null || selectedText.isEmpty())
             return false;
+
         MoTab tab = new MoPopUpTab(selectedText,context).setCaptureImage(false);
         BottomSheetDialog bottomSheerDialog = new BottomSheetDialog(context);
         View parentView = MoInflaterView.inflate(R.layout.smart_text_search_layout,context);
         LinearLayout linearLayout = parentView.findViewById(R.id.nested_linear_bottom_sheet);
-        linearLayout.addView(tab.getWebView());
+        linearLayout.addView(tab.getMoWebView());
         bottomSheerDialog.setContentView(parentView);
         bottomSheerDialog.getBehavior().setSkipCollapsed(false);
         bottomSheerDialog.getBehavior().setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -107,6 +108,7 @@ public class MoHitTestResultParser {
         bottomSheerDialog.show();
         return true;
     }
+
 
 
     /**

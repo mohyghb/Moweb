@@ -4,9 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
-import com.moofficial.moessentials.MoEssentials.MoReadWrite.MoReadWrite;
-import com.moofficial.moweb.Moweb.MoBitmap.MoBitmapSaver;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManager;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManagerUtils;
 
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabExceptions.MoTabNotFoundException;
@@ -15,6 +14,7 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoIncognitoTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MoTabsManager {
@@ -22,6 +22,8 @@ public class MoTabsManager {
     private static final String SEP_KEY = "&siugsiojga0123948&";
     private static final String TABS_FILE = "tabs_file";
     public static final String TAB_BITMAP_DIRECTORY = "tab_bitmap_dir";
+    public static final String TAB_DIR = "mo_tab_dir";
+
 
     private static ArrayList<MoTab> tabs = new ArrayList<>();
     private static ArrayList<MoTab> incognitoTabs = new ArrayList<>();
@@ -86,36 +88,23 @@ public class MoTabsManager {
      * @param context
      */
     public static void save(Context context) {
-        String data = MoFile.getData(tabs);
-        MoReadWrite.saveFile(TABS_FILE,data,context);
-        // save the bitmaps of the tabs
-        saveBitmapsOfTabs(context);
-    }
-
-
-    /**
-     * saves the bitmap preview of the webviews for later use
-     * @param context
-     */
-    private static void saveBitmapsOfTabs(Context context){
-        MoBitmapSaver saver = new MoBitmapSaver(context)
-                .setExternal(false)
-                .setDirectoryName(TAB_BITMAP_DIRECTORY);
-        for(MoTab t: tabs){
-            t.saveWebViewBitmap(saver);
+        try {
+            MoFileManagerUtils.write(context,tabs);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+
+
 
     /**
      * reloads the tabs if they have been not loaded
      * @param context
      */
     public static void load(Context context) {
-        tabs.clear();
-        // TODO UNCOMMENT THE RELOAD LINE
-        //if(tabs.isEmpty()){
+        if(tabs.isEmpty()){
            reload(context);
-        //}
+        }
     }
 
     /**
@@ -123,21 +112,14 @@ public class MoTabsManager {
      */
     private static void reload(Context context) {
         tabs = new ArrayList<>();
-        String data = MoReadWrite.readFile(TABS_FILE,context);
-        String[] components = MoFile.loadable(data);
-        if(MoFile.isValidData(components)){
-            String[] tbs = MoFile.loadable(components[0]);
-            for(String t: tbs){
-                if(!t.isEmpty()) {
-                    try{
-                        MoTab tab = new MoTab(context);
-                        tab.load(t, context);
-                        tabs.add(tab);
-                    }catch(Exception e){
-                        Toast.makeText(context,"Caught exception while trying to load tabs",Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
+        try {
+            MoFileManager.readAllDirFiles(context, TAB_DIR, (s, i) -> {
+                MoTab tab = new MoTab(context);
+                tab.load(s, context);
+                tabs.add(tab);
+            });
+        } catch (IOException e) {
+            Toast.makeText(context,"error loading tabs",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -213,11 +195,7 @@ public class MoTabsManager {
      */
     private static void removeTabStuff(int index,Context context,ArrayList<MoTab> tabs){
         // deleting the bitmap used to show user
-        tabs.get(index).deleteWebViewBitmap(
-                new MoBitmapSaver(context)
-                        .setDirectoryName(TAB_BITMAP_DIRECTORY)
-                        .setExternal(false)
-        );
+        tabs.get(index).deleteWebViewBitmap(context);
         // removing it from tabs list
         tabs.remove(index);
     }
@@ -314,6 +292,7 @@ public class MoTabsManager {
         for(int i = tabs.size()-1; i>=0;i--){
             remove(i,context,MoTabType.TYPE_NORMAL);
         }
+        save(context);
         Toast.makeText(context,context.getString(R.string.toast_closed_all_normal_tabs),Toast.LENGTH_SHORT).show();
     }
 
@@ -354,6 +333,16 @@ public class MoTabsManager {
     }
 
 
+    /**
+     * calls on destroy for every
+     * tab that exists
+     */
+    public static void onDestroy(){
+        for(MoTab t : tabs){
+            t.onDestroy();
+        }
+        tabs = null;
+    }
 
 
 }

@@ -87,7 +87,7 @@ public class MoTabRecyclerAdapter extends MoPreviewSelectableAdapter<MoTabRecycl
 
 
     @Override
-    protected void onBindViewHolderDifferentVersion(@NonNull TabViewHolder holder, int position) {
+    protected void onBindViewHolderDifferentVersion(@NonNull TabViewHolder holder, int position,int recPos) {
         MoTab tab = dataSet.get(position);
         makeTabAware(position, tab);
         if(MoSectionManager.getInstance().isInTabView()){
@@ -138,9 +138,7 @@ public class MoTabRecyclerAdapter extends MoPreviewSelectableAdapter<MoTabRecycl
 
     private void makeTabAware(int position, MoTab tab) {
         // updating the preview whenever it is possible
-        tab.setOnBitmapUpdateListener(() -> {
-            notifyItemChanged(position);
-        });
+        tab.setNotifyTabChanged(() -> notifyItemChanged(position));
     }
 
     private void onTabClickListener(TabViewHolder holder, int position, MoTab tab) {

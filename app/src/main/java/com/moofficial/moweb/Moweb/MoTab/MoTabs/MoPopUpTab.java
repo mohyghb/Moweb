@@ -14,15 +14,15 @@ public class MoPopUpTab extends MoTab {
 
     public MoPopUpTab(String searchText, Context context) {
         super(searchText, context);
-        MoViewUtils.removeView(super.getWebView());
+        MoViewUtils.removeView(super.getMoWebView());
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams
                 (LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
-        super.getWebView().setLayoutParams(layoutParams);
+        super.getMoWebView().setLayoutParams(layoutParams);
     }
 
 
-
-
-
-
+    @Override
+    public void saveTab() {
+        // not saving the tab, just using it as a pop up
+    }
 }

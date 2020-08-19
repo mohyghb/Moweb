@@ -14,7 +14,6 @@ import androidx.transition.TransitionManager;
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoDialog.MoDialogs;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoListViewSync;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
@@ -38,6 +37,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Stack;
 
+// TODO when removing, the bookmarks are still there
 public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmarkListener {
 
 
@@ -48,7 +48,6 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     private MoBookmarkRecyclerAdapter recyclerAdapter;
 
     private MoSearchable moSearchable;
-    private MoDeletable<MoBookmark> moListDelete;
     private MoSelectable<MoBookmark> moListSelectable;
     private MoToolBar moListSelectableToolbar;
     private MoListViewSync listViewSync;
@@ -76,7 +75,10 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
         // when we have more than one bars
         // then we need to disable the toolbar animation
         setupMultipleToolbars(moToolBar, moToolBar,searchBar,moListSelectableToolbar);
-        disableToolbarAnimation();
+        initCardRecyclerView();
+    }
+
+    private void initCardRecyclerView() {
         cardRecyclerView = new MoCardRecyclerView(this).makeCardRound();
         linearNested.addView(cardRecyclerView);
     }
@@ -159,7 +161,6 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     /**
      * deletes all the selected
      * bookmarks/folders
-     * todo: ask them if they want to do it
      */
     private void performDelete() {
         if (nothingIsSelected()) return;
@@ -396,7 +397,6 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
             listViewSync.removeAction();
         }
         folders.add(folder);
-        //TODO transition each time opening a new folder
         openCloseFolderWithAnimation();
     }
 

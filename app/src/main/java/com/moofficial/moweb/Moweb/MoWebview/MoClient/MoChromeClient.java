@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.GeolocationPermissions;
 import android.webkit.PermissionRequest;
@@ -21,6 +22,7 @@ public class MoChromeClient extends WebChromeClient {
 
     private Context context;
     private ProgressBar bar;
+    private boolean hideProgressBarWhenFinished = true;
     private ViewGroup.LayoutParams barParams;
 
     public MoChromeClient(Context context){
@@ -47,9 +49,13 @@ public class MoChromeClient extends WebChromeClient {
             }else{
                 bar.setProgress(newProgress);
             }
-            barParams.width = context.getResources().getDisplayMetrics().widthPixels * newProgress / 100;
-            bar.setLayoutParams(barParams);
         });
+        if(hideProgressBarWhenFinished && newProgress == 100){
+            // then we are done so hide the progress bar
+            bar.setVisibility(View.GONE);
+        }else{
+            bar.setVisibility(View.VISIBLE);
+        }
     }
 
 

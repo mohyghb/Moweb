@@ -2,150 +2,180 @@ package com.moofficial.moweb;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.util.Pair;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.SearchView;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
+import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoListViewSync;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
-
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistory;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryRecyclerAdapter;
 
-public class HistoryActivity extends AppCompatActivity {
+import java.io.IOException;
+import java.util.ArrayList;
 
-    private static final int HISTORY_COUNT_PER_REFRESH = 10;
+public class HistoryActivity extends MoSmartActivity {
+
 
     // history
     private MoRecyclerView historyRecyclerView;
+    private MoHistoryRecyclerAdapter historyRecyclerAdapter;
+    private MoCardRecyclerView cardRecyclerView;
+    private MoToolBar moToolBar;
 
-    private TextView firstDateTile;
-    private Button loadMoreHistory;
-    private int count = HISTORY_COUNT_PER_REFRESH;
+    private MoSelectable<MoHistory> selectable;
+    private MoToolBar selectBar;
+    private MoListViewSync sync;
+    private MoSearchable searchable;
 
     // toolbar
     private MoPopUpMenu morePopUp;
-    private Toolbar toolbar;
-    private Menu menu;
-    private SearchView searchView;
-    private ImageButton moreButton;
+
+
+
+    private ArrayList<MoHistory> allHistories;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_history);
-        MoHistoryManager.load(this);
-        init();
-
+    protected void init() {
+        initUI();
+        initClass();
     }
 
-    private void init() {
-        initToolbar();
-        initRecyclerView();
-        initMorePopUpMenu();
-        initMoreButton();
-        initBackButton();
-        initFirstDateTile();
-        initLoadMoreButton();
-        initSearchView();
+    private void initUI(){
+        setTitle(R.string.history);
+        initRecyclerCardView();
+        initToolbars();
+        nestedScrollView.setScrollContainer(true);
+        nestedScrollView.setMeasureAllChildren(true);
     }
 
-    private void initSearchView(){
-        MenuItem searchItem = menu.findItem(R.id.app_bar_search);
-        searchView = (SearchView) searchItem.getActionView();
-//        new MoSearchViewFormatter()
-//                .setSearchBackGroundResource(R.drawable.curved_top_day_night_background)
-//                .setSearchHintText("search history")
-//                .setSearchIconResource(R.drawable.ic_search_black_24dp,false,true)
-//                .format(searchView);
+    private void initRecyclerCardView() {
+        cardRecyclerView = new MoCardRecyclerView(this);
+//        LinearLayout.LayoutParams params = MoMarginBuilder.getLinearParams(0,0,0,0);
+//        params.height = getResources().getDisplayMetrics().heightPixels;
+        linearNested.addView(cardRecyclerView);
     }
 
-    private void initToolbar(){
-        this.toolbar = findViewById(R.id.history_toolbar);
-        this.menu = this.toolbar.getMenu();
+
+
+    private void initToolbars() {
+        initMoToolbar();
+        initSelectBar();
+        syncTitle(moToolBar.getTitle(),selectBar.getTitle());
+        setupMultipleToolbars(moToolBar,moToolBar,selectBar);
     }
 
-    private void initLoadMoreButton(){
-        this.loadMoreHistory = findViewById(R.id.load_more_history_button);
-        this.loadMoreHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                count+=HISTORY_COUNT_PER_REFRESH;
-                initRecyclerView();
+    private void initSelectBar() {
+        selectBar = new MoToolBar(this)
+                .hideLeft()
+                .showCheckBox()
+                .setMiddleIcon(R.drawable.ic_baseline_delete_24)
+                .setMiddleOnClickListener(view -> performDeleteHistory());
+        selectBar.getCardView().makeTransparent();
+    }
+
+    /**
+     * deletes the selected histories from
+     * the array adapter
+     */
+    private void performDeleteHistory() {
+        try {
+            MoHistoryManager.remove(this,historyRecyclerAdapter.getSelectedItems(),allHistories);
+            historyRecyclerAdapter.notifyDataSetChanged();
+            if(selectable.isInActionMode()){
+                sync.removeAction();
             }
-        });
-    }
-
-    private void initFirstDateTile(){
-        MoHistory history = MoHistoryManager.getLastHistory();
-        firstDateTile = findViewById(R.id.date_tile);
-        if(history!=null){
-            firstDateTile.setVisibility(View.VISIBLE);
-            firstDateTile.setText(history.getDate());
-        }else{
-            firstDateTile.setVisibility(View.GONE);
+        } catch (IOException e) {
+            Toast.makeText(this,e.getMessage(),Toast.LENGTH_LONG).show();
         }
     }
 
+    private void initMoToolbar() {
+        moToolBar = new MoToolBar(this)
+                .setLeftOnClickListener(view -> onBackPressed());
+        moToolBar.getCardView().makeTransparent();
+    }
+
+    private void initClass(){
+        initHistory();
+        initAdapter();
+        initRecyclerView();
+        initSelectable();
+        initSearchable();
+        initSync();
+    }
+
+
+
+
+    private void initHistory() {
+        allHistories = MoHistoryManager.getAllHistories();
+    }
+
+    private void initAdapter(){
+        this.historyRecyclerAdapter = new MoHistoryRecyclerAdapter(allHistories,this);
+    }
 
     private void initRecyclerView(){
-        historyRecyclerView = new MoRecyclerView(HistoryActivity.this,findViewById(R.id.history_recycler_view),
-                new MoHistoryRecyclerAdapter(MoHistoryManager.getHistoriesWithDateTiles(count),
-                        HistoryActivity.this));
-        historyRecyclerView.setReverseLayout(true);
-        historyRecyclerView.show();
+        this.historyRecyclerView = new MoRecyclerView(this,
+                this.cardRecyclerView.getRecyclerView(),this.historyRecyclerAdapter);
+        this.historyRecyclerView.show();
     }
 
-    private void initMorePopUpMenu(){
-        this.morePopUp = new MoPopUpMenu(this).setEntries(
-                new Pair<>("Clear all", menuItem -> {
-                    MoHistoryManager.clearHistory(HistoryActivity.this);
-                    initRecyclerView();
-                    initFirstDateTile();
-                    return false;
-                })
-        );
+    private void initSelectable(){
+        this.selectable = new MoSelectable<>(this,getGroupRootView(),this.historyRecyclerAdapter)
+                .setCounterView(title)
+                .setSelectAllCheckBox(selectBar.getCheckBox())
+                .addNormalViews(moToolBar)
+                .addUnNormalViews(selectBar)
+                .setAllItemsAreSelectable(false);
     }
 
-    private void initMoreButton(){
-        this.moreButton = (ImageButton)menu.findItem(R.id.more_menu_item).getActionView();
-        this.moreButton.setOnClickListener(view -> morePopUp.show(view));
+    private void initSearchable(){
+//        this.searchable = new MoSearchable(this, getGroupRootView(), new MoSearchableList() {
+//            @Override
+//            public List<? extends MoSearchableItem> getSearchableItems() {
+//                return allHistories;
+//            }
+//
+//            @Override
+//            public void notifyItemChanged(int i) {
+//
+//            }
+//
+//            @Override
+//            public void notifyDataSetChanged() {
+//
+//            }
+//        });
     }
 
-    private void initBackButton(){
-        toolbar.setNavigationOnClickListener(view -> finish());
+    private void initSync(){
+        this.sync = new MoListViewSync(getGroupRootView(),this.selectable).setPutOnHold(true);
     }
 
+    @Override
+    public void onBackPressed() {
+        if(this.sync.hasAction()){
+            this.sync.removeAction();
+        }else{
+            super.onBackPressed();
+        }
+    }
 
-
+    /**
+     * launches the activity for
+     * @param c
+     */
     public static void launch(Context c){
         Intent i = new Intent(c,HistoryActivity.class);
         c.startActivity(i);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

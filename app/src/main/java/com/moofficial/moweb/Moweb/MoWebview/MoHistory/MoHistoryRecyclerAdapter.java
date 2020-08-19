@@ -3,92 +3,104 @@ package com.moofficial.moweb.Moweb.MoWebview.MoHistory;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
-import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoPreviewSelectableAdapter;
 import com.moofficial.moweb.R;
 
 import java.util.ArrayList;
 
-public class MoHistoryRecyclerAdapter extends RecyclerView.Adapter<MoHistoryHolder> {
+public class MoHistoryRecyclerAdapter extends MoPreviewSelectableAdapter<MoHistoryHolder,MoHistory> implements
+        MoSelectableList<MoHistory> {
 
 
 
-    private ArrayList<MoHistory> dataSet;
     private Context context;
-
-
+    private MoSelectable<MoHistory> selectable;
 
 
     public MoHistoryRecyclerAdapter(ArrayList<MoHistory> dataSet,Context c) {
-        this.dataSet = dataSet;
+        super(dataSet);
         this.context = c;
-    }
-
-    @Override
-    public int getItemCount() {
-        return dataSet.size();
+        setHasStableIds(true);
     }
 
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
 
     @NonNull
     @Override
     public MoHistoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v;
-        switch (viewType){
-            case MoHistory.TYPE_HISTORY:
-                v = MoInflaterView.inflate(R.layout.history_tile,parent.getContext());
-                break;
-            default:
-                v = MoInflaterView.inflate(R.layout.history_date_tile,parent.getContext());
-                break;
+        if (viewType == MoHistory.TYPE_HISTORY) {
+            v = MoInflaterView.inflate(R.layout.history_tile, parent.getContext());
+        } else {
+            v = MoInflaterView.inflate(R.layout.history_date_tile, parent.getContext());
         }
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        v.setLayoutParams(lp);
+        v.setLayoutParams(getMatchWrapParams());
         return new MoHistoryHolder(v,viewType);
     }
 
-
     @Override
-    public void onBindViewHolder(@NonNull MoHistoryHolder holder, int position) {
+    protected void onBindViewHolderDifferentVersion(@NonNull MoHistoryHolder holder, int position, int i1) {
+        MoHistory history = dataSet.get(position);
         switch (holder.type){
-            case MoHistory.TYPE_DATE_TILE:
-                holder.date.setText(dataSet.get(position).getDate());
+            case MoHistory.TYPE_DATE:
+                holder.date.setText(history.getDate());
                 break;
             case MoHistory.TYPE_HISTORY:
-                MoHistory history = dataSet.get(position);
-                holder.urlTextView.setText(history.getLimitedUrl());
+                holder.urlTextView.setText(history.getUrl());
                 holder.dateTimeTextView.setText(history.getDate());
-                holder.titleTextView.setText(history.getLimitedTitle());
-                holder.firstLetter.setText(history.getSignatureLetter());
+                holder.titleTextView.setText(history.getTitle());
+                holder.moImageTextLogo.setText(history.getSignatureLetter());
+                makeHistoryClickable(holder, i1);
+                makeHistoryLongClickable(holder, i1);
+                MoSelectableUtils.applySelectedColor(context,holder.cover,history);
                 break;
         }
-
     }
+
+    private void makeHistoryClickable(@NonNull MoHistoryHolder holder, int position) {
+        holder.cardView.setOnClickListener(view -> {
+            if(selectable.isInActionMode()){
+                onSelect(position);
+            }else{
+                // todo open the history inside their browser
+            }
+        });
+    }
+
+    private void makeHistoryLongClickable(@NonNull MoHistoryHolder holder, int position) {
+        holder.cardView.setOnLongClickListener(view -> {
+            if(!selectable.isInActionMode()){
+                selectable.activateSpecialMode();
+                onSelect(position);
+                return true;
+            }
+            return false;
+        });
+    }
+
+
+
 
     @Override
     public int getItemViewType(int position) {
-        return dataSet.get(position).getType();
+        return dataSet.get(getCorrectPosition(position)).getType();
     }
 
 
-
-
-    private void onRemove(int position){
-        MoHistoryManager.remove(position,context);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, MoTabsManager.size());
+    @Override
+    public void setListSelectable(MoSelectable<MoHistory> moSelectable) {
+        this.selectable = moSelectable;
     }
 
-
-
+    @Override
+    public void onSelect(int i) {
+        this.selectable.onSelect(dataSet.get(getCorrectPosition(i)),i);
+    }
 }

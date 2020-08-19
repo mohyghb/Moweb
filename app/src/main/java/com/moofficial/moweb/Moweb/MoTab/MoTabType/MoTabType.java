@@ -5,8 +5,8 @@ import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
-import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
 
 
 public class MoTabType implements MoSavable, MoLoadable {

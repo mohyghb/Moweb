@@ -3,9 +3,9 @@ package com.moofficial.moweb.Moweb.MoBookmark;
 import android.content.Context;
 
 import com.moofficial.moessentials.MoEssentials.MoDate.MoDate;
-import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
-import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
-import com.moofficial.moessentials.MoEssentials.MoIO.MoSwitchSavable;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSwitchSavable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableItem;
@@ -314,10 +314,6 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
         return this.isSelected;
     }
 
-    @Override
-    public Object getItem() {
-        return this;
-    }
 
     // searchable
 

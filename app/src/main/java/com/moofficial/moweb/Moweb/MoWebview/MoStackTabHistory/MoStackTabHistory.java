@@ -3,9 +3,9 @@ package com.moofficial.moweb.Moweb.MoWebview.MoStackTabHistory;
 
 import android.content.Context;
 
-import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
-import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
-import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebView;
 
 import java.util.ArrayList;

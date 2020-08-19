@@ -3,9 +3,8 @@ package com.moofficial.moweb.Moweb.MoUrl;
 import android.content.Context;
 import android.webkit.URLUtil;
 
-
-import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
-import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
 
 import java.net.MalformedURLException;
 import java.net.URL;

@@ -31,7 +31,7 @@ public class MoHomePageRecyclerAdapter extends MoPreviewSelectableAdapter<MoHome
     }
 
     @Override
-    protected void onBindViewHolderDifferentVersion(@NonNull MoHomePageViewHolder holder, int position) {
+    protected void onBindViewHolderDifferentVersion(@NonNull MoHomePageViewHolder holder, int position,int i) {
         MoHomePage homePage = dataSet.get(position);
         holder.urlTextView.setText(homePage.getUrl());
         holder.radioButton.setChecked(homePage.isActivated());

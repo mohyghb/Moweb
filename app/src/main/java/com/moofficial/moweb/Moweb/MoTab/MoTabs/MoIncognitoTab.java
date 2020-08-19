@@ -26,4 +26,10 @@ public class MoIncognitoTab extends MoTab {
         moWebView.setSaveHistory(false);
         super.initWebView();
     }
+
+    @Override
+    public void saveTab() {
+        // no saving the tab
+    }
+
 }

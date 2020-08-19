@@ -24,6 +24,8 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebUtils;
 
+import java.io.IOException;
+
 import static com.moofficial.moweb.MoSection.MoSectionManager.IN_TAB_VIEW;
 import static com.moofficial.moweb.MoSection.MoSectionManager.TABS_VIEW;
 
@@ -43,14 +45,23 @@ public class MainActivity extends AppCompatActivity {
         WebView.enableSlowWholeDocumentDraw();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // TODO optimize this so on runtime, it
-        //  doesn't take a lot of time to load the app
 
-        MoLog.printRunTime("history", () -> MoHistoryManager.load(this));
+
         MoLog.printRunTime("home pages",()->MoHomePageManager.load(this));
         MoLog.printRunTime("bookmarks",()->MoBookmarkManager.load(this));
 
         init();
+
+        MoLog.printRunTime("history", () -> {
+            try {
+                MoHistoryManager.load(this);
+//                for(int i = 0; i < 300;i++){
+//                    MoHistoryManager.add(this, MoSearchEngine.instance.getURL(i+""),i+"");
+//                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
     }
 
@@ -69,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
                 .setTransitionIn(new Slide())
                 .setTransitionOut(new Slide());
         changeContentView();
-        int i = 0;
     }
 
 
@@ -148,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         MoTabController.instance.onDestroy();
+        MoTabsManager.onDestroy();
     }
 
     @Override

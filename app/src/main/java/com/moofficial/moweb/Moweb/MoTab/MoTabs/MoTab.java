@@ -3,6 +3,7 @@ package com.moofficial.moweb.Moweb.MoTab.MoTabs;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -18,11 +19,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.moofficial.moessentials.MoEssentials.MoBitmap.MoBitmap;
 import com.moofficial.moessentials.MoEssentials.MoConnections.MoShare;
-import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
-import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
-import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
-import com.moofficial.moessentials.MoEssentials.MoKeyboardUtils.MoKeyboardUtils;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManagerUtils;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFileSavable;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoRunnable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
@@ -30,21 +33,23 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoFindBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupItemBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupWindow;
+import com.moofficial.moessentials.MoEssentials.MoUtils.MoKeyboardUtils.MoKeyboardUtils;
 import com.moofficial.moweb.BookmarkActivity;
 import com.moofficial.moweb.HistoryActivity;
 import com.moofficial.moweb.MoHTML.MoHTMLAsyncTask;
-import com.moofficial.moweb.Moweb.MoBitmap.MoBitmap;
-import com.moofficial.moweb.Moweb.MoBitmap.MoBitmapSaver;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
+import com.moofficial.moweb.Moweb.MoTab.MoTabBitmap.MoTabBitmap;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabExceptions.MoTabNotFoundException;
+import com.moofficial.moweb.Moweb.MoTab.MoTabId.MoTabId;
 import com.moofficial.moweb.Moweb.MoTab.MoTabSuggestion;
 import com.moofficial.moweb.Moweb.MoTab.MoTabType.MoTabType;
 import com.moofficial.moweb.Moweb.MoTab.MoTabUtils;
+import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoNotifyTabChanged;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoOnTabBitmapUpdateListener;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoUrl.MoURL;
@@ -54,22 +59,23 @@ import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebView;
 import com.moofficial.moweb.R;
 
-// TODO: ERROR THE URL IS SOME HOW CHANGED TO ABOUT:BLANK AFTER THE FIRST INIT
-public class MoTab implements MoSavable, MoLoadable, MoSelectableItem {
+import java.io.IOException;
+
+public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
 
 
-    // DATA
+
+    private MoTabId tabId = new MoTabId();
     private MoTab parentTab;
     protected MoWebView moWebView;
     private MoURL url;
     private MoOnTabBitmapUpdateListener onBitmapUpdateListener = ()->{};
-    private MoBitmap moBitmap = new MoBitmap()
-            .setOnBitmapCapturedListener(b -> onBitmapUpdateListener.onBitmapUpdated());
+    private MoNotifyTabChanged notifyTabChanged = ()->{};
+    private MoBitmap moBitmap = new MoTabBitmap();
     private boolean isUpToDate;
     private MoTabType tabType;
     private MoPopupWindow moPopupWindow;
     private MoSearchable moSearchable;
-    // suggestions
     private MoTabSuggestion suggestion;
 
 
@@ -94,8 +100,7 @@ public class MoTab implements MoSavable, MoLoadable, MoSelectableItem {
         initContextView(context);
         this.url = new MoURL(url);
         init();
-        this.moWebView.loadUrl(this.url.getUrlString());
-        this.isUpToDate = true;
+        search(this.url.getUrlString());
     }
 
     private void initContextView(Context context) {
@@ -153,6 +158,15 @@ public class MoTab implements MoSavable, MoLoadable, MoSelectableItem {
 
     public MoTab setOnBitmapUpdateListener(MoOnTabBitmapUpdateListener onBitmapUpdateListener) {
         this.onBitmapUpdateListener = onBitmapUpdateListener;
+        return this;
+    }
+
+    public MoNotifyTabChanged getNotifyTabChanged() {
+        return notifyTabChanged;
+    }
+
+    public MoTab setNotifyTabChanged(MoNotifyTabChanged notifyTabChanged) {
+        this.notifyTabChanged = notifyTabChanged;
         return this;
     }
 
@@ -392,8 +406,7 @@ public class MoTab implements MoSavable, MoLoadable, MoSelectableItem {
         //tabs button
         this.tabsNumber = view.findViewById(R.id.tabs_button);
         this.tabsNumber.setOnClickListener(view -> {
-            onBitmapUpdateListener.onBitmapUpdated();
-            //moWebView.forceCaptureBitmapIfNotLoading();
+            notifyTabChanged.notifyTabChanged();
             MoTabController.instance.onTabsButtonPressed();
         });
     }
@@ -544,6 +557,8 @@ public class MoTab implements MoSavable, MoLoadable, MoSelectableItem {
         this.searchText.setText(url.getUrlString());
         // hide keyboard
         MoKeyboardUtils.hideSoftKeyboard(this.searchText);
+        // save the tab
+        saveTab();
     }
 
 
@@ -557,6 +572,7 @@ public class MoTab implements MoSavable, MoLoadable, MoSelectableItem {
         updateUrl(MoSearchEngine.instance.getURL(s));
         // load it inside the web view
         this.moWebView.loadUrl(url.getUrlString());
+        this.isUpToDate = true;
     }
 
 
@@ -633,22 +649,47 @@ public class MoTab implements MoSavable, MoLoadable, MoSelectableItem {
     }
 
 
-    /**
-     * saves the bitmap for this webview
-     * @param saver
-     */
-    public void saveWebViewBitmap(MoBitmapSaver saver){
-        saver.setFileName(this.moBitmap.stringifyId());
-        saver.save(this.moBitmap.getBitmap());
+
+    public void captureAndSaveWebViewBitmapAsync(){
+        // needs to be outside of async b/c the capture bitmap should
+        // occur on web view thread not async
+        moWebView.forceCaptureBitmap();
+        AsyncTask.execute(() -> {
+            MoLog.printRunTime("bitmapSave" + moBitmap.getName(), () -> {
+                try {
+                    moBitmap.saveBitmap(context);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        });
     }
 
     /**
      * deletes the bitmap for this tab
-     * @param saver
      */
-    public void deleteWebViewBitmap(MoBitmapSaver saver){
-        saver.setFileName(this.moBitmap.stringifyId());
-        saver.delete();
+    public void deleteWebViewBitmap(Context context){
+        moBitmap.deleteBitmap(context);
+    }
+
+
+    /**
+     *  saves the tab inside its own
+     *  unique file
+     */
+    public void saveTab(){
+        try {
+            MoFileManagerUtils.write(context,this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * deletes the file of the tab completely
+     */
+    public void deleteTab(){
+        MoFileManagerUtils.delete(context,this);
     }
 
 
@@ -672,8 +713,8 @@ public class MoTab implements MoSavable, MoLoadable, MoSelectableItem {
         String[] c = MoFile.loadable(data);
         this.url = new MoURL(c[0],context);
         this.moBitmap.load(c[1],context);
-        // GIVES ERROR
         this.moWebView.load(c[2],context);
+        this.tabId.load(c[3],context);
         this.init();
     }
 
@@ -685,8 +726,19 @@ public class MoTab implements MoSavable, MoLoadable, MoSelectableItem {
      */
     @Override
     public String getData() {
-        return MoFile.getData(this.url,this.moBitmap,this.moWebView);
+        return MoFile.getData(this.url,this.moBitmap,this.moWebView,this.tabId);
     }
+
+    @Override
+    public String getDirName() {
+        return MoTabsManager.TAB_DIR;
+    }
+
+    @Override
+    public String getFileName() {
+        return this.tabId.stringify();
+    }
+
 
     // set of functions for different events of activity
     public void onPause(){
@@ -702,7 +754,7 @@ public class MoTab implements MoSavable, MoLoadable, MoSelectableItem {
 
 
     // when the user presses search button
-    private void onSearch(TextView textView,int actionId,KeyEvent event){
+    private void onSearch(TextView textView, int actionId, KeyEvent event){
         if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) ||
                 (actionId == EditorInfo.IME_ACTION_SEARCH)) {
             // then we need to search
@@ -711,7 +763,7 @@ public class MoTab implements MoSavable, MoLoadable, MoSelectableItem {
     }
 
 
-    // when we receive an error from web view
+
     public void onErrorReceived(WebResourceRequest request, WebResourceError error){
 //        moWebView.setVisibility(View.INVISIBLE);
 //        errorLayout.setVisibility(View.VISIBLE);
@@ -733,9 +785,6 @@ public class MoTab implements MoSavable, MoLoadable, MoSelectableItem {
         return this.isSelected;
     }
 
-    @Override
-    public Object getItem() {
-        return this;
-    }
+
 
 }

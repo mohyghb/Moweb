@@ -6,10 +6,7 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
-import com.moofficial.moessentials.MoEssentials.MoAsyncTask.MoAsyncTask;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
-import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
-import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 
 public class MoSaverBackgroundService extends Service {
 
@@ -21,17 +18,38 @@ public class MoSaverBackgroundService extends Service {
         return null;
     }
 
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        MoAsyncTask asyncTask = new MoAsyncTask().setAsyncDoInBackground(objects -> {
-            MoLog.print("saving tabs ... ");
-            MoTabsManager.save(MoSaverBackgroundService.this);
-            MoTabController.instance.save(MoSaverBackgroundService.this);
-        });
-        asyncTask.execute();
+//        AsyncTask.execute(() -> MoLog.printRunTime("saveTabsRunTime", () -> {
+//            MoLog.print("saving tabs ... ");
+//            MoTabsManager.save(MoSaverBackgroundService.this);
+//            MoTabController.instance.save(MoSaverBackgroundService.this);
+//        }));
+
+//        Handler handler = new Handler();
+//        handler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                MoLog.printRunTime("saveTabsRunTime", () -> {
+//                            MoLog.print("saving tabs ... ");
+//                            MoTabsManager.save(MoSaverBackgroundService.this);
+//                            MoTabController.instance.save(MoSaverBackgroundService.this);
+//                        });
+////                MoAsyncTask asyncTask = new MoAsyncTask().setAsyncDoInBackground(objects -> {
+////
+////                });
+////                asyncTask.setAsyncOnTaskFinished(o -> MoLog.print("saving just finished async task"));
+////                asyncTask.execute();
+//            }
+//        });
+
         return android.app.Service.START_STICKY;
     }
 
-
-
+    @Override
+    public void onDestroy() {
+        MoLog.print("on destroy saver background service");
+        super.onDestroy();
+    }
 }

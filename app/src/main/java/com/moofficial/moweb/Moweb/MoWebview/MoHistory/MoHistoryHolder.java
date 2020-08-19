@@ -1,17 +1,23 @@
 package com.moofficial.moweb.Moweb.MoWebview.MoHistory;
 
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoImageTextLogo;
 import com.moofficial.moweb.R;
 
 public class MoHistoryHolder extends RecyclerView.ViewHolder {
 
     // history
-    TextView urlTextView,dateTimeTextView,titleTextView,firstLetter;
+    TextView urlTextView,dateTimeTextView,titleTextView;
+    MoImageTextLogo moImageTextLogo;
+    CardView cardView;
+    LinearLayout cover;
 
     // date tile
     TextView date;
@@ -26,7 +32,7 @@ public class MoHistoryHolder extends RecyclerView.ViewHolder {
 
     private void init(){
         switch (type){
-            case MoHistory.TYPE_DATE_TILE:
+            case MoHistory.TYPE_DATE:
                 initDateTile();
                 break;
             case MoHistory.TYPE_HISTORY:
@@ -39,13 +45,17 @@ public class MoHistoryHolder extends RecyclerView.ViewHolder {
         urlTextView = itemView.findViewById(R.id.history_url);
         dateTimeTextView = itemView.findViewById(R.id.history_date_time);
         titleTextView = itemView.findViewById(R.id.history_title);
-        firstLetter = itemView.findViewById(R.id.first_letter_text);
+        moImageTextLogo = itemView.findViewById(R.id.image_text_logo);
+        cardView = itemView.findViewById(R.id.history_tile_card_view);
+        cover = itemView.findViewById(R.id.history_tile_cover_view);
     }
 
 
     private void initDateTile(){
         date = itemView.findViewById(R.id.date_tile);
     }
+
+
 
 
 }

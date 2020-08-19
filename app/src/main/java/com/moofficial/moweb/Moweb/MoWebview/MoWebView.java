@@ -10,12 +10,12 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import com.moofficial.moessentials.MoEssentials.MoIO.MoFile;
-import com.moofficial.moessentials.MoEssentials.MoIO.MoLoadable;
-import com.moofficial.moessentials.MoEssentials.MoIO.MoSavable;
+import com.moofficial.moessentials.MoEssentials.MoBitmap.MoBitmap;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moweb.MoTouchPosition.MoTouchPosition;
-import com.moofficial.moweb.Moweb.MoBitmap.MoBitmap;
 import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoWebClient;
@@ -25,7 +25,7 @@ import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnReceivedError;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnUpdateUrlListener;
 
 // a web view which has more helper functions
-public class MoWebView extends WebView implements MoSavable,MoLoadable {
+public class MoWebView extends WebView implements MoSavable, MoLoadable {
 
 
 
@@ -38,7 +38,7 @@ public class MoWebView extends WebView implements MoSavable,MoLoadable {
             onUpdateUrlListener.onUrlUpdate(url,isReload);
             stackTabHistory.update();
             if(saveHistory && !isReload){
-                MoHistoryManager.add(url,view.getTitle(),context);
+                MoHistoryManager.add(view);
             }
             // save history
             MoWebView.this.url = url;
@@ -47,7 +47,9 @@ public class MoWebView extends WebView implements MoSavable,MoLoadable {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             MoLog.print("on page finished "+view.getProgress()+"" + url);
-            captureBitmapWithDelay(1200);
+            if(captureBitmapWhenFinishedLoading){
+                captureBitmapWithDelay(1000);
+            }
             // inject the js to web view
             evaluateJavascript(MoWebElementDetection.injectJs(context),null);
         }
@@ -66,6 +68,7 @@ public class MoWebView extends WebView implements MoSavable,MoLoadable {
     private MoOnReceivedError onErrorReceived = (view, request, error) -> {};
     private MoBitmap moBitmap;
     private boolean captureBitmap = true;
+    private boolean captureBitmapWhenFinishedLoading = false;
     private boolean saveHistory = true;
     private boolean isInDesktopMode = false;
     private boolean isPaused = true;
@@ -243,25 +246,31 @@ public class MoWebView extends WebView implements MoSavable,MoLoadable {
      */
     public void captureBitmap() {
         if(captureBitmap){
-            moBitmap.captureBitmap(this);
+            post(() -> moBitmap.captureBitmap(MoWebView.this));
         }
     }
 
     public void captureBitmapWithDelay(long delay){
         if(captureBitmap){
-            moBitmap.captureBitmapWithDelay(this,delay);
+            post(()->moBitmap.captureBitmapWithDelay(this,delay));
         }
     }
 
     public void captureBitmapIfNotLoading(){
         if(captureBitmap){
-            moBitmap.captureBitmapIfNotLoading(this);
+            post(()->moBitmap.captureBitmapIfNotLoading(this));
         }
     }
 
     public void forceCaptureBitmapIfNotLoading(){
         if(captureBitmap){
-            moBitmap.forceCaptureBitmapIfNotLoading(this);
+            post(()->moBitmap.forceCaptureBitmapIfNotLoading(this));
+        }
+    }
+
+    public void forceCaptureBitmap(){
+        if(captureBitmap){
+            moBitmap.forceCaptureBitmap(this);
         }
     }
 
