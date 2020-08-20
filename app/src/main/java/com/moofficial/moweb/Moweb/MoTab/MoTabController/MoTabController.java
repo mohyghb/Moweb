@@ -122,7 +122,7 @@ public class MoTabController extends MoContext implements MoSavable, MoLoadable 
 
     /**
      *
-     * @returns true if the normal tabs are empty and the current controller is
+     * @return true if the normal tabs are empty and the current controller is
      * a normal controller, or if the incognito tabs are empty and the current controller is
      * incognito controller
      */
@@ -130,6 +130,15 @@ public class MoTabController extends MoContext implements MoSavable, MoLoadable 
         return (MoTabsManager.size() == 0 && this.currentTabControl.getType() == MoTabType.TYPE_NORMAL)
                 ||
                 (MoTabsManager.sizePrivate() == 0 && this.currentTabControl.getType() == MoTabType.TYPE_PRIVATE);
+    }
+
+    /**
+     *
+     * @return if the opposite of the above function
+     * is true
+     */
+    public boolean isNotOutOfOptions(){
+        return !isOutOfOptions();
     }
 
     /**
@@ -141,6 +150,16 @@ public class MoTabController extends MoContext implements MoSavable, MoLoadable 
                 ()->this.incognitoTabsControl.notifyRemovedIndex());
     }
 
+    /**
+     * notifies that something has changed inside
+     * the recycler view about the current tab
+     */
+    public void notifyCurrentTabInRecycler(){
+        MoTab t = getCurrent();
+        if(t!=null){
+            t.getNotifyTabChanged().notifyTabChanged();
+        }
+    }
 
     public MoTab getCurrent(){
         switch (currentTabControl.getType()){

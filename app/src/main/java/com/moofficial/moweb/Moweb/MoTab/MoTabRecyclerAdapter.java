@@ -68,6 +68,7 @@ public class MoTabRecyclerAdapter extends MoPreviewSelectableAdapter<MoTabRecycl
         super(myDataset);
         this.context = c;
         this.isInGrid = isInGrid;
+        setHasStableIds(true);
     }
 
 
@@ -138,18 +139,18 @@ public class MoTabRecyclerAdapter extends MoPreviewSelectableAdapter<MoTabRecycl
 
     private void makeTabAware(int position, MoTab tab) {
         // updating the preview whenever it is possible
-        tab.setNotifyTabChanged(() -> notifyItemChanged(position));
+        //tab.setNotifyTabChanged(() -> notifyItemChanged(position));
     }
 
     private void onTabClickListener(TabViewHolder holder, int position, MoTab tab) {
         // going inside the tab
         holder.cardView.setOnClickListener(view -> {
-            if(selectable.isInActionMode()){
-                onSelect(position);
-            }else{
+//            if(selectable.isInActionMode()){
+//                onSelect(position);
+//            }else{
                 MoTabController.instance.setIndex(position,
                         tab.getType());
-            }
+           // }
 
         });
     }

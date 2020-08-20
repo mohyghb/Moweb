@@ -10,10 +10,9 @@
         <item name="imageButtonStyle">@style/MoImageButton_Style_Dark</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationStyle</item>
         <item name="materialCardViewStyle">@style/MoMaterialCardViewStyleBright</item>
-        <item name="android:statusBarColor">@color/MaterialDark</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:listViewStyle">@style/MoListStyle_Dark</item>
         <item name="recyclerViewStyle">@style/MoListStyle_Dark</item>
-        <item name="android:windowLightStatusBar">false</item>
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
     </style>

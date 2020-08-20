@@ -9,7 +9,7 @@ import com.moofficial.moweb.Moweb.MoWebview.MoWebView;
 public class MoTabUtils {
 
     @SuppressLint("ClickableViewAccessibility")
-    public static void transitionToInTabMode(MoWebView m, ViewGroup viewGroup,ViewGroup root){
+    public static void transitionToInTabMode(MoWebView m, ViewGroup viewGroup){
         m.moveWebViewTo(viewGroup);
         // making the web view function properly
         // TODO: touch point listener should not be working anymore

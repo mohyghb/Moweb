@@ -5,6 +5,8 @@ import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import androidx.annotation.IntDef;
+
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
 
@@ -12,11 +14,13 @@ import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
 public class MoTabType implements MoSavable, MoLoadable {
 
 
+    @IntDef({TYPE_NORMAL,TYPE_PRIVATE})
+    public @interface TabType{}
     public static final int TYPE_NORMAL = 0;
     public static final int TYPE_PRIVATE = 1;
 
 
-    private int type;
+    @TabType private int type;
     private WebView webView;
 
     public MoTabType(int t){
@@ -37,7 +41,7 @@ public class MoTabType implements MoSavable, MoLoadable {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(@TabType int type) {
         this.type = type;
         if(webView!=null){
             switch (type){

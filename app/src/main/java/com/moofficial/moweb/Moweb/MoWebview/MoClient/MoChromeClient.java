@@ -43,6 +43,8 @@ public class MoChromeClient extends WebChromeClient {
     }
 
     private void updateProgressBar(int newProgress) {
+        if(bar == null)
+            return;
         bar.post(() -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 bar.setProgress(newProgress,true);

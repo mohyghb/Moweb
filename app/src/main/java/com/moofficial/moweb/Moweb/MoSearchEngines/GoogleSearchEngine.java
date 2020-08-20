@@ -2,15 +2,12 @@ package com.moofficial.moweb.Moweb.MoSearchEngines;
 
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class GoogleSearchEngine extends MoSearchEngine {
 
     private static final String SEARCH_SUGGESTIONS = "http://google.com/complete/search?output=toolbar&q=";
 
     public static final String GOOGLE_ADDRESS = "https://www.google.com";
-    private static final String GOOGLE_SEARCH = "https://www.google.com/search?q=";
+    private static final String GOOGLE_SEARCH = "https://www.google.com/?gws_rd=ssl#q=";
     public static final String GOOGLE_SEARCH_COMMAND = "search?";
     private static final String SPLITTER = "suggestion data=";
 

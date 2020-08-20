@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MoTabActivity"></activity>
+        <activity android:name=".MoTabActivity" android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".BookmarkFolderChooserActivity" />
         <activity android:name=".EditBookmarkActivity" />
         <activity android:name=".BookmarkActivity" />
@@ -27,8 +27,8 @@
         <activity android:name=".HistoryActivity" />
         <activity
             android:name=".MainActivity"
-            android:configChanges="orientation|screenSize"
-            android:alwaysRetainTaskState="true">
+            android:alwaysRetainTaskState="true"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,6 +1,7 @@
 package com.moofficial.moweb.Moweb.MoTab.MoTabs;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.WindowManager;
 
 import com.moofficial.moweb.Moweb.MoTab.MoTabType.MoTabType;
@@ -8,15 +9,14 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabType.MoTabType;
 // no web view cache
 // no history save
 // no screen shot
+// no saving tab
 public class MoIncognitoTab extends MoTab {
 
 
-    public MoIncognitoTab(Activity a, String url) {
+    public MoIncognitoTab(Context a, String url) {
         super(a, url);
         // this makes sure that we are browsing incognito
         super.setType(MoTabType.TYPE_PRIVATE);
-        // to make sure the user can not take screen shots
-        a.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,WindowManager.LayoutParams.FLAG_SECURE);
     }
 
     @Override
@@ -32,4 +32,9 @@ public class MoIncognitoTab extends MoTab {
         // no saving the tab
     }
 
+    @Override
+    public void applyWindowRules(Activity a) {
+        // to make sure the user can not take screen shots
+        a.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,WindowManager.LayoutParams.FLAG_SECURE);
+    }
 }

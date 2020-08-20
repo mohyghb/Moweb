@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.transition.Slide;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
 
@@ -18,7 +17,6 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoSwitche
 import com.moofficial.moweb.MoSection.MoSectionManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
-import com.moofficial.moweb.Moweb.MoServices.MoSaverBackgroundService;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
@@ -63,6 +61,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+//        Window window = getWindow();
+//        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//        window.setStatusBarColor(Color.BLUE);
+
     }
 
 
@@ -101,17 +103,23 @@ public class MainActivity extends AppCompatActivity {
     private void changeContentView(){
         switch (MoSectionManager.getInstance().getSection()){
             case TABS_VIEW:
+                moTabSectionManager.update();
                 moSectionViewManager.setActiveSection(TABS_VIEW);
                 break;
             case IN_TAB_VIEW:
-                if(!MoTabController.instance.isOutOfOptions()){
-                    //MoTabActivity.startActivity(this);
-                    linearLayout.removeAllViews();
-                    linearLayout.addView(MoTabController.instance.getCurrent().getZeroPaddingView(rootView),
-                            new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                    ViewGroup.LayoutParams.MATCH_PARENT));
-                    moSectionViewManager.setActiveSection(IN_TAB_VIEW);
-
+                if(MoTabController.instance.isNotOutOfOptions()){
+                    startActivity(new Intent(this,MoTabActivity.class));
+//                    MoTab t = MoTabController.instance.getCurrent();
+//                    // removing everything from linear layout
+//                    linearLayout.removeAllViews();
+//                    // adding the current tab inside
+//                    linearLayout.addView(t.getZeroPaddingView(rootView),
+//                            new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//                                    ViewGroup.LayoutParams.MATCH_PARENT));
+//                    // showing in tab view
+//                    moSectionViewManager.setActiveSection(IN_TAB_VIEW);
+//                    // applying the window rules of the tab
+//                    t.applyWindowRules(this);
                 }else{
                     MoSectionManager.getInstance().setSection(TABS_VIEW);
                     changeContentView();
@@ -150,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
     // save the tabs before leaving the app
     @Override
     protected void onStop() {
-        saveState();
         super.onStop();
     }
 
@@ -167,15 +174,7 @@ public class MainActivity extends AppCompatActivity {
         MoTabController.instance.onPause();
     }
 
-    /**
-     * saves tabs
-     * saves the tab controller information
-     */
-    // TODO when the phone is sleep, this causes error
-    private void saveState() {
-        Intent saverIntent = new Intent(this, MoSaverBackgroundService.class);
-        startService(saverIntent);
-    }
+
 
     /**
      * load tabs

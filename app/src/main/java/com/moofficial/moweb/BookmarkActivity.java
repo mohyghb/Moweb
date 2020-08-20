@@ -31,6 +31,7 @@ import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkRecyclerAdapter;
 import com.moofficial.moweb.Moweb.MoBookmark.MoOnOpenBookmarkListener;
+import com.moofficial.moweb.Moweb.MoTab.MoOpenTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 
 import java.util.ArrayList;
@@ -125,14 +126,22 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
         if(noFolderHasBeenSelected()){
             p.setEntries(
                     new Pair<>(getString(R.string.open_in_tab), menuItem -> {
-
+                        if(nothingIsSelected()) return false;
+                        MoOpenTab.openInNewTabs(this,recyclerAdapter.getSelectedItems());
+                        finish();
                         return false;
                     }),
-                    new Pair<>(getString(R.string.open_in_incognito_tab), menuItem -> false)
+                    new Pair<>(getString(R.string.open_in_incognito_tab), menuItem -> {
+                        if(nothingIsSelected()) return false;
+                        MoOpenTab.openInNewPrivateTabs(this,recyclerAdapter.getSelectedItems());
+                        finish();
+                        return false;
+                    })
             );
         }
         p.show(moListSelectableToolbar.getRightButton());
     }
+
 
     /**
      * shares all the selected bookmarks
@@ -471,5 +480,14 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
         Toast.makeText(BookmarkActivity.this,"Updated!",Toast.LENGTH_SHORT).show();
         // done selecting
         listViewSync.removeAction();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        while(listViewSync.hasAction()){
+            listViewSync.removeAction();
+        }
     }
 }

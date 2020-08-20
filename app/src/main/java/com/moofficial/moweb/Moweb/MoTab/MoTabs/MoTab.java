@@ -1,24 +1,17 @@
 package com.moofficial.moweb.Moweb.MoTab.MoTabs;
 
-import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.moofficial.moessentials.MoEssentials.MoBitmap.MoBitmap;
 import com.moofficial.moessentials.MoEssentials.MoConnections.MoShare;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManagerUtils;
@@ -26,38 +19,22 @@ import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFileSavable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
-import com.moofficial.moessentials.MoEssentials.MoRunnable.MoRunnable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableItem;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoFindBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupItemBuilder;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupWindow;
 import com.moofficial.moessentials.MoEssentials.MoUtils.MoKeyboardUtils.MoKeyboardUtils;
-import com.moofficial.moweb.BookmarkActivity;
-import com.moofficial.moweb.HistoryActivity;
-import com.moofficial.moweb.MoHTML.MoHTMLAsyncTask;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
-import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
-import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
-import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabBitmap.MoTabBitmap;
-import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabExceptions.MoTabNotFoundException;
 import com.moofficial.moweb.Moweb.MoTab.MoTabId.MoTabId;
-import com.moofficial.moweb.Moweb.MoTab.MoTabSuggestion;
+import com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar.MoTabSearchBar;
 import com.moofficial.moweb.Moweb.MoTab.MoTabType.MoTabType;
-import com.moofficial.moweb.Moweb.MoTab.MoTabUtils;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoNotifyTabChanged;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoOnTabBitmapUpdateListener;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoUrl.MoURL;
 import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
-import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebView;
-import com.moofficial.moweb.R;
 
 import java.io.IOException;
 
@@ -73,40 +50,36 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
     private MoNotifyTabChanged notifyTabChanged = ()->{};
     private MoBitmap moBitmap = new MoTabBitmap();
     private boolean isUpToDate;
-    private MoTabType tabType;
-    private MoPopupWindow moPopupWindow;
-    private MoSearchable moSearchable;
-    private MoTabSuggestion suggestion;
+    private MoTabType tabType = new MoTabType(MoTabType.TYPE_NORMAL);
+//    private MoPopupWindow moPopupWindow;
+//    private MoSearchable moSearchable;
+//    private MoTabSuggestion suggestion;
 
 
 
     // UI
     private Context context;
-    private View view;
-    private TextInputEditText searchText;
-    private View searchBar;
-    private TextView tabsNumber;
-    private ProgressBar progressBar;
-    private ImageButton moreTabButton;
-    private LinearLayout webLinearLayout;
+//    private View view;
+//    private LinearLayout webLinearLayout;
     private View errorLayout;
-    private MoFindBar moFindBar;
+    private MoTabSearchBar tabSearchBar;
+
     private boolean captureImage = true;
     private boolean isSelected = false;
-
+    private boolean wasInitAlready = false;
 
 
     public MoTab(Context context, String url) {
         initContextView(context);
         this.url = new MoURL(url);
-        init();
+        //init();
         search(this.url.getUrlString());
     }
 
     private void initContextView(Context context) {
         this.context = context;
-        this.view = MoInflaterView.inflate(R.layout.tab, this.context);
-        this.moWebView = view.findViewById(R.id.tab_web_view);
+       // this.view = MoInflaterView.inflate(R.layout.tab, this.context);
+        this.moWebView = new MoWebView(context);
     }
 
     public MoTab(String searchText,Context context){
@@ -188,68 +161,9 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
         return this;
     }
 
-    public MoPopupWindow getMoPopupWindow() {
-        return moPopupWindow;
-    }
 
-    public MoTab setMoPopupWindow(MoPopupWindow moPopupWindow) {
-        this.moPopupWindow = moPopupWindow;
-        return this;
-    }
 
-    public MoSearchable getMoSearchable() {
-        return moSearchable;
-    }
 
-    public MoTab setMoSearchable(MoSearchable moSearchable) {
-        this.moSearchable = moSearchable;
-        return this;
-    }
-
-    public TextInputEditText getSearchText() {
-        return searchText;
-    }
-
-    public MoTab setSearchText(TextInputEditText searchText) {
-        this.searchText = searchText;
-        return this;
-    }
-
-    public View getSearchBar() {
-        return searchBar;
-    }
-
-    public MoTab setSearchBar(View searchBar) {
-        this.searchBar = searchBar;
-        return this;
-    }
-
-    public TextView getTabsNumber() {
-        return tabsNumber;
-    }
-
-    public MoTab setTabsNumber(TextView tabsNumber) {
-        this.tabsNumber = tabsNumber;
-        return this;
-    }
-
-    public ProgressBar getProgressBar() {
-        return progressBar;
-    }
-
-    public MoTab setProgressBar(ProgressBar progressBar) {
-        this.progressBar = progressBar;
-        return this;
-    }
-
-    public ImageButton getMoreTabButton() {
-        return moreTabButton;
-    }
-
-    public MoTab setMoreTabButton(ImageButton moreTabButton) {
-        this.moreTabButton = moreTabButton;
-        return this;
-    }
 
     public View getErrorLayout() {
         return errorLayout;
@@ -260,261 +174,293 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
         return this;
     }
 
-    public MoFindBar getMoFindBar() {
-        return moFindBar;
+    public MoTabSearchBar getTabSearchBar() {
+        return tabSearchBar;
     }
 
-    public MoTab setMoFindBar(MoFindBar moFindBar) {
-        this.moFindBar = moFindBar;
+    public MoTab setTabSearchBar(MoTabSearchBar tabSearchBar) {
+        this.tabSearchBar = tabSearchBar;
         return this;
     }
 
-    public MoTabSuggestion getSuggestion() {
-        return suggestion;
+    public MoTabId getTabId() {
+        return tabId;
     }
 
-    public MoTab setSuggestion(MoTabSuggestion suggestion) {
-        this.suggestion = suggestion;
+    public MoTab setTabId(MoTabId tabId) {
+        this.tabId = tabId;
         return this;
     }
+
+    public MoBitmap getMoBitmap() {
+        return moBitmap;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public MoTab setContext(Context context) {
+        this.context = context;
+        return this;
+    }
+
+//    public MoTab setView(View view) {
+//        this.view = view;
+//        return this;
+//    }
+//
+//    public LinearLayout getWebLinearLayout() {
+//        return webLinearLayout;
+//    }
+//
+//    public MoTab setWebLinearLayout(LinearLayout webLinearLayout) {
+//        this.webLinearLayout = webLinearLayout;
+//        return this;
+//    }
 
     /**
      * init the whole class
      */
-    private void init(){
-        if(moWebView==null){
-            this.moWebView = new MoWebView(this.context);
-        }
-        initProgressBar();
+    public void init(){
+        if(wasInitAlready)
+            return;
+
+//        if(moWebView==null){
+//            this.moWebView = new MoWebView(this.context);
+//        }
+       // initProgressBar();
         initWebView();
-        initWebLinearLayout();
-        initSearchText();
-        initTabsButton();
-        initSearchBar();
-        initSuggestion();
-        initErrorLayout();
-        initMoreButton();
-        initMoSearchable();
-        initTabType();
-    }
-
-    private void initTabType() {
-        this.tabType = new MoTabType(MoTabType.TYPE_NORMAL,getWebView());
-    }
-
-    private void initSuggestion() {
-        this.suggestion = new MoTabSuggestion(this.context,this.view)
-                .setOnSuggestionClicked(new MoRunnable() {
-                    @Override
-                    public <T> void run(T... args) {
-                        String suggestion = (String)args[0];
-                        if(suggestion != null){
-                            search(suggestion);
-                        }
-                    }
-                });
-        this.suggestion.hide();
-    }
-
-    private void initProgressBar(){
-        this.progressBar = this.view.findViewById(R.id.tab_progress);
-        this.progressBar.setMax(100);
-        this.progressBar.setIndeterminate(false);
-        this.progressBar.setProgress(0);
+      //  initWebLinearLayout();
+      //  initSearchText();
+      //  initTabsButton();
+//        initSearchBar();
+        //initSuggestion();
+     //   initErrorLayout();
+//        initMoreButton();
+//        initMoSearchable();
+        wasInitAlready = true;
     }
 
 
-    @SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
+//
+//    private void initSuggestion() {
+//        this.suggestion = new MoTabSuggestion(this.context,this.view)
+//                .setOnSuggestionClicked(new MoRunnable() {
+//                    @Override
+//                    public <T> void run(T... args) {
+//                        String suggestion = (String)args[0];
+//                        if(suggestion != null){
+//                            search(suggestion);
+//                        }
+//                    }
+//                });
+//        this.suggestion.hide();
+//    }
+
+
+
+
+    //@SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
     protected void initWebView(){
         moWebView.setMoBitmap(this.moBitmap)
-                 .setChromeClient(new MoChromeClient(this.context).setProgressBar(this.progressBar))
+                 .setChromeClient(new MoChromeClient(this.context).setProgressBar(this.tabSearchBar.getProgressBar()))
                  .setOnUpdateUrlListener((url, isReload) -> updateUrl(url))
                  .setOnErrorReceived((view, request, error) -> onErrorReceived(request, error));
         moWebView.init();
+        // todo we need to set the web view for tab type
     }
 
-    private void initWebLinearLayout(){
-        this.webLinearLayout = view.findViewById(R.id.tab_linear_layout);
-    }
+//    private void initWebLinearLayout(){
+//        this.webLinearLayout = view.findViewById(R.id.tab_linear_layout);
+//    }
 
-    /**
-     * search edit text init
-     */
-    private void initSearchText(){
-        //search text
-        searchText = this.view.findViewById(R.id.search_bar_text);
-        searchText.setText(this.url.getUrlString());
-        searchText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+//    /**
+//     * search edit text init
+//     */
+//    private void initSearchText(){
+//        //search text
+//        searchText = this.view.findViewById(R.id.search_bar_text);
+//        searchText.setText(this.url.getUrlString());
+//        searchText.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                if(searchText.hasFocus()){
+//                    // only show suggestions when user is actually editing it
+//                    showSuggestions(charSequence);
+//                }
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {}
+//        });
+//        searchText.setOnFocusChangeListener((view, b) -> {
+//            if(!b){
+//                // hide the suggestions when user is not editing
+//                suggestion.hide();
+//            }
+//        });
+//        searchText.setOnEditorActionListener((textView, i, keyEvent) -> {
+//            onSearch(textView,i,keyEvent);
+//            searchText.clearFocus();
+//            return false;
+//        });
+//    }
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(searchText.hasFocus()){
-                    // only show suggestions when user is actually editing it
-                    showSuggestions(charSequence);
-                }
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {}
-        });
-        searchText.setOnFocusChangeListener((view, b) -> {
-            if(!b){
-                // hide the suggestions when user is not editing
-                suggestion.hide();
-            }
-        });
-        searchText.setOnEditorActionListener((textView, i, keyEvent) -> {
-            onSearch(textView,i,keyEvent);
-            searchText.clearFocus();
-            return false;
-        });
-    }
-
-    /**
-     * shows auto complete text when user is typing
-     * their search or URL
-     * @param charSequence
-     */
-    private void showSuggestions(CharSequence charSequence){
-        if(MoSearchAutoComplete.enabled){
-            // only provide them with search suggestions if they want them
-            MoHTMLAsyncTask htmlAsyncTask = new MoHTMLAsyncTask().setUrl(
-                    MoSearchEngine.instance.suggestionURL(charSequence.toString()));
-            htmlAsyncTask.setOnHtmlReceived(new MoRunnable() {
-                @SafeVarargs
-                @Override
-                public final <T> void run(T... args) {
-                    // getting suggestion from search engine
-                    MoSuggestions s = MoSearchEngine.instance.getSuggestions((String)args[0]);
-                    // add the suggestions from history
-                    MoHistoryManager.addSuggestionsFromHistory(charSequence.toString(),s);
-                    suggestion.show(s);
-                }
-            });
-            htmlAsyncTask.execute();
-        }
-    }
-
-
-    /**
-     * init the tab button
-     */
-    private void initTabsButton() {
-        //tabs button
-        this.tabsNumber = view.findViewById(R.id.tabs_button);
-        this.tabsNumber.setOnClickListener(view -> {
-            notifyTabChanged.notifyTabChanged();
-            MoTabController.instance.onTabsButtonPressed();
-        });
-    }
-
-    /**
-     * init search bar
-     */
-    private void initSearchBar(){
-        this.searchBar = this.view.findViewById(R.id.tab_search_bar);
-    }
+//    /**
+//     * shows auto complete text when user is typing
+//     * their search or URL
+//     * @param charSequence
+//     */
+//    private void showSuggestions(CharSequence charSequence){
+//        if(MoSearchAutoComplete.enabled){
+//            // only provide them with search suggestions if they want them
+//            MoHTMLAsyncTask htmlAsyncTask = new MoHTMLAsyncTask().setUrl(
+//                    MoSearchEngine.instance.suggestionURL(charSequence.toString()));
+//            htmlAsyncTask.setOnHtmlReceived(new MoRunnable() {
+//                @SafeVarargs
+//                @Override
+//                public final <T> void run(T... args) {
+//                    // getting suggestion from search engine
+//                    MoSuggestions s = MoSearchEngine.instance.getSuggestions((String)args[0]);
+//                    // add the suggestions from history
+//                    MoHistoryManager.addSuggestionsFromHistory(charSequence.toString(),s);
+//                    suggestion.show(s);
+//                }
+//            });
+//            htmlAsyncTask.execute();
+//        }
+//    }
 
 
-    /**
-     * inits the error layout
-     */
-    private void initErrorLayout(){
-        this.errorLayout = this.view.findViewById(R.id.tab_error_layout);
-    }
+//    /**
+//     * init the tab button
+//     */
+//    private void initTabsButton() {
+//        //tabs button
+//        this.tabsButton = view.findViewById(R.id.tabs_button);
+//        this.tabsButton.setOnClickListener(view -> {
+//            notifyTabChanged.notifyTabChanged();
+//            MoTabController.instance.onTabsButtonPressed();
+//        });
+//    }
+
+//    /**
+//     * init search bar
+//     */
+//    private void initSearchBar(){
+//        this.searchBar = this.view.findViewById(R.id.tab_search_bar);
+//    }
+
+
+//    /**
+//     * inits the error layout
+//     */
+//    private void initErrorLayout(){
+//        this.errorLayout = this.view.findViewById(R.id.tab_error_layout);
+//    }
 
 
 
-    private void initMoreButton(){
-        this.moreTabButton = this.view.findViewById(R.id.more_bar_button);
-        this.moreTabButton.setOnClickListener(view -> {
-            initMorePopupMenu();
-            moPopupWindow.show(view);
-        });
-    }
-
-    private void initMorePopupMenu(){
-        this.moPopupWindow = new MoPopupWindow(this.context)
-                .groupViewsHorizontally(
-                        new MoPopupItemBuilder(this.context)
-                                .buildImageButton(R.drawable.ic_baseline_chevron_right_24,
-                                        view-> moWebView.goForwardIfYouCan())
-                                .buildCheckedImageButton(R.drawable.ic_baseline_star_24,
-                                        R.drawable.ic_baseline_star_border_24, view -> bookmarkThisUrl(),
-                                        ()-> MoBookmarkManager.has(this.url.getUrlString()))
-                                .buildImageButton(R.drawable.ic_baseline_refresh_24, view-> moWebView.forceReloadFromNetwork())
-                                .build()
-                )
-                .setViews(
-                        new MoPopupItemBuilder(this.context)
-                                .buildTextButton(R.string.find_in_page,
-                                        view -> moSearchable.activateSpecialMode())
-                                .buildTextButton(R.string.bookmark_title,
-                                        view-> BookmarkActivity.startActivity(this.context))
-                                .buildTextButton(R.string.home_page_title,
-                                        view -> search(MoHomePageManager.getCurrentActivatedURL()))
-                                .buildTextButton(R.string.history,
-                                        view-> HistoryActivity.launch(this.context))
-                                .buildTextButton(R.string.share, view -> new MoShare().setText(this.url.getUrlString()).shareText(this.context))
-                                .buildTextButton(R.string.desktop_mode,moWebView.isInDesktopMode()?
-                                        R.drawable.ic_baseline_check_box_24:R.drawable.ic_baseline_check_box_outline_blank_24 , view -> {
-                                    moWebView.enableReverseMode();
-                                })
-                                .build()
-                ).build();
-    }
+//    private void initMoreButton(){
+//        this.moreTabButton = this.view.findViewById(R.id.more_bar_button);
+//        this.moreTabButton.setOnClickListener(view -> {
+//            initMorePopupMenu();
+//            moPopupWindow.show(view);
+//        });
+//    }
+//
+//    private void initMorePopupMenu(){
+//        this.moPopupWindow = new MoPopupWindow(this.context)
+//                .groupViewsHorizontally(
+//                        new MoPopupItemBuilder(this.context)
+//                                .buildImageButton(R.drawable.ic_baseline_chevron_right_24,
+//                                        view-> moWebView.goForwardIfYouCan())
+//                                .buildCheckedImageButton(R.drawable.ic_baseline_star_24,
+//                                        R.drawable.ic_baseline_star_border_24, view -> bookmarkThisUrl(),
+//                                        ()-> MoBookmarkManager.has(this.url.getUrlString()))
+//                                .buildImageButton(R.drawable.ic_baseline_refresh_24, view-> moWebView.forceReloadFromNetwork())
+//                                .build()
+//                )
+//                .setViews(
+//                        new MoPopupItemBuilder(this.context)
+//                                .buildTextButton(R.string.find_in_page,
+//                                        view -> moSearchable.activateSpecialMode())
+//                                .buildTextButton(R.string.bookmark_title,
+//                                        view-> BookmarkActivity.startActivity(this.context))
+//                                .buildTextButton(R.string.home_page_title,
+//                                        view -> search(MoHomePageManager.getCurrentActivatedURL()))
+//                                .buildTextButton(R.string.history,
+//                                        view-> HistoryActivity.launch(this.context))
+//                                .buildTextButton(R.string.share, view -> new MoShare().setText(this.url.getUrlString()).shareText(this.context))
+//                                .buildTextButton(R.string.desktop_mode,moWebView.isInDesktopMode()?
+//                                        R.drawable.ic_baseline_check_box_24:R.drawable.ic_baseline_check_box_outline_blank_24 , view -> {
+//                                    moWebView.enableReverseMode();
+//                                })
+//                                .build()
+//                ).build();
+//    }
 
     /**
      * bookmarks or un-bookmarks this url
      * that the tab is currently showing
      */
-    private void bookmarkThisUrl(){
+    public void bookmarkTheTab(){
         MoBookmarkManager.addOrRemoveIfWasAddedAlready(this.context,this.url.getUrlString(),this.moWebView.getTitle());
     }
 
-
-    private void initMoFindBar(){
-        this.moFindBar = view.findViewById(R.id.tab_find_bar);
+    /**
+     * shares the url text of this tab
+     * with any other app
+     */
+    public void shareTheTab(){
+        new MoShare().setText(this.url.getUrlString()).shareText(this.context);
     }
 
 
-    private void initMoSearchable(){
-        initMoFindBar();
-        this.moSearchable = new MoSearchable(this.context,(ViewGroup) this.view){
-            @Override
-            public void onUpFindPressed() {
-                moWebView.findPrevious();
-            }
-
-            @Override
-            public void onDownFindPressed() {
-                moWebView.findNext();
-            }
-        };
-        this.moSearchable.setSearchOnTextChanged(true)
-                .setSearchTextView(moFindBar.getEditText())
-                .setUpFind(moFindBar.getMiddleButton())
-                .setDownFind(moFindBar.getRightButton())
-                .setCancelButton(moFindBar.LId())
-                .addNormalViews(R.id.tab_search_bar_card_view,R.id.suggestion_tab_card_view,R.id.tab_progress)
-                .addUnNormalViews(moFindBar)
-                .setOnSearchListener(s -> {
-                    this.moWebView.findAllAsync(s, (index, size, finishedFinding) -> {
-                        //disable or enable the buttons based on the index and size
-                        this.moSearchable.updateUpDownFindButtons(index,size);
-                    });
-                })
-                .setOnSearchCanceled(() -> {
-                    // exiting find mode
-                    this.moSearchable.deactivateSpecialMode();
-                    this.moWebView.clearMatches();
-                    this.moSearchable.clearSearch();
-                });
-
-    }
+//    private void initMoFindBar(){
+//        this.moFindBar = view.findViewById(R.id.tab_find_bar);
+//    }
+//
+//
+//    private void initMoSearchable(){
+//        initMoFindBar();
+//        this.moSearchable = new MoSearchable(this.context,(ViewGroup) this.view){
+//            @Override
+//            public void onUpFindPressed() {
+//                moWebView.findPrevious();
+//            }
+//
+//            @Override
+//            public void onDownFindPressed() {
+//                moWebView.findNext();
+//            }
+//        };
+//        this.moSearchable.setSearchOnTextChanged(true)
+//                .setSearchTextView(moFindBar.getEditText())
+//                .setUpFind(moFindBar.getMiddleButton())
+//                .setDownFind(moFindBar.getRightButton())
+//                .setCancelButton(moFindBar.LId())
+//                .addNormalViews(R.id.tab_search_bar_card_view,R.id.suggestion_tab_card_view,R.id.tab_progress)
+//                .addUnNormalViews(moFindBar)
+//                .setOnSearchListener(s -> {
+//                    this.moWebView.findAllAsync(s, (index, size, finishedFinding) -> {
+//                        //disable or enable the buttons based on the index and size
+//                        this.moSearchable.updateUpDownFindButtons(index,size);
+//                    });
+//                })
+//                .setOnSearchCanceled(() -> {
+//                    // exiting find mode
+//                    this.moSearchable.deactivateSpecialMode();
+//                    this.moWebView.clearMatches();
+//                    this.moSearchable.clearSearch();
+//                });
+//
+//    }
 
 
     /**
@@ -548,12 +494,14 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
     public void updateUrl(String u){
         // update url
         this.url.setUrlString(u);
-        // remove focus from search
-        this.searchText.clearFocus();
-        // set the text for url
-        this.searchText.setText(url.getUrlString());
-        // hide keyboard
-        MoKeyboardUtils.hideSoftKeyboard(this.searchText);
+        if(tabSearchBar!=null){
+            // remove focus from search
+            this.tabSearchBar.getSearchText().clearFocus();
+            // set the text for url
+            this.tabSearchBar.getSearchText().setText(url.getUrlString());
+            // hide keyboard
+            MoKeyboardUtils.hideSoftKeyboard(this.tabSearchBar.getSearchText());
+        }
         // save the tab
         saveTab();
     }
@@ -583,9 +531,9 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
     public String getUrl() {
         return url.getUrlString();
     }
-    public View getView() {
-        return view;
-    }
+    //public View getView() {
+    //    return view;
+   // }
 
 
 
@@ -613,32 +561,50 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
         return captureImage;
     }
 
+
     /**
-     * this is for main view (showing the web in main activity)
-     * this method is called when you are trying to set the scene to
-     * this tab
-     * @return a view of web search
+     * makes sure that you can take screen
+     * shots inside normal tabs and you can't inside
+     * private tabs
+     * @param a activity to apply the window rule to
      */
-    @SuppressLint("SetTextI18n")
-    public View getZeroPaddingView(ViewGroup root){
-        // make the search bar visible
-        searchBar.setVisibility(View.VISIBLE);
-        // make sure the tab count is corrects
-        this.tabsNumber.setText(MoTabsManager.size()+"");
-        // making the view padding zero
-        this.view.setPadding(0,0,0,0);
-        updateWebViewIfNotUpdated();
-        MoTabUtils.transitionToInTabMode(this.moWebView,this.webLinearLayout,root);
-        onResume();
-        // if the parent view is not null, make it null so
-        // we can set it to another parent view
-        if(view.getParent() != null) {
-            ((ViewGroup)view.getParent()).removeView(view); // <- fix
-        }
-        return view;
+    public void applyWindowRules(Activity a){
+        // todo
+       // a.getWindow().setStatusBarContrastEnforced();
     }
 
-    private void updateWebViewIfNotUpdated() {
+//    /**
+//     * this is for main view (showing the web in main activity)
+//     * this method is called when you are trying to set the scene to
+//     * this tab
+//     * @return a view of web search
+//     */
+//    @SuppressLint("SetTextI18n")
+//    @Deprecated
+//    public View getZeroPaddingView(){
+//        // make the search bar visible
+//        //searchBar.setVisibility(View.VISIBLE);
+//        // make sure the tab count is corrects
+////        this.tabsButton.setText(MoTabsManager.size()+"");
+////        // making the view padding zero
+////        this.view.setPadding(0,0,0,0);
+////        updateWebViewIfNotUpdated();
+////        MoTabUtils.transitionToInTabMode(this.moWebView,this.webLinearLayout);
+////        onResume();
+////        // if the parent view is not null, make it null so
+////        // we can set it to another parent view
+////        if(view.getParent() != null) {
+////            ((ViewGroup)view.getParent()).removeView(view);
+////        }
+//        return view;
+//    }
+
+    /**
+     * if it has not been updated yet
+     * loads the url inside the web view
+     * and sets is up to date to true
+     */
+    public void updateWebViewIfNotUpdated() {
         // loading the url if it has not been loaded yet
         if(!this.isUpToDate) {
             this.isUpToDate = true;
@@ -647,7 +613,10 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
     }
 
 
-
+    /**
+     * captures a bitmap preview of the web view
+     * and saves it async to boost the performance
+     */
     public void captureAndSaveWebViewBitmapAsync(){
         // needs to be outside of async b/c the capture bitmap should
         // occur on web view thread not async
@@ -655,7 +624,10 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
         AsyncTask.execute(() -> {
             MoLog.printRunTime("bitmapSave" + moBitmap.getName(), () -> {
                 try {
-                    moBitmap.saveBitmap(context);
+                    // save it if the bitmap is not null
+                    if(moBitmap.getBitmap()!=null){
+                        moBitmap.saveBitmap(context);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -686,8 +658,9 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
     /**
      * deletes the file of the tab completely
      */
-    public void deleteTab(){
+    public void deleteTab() {
         MoFileManagerUtils.delete(context,this);
+        deleteWebViewBitmap(context);
     }
 
 
@@ -713,7 +686,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
         this.moBitmap.load(c[1],context);
         this.moWebView.load(c[2],context);
         this.tabId.load(c[3],context);
-        this.init();
+        //this.init();
     }
 
 

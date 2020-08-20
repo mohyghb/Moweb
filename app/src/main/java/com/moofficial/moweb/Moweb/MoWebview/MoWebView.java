@@ -236,7 +236,7 @@ public class MoWebView extends WebView implements MoSavable, MoLoadable {
     }
 
     public String getBaseUrl(){
-        return MoUrlUtils.getBaseUrl(getUrl());
+        return MoUrlUtils.getBaseUrl(this.url);
     }
 
 

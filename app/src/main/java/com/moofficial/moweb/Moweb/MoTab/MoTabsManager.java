@@ -1,12 +1,10 @@
 package com.moofficial.moweb.Moweb.MoTab;
 
-import android.app.Activity;
 import android.content.Context;
 import android.widget.Toast;
 
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManager;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManagerUtils;
-
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabExceptions.MoTabNotFoundException;
 import com.moofficial.moweb.Moweb.MoTab.MoTabType.MoTabType;
@@ -27,7 +25,7 @@ public class MoTabsManager {
 
     private static ArrayList<MoTab> tabs = new ArrayList<>();
     private static ArrayList<MoTab> privateTabs = new ArrayList<>();
-    private static MoTabRecyclerAdapter tabRecyclerAdapter,incognitoTabAdapter;
+//    private static MoTabRecyclerAdapter tabRecyclerAdapter,incognitoTabAdapter;
 
     public static ArrayList<MoTab> getTabs(){
         return tabs;
@@ -35,18 +33,18 @@ public class MoTabsManager {
     public static ArrayList<MoTab> getPrivateTabs(){
         return privateTabs;
     }
-    public static MoTabRecyclerAdapter getTabRecyclerAdapter() {
-        return tabRecyclerAdapter;
-    }
-    public static void setTabRecyclerAdapter(MoTabRecyclerAdapter tabRecyclerAdapter) {
-        MoTabsManager.tabRecyclerAdapter = tabRecyclerAdapter;
-    }
-    public static MoTabRecyclerAdapter getIncognitoTabAdapter() {
-        return incognitoTabAdapter;
-    }
-    public static void setPrivateTabAdapter(MoTabRecyclerAdapter incognitoTabAdapter) {
-        MoTabsManager.incognitoTabAdapter = incognitoTabAdapter;
-    }
+//    public static MoTabRecyclerAdapter getTabRecyclerAdapter() {
+//        return tabRecyclerAdapter;
+//    }
+//    public static void setTabRecyclerAdapter(MoTabRecyclerAdapter tabRecyclerAdapter) {
+//        MoTabsManager.tabRecyclerAdapter = tabRecyclerAdapter;
+//    }
+//    public static MoTabRecyclerAdapter getIncognitoTabAdapter() {
+//        return incognitoTabAdapter;
+//    }
+//    public static void setPrivateTabAdapter(MoTabRecyclerAdapter incognitoTabAdapter) {
+//        MoTabsManager.incognitoTabAdapter = incognitoTabAdapter;
+//    }
 
 
     /**
@@ -54,7 +52,7 @@ public class MoTabsManager {
      * @param context
      * @param url
      */
-    private static void newTab(Context context, String url, MoTab parentTab){
+    static void newTab(Context context, String url, MoTab parentTab){
         MoTab tab = new MoTab(context,url);
         tab.setParentTab(parentTab);
         tabs.add(tab);
@@ -65,7 +63,7 @@ public class MoTabsManager {
      * @param a
      * @param url
      */
-    private static void newPrivateTab(Activity a, String url, MoTab parentTab){
+    static void newPrivateTab(Context a, String url, MoTab parentTab){
         MoIncognitoTab t = new MoIncognitoTab(a,url);
         t.setParentTab(parentTab);
         privateTabs.add(t);
@@ -174,11 +172,9 @@ public class MoTabsManager {
         switch (type){
             case MoTabType.TYPE_NORMAL:
                 removeTabStuff(index,context,tabs);
-                notifyItemRemoved(index,tabRecyclerAdapter);
                 break;
             case MoTabType.TYPE_PRIVATE:
                 removeTabStuff(index,context, privateTabs);
-                notifyItemRemoved(index,incognitoTabAdapter);
                 break;
         }
         MoTabController.instance.notifyRemoved(type);
@@ -194,8 +190,8 @@ public class MoTabsManager {
      * @param tabs
      */
     private static void removeTabStuff(int index,Context context,ArrayList<MoTab> tabs){
-        // deleting the bitmap used to show user
-        tabs.get(index).deleteWebViewBitmap(context);
+        // deleting the tab (bitmap and file info)
+        tabs.get(index).deleteTab();
         // removing it from tabs list
         tabs.remove(index);
     }
@@ -221,24 +217,32 @@ public class MoTabsManager {
     public static void addTab(Context context, String url,boolean getCurrentAsParent) {
         MoTabsManager.newTab(context, url,getCurrentAsParent?MoTabController.instance.getCurrent():null);
         int index = tabs.size() - 1;
-        MoTabController.instance.setIndex(index,MoTabType.TYPE_NORMAL);
-        notifyItemInserted(index, tabRecyclerAdapter);
+        setCurrentTabIndex(index,MoTabType.TYPE_NORMAL);
     }
+
+
 
 
     /**
      * adds incognito tab with parent tab
-     * @param a
-     * @param url
+     * @param c context of app
+     * @param url url to open the new private tab in
      */
-    public static void addPrivateTab(Activity a, String url, boolean getCurrentAsParent){
-        MoTabsManager.newPrivateTab(a,url,getCurrentAsParent?MoTabController.instance.getCurrent():null);
+    public static void addPrivateTab(Context c, String url, boolean getCurrentAsParent){
+        MoTabsManager.newPrivateTab(c,url,getCurrentAsParent?MoTabController.instance.getCurrent():null);
         int index = privateTabs.size() - 1;
-        MoTabController.instance.setIndex(index,MoTabType.TYPE_PRIVATE);
-        notifyItemInserted(index, incognitoTabAdapter);
+        setCurrentTabIndex(index,MoTabType.TYPE_PRIVATE);
     }
 
 
+    /**
+     *
+     * @param index
+     * @param type
+     */
+    static void setCurrentTabIndex(int index, @MoTabType.TabType int type){
+        MoTabController.instance.setIndex(index,type);
+    }
 
 
     /**
@@ -310,27 +314,39 @@ public class MoTabsManager {
 
     // tab recycler methods
 
-    /**
-     * notifies the recycler adapter that an item has been inserted
-     * @param index of the item
-     * @param tabRecyclerAdapter corresponding adapter
-     */
-    private static void notifyItemInserted(int index, MoTabRecyclerAdapter tabRecyclerAdapter) {
-        if (tabRecyclerAdapter != null) {
-            tabRecyclerAdapter.notifyItemInserted(index);
-        }
-    }
-
-    /**
-     * notifies the recycler adapter that an item has been removed
-     * @param index of the item
-     * @param tabRecyclerAdapter corresponding adapter
-     */
-    private static void notifyItemRemoved(int index, MoTabRecyclerAdapter tabRecyclerAdapter) {
-        if (tabRecyclerAdapter != null) {
-            tabRecyclerAdapter.notifyItemRemoved(index);
-        }
-    }
+//    /**
+//     * notifies the recycler adapter that an item has been inserted
+//     * @param index of the item
+//     * @param tabRecyclerAdapter corresponding adapter
+//     */
+//    private static void notifyItemInserted(int index, MoTabRecyclerAdapter tabRecyclerAdapter) {
+//        if (tabRecyclerAdapter != null) {
+//            tabRecyclerAdapter.notifyItemInserted(index);
+//        }
+//    }
+//
+//    /**
+//     * notifies item range inserted
+//     * @param index starting position of items that were added
+//     * @param count number of items added
+//     * @param adapter adapter to notify
+//     */
+//    private static void notifyItemRangeInserted(int index,int count,MoTabRecyclerAdapter adapter){
+//        if(adapter!=null){
+//            adapter.notifyItemRangeInserted(index,count);
+//        }
+//    }
+//
+//    /**
+//     * notifies the recycler adapter that an item has been removed
+//     * @param index of the item
+//     * @param tabRecyclerAdapter corresponding adapter
+//     */
+//    private static void notifyItemRemoved(int index, MoTabRecyclerAdapter tabRecyclerAdapter) {
+//        if (tabRecyclerAdapter != null) {
+//            tabRecyclerAdapter.notifyItemRemoved(index);
+//        }
+//    }
 
 
     /**

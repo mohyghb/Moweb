@@ -72,7 +72,7 @@ public class MoTabSectionManager {
     // init the adapter fro normal tabs
     private void initNormalAdapter(){
         this.mTabAdapter = new MoTabRecyclerAdapter(MoTabsManager.getTabs(),mainActivity,showInGrid);
-        MoTabsManager.setTabRecyclerAdapter(mTabAdapter);
+//        MoTabsManager.setTabRecyclerAdapter(mTabAdapter);
     }
 
     /**
@@ -82,14 +82,16 @@ public class MoTabSectionManager {
     private void initRecyclerView() {
         initNormalAdapter();
         tabsRecyclerView = MoRecyclerUtils.get(mainView.findViewById(R.id.recycler_tabs_view), mTabAdapter)
-                .setOrientation(LinearLayoutManager.HORIZONTAL);
+                .setOrientation(LinearLayoutManager.HORIZONTAL)
+                .setMaxHeight(mainActivity.getResources().getDisplayMetrics().heightPixels);
+
         tabsRecyclerView.show();
     }
 
     // init the adapter for incognito tabs
     private void initIncognitoAdapter(){
         this.mIncognitoAdapter = new MoTabRecyclerAdapter(MoTabsManager.getPrivateTabs(),mainActivity,showInGrid);
-        MoTabsManager.setPrivateTabAdapter(mIncognitoAdapter);
+        //MoTabsManager.setPrivateTabAdapter(mIncognitoAdapter);
     }
 
     private void initIncognitoRecyclerView(){
@@ -170,12 +172,15 @@ public class MoTabSectionManager {
      * changes the grid view to list view and vice versa
      */
     private void changeGrid() {
-//        initNormalAdapter();
-//        initIncognitoAdapter();
         this.tabsRecyclerView.switchLayoutManager(showInGrid?MoRecyclerView.GRID_LAYOUT_MANAGER:
                 MoRecyclerView.LINEAR_LAYOUT_MANAGER);
         this.incognitoTabsRecyclerView.switchLayoutManager(showInGrid?MoRecyclerView.GRID_LAYOUT_MANAGER:
                 MoRecyclerView.LINEAR_LAYOUT_MANAGER);
+    }
+
+    public void update(){
+        mTabAdapter.notifyDataSetChanged();
+        mIncognitoAdapter.notifyDataSetChanged();
     }
 
     /**
