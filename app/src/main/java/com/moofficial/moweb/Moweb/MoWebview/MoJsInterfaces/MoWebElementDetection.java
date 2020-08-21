@@ -1,16 +1,17 @@
-package com.moofficial.moweb.Moweb.MoWebview;
+package com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces;
 
 import android.content.Context;
 import android.webkit.JavascriptInterface;
 
 import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
-public class MoWebElementDetection extends Object {
+public class MoWebElementDetection implements MoJsInterface{
 
     public static final String CLASS_NAME = "mowebelement";
     public static final String UNDEFINED = "undefined";
@@ -99,7 +100,7 @@ public class MoWebElementDetection extends Object {
 
 
 
-    static String injectJs(Context c) {
+    public static String injectJs(Context c) {
         if(!INJECTED_JS.isEmpty()){
             return INJECTED_JS;
         }
@@ -137,12 +138,12 @@ public class MoWebElementDetection extends Object {
      * @param input
      * @return
      */
-    static boolean isValidVar(String input){
+    public static boolean isValidVar(String input){
         return input != null && !input.isEmpty() && !input.equals(UNDEFINED);
     }
 
 
-    boolean isValidDialog() {
+    public boolean isValidDialog() {
         return isValidVar(href) || isValidVar(innerText);
     }
 
@@ -169,5 +170,10 @@ public class MoWebElementDetection extends Object {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    public String getClassName() {
+        return CLASS_NAME;
     }
 }

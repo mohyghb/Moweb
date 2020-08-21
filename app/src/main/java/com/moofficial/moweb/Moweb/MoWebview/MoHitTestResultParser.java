@@ -20,6 +20,8 @@ import com.moofficial.moweb.MoClipboard.MoClipboard;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoPopUpTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
+import com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces.MoWebElementDetection;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 import com.moofficial.moweb.R;
 
 import java.util.Objects;
@@ -47,7 +49,7 @@ public class MoHitTestResultParser {
     private Dialog dialog;
 
 
-    MoHitTestResultParser(Context context, MoWebView webView){
+    public MoHitTestResultParser(Context context, MoWebView webView){
         this.context = context;
         this.webView = webView;
         // for detecting when the user clicks an element
@@ -57,7 +59,7 @@ public class MoHitTestResultParser {
     }
 
 
-    boolean createDialog() {
+    public boolean createDialog() {
         if(!elementDetection.isValidDialog()) {
             return false;
         }
@@ -171,7 +173,7 @@ public class MoHitTestResultParser {
     /**
      * this method returns the text that is selected in web view
      */
-    void onTextSelected(){
+    public void onTextSelected(){
         webView.evaluateJavascript("(function(){return window.getSelection().toString()})()",
                 value -> {
                     selectedText = value.replace("\"","");

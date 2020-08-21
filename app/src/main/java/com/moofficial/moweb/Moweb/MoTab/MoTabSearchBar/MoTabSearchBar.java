@@ -27,7 +27,7 @@ import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabSuggestion;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
-import com.moofficial.moweb.Moweb.MoWebview.MoWebView;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 import com.moofficial.moweb.R;
 
 public class MoTabSearchBar extends MoConstraint {

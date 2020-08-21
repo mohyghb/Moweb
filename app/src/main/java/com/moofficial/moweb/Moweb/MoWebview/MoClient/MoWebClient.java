@@ -9,6 +9,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+
 import java.net.URISyntaxException;
 
 public class MoWebClient extends WebViewClient {
@@ -33,7 +35,7 @@ public class MoWebClient extends WebViewClient {
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-
+        MoLog.print("should ovveride " + request.getUrl() + "====" + request.getMethod()  +"-=====" + request.isForMainFrame());
 
         String url = request.getUrl().toString();
         if (url.startsWith(HTTP)) return false;//open web links as usual
@@ -73,7 +75,6 @@ public class MoWebClient extends WebViewClient {
         }
         return true;//do nothing in other cases
     }
-
 
 
 

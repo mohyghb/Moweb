@@ -9,6 +9,8 @@ import android.webkit.WebView;
 
 import androidx.core.app.ActivityCompat;
 
+import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
+
 public class MoWebUtils {
 
     private static final String desktop_mode = "Mozilla/5.0 (X11; Linux x86_64)" +
@@ -51,7 +53,7 @@ public class MoWebUtils {
      * @param webView
      * @param enabled
      */
-    public static void setDesktopMode(MoWebView webView,boolean enabled) {
+    public static void setDesktopMode(MoWebView webView, boolean enabled) {
         final WebSettings webSettings = webView.getSettings();
         final String newUserAgent;
         if (enabled) {
@@ -66,7 +68,7 @@ public class MoWebUtils {
         }
         webSettings.setUserAgentString(newUserAgent);
         webSettings.setLoadWithOverviewMode(enabled);
-        webSettings.setUseWideViewPort(enabled);
+        webSettings.setUseWideViewPort(true);
         webView.forceReloadFromNetwork();
     }
 

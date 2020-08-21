@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.ViewGroup;
 
-import com.moofficial.moweb.Moweb.MoWebview.MoWebView;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 
 public class MoTabUtils {
 

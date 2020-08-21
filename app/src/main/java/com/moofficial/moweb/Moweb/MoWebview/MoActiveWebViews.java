@@ -1,5 +1,7 @@
 package com.moofficial.moweb.Moweb.MoWebview;
 
+import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
+
 import java.util.LinkedList;
 import java.util.Queue;
 

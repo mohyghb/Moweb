@@ -6,7 +6,7 @@ import android.content.Context;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
-import com.moofficial.moweb.Moweb.MoWebview.MoWebView;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 
 import java.util.ArrayList;
 import java.util.Arrays;

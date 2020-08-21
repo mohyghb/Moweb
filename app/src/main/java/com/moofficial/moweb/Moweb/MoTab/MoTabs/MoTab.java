@@ -34,7 +34,7 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoUrl.MoURL;
 import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
-import com.moofficial.moweb.Moweb.MoWebview.MoWebView;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 
 import java.io.IOException;
 
@@ -226,19 +226,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
         if(wasInitAlready)
             return;
 
-//        if(moWebView==null){
-//            this.moWebView = new MoWebView(this.context);
-//        }
-       // initProgressBar();
         initWebView();
-      //  initWebLinearLayout();
-      //  initSearchText();
-      //  initTabsButton();
-//        initSearchBar();
-        //initSuggestion();
-     //   initErrorLayout();
-//        initMoreButton();
-//        initMoSearchable();
         wasInitAlready = true;
     }
 
@@ -609,6 +597,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
         if(!this.isUpToDate) {
             this.isUpToDate = true;
             moWebView.loadUrl(this.url.getUrlString());
+            MoLog.print("not up to date");
         }
     }
 

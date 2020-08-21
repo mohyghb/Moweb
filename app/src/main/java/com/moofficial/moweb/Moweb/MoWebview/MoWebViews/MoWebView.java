@@ -1,14 +1,17 @@
-package com.moofficial.moweb.Moweb.MoWebview;
+package com.moofficial.moweb.Moweb.MoWebview.MoWebViews;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+
+import androidx.core.widget.NestedScrollView;
 
 import com.moofficial.moessentials.MoEssentials.MoBitmap.MoBitmap;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
@@ -20,17 +23,23 @@ import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoWebClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
+import com.moofficial.moweb.Moweb.MoWebview.MoHitTestResultParser;
+import com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces.MoJsResize;
+import com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces.MoWebElementDetection;
 import com.moofficial.moweb.Moweb.MoWebview.MoStackTabHistory.MoStackTabHistory;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnPageFinishedListener;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnReceivedError;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnResizeWebViewListener;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnUpdateUrlListener;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebState;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebUtils;
 
 // a web view which has more helper functions
-public class MoWebView extends WebView implements MoSavable, MoLoadable {
+public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable {
 
 
 
     private Context context;
-   // private WebView wv;
     private MoWebClient client = new MoWebClient() {
         @Override
         public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
@@ -45,14 +54,30 @@ public class MoWebView extends WebView implements MoSavable, MoLoadable {
         }
         @Override
         public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
             MoLog.print("on page finished "+view.getProgress()+"" + url);
+            // capture bitmap with a delay of one second after the page has been finished
             if(captureBitmapWhenFinishedLoading){
                 captureBitmapWithDelay(1000);
             }
             // inject the js to web view
             evaluateJavascript(MoWebElementDetection.injectJs(context),null);
+            super.onPageFinished(view, url);
+            onPageFinishedListener.onFinished(view,url);
         }
+
+//        @Nullable
+//        @Override
+//        public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+//            // getting the height of the web view and calling the js interface
+////            if(request.isForMainFrame() || request.hasGesture()){
+////                MoLog.print("for main frame or gesture");
+////                //MoLog.print("intercept " + request.getUrl() + "====" + request.getMethod()  +"-=====" + request.isForMainFrame());
+////                view.post(() -> view.loadUrl("javascript:MoJsResize.resize(document.body.getBoundingClientRect().height)"));
+////            }
+//
+//            return super.shouldInterceptRequest(view, request);
+//        }
+
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
             onErrorReceived.onReceivedError(view,request,error);
@@ -66,9 +91,13 @@ public class MoWebView extends WebView implements MoSavable, MoLoadable {
     private MoStackTabHistory stackTabHistory = new MoStackTabHistory();
     private MoOnUpdateUrlListener onUpdateUrlListener = (url, isReload) -> {};
     private MoOnReceivedError onErrorReceived = (view, request, error) -> {};
+    private MoOnPageFinishedListener onPageFinishedListener = (view, url) -> {};
     private MoBitmap moBitmap;
+    private MoJsResize jsResize;
+    private MoWebState webState = new MoWebState();
     private boolean captureBitmap = true;
     private boolean captureBitmapWhenFinishedLoading = false;
+    private boolean enableWebViewResize = true;
     private boolean saveHistory = true;
     private boolean isInDesktopMode = false;
     private boolean isPaused = true;
@@ -85,11 +114,6 @@ public class MoWebView extends WebView implements MoSavable, MoLoadable {
 
     public MoWebView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.context = context;
-    }
-
-    public MoWebView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
         this.context = context;
     }
 
@@ -173,6 +197,14 @@ public class MoWebView extends WebView implements MoSavable, MoLoadable {
         return this;
     }
 
+    public MoWebState getWebState() {
+        return webState;
+    }
+
+    public MoWebView setWebState(MoWebState webState) {
+        this.webState = webState;
+        return this;
+    }
 
     public boolean isCaptureBitmap() {
         return captureBitmap;
@@ -180,6 +212,15 @@ public class MoWebView extends WebView implements MoSavable, MoLoadable {
 
     public MoWebView setCaptureBitmap(boolean captureBitmap) {
         this.captureBitmap = captureBitmap;
+        return this;
+    }
+
+    public boolean isEnableWebViewResize() {
+        return enableWebViewResize;
+    }
+
+    public MoWebView setEnableWebViewResize(boolean enableWebViewResize) {
+        this.enableWebViewResize = enableWebViewResize;
         return this;
     }
 
@@ -192,6 +233,15 @@ public class MoWebView extends WebView implements MoSavable, MoLoadable {
         return this;
     }
 
+    public MoOnPageFinishedListener getOnPageFinishedListener() {
+        return onPageFinishedListener;
+    }
+
+    public MoWebView setOnPageFinishedListener(MoOnPageFinishedListener onPageFinishedListener) {
+        this.onPageFinishedListener = onPageFinishedListener;
+        return this;
+    }
+
     @SuppressLint({"ClickableViewAccessibility"})
     public void init() {
         initWebView();
@@ -199,6 +249,7 @@ public class MoWebView extends WebView implements MoSavable, MoLoadable {
         // user long presses over an element of web view
         initStackTabHistory();
         initHitTestResult();
+        addJsInterfaces();
         enableCorrectMode();
     }
 
@@ -219,6 +270,8 @@ public class MoWebView extends WebView implements MoSavable, MoLoadable {
         webSettings.setDisplayZoomControls(false);
         // if we have it inside cache, load it from there, else use network
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        // showing inside overlay scroll bars
+        setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
     }
 
 
@@ -234,6 +287,38 @@ public class MoWebView extends WebView implements MoSavable, MoLoadable {
             }
         });
     }
+
+    /**
+     * adds all the necessary js interfaces
+     * that are included inside the js interface list
+     */
+    private void addJsInterfaces() {
+        addResizeWebViewJs();
+    }
+
+    /**
+     * makes the web view change it's height
+     * when the content height changes
+     * this is useful
+     */
+    private void addResizeWebViewJs() {
+        if(enableWebViewResize){
+            // add the resize web view on search finished js interface
+            jsResize = new MoJsResize();
+            addJavascriptInterface(jsResize,jsResize.getClassName());
+        }
+    }
+
+    /**
+     * when resizing from an activity
+     * @param l
+     * @return
+     */
+    public MoWebView setOnResizeWebViewListener(MoOnResizeWebViewListener l){
+        this.jsResize.setOnResizeWebViewListener(l);
+        return this;
+    }
+
 
     public String getBaseUrl(){
         return MoUrlUtils.getBaseUrl(this.url);
@@ -421,16 +506,32 @@ public class MoWebView extends WebView implements MoSavable, MoLoadable {
 
     /**
      * moves the web view to the view group that is passed
-     * @param viewGroup
+     * @param viewGroup to move the web view inside there
+     * @param lp layout params of the web view inside that view group
      */
-    public void moveWebViewTo(ViewGroup viewGroup,int width, int height){
+    public void moveWebViewTo(ViewGroup viewGroup, ViewGroup.LayoutParams lp){
         if(this.getParent()!=null){
             // it has a parent, remove the web view from the parent first
             ((ViewGroup)getParent()).removeView(this);
         }
-        viewGroup.addView(this,new ViewGroup.LayoutParams(width,height));
+        viewGroup.addView(this,lp);
     }
 
+    /**
+     * moves the web view to the view group that is passed
+     * @param viewGroup to move the web view inside there
+     */
+    public void moveWebViewTo(ViewGroup viewGroup,int width, int height){
+       moveWebViewTo(viewGroup,new ViewGroup.LayoutParams(width,height));
+    }
+
+    /**
+     * moves the web view to the view group that is passed
+     * @param viewGroup to move the web view inside there
+     *                  we automatically set the width and height to
+     *                  match parent (you can use other methods to specify
+     *                  height and width)
+     */
     public void moveWebViewTo(ViewGroup viewGroup){
         moveWebViewTo(viewGroup,ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
@@ -438,18 +539,35 @@ public class MoWebView extends WebView implements MoSavable, MoLoadable {
 
 
 
+
+    /**
+     * restores the state of the web view
+     * like: x,y position where it was left off
+     * and the height and width of it
+     * @param n
+     */
+    public void restoreState(NestedScrollView n){
+        webState.applyState(this,n);
+    }
+
+
+    @Override
     public void onResume(){
+        MoLog.print("web view on Resume()");
         super.onResume();
         isPaused = false;
     }
 
+    @Override
     public void onPause(){
+        MoLog.print("web view on pause()");
         super.onPause();
         isPaused = true;
     }
 
     public void onDestroy(){
         super.destroy();
+        //todo remove all the js interfaces
     }
 
     public boolean isPaused() {
@@ -461,10 +579,11 @@ public class MoWebView extends WebView implements MoSavable, MoLoadable {
         String[] c = MoFile.loadable(s);
         this.stackTabHistory.load(c[0],context);
         this.isInDesktopMode = Boolean.parseBoolean(c[1]);
+        this.webState.load(c[2],context);
     }
 
     @Override
     public String getData() {
-        return MoFile.getData(this.stackTabHistory.getData(),this.isInDesktopMode);
+        return MoFile.getData(this.stackTabHistory.getData(),this.isInDesktopMode,this.webState);
     }
 }

@@ -168,11 +168,11 @@ public class MainActivity extends AppCompatActivity {
         MoTabsManager.onDestroy();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MoTabController.instance.onPause();
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        MoTabController.instance.onPause();
+//    }
 
 
 
