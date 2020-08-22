@@ -1,17 +1,24 @@
 package com.moofficial.moweb;
 
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.os.Bundle;
+import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.Window;
 
-import com.google.android.material.appbar.AppBarLayout;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartCoordinatorActivity;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoAnimation.MoTransitions.MoCircularTransition;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewGroupUtils.MoAppbar.MoAppbarUtils;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewGroupUtils.MoCoordinatorUtils;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar.MoTabSearchBar;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 
-public class MoTabActivity extends MoSmartActivity {
+public class MoTabActivity extends MoSmartCoordinatorActivity {
 
 
     private MoTabSearchBar moTabSearchBar;
@@ -19,106 +26,141 @@ public class MoTabActivity extends MoSmartActivity {
     private MoWebView webView;
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        MoCircularTransition t = new MoCircularTransition();
+       // t.setSlideEdge(Gravity.START);
+        //t.setDuration(2000);
+        Window w = getWindow();
+        w.setEnterTransition(t);
+        w.setExitTransition(t);
+//        w.setAllowReturnTransitionOverlap(true);
+//        w.setAllowEnterTransitionOverlap(true);
+
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
     protected void init() {
-       // getRootView().setFitsSystemWindows(true);
+
+
+
         MoAppbarUtils.snapNoToolbar(collapsingToolbarLayout);
-//        snapAppbar();
-//        noToolbarNeeded();
+        appBarLayout.setExpanded(false);
+
 
         this.tab = MoTabController.instance.getCurrent();
-
         this.moTabSearchBar = new MoTabSearchBar(this)
                 .setTab(tab)
                 .setTabOnSearchListener(search -> tab.search(search))
                 .setTextSearch(tab.getUrl())
                 .setOnTabsButtonClicked(view -> {
                     MoTabController.instance.onTabsButtonPressed();
-                    finish();
+                    supportFinishAfterTransition();
+//                    finishAfterTransition();
+                    //exitReveal();
                 })
                 .setNumberOfTabs(MoTabsManager.size());
         this.tab.init();
         tab.updateWebViewIfNotUpdated();
         webView = tab.getMoWebView();
 
-//        webView.setOnResizeWebViewListener(h -> {
-//            int newHeight = (int) (h * getResources().getDisplayMetrics().density);
-//            MoLog.print("diff = " + (newHeight - webView.getWebState().getHeight()));
-//            if(newHeight!= webView.getWebState().getHeight()){
-//                // saving it for later use (x and y scroll should be zero to show the top of the web view)
-//                webView.getWebState().setHeight(newHeight).setScrollX(0).setScrollY(0);
-//                // what to do when we resize it
-//                // we are resizing the web view so it only shows the
-//                // height that it needs
-//                runOnUiThread(() -> {
-//                    TransitionManager.beginDelayedTransition(getGroupRootView(),new ChangeBounds());
-//                    webView.restoreState((NestedScrollView) null);
-//                });
-//                MoLog.print("resize");
-//            }
-//        });
-//        webView.setOnPageFinishedListener(new MoOnPageFinishedListener() {
-//            @Override
-//            public void onFinished(WebView view, String url) {
-//                nestedScrollView.scrollTo(0,0);
-//            }
-//        });
 
-        /**
-         * construction
-         */
-
-        coordinatorLayout.removeView(nestedScrollView);
-
-        CoordinatorLayout.LayoutParams lp = new CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.MATCH_PARENT,
-                CoordinatorLayout.LayoutParams.MATCH_PARENT);
-        lp.setBehavior(new AppBarLayout.ScrollingViewBehavior());
-
-       // webView.setLayoutParams(lp);
+        // todo add back the on touch listener stuff
         webView.setOnTouchListener((view, motionEvent) -> false);
         webView.resumeTimers();
         webView.setNestedScrollingEnabled(true);
-        webView.moveWebViewTo(coordinatorLayout,lp);
-
-      //  coordinatorLayout.addView(webView);
-
-
-//        webView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-//            @Override
-//            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-//                MoLog.print(String.format("%d,%d,%d,%d",i,i1,i2,i3));
-//            }
-//        });
-
-        appBarLayout.setExpanded(false);
+        webView.moveWebViewTo(coordinatorLayout, MoCoordinatorUtils.getScrollingParams());
 
 
 
-        /**
-         * construction
-         */
+
+
+
+
 
         //MoTabUtils.transitionToInTabMode(webView,linearNested.getLinearLayout());
         linearBottom.addView(moTabSearchBar);
 
 
+//        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                enterReveal();
+//                rootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//            }
+//        });
+
+    }
+
+
+    void enterReveal() {
+        // previously invisible view
+        final View myView = rootView;
+        //myView.measure(0,0);
+        // get the center for the clipping circle
+        int cx = getWidthPixels() / 2;
+        int cy = getHeightPixels() / 2;
+
+        // get the final radius for the clipping circle
+        float finalRadius = (float) Math.hypot(cx, cy);
+
+        // create the animator for this view (the start radius is zero)
+        Animator anim = ViewAnimationUtils.createCircularReveal(myView, cx, cy, 0f, finalRadius);
+
+        // make the view visible and start the animation
+        myView.setVisibility(View.VISIBLE);
+        anim.start();
+        MoLog.print("enter reveal");
+    }
+
+    void exitReveal() {
+        // previously visible view
+        final View myView = rootView;
+
+        // get the center for the clipping circle
+        int cx = getWidthPixels() / 2;
+        int cy = getHeightPixels() / 2;
+
+        // get the initial radius for the clipping circle
+        int initialRadius = getHeightPixels();
+
+        // create the animation (the final radius is zero)
+        Animator anim =
+                ViewAnimationUtils.createCircularReveal(myView, cx, cy, initialRadius, 0);
+
+        // make the view invisible when the animation is done
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                rootView.setVisibility(View.INVISIBLE);
+                finish();
+                overridePendingTransition(0,0);
+                //myView.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        // start the animation
+        anim.start();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // restore web view
-        //webView.restoreState(nestedScrollView);
-
-       // tab.onResume();
+        // todo
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        // saving web state
-//        webView.getWebState()
-//                .setScrollX(nestedScrollView.getScrollX())
-//                .setScrollY(nestedScrollView.getScrollY());
+        // todo
     }
 
     @Override
@@ -126,6 +168,7 @@ public class MoTabActivity extends MoSmartActivity {
         super.onDestroy();
         // destroying the search bar for tab
         this.moTabSearchBar.onDestroy();
+        // todo
     }
 
     @Override

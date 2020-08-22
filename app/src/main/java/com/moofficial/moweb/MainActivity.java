@@ -1,9 +1,12 @@
 package com.moofficial.moweb;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.transition.Slide;
+import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
 
@@ -13,6 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoAnimation.MoAnimation;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoAnimation.MoTransitions.MoCircularTransition;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoSwitchers.MoSectionViewManager;
 import com.moofficial.moweb.MoSection.MoSectionManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
@@ -41,6 +45,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         WebView.enableSlowWholeDocumentDraw();
+
+
+        MoCircularTransition t = new MoCircularTransition();
+       // t.setSlideEdge(Gravity.START);
+        //t.setDuration(2000);
+        Window w = getWindow();
+        w.setEnterTransition(t);
+        w.setExitTransition(t);
+//        w.setAllowReturnTransitionOverlap(true);
+//        w.setAllowEnterTransitionOverlap(true);
+
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -81,7 +99,14 @@ public class MainActivity extends AppCompatActivity {
                 .addSection(IN_TAB_VIEW,linearLayout)
                 .setTransitionIn(new Slide())
                 .setTransitionOut(new Slide());
-        changeContentView();
+
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                changeContentView();
+                rootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
     }
 
 
@@ -108,7 +133,10 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case IN_TAB_VIEW:
                 if(MoTabController.instance.isNotOutOfOptions()){
-                    startActivity(new Intent(this,MoTabActivity.class));
+                    startActivity(new Intent(this,MoTabActivity.class),
+                            ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+                    //overridePendingTransition(MoAnimation.LEFT_TO_RIGHT,MoAnimation.RIGHT_TO_LEFT);
+
 //                    MoTab t = MoTabController.instance.getCurrent();
 //                    // removing everything from linear layout
 //                    linearLayout.removeAllViews();
@@ -127,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+
 
 
     @Override

@@ -11,8 +11,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import androidx.core.widget.NestedScrollView;
-
 import com.moofficial.moessentials.MoEssentials.MoBitmap.MoBitmap;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
@@ -24,12 +22,10 @@ import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoWebClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoHitTestResultParser;
-import com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces.MoJsResize;
 import com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces.MoWebElementDetection;
 import com.moofficial.moweb.Moweb.MoWebview.MoStackTabHistory.MoStackTabHistory;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnPageFinishedListener;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnReceivedError;
-import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnResizeWebViewListener;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnUpdateUrlListener;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebState;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebUtils;
@@ -62,21 +58,9 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
             // inject the js to web view
             evaluateJavascript(MoWebElementDetection.injectJs(context),null);
             super.onPageFinished(view, url);
-            onPageFinishedListener.onFinished(view,url);
+            MoWebView.this.onPageFinishedListener.onFinished(view,url);
         }
 
-//        @Nullable
-//        @Override
-//        public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-//            // getting the height of the web view and calling the js interface
-////            if(request.isForMainFrame() || request.hasGesture()){
-////                MoLog.print("for main frame or gesture");
-////                //MoLog.print("intercept " + request.getUrl() + "====" + request.getMethod()  +"-=====" + request.isForMainFrame());
-////                view.post(() -> view.loadUrl("javascript:MoJsResize.resize(document.body.getBoundingClientRect().height)"));
-////            }
-//
-//            return super.shouldInterceptRequest(view, request);
-//        }
 
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
@@ -93,11 +77,9 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
     private MoOnReceivedError onErrorReceived = (view, request, error) -> {};
     private MoOnPageFinishedListener onPageFinishedListener = (view, url) -> {};
     private MoBitmap moBitmap;
-    private MoJsResize jsResize;
     private MoWebState webState = new MoWebState();
     private boolean captureBitmap = true;
     private boolean captureBitmapWhenFinishedLoading = false;
-    private boolean enableWebViewResize = true;
     private boolean saveHistory = true;
     private boolean isInDesktopMode = false;
     private boolean isPaused = true;
@@ -215,14 +197,6 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         return this;
     }
 
-    public boolean isEnableWebViewResize() {
-        return enableWebViewResize;
-    }
-
-    public MoWebView setEnableWebViewResize(boolean enableWebViewResize) {
-        this.enableWebViewResize = enableWebViewResize;
-        return this;
-    }
 
     public boolean isSaveHistory() {
         return saveHistory;
@@ -272,6 +246,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         // showing inside overlay scroll bars
         setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        setTransitionName("hello");
     }
 
 
@@ -293,31 +268,9 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
      * that are included inside the js interface list
      */
     private void addJsInterfaces() {
-        addResizeWebViewJs();
+
     }
 
-    /**
-     * makes the web view change it's height
-     * when the content height changes
-     * this is useful
-     */
-    private void addResizeWebViewJs() {
-        if(enableWebViewResize){
-            // add the resize web view on search finished js interface
-            jsResize = new MoJsResize();
-            addJavascriptInterface(jsResize,jsResize.getClassName());
-        }
-    }
-
-    /**
-     * when resizing from an activity
-     * @param l
-     * @return
-     */
-    public MoWebView setOnResizeWebViewListener(MoOnResizeWebViewListener l){
-        this.jsResize.setOnResizeWebViewListener(l);
-        return this;
-    }
 
 
     public String getBaseUrl(){
@@ -544,10 +497,9 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
      * restores the state of the web view
      * like: x,y position where it was left off
      * and the height and width of it
-     * @param n
      */
-    public void restoreState(NestedScrollView n){
-        webState.applyState(this,n);
+    public void restoreState(){
+        webState.applyState(this);
     }
 
 

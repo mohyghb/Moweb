@@ -8,13 +8,17 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:navigationBarColor">@color/MaterialDark</item>
         <item name="imageButtonStyle">@style/MoImageButton_Style_Dark</item>
-        <item name="android:windowAnimationStyle">@style/WindowAnimationStyle</item>
+<!--        <item name="android:windowAnimationStyle">@style/WindowAnimationStyle</item>-->
         <item name="materialCardViewStyle">@style/MoMaterialCardViewStyleBright</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:listViewStyle">@style/MoListStyle_Dark</item>
         <item name="recyclerViewStyle">@style/MoListStyle_Dark</item>
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
+
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowActivityTransitions">true</item>
+
     </style>
 
 
