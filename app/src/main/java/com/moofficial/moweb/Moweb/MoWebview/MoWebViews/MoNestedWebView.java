@@ -11,7 +11,8 @@ import androidx.core.view.NestedScrollingChildHelper;
 import androidx.core.view.ViewCompat;
 
 // todo improve the scrolling effect further
-public class MoNestedWebView extends WebView implements NestedScrollingChild {
+// not for private app usage
+class MoNestedWebView extends WebView implements NestedScrollingChild {
 //    private int mLastY;
 //    private final int[] mScrollOffset = new int[2];
 //    private final int[] mScrollConsumed = new int[2];

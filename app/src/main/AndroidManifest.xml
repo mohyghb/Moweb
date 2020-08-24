@@ -16,24 +16,38 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MoTabActivity" android:windowSoftInputMode="adjustPan" android:alwaysRetainTaskState="true"/>
-        <activity android:name=".BookmarkFolderChooserActivity" />
-        <activity android:name=".EditBookmarkActivity" />
-        <activity android:name=".BookmarkActivity" />
-        <activity android:name=".HomePageActivity" />
+        <activity android:name=".MoActivities.MainMenuActivity"></activity>
+
         <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" />
-        <activity android:name=".HistoryActivity" />
-        <activity
-            android:name=".MainActivity"
+            android:name=".MoActivities.MoTabActivity"
             android:alwaysRetainTaskState="true"
+            android:windowSoftInputMode="adjustPan"
             android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+
+        <activity android:name=".MoActivities.BookmarkFolderChooserActivity" />
+        <activity android:name=".MoActivities.EditBookmarkActivity" />
+        <activity android:name=".MoActivities.BookmarkActivity" />
+        <activity android:name=".MoActivities.HomePageActivity" />
+        <activity
+            android:name=".MoActivities.SettingsActivity"
+            android:label="@string/title_activity_settings" />
+        <activity android:name=".MoActivities.HistoryActivity" />
+        <activity
+            android:name=".MoActivities.MainActivity">
+<!--            android:alwaysRetainTaskState="true"-->
+<!--            android:configChanges="orientation|screenSize">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
 
         <service android:name=".Moweb.MoServices.MoSaverBackgroundService" />

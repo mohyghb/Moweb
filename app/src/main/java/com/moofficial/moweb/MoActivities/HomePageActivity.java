@@ -1,4 +1,4 @@
-package com.moofficial.moweb;
+package com.moofficial.moweb.MoActivities;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +16,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerVi
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePage;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageRecyclerAdapter;
+import com.moofficial.moweb.R;
 
 public class HomePageActivity extends MoSmartActivity {
 

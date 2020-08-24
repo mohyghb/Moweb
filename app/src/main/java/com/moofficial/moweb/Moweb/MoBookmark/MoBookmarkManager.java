@@ -45,15 +45,21 @@ public class MoBookmarkManager {
     /**
      * adds or removes the bookmark from the list
      * if we already have it
-     * @param context
-     * @param url
-     * @param title
+     * @param context of the app
+     * @param url of the bookmark
+     * @param title of the bookmark
+     * @return true if the url was added
+     * or false if it was removed from the database (that means
+     * that previously the url was inside the databse so we removed
+     * it)
      */
-    public static void addOrRemoveIfWasAddedAlready(Context context,String url,String title){
+    public static boolean addOrRemoveIfWasAddedAlready(Context context,String url,String title){
         if(!add(context,url,title)){
             // it did not add it to the bookmarks because we already had one with the same url
             remove(context,url);
+            return false;
         }
+        return true;
     }
 
     /**

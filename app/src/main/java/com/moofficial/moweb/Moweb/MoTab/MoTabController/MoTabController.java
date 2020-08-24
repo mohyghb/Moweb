@@ -27,22 +27,20 @@ public class MoTabController extends MoContext implements MoSavable, MoLoadable 
     private MoControl normalTabsControl;
 
 
-    private Runnable changeContentView;
-    private Runnable tabsButtonPressed;
+//    private Runnable changeContentView;
+//    private Runnable tabsButtonPressed;
 
 
     public static MoTabController instance;
 
 
 
-    public static void init(Context context, Runnable ccv, Runnable tbp){
-        instance = new MoTabController(context,ccv,tbp);
+    public static void init(Context context){
+        instance = new MoTabController(context);
     }
 
-    MoTabController(Context context, Runnable ccv, Runnable tbp){
+    MoTabController(Context context){
         super(context);
-        this.changeContentView = ccv;
-        this.tabsButtonPressed = tbp;
         initTabControllers();
     }
 
@@ -59,9 +57,9 @@ public class MoTabController extends MoContext implements MoSavable, MoLoadable 
 //        return index;
 //    }
 
-    public void onTabsButtonPressed() {
-        this.tabsButtonPressed.run();
-    }
+//    public void onTabsButtonPressed() {
+//        this.tabsButtonPressed.run();
+//    }
 
 
 
@@ -78,7 +76,7 @@ public class MoTabController extends MoContext implements MoSavable, MoLoadable 
         save(this.context);
         // change the section to show the in tab view
         MoSectionManager.getInstance().setSection(IN_TAB_VIEW);
-        changeContentView.run();
+//        changeContentView.run();
     }
 
     /**
@@ -150,16 +148,7 @@ public class MoTabController extends MoContext implements MoSavable, MoLoadable 
                 ()->this.incognitoTabsControl.notifyRemovedIndex());
     }
 
-    /**
-     * notifies that something has changed inside
-     * the recycler view about the current tab
-     */
-    public void notifyCurrentTabInRecycler(){
-        MoTab t = getCurrent();
-        if(t!=null){
-            t.getNotifyTabChanged().notifyTabChanged();
-        }
-    }
+
 
     public MoTab getCurrent(){
         switch (currentTabControl.getType()){

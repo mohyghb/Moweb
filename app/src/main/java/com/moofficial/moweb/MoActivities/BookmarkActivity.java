@@ -1,4 +1,4 @@
-package com.moofficial.moweb;
+package com.moofficial.moweb.MoActivities;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,6 +33,7 @@ import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkRecyclerAdapter;
 import com.moofficial.moweb.Moweb.MoBookmark.MoOnOpenBookmarkListener;
 import com.moofficial.moweb.Moweb.MoTab.MoOpenTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
+import com.moofficial.moweb.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +88,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
 
     private void initSearchBar(){
         this.searchBar = new MoSearchBar(this);
-        this.searchBar.getMaterialCardView().makeTransparent();
+        this.searchBar.getCardView().makeTransparent();
     }
 
     private void initToolBar(){
@@ -273,7 +274,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
             MoEditText editText = new MoEditText(this)
                     .setHint(R.string.add_folder_in_bookmark_hint_dialog)
                     .setBoxBackgroundColor(R.color.MoBackground);
-            editText.getCardWrapper().makeTransparent();
+            editText.getCardView().makeTransparent();
 
             new MoPaddingBuilder(16)
                     .convertValuesToDp()

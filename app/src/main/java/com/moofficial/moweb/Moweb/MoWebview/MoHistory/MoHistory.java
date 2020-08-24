@@ -102,6 +102,8 @@ public class MoHistory implements MoSwitchSavable, MoLoadable, MoSelectableItem,
         return url.getUrlString();
     }
 
+
+
     public String getLimitedUrl() {
         return MoString.getLimitedCount(url.getUrlString(),TEXT_COUNT);
     }
@@ -121,6 +123,8 @@ public class MoHistory implements MoSwitchSavable, MoLoadable, MoSelectableItem,
     public String getTitle() {
         return title;
     }
+
+
 
     public String getLimitedTitle() {
         return MoString.getLimitedCount(title,TEXT_COUNT);
@@ -271,6 +275,8 @@ public class MoHistory implements MoSwitchSavable, MoLoadable, MoSelectableItem,
         return this.isSelected;
     }
 
+    // mo selectable
+
     @Override
     public void setSelected(boolean b) {
         this.isSelected = b;
@@ -285,6 +291,8 @@ public class MoHistory implements MoSwitchSavable, MoLoadable, MoSelectableItem,
     public boolean isSelectable() {
         return this.isTypeHistory();
     }
+
+    // mo searchable
 
     @Override
     public boolean updateSearchable(Object... objects) {
@@ -302,4 +310,7 @@ public class MoHistory implements MoSwitchSavable, MoLoadable, MoSelectableItem,
     public void setSearchable(boolean b) {
         this.isSearched = b;
     }
+
+
+
 }

@@ -23,7 +23,7 @@ import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoWebClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoHitTestResultParser;
 import com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces.MoWebElementDetection;
-import com.moofficial.moweb.Moweb.MoWebview.MoStackTabHistory.MoStackTabHistory;
+import com.moofficial.moweb.Moweb.MoWebview.MoStackTabHistory.MoStackWebHistory;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnPageFinishedListener;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnReceivedError;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnUpdateUrlListener;
@@ -72,7 +72,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
     //private MoTab tab;
     private MoHitTestResultParser hitTestResultParser;
     private MoTouchPosition touchPosition;
-    private MoStackTabHistory stackTabHistory = new MoStackTabHistory();
+    private MoStackWebHistory stackTabHistory = new MoStackWebHistory();
     private MoOnUpdateUrlListener onUpdateUrlListener = (url, isReload) -> {};
     private MoOnReceivedError onErrorReceived = (view, request, error) -> {};
     private MoOnPageFinishedListener onPageFinishedListener = (view, url) -> {};
@@ -161,11 +161,11 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         return this;
     }
 
-    public MoStackTabHistory getStackTabHistory() {
+    public MoStackWebHistory getStackTabHistory() {
         return stackTabHistory;
     }
 
-    public MoWebView setStackTabHistory(MoStackTabHistory stackTabHistory) {
+    public MoWebView setStackTabHistory(MoStackWebHistory stackTabHistory) {
         this.stackTabHistory = stackTabHistory;
         return this;
     }
@@ -246,7 +246,6 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         // showing inside overlay scroll bars
         setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        setTransitionName("hello");
     }
 
 
@@ -396,11 +395,42 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
      * reloads the web view even if the
      * cache mode is turned on
      * if the url is not null and not empty
+     * (reloads it to the current url of this class not the
+     * url inside the web view class)
      */
-    public void forceReloadFromNetwork(){
-        if(this.url!=null && !this.url.isEmpty()){
-            this.loadUrl(MoWebUtils.makeUrlUnique(this.url));
+    public void forceReload(){
+        if(this.url!=null && !this.url.isEmpty()) {
+            this.loadUrl(this.url,false);
         }
+    }
+
+    /**
+     * loads the url normally if
+     * loadFromCache is true, and if it is false
+     * we make sure that the url is unique so that the
+     * load url does not load it from cache
+     * @param url to be loaded inside the web view
+     * @param loadFromCache whether we should load this url
+     *                      from cache or not
+     */
+    public void loadUrl(String url,boolean loadFromCache){
+        super.loadUrl(loadFromCache?url:MoWebUtils.makeUrlUnique(url));
+    }
+
+
+
+
+
+
+    /**
+     * loading the url and saving
+     * it inside our fields
+     * @param url
+     */
+    @Override
+    public void loadUrl(String url){
+        super.loadUrl(url);
+        this.url = url;
     }
 
 

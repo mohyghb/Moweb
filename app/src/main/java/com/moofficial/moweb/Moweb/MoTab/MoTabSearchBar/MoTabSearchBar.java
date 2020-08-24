@@ -16,11 +16,9 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewGroups.MoCo
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoFindBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupItemBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupWindow;
-import com.moofficial.moweb.BookmarkActivity;
-import com.moofficial.moweb.HistoryActivity;
+import com.moofficial.moweb.MoActivities.BookmarkActivity;
+import com.moofficial.moweb.MoActivities.HistoryActivity;
 import com.moofficial.moweb.MoHTML.MoHTMLAsyncTask;
-import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
-import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
@@ -41,7 +39,7 @@ public class MoTabSearchBar extends MoConstraint {
     private MoSearchable moSearchable;
     private MoTabSuggestion suggestion;
 
-    private MoTabOnSearchListener tabOnSearchListener = search -> {};
+
     private MoWebView moWebView;
     private MoTab tab;
 
@@ -164,25 +162,20 @@ public class MoTabSearchBar extends MoConstraint {
         return this;
     }
 
-    public MoTabOnSearchListener getTabOnSearchListener() {
-        return tabOnSearchListener;
-    }
 
-    public MoTabSearchBar setTabOnSearchListener(MoTabOnSearchListener tabOnSearchListener) {
-        this.tabOnSearchListener = tabOnSearchListener;
-        return this;
-    }
 
     public MoTab getTab() {
         return tab;
     }
 
-    public MoTabSearchBar setTab(MoTab tab) {
+    public MoTabSearchBar syncWith(MoTab tab) {
         this.tab = tab;
         // sync their web view
         this.moWebView = tab.getMoWebView();
         // sync the search text, so the tab's web view can update it as well
-        this.tab.setTabSearchBar(this);
+        this.tab.setSearchText(this.searchText);
+        // sync the progress bar with the tab
+        this.tab.setProgressBar(this.progressBar);
         return this;
     }
 
@@ -228,7 +221,7 @@ public class MoTabSearchBar extends MoConstraint {
             }
         });
         searchText.setOnEditorActionListener((textView, i, keyEvent) -> {
-            tabOnSearchListener.onSearch(textView.getText().toString());
+            tab.search(textView.getText().toString());
             searchText.clearFocus();
             return false;
         });
@@ -306,8 +299,8 @@ public class MoTabSearchBar extends MoConstraint {
                                         view-> moWebView.goForwardIfYouCan())
                                 .buildCheckedImageButton(R.drawable.ic_baseline_star_24,
                                         R.drawable.ic_baseline_star_border_24, view -> tab.bookmarkTheTab(),
-                                        ()-> MoBookmarkManager.has(tab.getUrl()))
-                                .buildImageButton(R.drawable.ic_baseline_refresh_24, view-> moWebView.forceReloadFromNetwork())
+                                        ()-> tab.urlIsBookmarked())
+                                .buildImageButton(R.drawable.ic_baseline_refresh_24, view-> moWebView.forceReload())
                                 .build()
                 )
                 .setViews(
@@ -317,7 +310,7 @@ public class MoTabSearchBar extends MoConstraint {
                                 .buildTextButton(R.string.bookmark_title,
                                         view-> BookmarkActivity.startActivity(this.context))
                                 .buildTextButton(R.string.home_page_title,
-                                        view -> tabOnSearchListener.onSearch(MoHomePageManager.getCurrentActivatedURL()))
+                                        view -> tab.goToHomepage())
                                 .buildTextButton(R.string.history,
                                         view-> HistoryActivity.launch(this.context))
                                 .buildTextButton(R.string.share, view -> tab.shareTheTab())
@@ -382,7 +375,10 @@ public class MoTabSearchBar extends MoConstraint {
      * object
      */
     public void onDestroy(){
-        tab.setTabSearchBar(null);
+        if(tab!=null){
+            tab.setSearchText(null);
+            tab.setProgressBar(null);
+        }
         tab = null;
         moWebView = null;
     }

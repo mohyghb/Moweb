@@ -14,7 +14,7 @@ import java.util.Arrays;
 // a class to save all the searches of the user
 // so we can go back if stack has anything in it
 // it has a mutual connection with a mo web view
-public class MoStackTabHistory implements MoSavable, MoLoadable {
+public class MoStackWebHistory implements MoSavable, MoLoadable {
 
     // millisecond of double pressing the back button to jump back two goBacks
     private final int DOUBLE_BACK_PRESS_TOLERANCE = 1200;
@@ -29,11 +29,11 @@ public class MoStackTabHistory implements MoSavable, MoLoadable {
     private int previousAction = ACTION_NULL;
     private long lastBackPressed;
 
-    public MoStackTabHistory(){
+    public MoStackWebHistory(){
 
     }
 
-    public MoStackTabHistory(String data,Context c){
+    public MoStackWebHistory(String data, Context c){
         this.load(data,c);
     }
 
@@ -41,7 +41,6 @@ public class MoStackTabHistory implements MoSavable, MoLoadable {
      * adds the url to the stack of urls
      * only adds it if the current url is different
      * than the last url added
-     *
      */
     public void update(){
         @SuppressWarnings("ConstantConditions")
@@ -62,7 +61,7 @@ public class MoStackTabHistory implements MoSavable, MoLoadable {
         }
     }
 
-    public MoStackTabHistory setWebView(MoWebView webView) {
+    public MoStackWebHistory setWebView(MoWebView webView) {
         this.webView = webView;
         return this;
     }
@@ -91,7 +90,7 @@ public class MoStackTabHistory implements MoSavable, MoLoadable {
             currentIndex--;
             //Toast.makeText(this.webView.getContext(),"double press",Toast.LENGTH_SHORT).show();
         }
-        this.webView.loadUrl(getCurrentURL());
+        this.webView.loadUrl(getCurrentURL(),true);
         lastBackPressed = System.currentTimeMillis();
     }
 
@@ -117,6 +116,8 @@ public class MoStackTabHistory implements MoSavable, MoLoadable {
             goForward();
         }
     }
+
+
 
 
     public String getCurrentURL(){

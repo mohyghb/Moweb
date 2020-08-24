@@ -15,9 +15,9 @@ import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoPreviewSelectableAdapter;
-import com.moofficial.moweb.MoSection.MoSectionManager;
-import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
+import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoOnTabClickListener;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.R;
 
@@ -27,13 +27,23 @@ public class MoTabRecyclerAdapter extends MoPreviewSelectableAdapter<MoTabRecycl
         implements MoSelectableList<MoTab> {
 
     private static final int TAB_PADDING = 54;
-    private static final int TAB_PADDING_GRID_VIEW = 24;
+    private static final int TAB_PADDING_GRID_VIEW = 12;
 
 
 
     private Context context;
     private boolean isInGrid;
     private MoSelectable<MoTab> selectable;
+    private MoOnTabClickListener onTabClickListener = (t, index) -> {};
+
+    public MoOnTabClickListener getOnTabClickListener() {
+        return onTabClickListener;
+    }
+
+    public MoTabRecyclerAdapter setOnTabClickListener(MoOnTabClickListener onTabClickListener) {
+        this.onTabClickListener = onTabClickListener;
+        return this;
+    }
 
     @Override
     public void setListSelectable(MoSelectable<MoTab> moSelectable) {
@@ -51,21 +61,24 @@ public class MoTabRecyclerAdapter extends MoPreviewSelectableAdapter<MoTabRecycl
         private ImageView background;
         private TextView url;
         private LinearLayout linearLayout;
-        private CardView cardView;
+        private CardView innerCard;
+        private MoCardView outerCard;
 
         public TabViewHolder(View v) {
             super(v);
             background = v.findViewById(R.id.web_view_bitmap);
             url = v.findViewById(R.id.tab_url_list_view);
             linearLayout = v.findViewById(R.id.tab_mode_list_linear_layout);
-            cardView = v.findViewById(R.id.tab_mode_list_inner_card_view);
+            innerCard = v.findViewById(R.id.tab_mode_list_inner_card_view);
+            outerCard = v.findViewById(R.id.tab_mode_list_card_view);
+            outerCard.makeCardRecRound();
         }
 
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MoTabRecyclerAdapter(ArrayList<MoTab> myDataset,Context c,boolean isInGrid) {
-        super(myDataset);
+    public MoTabRecyclerAdapter(ArrayList<MoTab> dataSet,Context c,boolean isInGrid) {
+        super(dataSet);
         this.context = c;
         this.isInGrid = isInGrid;
         setHasStableIds(true);
@@ -77,12 +90,17 @@ public class MoTabRecyclerAdapter extends MoPreviewSelectableAdapter<MoTabRecycl
     @NonNull
     @Override
     public TabViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        int height = (int)(context.getResources().getDisplayMetrics()
+                .heightPixels/2.25f);
         View v = MoInflaterView.inflate(R.layout.tab_mode_list,parent.getContext());
         if(!this.isInGrid){
             v.setPadding(TAB_PADDING,TAB_PADDING,TAB_PADDING,TAB_PADDING);
         }else{
             v.setPadding(TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW);
         }
+        ViewGroup.LayoutParams p = getMatchWrapParams();
+        p.height = height;
+        v.setLayoutParams(p);
         return new TabViewHolder(v);
     }
 
@@ -90,10 +108,6 @@ public class MoTabRecyclerAdapter extends MoPreviewSelectableAdapter<MoTabRecycl
     @Override
     protected void onBindViewHolderDifferentVersion(@NonNull TabViewHolder holder, int position,int recPos) {
         MoTab tab = dataSet.get(position);
-        makeTabAware(position, tab);
-        if(MoSectionManager.getInstance().isInTabView()){
-            return;
-        }
         MoLog.print("recycler adapter: " + position);
         onTabClickListener(holder, position, tab);
         updateUI(holder, tab);
@@ -112,7 +126,7 @@ public class MoTabRecyclerAdapter extends MoPreviewSelectableAdapter<MoTabRecycl
     }
 
     private void onLongTabClickListener(@NonNull TabViewHolder holder, int position) {
-        holder.cardView.setOnLongClickListener(view -> {
+        holder.innerCard.setOnLongClickListener(view -> {
             if(!selectable.isInActionMode()){
                 selectable.activateSpecialMode();
                 onSelect(position);
@@ -137,19 +151,16 @@ public class MoTabRecyclerAdapter extends MoPreviewSelectableAdapter<MoTabRecycl
         holder.url.setText(tab.getUrl());
     }
 
-    private void makeTabAware(int position, MoTab tab) {
-        // updating the preview whenever it is possible
-        //tab.setNotifyTabChanged(() -> notifyItemChanged(position));
-    }
 
     private void onTabClickListener(TabViewHolder holder, int position, MoTab tab) {
         // going inside the tab
-        holder.cardView.setOnClickListener(view -> {
+        holder.innerCard.setOnClickListener(view -> {
 //            if(selectable.isInActionMode()){
 //                onSelect(position);
 //            }else{
-                MoTabController.instance.setIndex(position,
-                        tab.getType());
+            onTabClickListener.onClickListener(tab,position);
+//                MoTabController.instance.setIndex(position,
+//                        tab.getType());
            // }
 
         });

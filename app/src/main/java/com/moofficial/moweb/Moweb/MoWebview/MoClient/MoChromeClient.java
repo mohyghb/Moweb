@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.GeolocationPermissions;
 import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
@@ -23,7 +22,6 @@ public class MoChromeClient extends WebChromeClient {
     private Context context;
     private ProgressBar bar;
     private boolean hideProgressBarWhenFinished = true;
-    private ViewGroup.LayoutParams barParams;
 
     public MoChromeClient(Context context){
         this.context = context;
@@ -31,7 +29,6 @@ public class MoChromeClient extends WebChromeClient {
 
     public MoChromeClient setProgressBar(ProgressBar bar){
         this.bar = bar;
-        this.barParams = this.bar.getLayoutParams();
         return this;
     }
 
@@ -42,6 +39,11 @@ public class MoChromeClient extends WebChromeClient {
         updateProgressBar(newProgress);
     }
 
+    /**
+     * update the progress bar
+     * if it is not null
+     * @param newProgress of the progress bar to be set
+     */
     private void updateProgressBar(int newProgress) {
         if(bar == null)
             return;

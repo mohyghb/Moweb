@@ -69,7 +69,7 @@ public class MoWebUtils {
         webSettings.setUserAgentString(newUserAgent);
         webSettings.setLoadWithOverviewMode(enabled);
         webSettings.setUseWideViewPort(true);
-        webView.forceReloadFromNetwork();
+        webView.forceReload();
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.moofficial.moweb;
+package com.moofficial.moweb.MoActivities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -20,6 +20,7 @@ import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkRecyclerAdapter;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkUtils;
 import com.moofficial.moweb.Moweb.MoBookmark.MoOnOpenBookmarkListener;
+import com.moofficial.moweb.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +66,7 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
 
     private void initMoSearchbar() {
         searchBar = new MoSearchBar(this);
-        searchBar.getMaterialCardView().makeTransparent();
+        searchBar.getCardView().makeTransparent();
         searchBar.setVisibility(View.GONE);
     }
 

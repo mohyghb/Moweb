@@ -1,4 +1,4 @@
-package com.moofficial.moweb;
+package com.moofficial.moweb.MoActivities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,9 +14,10 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
 import com.moofficial.moweb.MoSettingsEssentials.MoTheme.MoTheme;
-import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
+import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
+import com.moofficial.moweb.R;
 
 public class SettingsActivity extends AppCompatActivity {
 

@@ -6,6 +6,7 @@ import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoReadWrite.MoReadWrite;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoEditText.MoEditText;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
+import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.R;
 
 import java.util.ArrayList;
@@ -179,6 +180,14 @@ public class MoHomePageManager {
             editText.removeError();
         }
         return true;
+    }
+
+    /**
+     * applies the home page to the tab
+     * @param t tab to go to the home page on
+     */
+    public static void homePage(MoTab t){
+        t.search(getCurrentActivatedURL());
     }
 
 }

@@ -1,4 +1,4 @@
-package com.moofficial.moweb;
+package com.moofficial.moweb.MoActivities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,10 +19,11 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkUtils;
+import com.moofficial.moweb.R;
 
 import java.util.Objects;
 
-import static com.moofficial.moweb.BookmarkFolderChooserActivity.getChosenFolder;
+import static com.moofficial.moweb.MoActivities.BookmarkFolderChooserActivity.getChosenFolder;
 
 public class EditBookmarkActivity extends MoSmartActivity {
 

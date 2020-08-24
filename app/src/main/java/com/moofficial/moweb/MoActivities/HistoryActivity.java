@@ -1,4 +1,4 @@
-package com.moofficial.moweb;
+package com.moofficial.moweb.MoActivities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +19,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerVi
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistory;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryRecyclerAdapter;
+import com.moofficial.moweb.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -77,7 +78,7 @@ public class HistoryActivity extends MoSmartActivity {
     private void initSearchBar(){
         this.searchBar = new MoSearchBar(this);
         this.searchBar.setSearchHint(R.string.history_search_hint)
-                .getMaterialCardView()
+                .getCardView()
                 .makeTransparent();
     }
 

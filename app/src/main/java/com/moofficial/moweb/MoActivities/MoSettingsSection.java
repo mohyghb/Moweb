@@ -1,4 +1,4 @@
-package com.moofficial.moweb;
+package com.moofficial.moweb.MoActivities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,9 +7,9 @@ import androidx.preference.PreferenceManager;
 
 import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
 import com.moofficial.moweb.MoSettingsEssentials.MoTheme.MoTheme;
-import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
+import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 
 public class MoSettingsSection {
 
@@ -17,6 +17,17 @@ public class MoSettingsSection {
 
     private Context context;
     private SharedPreferences sharedPreferences;
+
+    private static MoSettingsSection instance;
+
+    public static void init(Context c){
+        instance = new MoSettingsSection(c);
+    }
+
+    public static MoSettingsSection getInstance(){
+        return instance;
+    }
+
 
     public MoSettingsSection(Context c){
         this.context = c;

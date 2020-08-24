@@ -9,19 +9,18 @@ import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 public class MoTabUtils {
 
     @SuppressLint("ClickableViewAccessibility")
-    public static void transitionToInTabMode(MoWebView m, ViewGroup viewGroup){
-        m.moveWebViewTo(viewGroup);
-        // making the web view function properly
-        // TODO: touch point listener should not be working anymore
+    public static void transitionToInTabMode(MoWebView m, ViewGroup viewGroup, ViewGroup.LayoutParams lp){
+        // todo, on touch listener needs to be updated
         m.setOnTouchListener((view, motionEvent) -> false);
         m.resumeTimers();
+        m.setNestedScrollingEnabled(true);
+        m.moveWebViewTo(viewGroup, lp);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     public static void transitionToListTabMode(Context c, MoWebView m, ViewGroup viewGroup){
-        int height = (int)(c.getResources().getDisplayMetrics()
-                .heightPixels/2.25f);
-        m.moveWebViewTo(viewGroup, ViewGroup.LayoutParams.MATCH_PARENT,height);
+
+        m.moveWebViewTo(viewGroup);
         m.setOnTouchListener((view, motionEvent) -> true);
         m.pauseTimers();
     }

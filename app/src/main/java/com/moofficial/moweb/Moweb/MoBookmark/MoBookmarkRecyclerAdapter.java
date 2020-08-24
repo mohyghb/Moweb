@@ -18,8 +18,8 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoPreviewSelectableAdapter;
-import com.moofficial.moweb.BookmarkActivity;
-import com.moofficial.moweb.EditBookmarkActivity;
+import com.moofficial.moweb.MoActivities.BookmarkActivity;
+import com.moofficial.moweb.MoActivities.EditBookmarkActivity;
 import com.moofficial.moweb.R;
 
 import java.util.List;
