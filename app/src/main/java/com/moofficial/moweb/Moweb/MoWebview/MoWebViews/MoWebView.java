@@ -37,13 +37,12 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
     private MoWebClient client = new MoWebClient() {
         @Override
         public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
-            super.doUpdateVisitedHistory(view, url, isReload);
+            url = MoUrlUtils.removeUrlUniqueness(url);
             onUpdateUrlListener.onUrlUpdate(url,isReload);
             stackTabHistory.update(url,isReload);
-            if(saveHistory && !isReload){
+            if(saveHistory && !isReload) {
                 MoHistoryManager.add(view);
             }
-            // save history
             MoWebView.this.url = url;
         }
         @Override
@@ -266,7 +265,10 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         return MoUrlUtils.getBaseUrl(this.url);
     }
 
-
+    @Override
+    public String getUrl() {
+        return this.url;
+    }
 
     /**
      * captures a bitmap from webview
@@ -409,7 +411,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
      *                      from cache or not
      */
     public void loadUrl(String url,boolean loadFromCache){
-        super.loadUrl(loadFromCache?url:MoWebUtils.makeUrlUnique(url));
+        super.loadUrl(loadFromCache?url:MoUrlUtils.makeUrlUnique(url));
     }
 
 

@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
@@ -81,23 +82,22 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
     @NonNull
     @Override
     public TabViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        int height = (int)(context.getResources().getDisplayMetrics()
-                .heightPixels/2.25f);
         View v = MoInflaterView.inflate(R.layout.tab_mode_list,parent.getContext());
         if(!this.isInGrid){
             v.setPadding(TAB_PADDING,TAB_PADDING,TAB_PADDING,TAB_PADDING);
         }else{
             v.setPadding(TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW);
         }
-        ViewGroup.LayoutParams p = getMatchWrapParams();
-        p.height = height;
-        v.setLayoutParams(p);
+        v.setLayoutParams(getMatchWrapParams());
         return new TabViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TabViewHolder holder, int position) {
         MoTab tab = dataSet.get(position);
+        int height = (int)(context.getResources().getDisplayMetrics()
+                .heightPixels/2.25f);
+        holder.outerCard.setLayoutParams(new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,height));
         onTabClickListener(holder, position, tab);
         updateUI(holder, tab);
         MoSelectableUtils.applySelectedColor(context,holder.coverView,tab);

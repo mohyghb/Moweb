@@ -81,35 +81,8 @@ public class MoWebUtils {
         return !webView.getSettings().getUserAgentString().contains("Mobile");
     }
 
-    /**
-     * given a url, make changes that makes it a different
-     * unique url, but it still provides the same output as the previous
-     * url
-     * This was created to make sure that we use network to load the
-     * url when changing the desktop mode, rather than getting it from cache
-     * @param url
-     * @return
-     */
-    public static String makeUrlUnique(final String url) {
-        if(url==null){
-            return "";
-        }
-        StringBuilder unique = new StringBuilder();
-        unique.append(url);
-        if (url.contains("?")) {
-            unique.append('&');
-        }
-        else {
-            if (url.lastIndexOf('/') <= 7) {
-                unique.append('/');
-            }
-            unique.append('?');
-        }
-        unique.append(System.currentTimeMillis());
-        unique.append('=');
-        unique.append(1);
-        return unique.toString();
-    }
+
+
 
 
 }

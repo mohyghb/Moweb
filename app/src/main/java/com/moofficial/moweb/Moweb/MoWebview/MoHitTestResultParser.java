@@ -101,6 +101,7 @@ public class MoHitTestResultParser {
 
     /**
      * shows a web view for the text that they selected
+     * construction this is not working (the web view is not showing)
      */
     private boolean smartTextSearch(Context context) {
         // don't show anything if there is no selected text
