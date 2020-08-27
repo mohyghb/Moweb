@@ -4,5 +4,5 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 
 public interface MoOnTabClickListener {
 
-    void onClickListener(MoTab t,int index);
+    void onTabClickListener(MoTab t, int index);
 }

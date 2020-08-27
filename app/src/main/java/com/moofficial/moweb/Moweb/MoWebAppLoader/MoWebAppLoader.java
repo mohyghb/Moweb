@@ -27,11 +27,11 @@ public class MoWebAppLoader {
         MoLog.printRunTime("load state ", new Runnable() {
             @Override
             public void run() {
-                // create a tab controller
-                MoTabController.init(context);
-                MoTabController.instance.load("",context);
                 // load back all the tabs
                 MoLog.printRunTime("tabs",()-> MoTabsManager.load(context));
+                // load the tab controller
+                MoTabController.instance.load("",context);
+
             }
         });
 

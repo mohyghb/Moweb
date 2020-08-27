@@ -3,6 +3,7 @@ package com.moofficial.moweb.MoActivities;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ViewTreeObserver;
 
 import androidx.annotation.Nullable;
 
@@ -13,6 +14,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewGroupUtils.
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewGroupUtils.MoCoordinatorUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
+import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoUpdateTabActivity;
 import com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar.MoTabSearchBar;
 import com.moofficial.moweb.Moweb.MoTab.MoTabUtils;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
@@ -21,7 +23,7 @@ import com.moofficial.moweb.Moweb.MoWebAppLoader.MoWebAppLoader;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 import com.moofficial.moweb.R;
 
-public class MoTabActivity extends MoSmartCoordinatorActivity {
+public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdateTabActivity {
 
     private static final int MAIN_MENU_REQUEST_CODE = 0;
 
@@ -35,6 +37,7 @@ public class MoTabActivity extends MoSmartCoordinatorActivity {
     protected void onCreate(Bundle savedInstanceState) {
         MoWindowTransitions.apply(new MoCircularTransition(),this);
         MoWebAppLoader.loadApp(this);
+        MoTabController.instance.setUpdateTabActivity(this);
         super.onCreate(savedInstanceState);
     }
 
@@ -43,8 +46,8 @@ public class MoTabActivity extends MoSmartCoordinatorActivity {
         MoAppbarUtils.snapNoToolbar(collapsingToolbarLayout);
         appBarLayout.setExpanded(false);
         initSearchBar();
-        update();
         initToolbar();
+        update();
     }
 
     /**
@@ -52,13 +55,49 @@ public class MoTabActivity extends MoSmartCoordinatorActivity {
      * only sees the updated version of the
      * tab activity and everything seems normal
      */
-    private void update() {
-        updateTab();
-        updateWebView();
-        updateSearchBar();
-        updateTitle();
-        updateSubtitle();
+    @Override
+    public void update() {
+        if(MoTabController.instance.isOutOfOptions()){
+            // launch the main menu
+            // when layout is done constructing
+            getRootView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    // monote: maybe make sure that other views are invisible for
+                    //  better user interactions?
+                    launchMainMenu();
+                    getRootView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            });
+        }else {
+            removePreviousTab();
+            updateTab();
+            updateWebView();
+            updateSearchBar();
+            updateTitle();
+            updateSubtitle();
+            updateToolbar();
+        }
     }
+
+    /**
+     * removes the previous tab from the coordinator
+     * layout before passing it to the recycler view inside
+     * main menu
+     * this solved the issue where we opened a tab
+     * from somewhere else and it didn't remove the
+     * previous web view and tab from here
+     * so we only are removing it if there is a current tab
+     * and the current tab is not the same as the new one
+     */
+    private void removePreviousTab() {
+        if(tab!=null && !MoTabController.instance.currentIs(this.tab) && webView != null){
+            // then remove it from web view when updating
+            coordinatorLayout.removeView(webView);
+            moTabSearchBar.onDestroy();
+        }
+    }
+
 
     private void updateTitle(){
         setTitle(this.webView.getTitle());
@@ -71,6 +110,10 @@ public class MoTabActivity extends MoSmartCoordinatorActivity {
     private void updateWebView() {
         this.webView = tab.getMoWebView();
         MoTabUtils.transitionToInTabMode(webView,coordinatorLayout, MoCoordinatorUtils.getScrollingParams());
+        this.webView.setOnLongClickListener(view -> {
+            webView.getHitTestResultParser().createDialogOrSmartText(MoTabActivity.this);
+            return false;
+        });
     }
 
     private void updateTab() {
@@ -80,6 +123,7 @@ public class MoTabActivity extends MoSmartCoordinatorActivity {
         this.tab.setOnUpdateUrlListener(s -> {
             updateTitle();
             updateSubtitle();
+            updateToolbar();
         });
     }
 
@@ -90,7 +134,7 @@ public class MoTabActivity extends MoSmartCoordinatorActivity {
      */
     private void initSearchBar() {
         this.moTabSearchBar = new MoTabSearchBar(this);
-        linearBottom.addView(moTabSearchBar);
+        this.linearBottom.addView(moTabSearchBar);
     }
 
     /**
@@ -98,8 +142,13 @@ public class MoTabActivity extends MoSmartCoordinatorActivity {
      * and the book mark button inside the toolbar
      */
     private void initToolbar() {
-        this.moToolBar = new MoToolBar(this)
-                .setLeftIcon(R.drawable.ic_baseline_home_24)
+        this.moToolBar = new MoToolBar(this);
+        // set it as a toolbar
+        toolbar.addToolbar(this.moToolBar);
+    }
+
+    private void updateToolbar() {
+        this.moToolBar.setLeftIcon(R.drawable.ic_baseline_home_24)
                 .setLeftOnClickListener(view -> tab.goToHomepage())
                 .hideTitle()
                 .setMiddleIcon(R.drawable.ic_baseline_refresh_24)
@@ -109,8 +158,8 @@ public class MoTabActivity extends MoSmartCoordinatorActivity {
                         R.drawable.ic_baseline_star_border_24)
                 .setRightOnClickListener(view -> {
                     tab.bookmarkTheTab();
-                });
-        moToolBar.getCardView().makeTransparent();
+                })
+                .getCardView().makeTransparent();
 
         // on tab change bookmark listener so we know which icon to use
         tab.setOnTabBookmarkChanged(isBookmarked -> {
@@ -118,8 +167,6 @@ public class MoTabActivity extends MoSmartCoordinatorActivity {
                     R.drawable.ic_baseline_star_24:
                     R.drawable.ic_baseline_star_border_24);
         });
-        // set it as a toolbar
-        toolbar.addToolbar(this.moToolBar);
     }
 
     /**
@@ -128,15 +175,23 @@ public class MoTabActivity extends MoSmartCoordinatorActivity {
      * search bar module
      */
     private void updateSearchBar(){
-        moTabSearchBar.onDestroy();
         moTabSearchBar.syncWith(tab)
+                .clearEditTextFocus()
                 .setTextSearch(tab.getUrl())
                 .setOnTabsButtonClicked(view -> {
-                    startActivityForResult(new Intent(this, MainMenuActivity.class),
-                            MAIN_MENU_REQUEST_CODE,
-                            ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+                    launchMainMenu();
                 })
                 .setNumberOfTabs(MoTabsManager.size());
+    }
+
+    /**
+     * goes to the main menu activity
+     * to show all the tabs to the user
+     */
+    private void launchMainMenu() {
+        startActivityForResult(new Intent(MoTabActivity.this, MainMenuActivity.class),
+                MAIN_MENU_REQUEST_CODE,
+                ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
     }
 
     @Override
@@ -173,12 +228,6 @@ public class MoTabActivity extends MoSmartCoordinatorActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // todo
-        // monote remove the bookmark listener
-        //  progress bar, web view, tab, search text
-        //  other things from the tab when leaving
-        //  or do them inside the on pause?
-
     }
 
     @Override

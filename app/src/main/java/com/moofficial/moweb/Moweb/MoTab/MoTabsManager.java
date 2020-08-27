@@ -1,10 +1,12 @@
 package com.moofficial.moweb.Moweb.MoTab;
 
 import android.content.Context;
+import android.util.LongSparseArray;
 import android.widget.Toast;
 
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManager;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManagerUtils;
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabExceptions.MoTabNotFoundException;
 import com.moofficial.moweb.Moweb.MoTab.MoTabType.MoTabType;
@@ -14,6 +16,7 @@ import com.moofficial.moweb.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MoTabsManager {
 
@@ -25,7 +28,7 @@ public class MoTabsManager {
 
     private static ArrayList<MoTab> tabs = new ArrayList<>();
     private static ArrayList<MoTab> privateTabs = new ArrayList<>();
-//    private static MoTabRecyclerAdapter tabRecyclerAdapter,incognitoTabAdapter;
+    private static LongSparseArray<MoTab> tabSparseArray = new LongSparseArray<>();
 
     public static ArrayList<MoTab> getTabs(){
         return tabs;
@@ -33,18 +36,6 @@ public class MoTabsManager {
     public static ArrayList<MoTab> getPrivateTabs(){
         return privateTabs;
     }
-//    public static MoTabRecyclerAdapter getTabRecyclerAdapter() {
-//        return tabRecyclerAdapter;
-//    }
-//    public static void setTabRecyclerAdapter(MoTabRecyclerAdapter tabRecyclerAdapter) {
-//        MoTabsManager.tabRecyclerAdapter = tabRecyclerAdapter;
-//    }
-//    public static MoTabRecyclerAdapter getIncognitoTabAdapter() {
-//        return incognitoTabAdapter;
-//    }
-//    public static void setPrivateTabAdapter(MoTabRecyclerAdapter incognitoTabAdapter) {
-//        MoTabsManager.incognitoTabAdapter = incognitoTabAdapter;
-//    }
 
 
     /**
@@ -52,24 +43,51 @@ public class MoTabsManager {
      * @param context
      * @param url
      */
-    static void newTab(Context context, String url, MoTab parentTab){
+    public static MoTab newTab(Context context, String url, MoTab parentTab){
         MoTab tab = new MoTab(context,url);
         tab.setParentTab(parentTab);
         tabs.add(tab);
+        addToSparseArray(tab);
+        return tab;
     }
 
     /**
      * creates a new incognito tab
-     * @param a
-     * @param url
+     * and adds it to the list
+     * @param a context of the place
+     * @param url url to put as the initial tab url
      */
-    static void newPrivateTab(Context a, String url, MoTab parentTab){
+    public static MoTab newPrivateTab(Context a, String url, MoTab parentTab){
         MoIncognitoTab t = new MoIncognitoTab(a,url);
         t.setParentTab(parentTab);
         privateTabs.add(t);
+        addToSparseArray(t);
+        return t;
     }
 
 
+    /**
+     * adds the tab to the sparse array based on it's id
+     * we should not have duplicate id for any
+     * tab
+     * @param t tab to be added inside sparse array
+     */
+    public static void addToSparseArray(MoTab t) {
+        if(tabSparseArray.get(t.getId())!=null){
+            MoLog.print("ERRRRRRRRRRRRRRRRRRRRORRRRRRRRRRRRRRRRRRRR SPARSE ARRAY HAS THIS ID");
+        }
+        tabSparseArray.put(t.getId(),t);
+    }
+
+    /**
+     * returns the tab with the id
+     * associated with it
+     * @param id of the tab
+     * @return tab with corresponding id
+     */
+    public static MoTab getTab(long id){
+        return tabSparseArray.get(id);
+    }
 
     // size of normal tabs
     public static int size() {
@@ -80,6 +98,21 @@ public class MoTabsManager {
         return privateTabs.size();
     }
 
+    /**
+     *
+     * @param type of the tab you want to get
+     * @return the last tab based on the type that is passed
+     * it will return null if there is no more tab of that type
+     */
+    public static MoTab getLastTab(@MoTabType.TabType int type){
+        switch (type){
+            case MoTabType.TYPE_NORMAL:
+                return tabs.isEmpty()?null:tabs.get(tabs.size()-1);
+            case MoTabType.TYPE_PRIVATE:
+                return privateTabs.isEmpty()?null:tabs.get(tabs.size()-1);
+        }
+        return null;
+    }
 
     /**
      * saving tabs data into a file and reloading them when they launch the app again
@@ -115,6 +148,7 @@ public class MoTabsManager {
                 MoTab tab = new MoTab(context);
                 tab.load(s, context);
                 tabs.add(tab);
+                addToSparseArray(tab);
             });
         } catch (IOException e) {
             Toast.makeText(context,"error loading tabs",Toast.LENGTH_SHORT).show();
@@ -160,51 +194,29 @@ public class MoTabsManager {
     }
 
 
+
     /**
-     * remove the tab from the list
-     * notify the recycler adapter, so they know that an item was removed
-     * and notify the tab controller so that it identifies a tab has been removed
-     * and manage the index properly
-     * @param index of the tab to be removed from tabs
-     * @param context  of the activity
+     * deletes the tab that is passed,
+     * we also remove it from its parent
+     * list and notify the controller that
+     * something has been removed
+     * @param t
      */
-    private static void remove(int index,Context context,int type) {
-        switch (type){
+    public static void delete(MoTab t) {
+        t.deleteTab();
+        switch (t.getType()){
             case MoTabType.TYPE_NORMAL:
-                removeTabStuff(index,context,tabs);
+                tabs.remove(t);
                 break;
             case MoTabType.TYPE_PRIVATE:
-                removeTabStuff(index,context, privateTabs);
+                privateTabs.remove(t);
                 break;
         }
-        MoTabController.instance.notifyRemoved(type);
+        MoTabController.instance.notifyTabRemoved(t);
     }
 
-    /**
-     * removes the tab bitmap previews that were
-     * previously saved on the internal storage
-     * we need to remove them so they don't take space as
-     * they continue to search in our app
-     * @param index
-     * @param context
-     * @param tabs
-     */
-    private static void removeTabStuff(int index,Context context,ArrayList<MoTab> tabs){
-        // deleting the tab (bitmap and file info)
-        tabs.get(index).deleteTab();
-        // removing it from tabs list
-        tabs.remove(index);
-    }
 
-    /**
-     * remove the tab from the list
-     * @param index of the tab to be removed from tabs
-     * @param context needed in order to save the changes onto a file
-     */
-    public static void remove(Context context,int index, int type) {
-        remove(index,context,type);
-        //save(context);
-    }
+
 
 
 
@@ -215,9 +227,8 @@ public class MoTabsManager {
      * @param url
      */
     public static void addTab(Context context, String url,boolean getCurrentAsParent) {
-        MoTabsManager.newTab(context, url,getCurrentAsParent?MoTabController.instance.getCurrent():null);
-        int index = tabs.size() - 1;
-        setCurrentTabIndex(index,MoTabType.TYPE_NORMAL);
+        setCurrentTab(context,MoTabsManager.newTab(context,
+                url,getCurrentAsParent?MoTabController.instance.getCurrent():null));
     }
 
 
@@ -229,19 +240,18 @@ public class MoTabsManager {
      * @param url url to open the new private tab in
      */
     public static void addPrivateTab(Context c, String url, boolean getCurrentAsParent){
-        MoTabsManager.newPrivateTab(c,url,getCurrentAsParent?MoTabController.instance.getCurrent():null);
-        int index = privateTabs.size() - 1;
-        setCurrentTabIndex(index,MoTabType.TYPE_PRIVATE);
+        setCurrentTab(c,MoTabsManager.newPrivateTab(c,url,
+                getCurrentAsParent?MoTabController.instance.getCurrent():null));
     }
 
 
     /**
      *
-     * @param index
-     * @param type
+     * @param context
+     * @param t
      */
-    static void setCurrentTabIndex(int index, @MoTabType.TabType int type){
-        MoTabController.instance.setIndex(index,type);
+    static void setCurrentTab(Context context,MoTab t){
+        MoTabController.instance.setNewTab(context,t);
     }
 
 
@@ -249,10 +259,9 @@ public class MoTabsManager {
      * selects the tab to be the one that the user
      * is currently viewing
      * @param tab
-     * @throws MoTabNotFoundException
      */
-    public static void selectTab(MoTab tab) throws MoTabNotFoundException {
-        MoTabController.instance.setIndex(getIndexOf(tab),tab.getType());
+    public static void selectTab(Context c,MoTab tab) {
+        MoTabController.instance.setNewTab(c,tab);
     }
 
 
@@ -262,7 +271,7 @@ public class MoTabsManager {
      * @return
      * @throws MoTabNotFoundException
      */
-    private static int getIndexOf(MoTab tab) throws MoTabNotFoundException {
+    public static int getIndexOf(MoTab tab) throws MoTabNotFoundException {
         switch (tab.getType()){
             case MoTabType.TYPE_PRIVATE:
                 return getIndexOf(tab, privateTabs);
@@ -293,11 +302,22 @@ public class MoTabsManager {
      * from our database
      */
     public static void clearAllNormalTabs(Context context){
-        for(int i = tabs.size()-1; i>=0;i--){
-            remove(i,context,MoTabType.TYPE_NORMAL);
+        for(MoTab t:tabs) {
+            delete(t);
         }
         save(context);
         Toast.makeText(context,context.getString(R.string.toast_closed_all_normal_tabs),Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * removes and deletes the files for
+     * the selected mo tabs
+     * @param selected selected tabs to be removed
+     */
+    public static void removeSelectedTabs(List<MoTab> selected){
+        for(MoTab t: selected){
+            delete(t);
+        }
     }
 
     /**
@@ -305,59 +325,30 @@ public class MoTabsManager {
      * from our database
      */
     public static void clearAllPrivateTabs(Context context){
-        for(int i = privateTabs.size()-1; i>=0; i--){
-            remove(i,context,MoTabType.TYPE_PRIVATE);
+        for(MoTab t: privateTabs){
+            delete(t);
         }
         Toast.makeText(context,context.getString(R.string.toast_closed_all_incognito_tabs),Toast.LENGTH_SHORT).show();
     }
 
 
-    // tab recycler methods
-
-//    /**
-//     * notifies the recycler adapter that an item has been inserted
-//     * @param index of the item
-//     * @param tabRecyclerAdapter corresponding adapter
-//     */
-//    private static void notifyItemInserted(int index, MoTabRecyclerAdapter tabRecyclerAdapter) {
-//        if (tabRecyclerAdapter != null) {
-//            tabRecyclerAdapter.notifyItemInserted(index);
-//        }
-//    }
-//
-//    /**
-//     * notifies item range inserted
-//     * @param index starting position of items that were added
-//     * @param count number of items added
-//     * @param adapter adapter to notify
-//     */
-//    private static void notifyItemRangeInserted(int index,int count,MoTabRecyclerAdapter adapter){
-//        if(adapter!=null){
-//            adapter.notifyItemRangeInserted(index,count);
-//        }
-//    }
-//
-//    /**
-//     * notifies the recycler adapter that an item has been removed
-//     * @param index of the item
-//     * @param tabRecyclerAdapter corresponding adapter
-//     */
-//    private static void notifyItemRemoved(int index, MoTabRecyclerAdapter tabRecyclerAdapter) {
-//        if (tabRecyclerAdapter != null) {
-//            tabRecyclerAdapter.notifyItemRemoved(index);
-//        }
-//    }
-
 
     /**
      * calls on destroy for every
-     * tab that exists
+     * tab that exists both private
+     * and normal tabs
+     * (so that the web views are destroyed
+     * and no memory leak is possible)
      */
     public static void onDestroy(){
         for(MoTab t : tabs){
             t.onDestroy();
         }
+        for(MoTab t: privateTabs){
+            t.onDestroy();
+        }
         tabs = null;
+        privateTabs = null;
     }
 
 

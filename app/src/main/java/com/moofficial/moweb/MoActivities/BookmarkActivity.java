@@ -16,8 +16,6 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoDialog.MoDialogs;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoListViewSync;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableList;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoPaddingBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoSearchBar;
@@ -132,7 +130,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
                         finish();
                         return false;
                     }),
-                    new Pair<>(getString(R.string.open_in_incognito_tab), menuItem -> {
+                    new Pair<>(getString(R.string.open_in_private_tab), menuItem -> {
                         if(nothingIsSelected()) return false;
                         MoOpenTab.openInNewPrivateTabs(this,recyclerAdapter.getSelectedItems());
                         finish();
@@ -330,22 +328,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     }
 
     private void initMoSearchable() {
-        this.moSearchable = new MoSearchable(this, getGroupRootView(), new MoSearchableList() {
-            @Override
-            public List<? extends MoSearchableItem> getSearchableItems() {
-                return MoBookmarkManager.getEverything();
-            }
-
-            @Override
-            public void notifyItemChanged(int i) {
-
-            }
-
-            @Override
-            public void notifyDataSetChanged() {
-
-            }
-        });
+        this.moSearchable = new MoSearchable(this, getGroupRootView(), MoBookmarkManager::getEverything);
         this.moSearchable.setShowNothingWhenSearchEmpty(false)
                 .setSearchOnTextChanged(true)
                 .setSearchTextView(searchBar.ETId())
@@ -423,7 +406,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
 
     @Override
     public void openBookmark(MoBookmark bookmark) {
-        MoTabController.instance.openUrlInCurrentTab(bookmark.getUrl(),true);
+        MoTabController.instance.openUrlInCurrentTab(this,bookmark.getUrl(),true);
         finish();
     }
 

@@ -168,6 +168,11 @@ public class MoTabSearchBar extends MoConstraint {
         return tab;
     }
 
+    public MoTabSearchBar clearEditTextFocus(){
+        searchText.clearFocus();
+        return this;
+    }
+
     public MoTabSearchBar syncWith(MoTab tab) {
         this.tab = tab;
         // sync their web view
@@ -238,8 +243,18 @@ public class MoTabSearchBar extends MoConstraint {
                         }
                     }
                 });
-        this.suggestion.hide();
+        hideSuggestions();
     }
+
+    /**
+     * hides the suggestions
+     * @return this
+     */
+    public MoTabSearchBar hideSuggestions(){
+        this.suggestion.hide();
+        return this;
+    }
+
 
     /**
      * shows auto complete text when user is typing
@@ -378,6 +393,8 @@ public class MoTabSearchBar extends MoConstraint {
         if(tab!=null){
             tab.setSearchText(null);
             tab.setProgressBar(null);
+            tab.setOnUpdateUrlListener(s -> {});
+            tab.setOnTabBookmarkChanged(isBookmarked -> {});
         }
         tab = null;
         moWebView = null;

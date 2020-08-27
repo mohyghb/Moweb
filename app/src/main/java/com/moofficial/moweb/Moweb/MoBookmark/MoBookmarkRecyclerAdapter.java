@@ -1,6 +1,5 @@
 package com.moofficial.moweb.Moweb.MoBookmark;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Pair;
@@ -14,22 +13,20 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterVi
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableList;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoPreviewSelectableAdapter;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
 import com.moofficial.moweb.MoActivities.BookmarkActivity;
 import com.moofficial.moweb.MoActivities.EditBookmarkActivity;
 import com.moofficial.moweb.R;
 
 import java.util.List;
 
-public class MoBookmarkRecyclerAdapter extends MoPreviewSelectableAdapter<MoBookmarkViewHolder,MoBookmark>
+public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkViewHolder,MoBookmark>
         implements MoSearchableList, MoSelectableList<MoBookmark> {
 
 
-    private MoSelectable<MoBookmark> moSelectable;
-    private Context context;
+
     private boolean disableLongClick = false;
     private MoOnOpenBookmarkListener openBookmarkListener = new MoOnOpenBookmarkListener() {
         @Override
@@ -45,8 +42,7 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewSelectableAdapter<MoBook
 
 
     public MoBookmarkRecyclerAdapter(Context context, List<MoBookmark> dataSet) {
-        super(dataSet);
-        this.context = context;
+        super(context,dataSet);
         setHasStableIds(true);
     }
 
@@ -79,9 +75,8 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewSelectableAdapter<MoBook
         return new MoBookmarkViewHolder(v);
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
-    protected void onBindViewHolderDifferentVersion(@NonNull MoBookmarkViewHolder h, int i, int i1) {
+    public void onBindViewHolder(@NonNull MoBookmarkViewHolder h, int i) {
         MoBookmark bookmark = dataSet.get(i);
         if (wasDeleted(h, bookmark,i)) return;
         switch (bookmark.getType()) {
@@ -100,7 +95,8 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewSelectableAdapter<MoBook
         MoDeletableUtils.applyDeleteColor(this.context,h.coverLayout,bookmark);
     }
 
-    private boolean wasDeleted(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark,int po) {
+
+    private boolean wasDeleted(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark, int po) {
         if(!bookmark.isSavable()){
             // make it so that the user thinks it's gone (or deleted for the time being)
             // then with the next load, everything will be right
@@ -115,7 +111,7 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewSelectableAdapter<MoBook
     private void onLongClickListener(@NonNull MoBookmarkViewHolder h, MoBookmark b,int i) {
         if(!disableLongClick){
             h.cardView.setOnLongClickListener(view -> {
-                if(this.moSelectable.isInActionMode()){
+                if(this.selectable.isInActionMode()){
                     return false;
                 }
 
@@ -141,8 +137,8 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewSelectableAdapter<MoBook
     }
 
     private void activateSelectMode(int i){
-        if(!moSelectable.isInActionMode()){
-            moSelectable.activateSpecialMode();
+        if(!selectable.isInActionMode()){
+            selectable.activateSpecialMode();
             onSelect(i);
         }
     }
@@ -151,7 +147,7 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewSelectableAdapter<MoBook
 
     private void onClickListener(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark,int i) {
         h.cardView.setOnClickListener(view -> {
-            if(moSelectable !=null && moSelectable.isInActionMode()){
+            if(selectable !=null && selectable.isInActionMode()){
                 onSelect(i);
             }
             else{
@@ -174,15 +170,7 @@ public class MoBookmarkRecyclerAdapter extends MoPreviewSelectableAdapter<MoBook
 
 
 
-    @Override
-    public void setListSelectable(MoSelectable<MoBookmark> moSelectable) {
-        this.moSelectable = moSelectable;
-    }
 
-
-    public void onSelect(int i) {
-        moSelectable.onSelect(dataSet.get(i),i);
-    }
 
 
     @Override

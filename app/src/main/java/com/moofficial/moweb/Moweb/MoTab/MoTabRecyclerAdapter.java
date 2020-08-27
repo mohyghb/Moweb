@@ -8,22 +8,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardView;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoPreviewSelectableAdapter;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoOnTabClickListener;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class MoTabRecyclerAdapter extends MoPreviewSelectableAdapter<MoTabRecyclerAdapter.TabViewHolder,MoTab>
+public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapter.TabViewHolder,MoTab>
         implements MoSelectableList<MoTab> {
 
     private static final int TAB_PADDING = 54;
@@ -31,9 +30,8 @@ public class MoTabRecyclerAdapter extends MoPreviewSelectableAdapter<MoTabRecycl
 
 
 
-    private Context context;
     private boolean isInGrid;
-    private MoSelectable<MoTab> selectable;
+
     private MoOnTabClickListener onTabClickListener = (t, index) -> {};
 
     public MoOnTabClickListener getOnTabClickListener() {
@@ -45,15 +43,6 @@ public class MoTabRecyclerAdapter extends MoPreviewSelectableAdapter<MoTabRecycl
         return this;
     }
 
-    @Override
-    public void setListSelectable(MoSelectable<MoTab> moSelectable) {
-        this.selectable = moSelectable;
-    }
-
-    @Override
-    public void onSelect(int i) {
-        selectable.onSelect(dataSet.get(i),i);
-    }
 
 
     public static class TabViewHolder extends RecyclerView.ViewHolder {
@@ -61,8 +50,9 @@ public class MoTabRecyclerAdapter extends MoPreviewSelectableAdapter<MoTabRecycl
         private ImageView background;
         private TextView url;
         private LinearLayout linearLayout;
-        private CardView innerCard;
+        private MoCardView innerCard;
         private MoCardView outerCard;
+        private LinearLayout coverView;
 
         public TabViewHolder(View v) {
             super(v);
@@ -72,14 +62,15 @@ public class MoTabRecyclerAdapter extends MoPreviewSelectableAdapter<MoTabRecycl
             innerCard = v.findViewById(R.id.tab_mode_list_inner_card_view);
             outerCard = v.findViewById(R.id.tab_mode_list_card_view);
             outerCard.makeCardRecRound();
+            coverView = v.findViewById(R.id.tab_mode_list_cover_view);
         }
 
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public MoTabRecyclerAdapter(ArrayList<MoTab> dataSet,Context c,boolean isInGrid) {
-        super(dataSet);
-        this.context = c;
+        super(c,dataSet);
+
         this.isInGrid = isInGrid;
         setHasStableIds(true);
     }
@@ -104,15 +95,27 @@ public class MoTabRecyclerAdapter extends MoPreviewSelectableAdapter<MoTabRecycl
         return new TabViewHolder(v);
     }
 
-
     @Override
-    protected void onBindViewHolderDifferentVersion(@NonNull TabViewHolder holder, int position,int recPos) {
+    public void onBindViewHolder(@NonNull TabViewHolder holder, int position) {
         MoTab tab = dataSet.get(position);
-        MoLog.print("recycler adapter: " + position);
         onTabClickListener(holder, position, tab);
         updateUI(holder, tab);
-        applySelectedBackground(holder, tab);
+        MoSelectableUtils.applySelectedColor(context,holder.coverView,tab);
         onLongTabClickListener(holder, position);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull TabViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if(payloads.isEmpty()){
+            super.onBindViewHolder(holder, position, payloads);
+        } else {
+            // we run partial efficient update
+            // the payload that is coming for sure we know it is
+            // from the mo selectable class
+            // so just update the selectable color
+            MoSelectableUtils.applySelectedColor(context,holder.coverView,dataSet.get(position));
+        }
+
     }
 
     /**
@@ -127,22 +130,12 @@ public class MoTabRecyclerAdapter extends MoPreviewSelectableAdapter<MoTabRecycl
 
     private void onLongTabClickListener(@NonNull TabViewHolder holder, int position) {
         holder.innerCard.setOnLongClickListener(view -> {
-            if(!selectable.isInActionMode()){
-                selectable.activateSpecialMode();
-                onSelect(position);
+            if(isNotSelecting()){
+                startSelecting(position);
+                return true;
             }
             return false;
         });
-    }
-
-    private void applySelectedBackground(@NonNull TabViewHolder holder, MoTab tab) {
-        if(tab.isSelected()){
-            holder.url.setBackgroundColor(context.getColor(R.color.error_color));
-           // new MoCardBuilder(context).setBackgroundColorId(R.color.error_color).build(holder.cardView);
-        }else{
-           // new MoCardBuilder(context).setBackgroundColorId(R.color.transparent).build(holder.cardView);
-            holder.url.setBackgroundColor(context.getColor(R.color.transparent));
-        }
     }
 
 
@@ -153,16 +146,13 @@ public class MoTabRecyclerAdapter extends MoPreviewSelectableAdapter<MoTabRecycl
 
 
     private void onTabClickListener(TabViewHolder holder, int position, MoTab tab) {
-        // going inside the tab
+        // going inside the tab or selecting it to be removed or shared ...
         holder.innerCard.setOnClickListener(view -> {
-//            if(selectable.isInActionMode()){
-//                onSelect(position);
-//            }else{
-            onTabClickListener.onClickListener(tab,position);
-//                MoTabController.instance.setIndex(position,
-//                        tab.getType());
-           // }
-
+            if(isSelecting()){
+                onSelect(position);
+            }else{
+                onTabClickListener.onTabClickListener(tab,position);
+            }
         });
     }
 
@@ -180,17 +170,13 @@ public class MoTabRecyclerAdapter extends MoPreviewSelectableAdapter<MoTabRecycl
         }
     }
 
-
-//    private void onRemove(int position){
-//        synchronized (tabs){
-//            if(position < getItemCount()){
-//                MoTabsManager.remove(this.context,position,tabs.get(position).getType());
-//                notifyItemRemoved(position);
-//                notifyItemRangeChanged(position,getItemCount());
-//            }
-//        }
-//    }
-
-
-
+    /**
+     * removes the tabs from this adapter
+     * and from the main manager class
+     */
+    public void deleteSelectedItems() {
+        MoTabsManager.removeSelectedTabs(this.selectedItems);
+        dataSet.removeAll(selectedItems);
+        notifyDataSetChanged();
+    }
 }

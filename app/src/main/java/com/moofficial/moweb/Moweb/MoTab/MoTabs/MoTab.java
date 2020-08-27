@@ -18,13 +18,14 @@ import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFileSavable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableItem;
 import com.moofficial.moessentials.MoEssentials.MoUtils.MoKeyboardUtils.MoKeyboardUtils;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabBitmap.MoTabBitmap;
-import com.moofficial.moweb.Moweb.MoTab.MoTabExceptions.MoTabNotFoundException;
 import com.moofficial.moweb.Moweb.MoTab.MoTabId.MoTabId;
 import com.moofficial.moweb.Moweb.MoTab.MoTabType.MoTabType;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoOnTabBookmarkChanged;
@@ -36,8 +37,9 @@ import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 
 import java.io.IOException;
+import java.util.Objects;
 
-public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
+public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSearchableItem {
 
 
 
@@ -45,32 +47,28 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
     private MoTab parentTab;
     protected MoWebView moWebView;
     private MoURL url;
-
     private MoBitmap moBitmap = new MoTabBitmap();
-    private boolean isUpToDate;
     private MoTabType tabType = new MoTabType(MoTabType.TYPE_NORMAL);
     private MoOnUpdateUrlListener onUpdateUrlListener = s -> {};
     private MoOnTabBookmarkChanged onTabBookmarkChanged = isBookmarked -> {};
-
-
     private Context context;
     private View errorLayout;
     private TextView searchText;
     private boolean captureImage = true;
     private boolean isSelected = false;
     private boolean wasInitAlready = false;
+    private boolean isSearched = false;
+    private boolean isUpToDate = false;
 
 
     public MoTab(Context context, String url) {
         initContextView(context);
         this.url = new MoURL(url);
-        //init();
-        search(this.url.getUrlString());
+        saveTab();
     }
 
     private void initContextView(Context context) {
         this.context = context;
-       // this.view = MoInflaterView.inflate(R.layout.tab, this.context);
         this.moWebView = new MoWebView(context);
     }
 
@@ -81,7 +79,6 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
     // for loading back tabs from saved files
     public MoTab(Context context){
         initContextView(context);
-        this.isUpToDate = false;
     }
 
     public MoTab setCaptureImage(boolean b){
@@ -266,17 +263,12 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
      * @param superBackPressed super.onBackPressed in main activity
      */
     public void onBackPressed(Runnable superBackPressed){
-        if(this.moWebView.canGoBack()){
+        if(this.moWebView.canGoBack()) {
             this.moWebView.goBack();
-        }else if(parentTab!=null){
+        } else if(parentTab!=null) {
             // we can go back to the parent tab
-            try {
-                MoTabsManager.selectTab(this.parentTab);
-            } catch (MoTabNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        else{
+            MoTabsManager.selectTab(context,this.parentTab);
+        } else {
             superBackPressed.run();
         }
     }
@@ -330,9 +322,9 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
     public String getUrl() {
         return url.getUrlString();
     }
-    //public View getView() {
-    //    return view;
-   // }
+    public long getId(){
+        return this.tabId.getId();
+    }
 
 
 
@@ -446,6 +438,18 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MoTab)) return false;
+        MoTab tab = (MoTab) o;
+        return tab.getId() == getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
 
     /**
      * loads a savable object into its class
@@ -502,6 +506,10 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
 //        errorLayout.setVisibility(View.VISIBLE);
     }
 
+
+
+    // mo selectable
+
     @Override
     public boolean onSelect() {
         this.isSelected = !this.isSelected;
@@ -518,6 +526,25 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem {
         return this.isSelected;
     }
 
+
+    // mo searchable
+
+    @Override
+    public boolean updateSearchable(Object... objects) {
+        this.isSearched = MoSearchableUtils.isSearchable(true,objects,
+                getUrl());
+        return this.isSearched;
+    }
+
+    @Override
+    public boolean isSearchable() {
+        return this.isSearched;
+    }
+
+    @Override
+    public void setSearchable(boolean b) {
+        this.isSearched = b;
+    }
 
 
 }

@@ -2,7 +2,6 @@ package com.moofficial.moweb.Moweb.MoWebview.MoWebViews;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
-import com.moofficial.moweb.MoTouchPosition.MoTouchPosition;
 import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoWebClient;
@@ -41,7 +39,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
             super.doUpdateVisitedHistory(view, url, isReload);
             onUpdateUrlListener.onUrlUpdate(url,isReload);
-            stackTabHistory.update();
+            stackTabHistory.update(url,isReload);
             if(saveHistory && !isReload){
                 MoHistoryManager.add(view);
             }
@@ -55,7 +53,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
             if(captureBitmapWhenFinishedLoading){
                 captureBitmapWithDelay(1000);
             }
-            // inject the js to web view
+            // inject the js to web view for getting links from touch
             evaluateJavascript(MoWebElementDetection.injectJs(context),null);
             super.onPageFinished(view, url);
             MoWebView.this.onPageFinishedListener.onFinished(view,url);
@@ -69,9 +67,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
     };
     private String url;
     private MoChromeClient chromeClient;
-    //private MoTab tab;
     private MoHitTestResultParser hitTestResultParser;
-    private MoTouchPosition touchPosition;
     private MoStackWebHistory stackTabHistory = new MoStackWebHistory();
     private MoOnUpdateUrlListener onUpdateUrlListener = (url, isReload) -> {};
     private MoOnReceivedError onErrorReceived = (view, request, error) -> {};
@@ -152,14 +148,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         return this;
     }
 
-    public MoTouchPosition getTouchPosition() {
-        return touchPosition;
-    }
 
-    public MoWebView setTouchPosition(MoTouchPosition touchPosition) {
-        this.touchPosition = touchPosition;
-        return this;
-    }
 
     public MoStackWebHistory getStackTabHistory() {
         return stackTabHistory;
@@ -221,16 +210,12 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         initWebView();
         // for showing pop up menu when
         // user long presses over an element of web view
-        initStackTabHistory();
         initHitTestResult();
         addJsInterfaces();
         enableCorrectMode();
     }
 
 
-    private void initStackTabHistory(){
-        this.stackTabHistory.setWebView(this);
-    }
 
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebView() {
@@ -249,17 +234,22 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
     }
 
 
-    private void initHitTestResult(){
-        this.hitTestResultParser = new MoHitTestResultParser(this.context,this);
+    private void initHitTestResult() {
+        this.hitTestResultParser = new MoHitTestResultParser(this);
         // init touch position
-        this.touchPosition = new MoTouchPosition(this).setLongClickListener(()->{
-            boolean dialogCreated = hitTestResultParser.createDialog();
-            if(!dialogCreated){
-                // only show the bottom search if dialog was not created
-                Handler handler = new Handler();
-                handler.postDelayed(() -> hitTestResultParser.onTextSelected(), 100);
-            }
-        });
+       // this.touchPosition = new MoTouchPosition(this).setLongClickListener(()->{
+            // monote
+            //  these should be moved inside the tab activity
+            //  and we have to set the long click listener there
+            //  we do not need touch position since we are not showing the
+            //  dialog at that position
+//            boolean dialogCreated = hitTestResultParser.createDialog();
+//            if(!dialogCreated){
+//                // only show the bottom search if dialog was not created
+//                Handler handler = new Handler();
+//                handler.postDelayed(() -> hitTestResultParser.onTextSelected(), 100);
+//            }
+       // });
     }
 
     /**
@@ -352,6 +342,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
      * if it can go forward from this url
      * @return
      */
+    @Override
     public boolean canGoForward(){
         return stackTabHistory.canGoForward();
     }
@@ -359,8 +350,9 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
     /**
      * goes forward a url
      */
+    @Override
     public void goForward(){
-        this.stackTabHistory.goForward();
+        this.loadUrl(this.stackTabHistory.goForward());
     }
 
     /**
@@ -377,6 +369,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
      * URL or not
      * @return
      */
+    @Override
     public boolean canGoBack(){
         return stackTabHistory.canGoBack();
     }
@@ -385,9 +378,11 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
      * goes back a page
      * can throw EmptyStackException if the stack
      * tab history is empty
+     * we load from cache if possible
      */
+    @Override
     public void goBack(){
-        this.stackTabHistory.goBack();
+        loadUrl(this.stackTabHistory.goBack());
     }
 
 
@@ -493,9 +488,11 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
      * @param lp layout params of the web view inside that view group
      */
     public void moveWebViewTo(ViewGroup viewGroup, ViewGroup.LayoutParams lp){
+
         if(this.getParent()!=null){
             // it has a parent, remove the web view from the parent first
-            ((ViewGroup)getParent()).removeView(this);
+            ViewGroup p = ((ViewGroup)getParent());
+            p.removeView(this);
         }
         viewGroup.addView(this,lp);
     }

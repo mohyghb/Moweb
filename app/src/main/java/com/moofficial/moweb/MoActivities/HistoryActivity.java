@@ -7,8 +7,6 @@ import android.widget.Toast;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoListViewSync;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableList;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoSearchBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
@@ -156,22 +154,7 @@ public class HistoryActivity extends MoSmartActivity {
 
 
     private void initSearchable(){
-        this.searchable = new MoSearchable(this, getGroupRootView(), new MoSearchableList() {
-            @Override
-            public List<? extends MoSearchableItem> getSearchableItems() {
-                return allHistories;
-            }
-
-            @Override
-            public void notifyItemChanged(int i) {
-
-            }
-
-            @Override
-            public void notifyDataSetChanged() {
-
-            }
-        })
+        this.searchable = new MoSearchable(this, getGroupRootView(), () -> allHistories)
                 .setOnSearchFinished(list -> updateAdapter((List<MoHistory>) list))
                 .setOnSearchCanceled(() -> updateAdapter(allHistories))
                 .setSearchOnTextChanged(true)

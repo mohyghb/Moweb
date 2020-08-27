@@ -12,35 +12,24 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoD
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletableInterface.MoListDeletable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoPreviewSelectableAdapter;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
 import com.moofficial.moweb.R;
 
 import java.util.List;
 
-public class MoHomePageRecyclerAdapter extends MoPreviewSelectableAdapter<MoHomePageViewHolder,MoHomePage>
+public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageViewHolder,MoHomePage>
         implements MoListDeletable<MoHomePage> {
 
 
-    private Context context;
     private MoDeletable<MoHomePage> moListDelete;
 
 
     public MoHomePageRecyclerAdapter(Context context, List<MoHomePage> dataSet) {
-        super(dataSet);
+        super(context,dataSet);
         this.context = context;
     }
 
-    @Override
-    protected void onBindViewHolderDifferentVersion(@NonNull MoHomePageViewHolder holder, int position,int i) {
-        MoHomePage homePage = dataSet.get(position);
-        holder.urlTextView.setText(homePage.getUrl());
-        holder.radioButton.setChecked(homePage.isActivated());
-        hideRadioButton(holder);
-        radioButtonPress(holder, position);
-        pressCard(holder, position);
-        longPressCard(holder,position);
-        MoDeletableUtils.applyDeleteColor(this.context,holder.coverLayout,homePage);
-    }
+
 
     private void hideRadioButton(@NonNull MoHomePageViewHolder holder) {
         if(moListDelete.isInActionMode()){
@@ -97,7 +86,17 @@ public class MoHomePageRecyclerAdapter extends MoPreviewSelectableAdapter<MoHome
         return new MoHomePageViewHolder(v);
     }
 
-
+    @Override
+    public void onBindViewHolder(@NonNull MoHomePageViewHolder holder, int position) {
+        MoHomePage homePage = dataSet.get(position);
+        holder.urlTextView.setText(homePage.getUrl());
+        holder.radioButton.setChecked(homePage.isActivated());
+        hideRadioButton(holder);
+        radioButtonPress(holder, position);
+        pressCard(holder, position);
+        longPressCard(holder,position);
+        MoDeletableUtils.applyDeleteColor(this.context,holder.coverLayout,homePage);
+    }
 
 
     @Override

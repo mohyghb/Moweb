@@ -7,8 +7,6 @@ import android.view.View;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableList;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoMarginBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoSearchBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
@@ -23,7 +21,6 @@ import com.moofficial.moweb.Moweb.MoBookmark.MoOnOpenBookmarkListener;
 import com.moofficial.moweb.R;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class BookmarkFolderChooserActivity extends MoSmartActivity implements MoOnOpenBookmarkListener {
@@ -90,22 +87,7 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
 
 
     private void initSearch() {
-        moSearchable = new MoSearchable(this, getGroupRootView(), new MoSearchableList() {
-            @Override
-            public List<? extends MoSearchableItem> getSearchableItems() {
-                return allPossibleFolders;
-            }
-
-            @Override
-            public void notifyItemChanged(int i) {
-
-            }
-
-            @Override
-            public void notifyDataSetChanged() {
-
-            }
-        })
+        moSearchable = new MoSearchable(this, getGroupRootView(), () -> allPossibleFolders)
                 .addNormalViews(this.moToolBar)
                 .addUnNormalViews(this.searchBar)
                 .setActivity(this)

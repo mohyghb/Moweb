@@ -23,7 +23,7 @@ public class MoOpenTab {
         for(T o : l){
             MoTabsManager.newTab(context,o.getSearchString(),null);
         }
-        MoTabsManager.setCurrentTabIndex(MoTabsManager.size()-1, MoTabType.TYPE_NORMAL);
+        MoTabsManager.setCurrentTab(context,MoTabsManager.getLastTab(MoTabType.TYPE_NORMAL));
     }
 
 
@@ -40,7 +40,7 @@ public class MoOpenTab {
         for(T o : l){
             MoTabsManager.newPrivateTab(context,o.getSearchString(),null);
         }
-        MoTabsManager.setCurrentTabIndex(MoTabsManager.sizePrivate() - 1, MoTabType.TYPE_PRIVATE);
+        MoTabsManager.setCurrentTab(context,MoTabsManager.getLastTab(MoTabType.TYPE_PRIVATE));
     }
 
 

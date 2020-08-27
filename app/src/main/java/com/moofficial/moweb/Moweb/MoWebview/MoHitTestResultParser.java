@@ -16,7 +16,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.moofficial.moessentials.MoEssentials.MoConnections.MoShare;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
-import com.moofficial.moweb.MoClipboard.MoClipboard;
+import com.moofficial.moweb.MoClipboard.MoClipboardUtils;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoPopUpTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
@@ -29,18 +29,12 @@ import java.util.Objects;
 public class MoHitTestResultParser {
 
 
-    private static final String OPEN_NEW_TAB = "Open in new tab";
-    private static final String OPEN_NEW_INCOGNITO_TAB = "Open in new incognito tab";
-    private static final String COPY_LINK_ADDRESS = "Copy link address";
-    private static final String COPY_LINK_TEXT = "Copy link text";
-    private static final String DOWNLOAD_LINK = "Download link";
-    private static final String SHARE_LINK = "Share link";
 
     private static final int BOTTOM_SHEET_PEEK_HEIGHT = 200;
 
-    private Context context;
-    private MoWebView webView;
 
+    private MoWebView webView;
+    private Context context;
     private String selectedText;
     private String href;
     private String title;
@@ -49,37 +43,55 @@ public class MoHitTestResultParser {
     private Dialog dialog;
 
 
-    public MoHitTestResultParser(Context context, MoWebView webView){
-        this.context = context;
+    public MoHitTestResultParser(MoWebView webView){
         this.webView = webView;
         // for detecting when the user clicks an element
         this.elementDetection = new MoWebElementDetection(webView);
         this.webView.addJavascriptInterface(this.elementDetection,MoWebElementDetection.CLASS_NAME);
-        clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+    }
+
+    /**
+     * create a dialog if the user long clicks
+     * on a link, or show a smart web search
+     * if the user is trying to copy a text
+     * @param c context of the situation
+     */
+    public void createDialogOrSmartText(Context c){
+        boolean b = createDialog(c);
+        if(!b){
+            onTextSelected(c);
+        }
     }
 
 
-    public boolean createDialog() {
+    /**
+     * creates a dialog
+     * of available options
+     * @param c
+     * @return
+     */
+    public boolean createDialog(Context c) {
         if(!elementDetection.isValidDialog()) {
             return false;
         }
-        title = elementDetection.getInnerText();
-        href = elementDetection.getHref();
-        dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(true);
-        dialog.setOnDismissListener(dialogInterface -> elementDetection.onTouchEnd());
-        dialog.setOnCancelListener(dialogInterface -> elementDetection.onTouchEnd());
-        View v = MoInflaterView.inflate(R.layout.popup_menu__webview,context);
+        this.context = c;
+        this.title = elementDetection.getInnerText();
+        this.href = elementDetection.getHref();
+        this.dialog = new Dialog(c);
+        this.dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.dialog.setCancelable(true);
+        this.dialog.setOnDismissListener(dialogInterface -> elementDetection.onTouchEnd());
+        this. dialog.setOnCancelListener(dialogInterface -> elementDetection.onTouchEnd());
+        View v = MoInflaterView.inflate(R.layout.popup_menu__webview,c);
         LinearLayout linearLayout = v.findViewById(R.id.dialog_actions_linear_layout);
         ((TextView)v.findViewById(R.id.title_dialog)).setText(title);
         ((TextView)v.findViewById(R.id.description_dialog)).setText(href);
-        addAction(MoWebElementDetection.isValidVar(title), this::copyLinkText,COPY_LINK_TEXT,context,linearLayout);
-        addAction(MoWebElementDetection.isValidVar(href), this::copyLinkAddress,COPY_LINK_ADDRESS,context,linearLayout);
-        addAction(MoWebElementDetection.isValidVar(href), this::openInNewTab,OPEN_NEW_TAB,context,linearLayout);
-        addAction(MoWebElementDetection.isValidVar(href), this::openInNewIncognitoTab,OPEN_NEW_INCOGNITO_TAB,context,linearLayout);
-        addAction(MoWebElementDetection.isValidVar(href), this::downloadLink,DOWNLOAD_LINK,context,linearLayout);
-        addAction(MoWebElementDetection.isValidVar(href), this::shareLink,SHARE_LINK,context,linearLayout);
+        addAction(MoWebElementDetection.isValidVar(title), this::copyLinkText,c.getString(R.string.copy_link_text),c,linearLayout);
+        addAction(MoWebElementDetection.isValidVar(href), this::copyLinkAddress,c.getString(R.string.copy_link_address),c,linearLayout);
+        addAction(MoWebElementDetection.isValidVar(href), this::openInNewTab,c.getString(R.string.open_in_tab),c,linearLayout);
+        addAction(MoWebElementDetection.isValidVar(href), this::openInNewIncognitoTab,c.getString(R.string.open_in_private_tab),c,linearLayout);
+        addAction(MoWebElementDetection.isValidVar(href), this::downloadLink,c.getString(R.string.download_link),c,linearLayout);
+        addAction(MoWebElementDetection.isValidVar(href), this::shareLink,c.getString(R.string.share_link),c,linearLayout);
         dialog.setContentView(v);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
@@ -90,12 +102,14 @@ public class MoHitTestResultParser {
     /**
      * shows a web view for the text that they selected
      */
-    private boolean smartTextSearch() {
+    private boolean smartTextSearch(Context context) {
         // don't show anything if there is no selected text
         if(selectedText == null || selectedText.isEmpty())
             return false;
 
         MoTab tab = new MoPopUpTab(selectedText,context).setCaptureImage(false);
+        tab.init();
+
         BottomSheetDialog bottomSheerDialog = new BottomSheetDialog(context);
         View parentView = MoInflaterView.inflate(R.layout.smart_text_search_layout,context);
         LinearLayout linearLayout = parentView.findViewById(R.id.nested_linear_bottom_sheet);
@@ -133,13 +147,13 @@ public class MoHitTestResultParser {
 
     // copies the link text in clip board
     private void copyLinkText() {
-        MoClipboard.addClipBoardText(clipboard,title,context,"Link Text");
+        MoClipboardUtils.add(context,title,"Link Text");
         dismissDialog();
     }
 
     // copies the link address
     private void copyLinkAddress(){
-        MoClipboard.addClipBoardText(clipboard,href,context,"Link Address");
+        MoClipboardUtils.add(context,href,"Link Address");
         dismissDialog();
     }
 
@@ -173,12 +187,12 @@ public class MoHitTestResultParser {
     /**
      * this method returns the text that is selected in web view
      */
-    public void onTextSelected(){
-        webView.evaluateJavascript("(function(){return window.getSelection().toString()})()",
+    public void onTextSelected(Context context){
+        webView.post(() -> webView.evaluateJavascript("(function(){return window.getSelection().toString()})()",
                 value -> {
                     selectedText = value.replace("\"","");
-                    smartTextSearch();
-                });
+                    smartTextSearch(context);
+                }));
     }
 
 

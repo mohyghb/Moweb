@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MoActivities.MainMenuActivity"></activity>
+        <activity android:name=".MoActivities.MainMenuActivity"/>
 
         <activity
             android:name=".MoActivities.MoTabActivity"

@@ -6,14 +6,12 @@ import android.content.Context;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
-import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 // a class to save all the searches of the user
 // so we can go back if stack has anything in it
-// it has a mutual connection with a mo web view
 public class MoStackWebHistory implements MoSavable, MoLoadable {
 
     // millisecond of double pressing the back button to jump back two goBacks
@@ -25,7 +23,7 @@ public class MoStackWebHistory implements MoSavable, MoLoadable {
 
     private ArrayList<String> list = new ArrayList<>();
     private int currentIndex = 0;
-    private MoWebView webView;
+    //private MoWebView webView;
     private int previousAction = ACTION_NULL;
     private long lastBackPressed;
 
@@ -41,10 +39,14 @@ public class MoStackWebHistory implements MoSavable, MoLoadable {
      * adds the url to the stack of urls
      * only adds it if the current url is different
      * than the last url added
+     * @param url of the new search
+     * @param isReload whether they reloaded the web view or not
      */
-    public void update(){
-        @SuppressWarnings("ConstantConditions")
-        String url = webView.copyBackForwardList().getCurrentItem().getUrl();
+    public void update(String url,boolean isReload) {
+        if(isReload)
+            return;
+        //@SuppressWarnings("ConstantConditions")
+//        String url = webView.copyBackForwardList().getCurrentItem().getUrl();
         if(url!=null && list.isEmpty() || !list.get(currentIndex).equals(url) && previousAction == ACTION_NULL){
             if(currentIndex!=list.size()-1 && previousAction==ACTION_NULL){
                 removeAfterCurrentIndex();
@@ -61,10 +63,6 @@ public class MoStackWebHistory implements MoSavable, MoLoadable {
         }
     }
 
-    public MoStackWebHistory setWebView(MoWebView webView) {
-        this.webView = webView;
-        return this;
-    }
 
     /**
      * if the stack has more than one url, we
@@ -73,7 +71,7 @@ public class MoStackWebHistory implements MoSavable, MoLoadable {
      * @return true if the stack has more than one url and the web view is not null
      */
     public boolean canGoBack(){
-        return this.webView != null && currentIndex>0;
+        return currentIndex>0;
     }
 
     /**
@@ -82,7 +80,7 @@ public class MoStackWebHistory implements MoSavable, MoLoadable {
      * into the web view
      * adds it to the popped queue
      */
-    public void goBack(){
+    public String goBack(){
         previousAction = ACTION_BACK;
         currentIndex--;
         if(canGoBack()&& System.currentTimeMillis() - lastBackPressed <= DOUBLE_BACK_PRESS_TOLERANCE){
@@ -90,21 +88,23 @@ public class MoStackWebHistory implements MoSavable, MoLoadable {
             currentIndex--;
             //Toast.makeText(this.webView.getContext(),"double press",Toast.LENGTH_SHORT).show();
         }
-        this.webView.loadUrl(getCurrentURL(),true);
+        //this.webView.loadUrl(getCurrentURL(),true);
         lastBackPressed = System.currentTimeMillis();
+        return getCurrentURL();
     }
 
     public boolean canGoForward(){
-        return this.webView!=null && currentIndex< list.size()-1;
+        return  currentIndex< list.size()-1;
     }
 
     /**
      * adds this to the
      */
-    public void goForward(){
+    public String goForward(){
         previousAction = ACTION_FORWARD;
         currentIndex++;
-        this.webView.loadUrl(getCurrentURL());
+        return getCurrentURL();
+//        this.webView.loadUrl(getCurrentURL());
     }
 
 

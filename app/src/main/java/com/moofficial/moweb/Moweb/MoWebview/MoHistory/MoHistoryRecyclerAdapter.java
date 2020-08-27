@@ -10,22 +10,21 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterVi
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoPreviewSelectableAdapter;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
 import com.moofficial.moweb.R;
 
 import java.util.ArrayList;
 
-public class MoHistoryRecyclerAdapter extends MoPreviewSelectableAdapter<MoHistoryHolder,MoHistory> implements
+public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolder,MoHistory> implements
         MoSelectableList<MoHistory> {
 
 
 
-    private Context context;
     private MoSelectable<MoHistory> selectable;
 
 
     public MoHistoryRecyclerAdapter(ArrayList<MoHistory> dataSet,Context c) {
-        super(dataSet);
+        super(c,dataSet);
         this.context = c;
         setHasStableIds(true);
     }
@@ -46,7 +45,7 @@ public class MoHistoryRecyclerAdapter extends MoPreviewSelectableAdapter<MoHisto
     }
 
     @Override
-    protected void onBindViewHolderDifferentVersion(@NonNull MoHistoryHolder holder, int position, int i1) {
+    public void onBindViewHolder(@NonNull MoHistoryHolder holder, int position) {
         MoHistory history = dataSet.get(position);
         switch (holder.type){
             case MoHistory.TYPE_DATE:
@@ -57,12 +56,14 @@ public class MoHistoryRecyclerAdapter extends MoPreviewSelectableAdapter<MoHisto
                 holder.dateTimeTextView.setText(history.getDate());
                 holder.titleTextView.setText(history.getTitle());
                 holder.moImageTextLogo.setText(history.getSignatureLetter());
-                makeHistoryClickable(holder, i1);
-                makeHistoryLongClickable(holder, i1);
+                makeHistoryClickable(holder, position);
+                makeHistoryLongClickable(holder, position);
                 MoSelectableUtils.applySelectedColor(context,holder.cover,history);
                 break;
         }
     }
+
+
 
     private void makeHistoryClickable(@NonNull MoHistoryHolder holder, int position) {
         holder.cardView.setOnClickListener(view -> {
@@ -90,7 +91,7 @@ public class MoHistoryRecyclerAdapter extends MoPreviewSelectableAdapter<MoHisto
 
     @Override
     public int getItemViewType(int position) {
-        return dataSet.get(getCorrectPosition(position)).getType();
+        return dataSet.get(position).getType();
     }
 
 
@@ -101,6 +102,6 @@ public class MoHistoryRecyclerAdapter extends MoPreviewSelectableAdapter<MoHisto
 
     @Override
     public void onSelect(int i) {
-        this.selectable.onSelect(dataSet.get(getCorrectPosition(i)),i);
+        this.selectable.onSelect(dataSet.get(i),i);
     }
 }
