@@ -2,25 +2,36 @@ package com.moofficial.moweb.Moweb.MoWebview;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.transition.TransitionManager;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoShare.MoShare;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moweb.MoClipboard.MoClipboardUtils;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoPopUpTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
-import com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces.MoWebElementDetection;
+import com.moofficial.moweb.Moweb.MoWebview.MoHitTestResult.MoHitTestResult;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 import com.moofficial.moweb.R;
 
@@ -36,18 +47,15 @@ public class MoHitTestResultParser {
     private MoWebView webView;
     private Context context;
     private String selectedText;
-    private String href;
+    private String url;
     private String title;
-    private MoWebElementDetection elementDetection;
-    private ClipboardManager clipboard;
+    private String src;
+    private Bitmap bitmap;
     private Dialog dialog;
 
 
     public MoHitTestResultParser(MoWebView webView){
         this.webView = webView;
-        // for detecting when the user clicks an element
-        this.elementDetection = new MoWebElementDetection(webView);
-        this.webView.addJavascriptInterface(this.elementDetection,MoWebElementDetection.CLASS_NAME);
     }
 
     /**
@@ -57,10 +65,7 @@ public class MoHitTestResultParser {
      * @param c context of the situation
      */
     public void createDialogOrSmartText(Context c){
-        boolean b = createDialog(c);
-        if(!b){
-            onTextSelected(c);
-        }
+        hitTestResult(c);
     }
 
 
@@ -71,31 +76,80 @@ public class MoHitTestResultParser {
      * @return
      */
     public boolean createDialog(Context c) {
-        if(!elementDetection.isValidDialog()) {
+        if(uselessDialog()) {
+            // we don't have anything to show to the user
             return false;
         }
         this.context = c;
-        this.title = elementDetection.getInnerText();
-        this.href = elementDetection.getHref();
         this.dialog = new Dialog(c);
         this.dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.dialog.setCancelable(true);
-        this.dialog.setOnDismissListener(dialogInterface -> elementDetection.onTouchEnd());
-        this. dialog.setOnCancelListener(dialogInterface -> elementDetection.onTouchEnd());
         View v = MoInflaterView.inflate(R.layout.popup_menu__webview,c);
         LinearLayout linearLayout = v.findViewById(R.id.dialog_actions_linear_layout);
         ((TextView)v.findViewById(R.id.title_dialog)).setText(title);
-        ((TextView)v.findViewById(R.id.description_dialog)).setText(href);
-        addAction(MoWebElementDetection.isValidVar(title), this::copyLinkText,c.getString(R.string.copy_link_text),c,linearLayout);
-        addAction(MoWebElementDetection.isValidVar(href), this::copyLinkAddress,c.getString(R.string.copy_link_address),c,linearLayout);
-        addAction(MoWebElementDetection.isValidVar(href), this::openInNewTab,c.getString(R.string.open_in_tab),c,linearLayout);
-        addAction(MoWebElementDetection.isValidVar(href), this::openInNewIncognitoTab,c.getString(R.string.open_in_private_tab),c,linearLayout);
-        addAction(MoWebElementDetection.isValidVar(href), this::downloadLink,c.getString(R.string.download_link),c,linearLayout);
-        addAction(MoWebElementDetection.isValidVar(href), this::shareLink,c.getString(R.string.share_link),c,linearLayout);
+        ((TextView)v.findViewById(R.id.description_dialog)).setText(url);
+
+        ImageView imageView = v.findViewById(R.id.popup_web_view_image);
+        //monote image
+        if(src!=null && !src.isEmpty()){
+            MoLog.print("should see an image");
+            imageView.setVisibility(View.VISIBLE);
+            Glide.with(context).asBitmap().load(this.src).into(new CustomTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                    bitmap = resource;
+                    TransitionManager.beginDelayedTransition((ViewGroup) v);
+                    imageView.setImageBitmap(resource);
+                    addAction(true,MoHitTestResultParser.this::shareImage,
+                            context.getString(R.string.share_image),context,linearLayout);
+                }
+
+                @Override
+                public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                }
+            });
+        }else{
+            imageView.setVisibility(View.GONE);
+        }
+
+
+        addAction(isValidVar(title), this::copyLinkText,c.getString(R.string.copy_link_text),c,linearLayout);
+        addAction(isValidVar(url), this::copyLinkAddress,c.getString(R.string.copy_link_address),c,linearLayout);
+        addAction(isValidVar(url), this::openInNewTab,c.getString(R.string.open_in_tab),c,linearLayout);
+        addAction(isValidVar(url), this::openInNewIncognitoTab,c.getString(R.string.open_in_private_tab),c,linearLayout);
+        addAction(isValidVar(url), this::downloadLink,c.getString(R.string.download_link),c,linearLayout);
+        addAction(isValidVar(url), this::shareLink,c.getString(R.string.share_link),c,linearLayout);
         dialog.setContentView(v);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
         return true;
+    }
+
+    /**
+     * if we don't have anything to show to user
+     * when they long click, then this is a useless dialog
+     * therefore, we need to look for smart search or something else
+     * @return true if all the elements of a dialog are null
+     */
+    private boolean uselessDialog() {
+        return this.url == null && this.title == null && this.src == null;
+    }
+
+
+    private void hitTestResult(Context context) {
+        new MoHitTestResult()
+                .of(this.webView)
+                .onResult((src, url, title) -> {
+                    this.src = src;
+                    this.url = url;
+                    this.title = title;
+                    if(!createDialog(context)){
+                        // try smart search
+                        smartTextSearch(context);
+                    }
+                })
+                .request();
     }
 
 
@@ -154,29 +208,33 @@ public class MoHitTestResultParser {
 
     // copies the link address
     private void copyLinkAddress(){
-        MoClipboardUtils.add(context,href,"Link Address");
+        MoClipboardUtils.add(context, url,"Link Address");
         dismissDialog();
     }
 
     // opens this url in new tab
     private void openInNewTab(){
-        MoTabsManager.addTab(context,href,true);
+        MoTabsManager.addTab(context, url,true);
         dismissDialog();
     }
 
     private void openInNewIncognitoTab(){
-        MoTabsManager.addPrivateTab((Activity) context,href, true);
+        MoTabsManager.addPrivateTab((Activity) context, url, true);
         dismissDialog();
     }
 
     private void downloadLink(){
-        MoDownloadListener.download(context,href);
+        MoDownloadListener.download(context, url);
         dismissDialog();
     }
 
-    private void shareLink(){
-        new MoShare().setText(this.href).shareText(this.context);
+    private void shareLink() {
+        new MoShare().setText(this.url).shareText(this.context);
         dismissDialog();
+    }
+
+    private void shareImage() {
+
     }
 
     // quits the dialog
@@ -184,6 +242,9 @@ public class MoHitTestResultParser {
         dialog.dismiss();
     }
 
+    public static boolean isValidVar(String input){
+        return input != null && !input.isEmpty();
+    }
 
     /**
      * this method returns the text that is selected in web view

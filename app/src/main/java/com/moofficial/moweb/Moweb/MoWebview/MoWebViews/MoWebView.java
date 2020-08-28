@@ -20,7 +20,6 @@ import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoWebClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoHitTestResultParser;
-import com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces.MoWebElementDetection;
 import com.moofficial.moweb.Moweb.MoWebview.MoStackTabHistory.MoStackWebHistory;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnPageFinishedListener;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnReceivedError;
@@ -52,8 +51,6 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
             if(captureBitmapWhenFinishedLoading){
                 captureBitmapWithDelay(1000);
             }
-            // inject the js to web view for getting links from touch
-            evaluateJavascript(MoWebElementDetection.injectJs(context),null);
             super.onPageFinished(view, url);
             MoWebView.this.onPageFinishedListener.onFinished(view,url);
         }
@@ -123,14 +120,6 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         return hitTestResultParser;
     }
 
-    public MoWebView setHitTestResultParser(MoHitTestResultParser hitTestResultParser) {
-        this.hitTestResultParser = hitTestResultParser;
-        return this;
-    }
-
-    public MoOnUpdateUrlListener getOnUpdateUrlListener() {
-        return onUpdateUrlListener;
-    }
 
     public MoWebView setOnUpdateUrlListener(MoOnUpdateUrlListener onUpdateUrlListener) {
         this.onUpdateUrlListener = onUpdateUrlListener;

@@ -40,17 +40,20 @@
             android:label="@string/title_activity_settings" />
         <activity android:name=".MoActivities.HistoryActivity" />
         <activity
-            android:name=".MoActivities.MainActivity">
-<!--            android:alwaysRetainTaskState="true"-->
-<!--            android:configChanges="orientation|screenSize">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
+            android:name=".MoActivities.MainActivity"/>
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-        </activity>
 
         <service android:name=".Moweb.MoServices.MoSaverBackgroundService" />
+
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.mydomain.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+        </provider>
+
+
     </application>
 
 </manifest>

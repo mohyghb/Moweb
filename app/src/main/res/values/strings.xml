@@ -22,6 +22,7 @@
     <string name="copy_link_text">Copy link text</string>
     <string name="download_link">Download link</string>
     <string name="share_link">Share link</string>
+    <string name="share_image">Share image</string>
 
     <!--tabs-->
     <string name="tab_search_hint">Search url…</string>
