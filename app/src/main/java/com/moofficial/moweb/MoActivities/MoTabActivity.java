@@ -26,6 +26,7 @@ import com.moofficial.moweb.R;
 public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdateTabActivity {
 
     private static final int MAIN_MENU_REQUEST_CODE = 0;
+    public static final int GO_TO_TAB_ACTIVITY_REQUEST = 1;
 
 
     private MoTabSearchBar moTabSearchBar;

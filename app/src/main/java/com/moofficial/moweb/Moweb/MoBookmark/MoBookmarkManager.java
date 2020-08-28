@@ -3,9 +3,9 @@ package com.moofficial.moweb.Moweb.MoBookmark;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.moofficial.moessentials.MoEssentials.MoConnections.MoShare;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoReadWrite.MoReadWrite;
+import com.moofficial.moessentials.MoEssentials.MoShare.MoShare;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoEditText.MoEditText;
 import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
 import com.moofficial.moweb.R;

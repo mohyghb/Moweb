@@ -1,9 +1,12 @@
 package com.moofficial.moweb.MoActivities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Pair;
 import android.widget.Toast;
 
+import com.moofficial.moessentials.MoEssentials.MoShare.MoShareUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoListViewSync;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
@@ -14,16 +17,19 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
+import com.moofficial.moweb.Moweb.MoTab.MoOpenTab;
+import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistory;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryRecyclerAdapter;
+import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoOnHistoryClicked;
 import com.moofficial.moweb.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryActivity extends MoSmartActivity {
+public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClicked {
 
 
     // history
@@ -40,6 +46,7 @@ public class HistoryActivity extends MoSmartActivity {
 
     // toolbar
     private MoPopUpMenu morePopUp;
+    private MoPopUpMenu selectedPopup;
 
 
 
@@ -84,9 +91,34 @@ public class HistoryActivity extends MoSmartActivity {
         selectBar = new MoToolBar(this)
                 .hideLeft()
                 .showCheckBox()
-                .setMiddleIcon(R.drawable.ic_baseline_delete_24)
-                .setMiddleOnClickListener(view -> performDeleteHistory());
+                .showExtraButton()
+                .setMiddleIcon(R.drawable.ic_baseline_share_24)
+                .setMiddleOnClickListener(view -> performShareSelected())
+                .setMiddleOnClickListener(view -> performShareSelected())
+                .setExtraIcon(R.drawable.ic_baseline_delete_24)
+                .setExtraOnClickListener(view -> performDeleteHistory())
+                .setRightOnClickListener(view -> {
+                    if(nothingHasBeenSelected()) return;
+                    selectedPopup.show(view);
+                });
         selectBar.getCardView().makeTransparent();
+    }
+
+    /**
+     * shares all the selected items
+     */
+    private void performShareSelected() {
+        if (nothingHasBeenSelected()) return;
+        MoShareUtils.share(HistoryActivity.this,
+                historyRecyclerAdapter.getSelectedItems(),true);
+    }
+
+    private boolean nothingHasBeenSelected() {
+        if(historyRecyclerAdapter.selectionIsEmpty()) {
+            Toast.makeText(this,R.string.empty_selection_message,Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -96,6 +128,7 @@ public class HistoryActivity extends MoSmartActivity {
      * toasts the error message if something goes wrong
      */
     private void performDeleteHistory() {
+        if(nothingHasBeenSelected()) return;
         try {
             // remove it from files, and the data set shown inside the recycler adapter
             MoHistoryManager.remove(this,historyRecyclerAdapter.getSelectedItems(),historyRecyclerAdapter.getDataSet());
@@ -124,10 +157,29 @@ public class HistoryActivity extends MoSmartActivity {
         initRecyclerView();
         initSelectable();
         initSearchable();
+        initSelectedPopup();
         initSync();
     }
 
 
+    /**
+     * open in new tabs
+     * open in new private tabs
+     */
+    private void initSelectedPopup(){
+        this.selectedPopup = new MoPopUpMenu(this).setEntries(
+                new Pair<>(getString(R.string.open_in_tab), menuItem -> {
+                    MoOpenTab.openInNewTabs(HistoryActivity.this,historyRecyclerAdapter.getSelectedItems());
+                    goBackToTabActivity();
+                    return false;
+                }),
+                new Pair<>(getString(R.string.open_in_private_tab), menuItem -> {
+                    MoOpenTab.openInNewPrivateTabs(HistoryActivity.this,historyRecyclerAdapter.getSelectedItems());
+                    goBackToTabActivity();
+                    return false;
+                })
+        );
+    }
 
 
     private void initHistory() {
@@ -135,7 +187,8 @@ public class HistoryActivity extends MoSmartActivity {
     }
 
     private void initAdapter(){
-        this.historyRecyclerAdapter = new MoHistoryRecyclerAdapter(allHistories,this);
+        this.historyRecyclerAdapter = new MoHistoryRecyclerAdapter(allHistories,this)
+                .setOnHistoryClicked(this);
     }
 
     private void initRecyclerView(){
@@ -190,13 +243,35 @@ public class HistoryActivity extends MoSmartActivity {
 
     /**
      * launches the activity for
-     * @param c
+     * @param c context
      */
     public static void launch(Context c){
         Intent i = new Intent(c,HistoryActivity.class);
         c.startActivity(i);
     }
 
+    /**
+     * launches the activity for result
+     * @param c activity
+     */
+    public static void launch(Activity c, int requestCode){
+        Intent i = new Intent(c,HistoryActivity.class);
+        c.startActivityForResult(i,requestCode);
+    }
+
+
+    @Override
+    public void onHistoryClicked(MoHistory h, int position) {
+        // we need to go back to tab activity in case we are inside another activity
+        MoTabController.instance.openUrlInCurrentTab(this,h.getUrl(),true);
+        goBackToTabActivity();
+    }
+
+    private void goBackToTabActivity() {
+        historyRecyclerAdapter.clearSelection();
+        setResult(MoTabActivity.GO_TO_TAB_ACTIVITY_REQUEST);
+        finish();
+    }
 
 
 }

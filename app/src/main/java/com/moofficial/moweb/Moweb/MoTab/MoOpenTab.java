@@ -20,6 +20,9 @@ public class MoOpenTab {
      * the user
      */
     public static <T extends MoTabOpenable> void openInNewTabs(Context context, List<T> l) {
+        if(l.isEmpty())
+            return;
+
         for(T o : l){
             MoTabsManager.newTab(context,o.getSearchString(),null);
         }
@@ -37,6 +40,9 @@ public class MoOpenTab {
      * the user
      */
     public static <T extends MoTabOpenable> void openInNewPrivateTabs(Context context, List<T> l) {
+        if(l.isEmpty())
+            return;
+
         for(T o : l){
             MoTabsManager.newPrivateTab(context,o.getSearchString(),null);
         }

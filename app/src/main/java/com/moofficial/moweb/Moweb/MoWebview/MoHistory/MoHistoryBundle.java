@@ -154,7 +154,30 @@ public class MoHistoryBundle implements MoFileSavable, MoLoadable {
     }
 
 
-
+    /**
+     * removes all the histories of which satisfy the requirement
+     * @param threshold if the history milli
+     */
+    public boolean removeHistoriesFrom(Context context,long threshold) throws IOException {
+        for(int i = histories.size()-1;i>=0;i--){
+            MoHistory h = histories.get(i);
+            if(h.getTimeInMillis()>=threshold) {
+                // this history should be removed
+                histories.remove(i);
+            }else{
+                // we reached a point inside the bundle
+                // where the current history is below the threshold
+                // therefore, since the histories are sorted already
+                // we can assume that the rest are going to be the same
+                // so return false, so the operation should not be continued
+                update(context);
+                return false;
+            }
+        }
+        // because we traversed through all of them and we still need to go through other bundles
+        update(context);
+        return true;
+    }
 
 
     /**

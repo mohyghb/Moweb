@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
@@ -19,17 +18,22 @@ public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolde
         MoSelectableList<MoHistory> {
 
 
-
-    private MoSelectable<MoHistory> selectable;
+    private MoOnHistoryClicked onHistoryClicked = (h, position) -> {};
 
 
     public MoHistoryRecyclerAdapter(ArrayList<MoHistory> dataSet,Context c) {
         super(c,dataSet);
-        this.context = c;
         setHasStableIds(true);
     }
 
+    public MoOnHistoryClicked getOnHistoryClicked() {
+        return onHistoryClicked;
+    }
 
+    public MoHistoryRecyclerAdapter setOnHistoryClicked(MoOnHistoryClicked onHistoryClicked) {
+        this.onHistoryClicked = onHistoryClicked;
+        return this;
+    }
 
     @NonNull
     @Override
@@ -56,7 +60,7 @@ public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolde
                 holder.dateTimeTextView.setText(history.getDate());
                 holder.titleTextView.setText(history.getTitle());
                 holder.moImageTextLogo.setText(history.getSignatureLetter());
-                makeHistoryClickable(holder, position);
+                makeHistoryClickable(holder, history,position);
                 makeHistoryLongClickable(holder, position);
                 MoSelectableUtils.applySelectedColor(context,holder.cover,history);
                 break;
@@ -65,21 +69,20 @@ public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolde
 
 
 
-    private void makeHistoryClickable(@NonNull MoHistoryHolder holder, int position) {
+    private void makeHistoryClickable(@NonNull MoHistoryHolder holder,MoHistory h,int position) {
         holder.cardView.setOnClickListener(view -> {
-            if(selectable.isInActionMode()){
+            if(isSelecting()){
                 onSelect(position);
-            }else{
-                // todo open the history inside their browser
+            }else {
+                onHistoryClicked.onHistoryClicked(h,position);
             }
         });
     }
 
     private void makeHistoryLongClickable(@NonNull MoHistoryHolder holder, int position) {
         holder.cardView.setOnLongClickListener(view -> {
-            if(!selectable.isInActionMode()){
-                selectable.activateSpecialMode();
-                onSelect(position);
+            if(isNotSelecting()){
+                startSelecting(position);
                 return true;
             }
             return false;
@@ -94,14 +97,4 @@ public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolde
         return dataSet.get(position).getType();
     }
 
-
-    @Override
-    public void setListSelectable(MoSelectable<MoHistory> moSelectable) {
-        this.selectable = moSelectable;
-    }
-
-    @Override
-    public void onSelect(int i) {
-        this.selectable.onSelect(dataSet.get(i),i);
-    }
 }

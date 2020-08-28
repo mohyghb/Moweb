@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
-import com.moofficial.moessentials.MoEssentials.MoConnections.MoShare;
+import com.moofficial.moessentials.MoEssentials.MoShare.MoShare;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moweb.MoClipboard.MoClipboardUtils;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoPopUpTab;

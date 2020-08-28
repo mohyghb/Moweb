@@ -8,16 +8,19 @@ import com.moofficial.moessentials.MoEssentials.MoDate.MoTimeUtils;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSwitchSavable;
+import com.moofficial.moessentials.MoEssentials.MoShare.MoTextShareable;
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableItem;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
+import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoTabOpenable;
 import com.moofficial.moweb.Moweb.MoUrl.MoURL;
 
 import java.util.List;
 
-public class MoHistory implements MoSwitchSavable, MoLoadable, MoSelectableItem, MoSearchableItem {
+public class MoHistory implements MoSwitchSavable, MoLoadable,
+        MoSelectableItem, MoSearchableItem, MoTextShareable, MoTabOpenable {
 
 
 
@@ -311,6 +314,13 @@ public class MoHistory implements MoSwitchSavable, MoLoadable, MoSelectableItem,
         this.isSearched = b;
     }
 
+    @Override
+    public String getTextToShare() {
+        return getUrl();
+    }
 
-
+    @Override
+    public String getSearchString() {
+        return getUrl();
+    }
 }

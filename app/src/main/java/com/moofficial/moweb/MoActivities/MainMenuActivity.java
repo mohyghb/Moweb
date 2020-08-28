@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Pair;
 
+import androidx.annotation.Nullable;
+
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoWindow.MoWindowTransitions;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoAnimation.MoTransitions.MoCircularTransition;
@@ -29,6 +31,7 @@ import java.util.List;
 
 public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickListener {
 
+    public static final int HISTORY_REQUEST_CODE = 0;
 
     private MoCardRecyclerView tabCardRecycler;
     private MoTabRecyclerAdapter tabRecyclerAdapter;
@@ -218,8 +221,7 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
                     return false;
                 }),
                 new Pair<>(getString(R.string.History), menuItem -> {
-                    Intent in = new Intent(this,HistoryActivity.class);
-                    startActivity(in);
+                    HistoryActivity.launch(this,HISTORY_REQUEST_CODE);
                     return false;
                 }),
                 new Pair<>(getString(R.string.Clear_All_Normal_Tabs), menuItem -> {
@@ -246,6 +248,14 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
         supportFinishAfterTransition();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == HISTORY_REQUEST_CODE && resultCode == MoTabActivity.GO_TO_TAB_ACTIVITY_REQUEST){
+            // we need to finish this activity and go to the tab activity
+            supportFinishAfterTransition();
+        }
+    }
 
     @Override
     public void onBackPressed() {

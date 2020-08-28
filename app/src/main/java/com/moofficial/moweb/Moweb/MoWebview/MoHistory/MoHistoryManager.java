@@ -242,146 +242,23 @@ public class MoHistoryManager {
     }
 
 
-//
-//    private static void addDateTileIfNeeded(MoHistory h1,MoHistory h2){
-//        if(h1!=null && h2!=null && needDateTile(h1,h2)){
-//            // h1 has happened before h2
-//            // we are just checking to see
-//            // if they happened on different dates or not
-//            histories.add(new MoHistory(h1.getDateTime()));
-//        }
-//    }
-//
-//
-//    /**
-//     * removes the history at [index]
-//     * @param index
-//     * @param c
-//     */
-//    public static void remove(int index,Context c){
-//        histories.remove(index);
-//        save(c);
-//    }
-//
-//
-//    /**
-//     * saves the web histories of the user
-//     * @param context
-//     */
-//    public static void save(Context context){
-//        MoReadWrite.saveFile(HISTORY_FILE, MoFile.getData(histories),context);
-//    }
-//
-//
-//
-//
-//    /**
-//     * loads the histories inside a list
-//     * @param c
-//     */
-//    public static void load(Context c){
-//        // avoids overloading it
-//        if(!histories.isEmpty()){
-//            return;
-//        }
-//        String[] com = MoFile.loadable(MoReadWrite.readFile(HISTORY_FILE,c));
-//        if(MoFile.isValidData(com)){
-//            String[] his = MoFile.loadable(com[0]);
-//            // load them in backwards
-//            for(String s: his){
-//                if(!s.isEmpty()){
-//                    MoHistory h = new MoHistory();
-//                    h.load(s,c);
-//                    histories.add(h);
-//                }
-//            }
-//        }
-//    }
-//
-//    /**
-//     * clears all the history with no exception
-//     */
-//    public static void clearHistory(Context context){
-//        histories.clear();
-//        save(context);
-//    }
-//
-//
-//    /**
-//     *
-//     * @returns the history of their search
-//     */
-//    public static ArrayList<MoHistory> getHistories() {
-//        return histories;
-//    }
-//
-//    /**
-//     *
-//     * @return history array list with added
-//     * date tiles to distinguish between the different
-//     * histories of the user by their criteria
-//     */
-//    public static ArrayList<MoHistory> getHistoriesWithDateTiles(int count) {
-//        ArrayList<MoHistory> list = new ArrayList<>();
-//        if(histories.size() <= count){
-//            return histories;
-//        }
-//        for(int i = histories.size()-count; i < histories.size();i++){
-//            list.add(histories.get(i));
-//        }
-//        return list;
-//    }
-//
-//
-
-//
-//
-//    /**
-//     *
-//     * @return the last history inside the array list
-//     */
-//    public static MoHistory getLastHistory(){
-//        if(histories.isEmpty()){
-//            // no last history
-//            return null;
-//        }
-//        boolean b = histories.get(histories.size()-1).isDateTile();
-//        if(!b){
-//            // last one is not a date tile
-//            return histories.get(histories.size()-1);
-//        }
-//        if(histories.size()<=1){
-//            // if the last one is a date tile
-//            // and the size is only one
-//            // then there is no last history
-//            return null;
-//        }
-//        return histories.get(histories.size()-2);
-//    }
-//
-//
-//    /**
-//     *
-//     * @param s what the user is searching for
-//     * @return a list of histories that are applicable to what
-//     * the user was searching for
-//     */
-//    public static ArrayList<MoHistory> search(String s){
-//        ArrayList<MoHistory> list = new ArrayList<>();
-//        for(MoHistory h: histories){
-//            if(h.isRelatedTo(s)){
-//                list.add(h);
-//            }
-//        }
-//        return list;
-//    }
-//
-//    public static int size(){
-//        return histories.size();
-//    }
-//
-//
-//
-//
+    /**
+     * removes all the histories that are between
+     * now and that amount milliseconds back
+     * for example to remove the last 24 hour histories,
+     * we remove all histories that are 24*60*60*1000 before
+     * the current time
+     * @param millisecondsTime time converted to milliseconds
+     */
+    public static void removeHistoriesFrom(Context context,long millisecondsTime) throws IOException {
+        long threshold = System.currentTimeMillis() - millisecondsTime;
+        for(MoHistoryBundle b: sortedBundles){
+            boolean shouldContinue = b.removeHistoriesFrom(context,threshold);
+            removeBundleIfEmpty(b,new ArrayList<>());
+            if(!shouldContinue) {
+                break;
+            }
+        }
+    }
 
 }
