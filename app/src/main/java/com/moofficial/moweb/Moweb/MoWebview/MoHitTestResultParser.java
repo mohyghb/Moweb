@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.transition.TransitionManager;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,13 +25,16 @@ import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileProvider.MoFileProvider;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoShare.MoShare;
+import com.moofficial.moessentials.MoEssentials.MoShare.MoShareUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moweb.MoClipboard.MoClipboardUtils;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoPopUpTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
+import com.moofficial.moweb.Moweb.MoWebManifest;
 import com.moofficial.moweb.Moweb.MoWebview.MoHitTestResult.MoHitTestResult;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 import com.moofficial.moweb.R;
@@ -233,8 +237,13 @@ public class MoHitTestResultParser {
         dismissDialog();
     }
 
+    // shares the current bitmap with other apps
     private void shareImage() {
-
+        Uri uri = MoFileProvider.getImageUri(this.context,this.bitmap,
+                "mo_images",(title==null?"image":title)+".png",
+                MoWebManifest.FILE_PROVIDER_AUTHORITY);
+        new MoShare().setType(MoShareUtils.TYPE_PNG_IMAGE)
+                .addImage(uri).shareImages(this.context);
     }
 
     // quits the dialog

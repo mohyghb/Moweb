@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <paths>
+        <cache-path name="mo_shared_images" path="mo_images/"/>
+    </paths>
+</resources>
