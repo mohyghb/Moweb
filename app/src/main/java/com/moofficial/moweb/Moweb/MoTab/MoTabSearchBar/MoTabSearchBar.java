@@ -1,27 +1,33 @@
 package com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.material.textfield.TextInputEditText;
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoRunnable;
+import com.moofficial.moessentials.MoEssentials.MoRunnable.MoWorker.MoWorker;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewGroups.MoConstraint;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoFindBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoViewUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupItemBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupWindow;
 import com.moofficial.moweb.MoActivities.BookmarkActivity;
 import com.moofficial.moweb.MoActivities.HistoryActivity;
-import com.moofficial.moweb.MoHTML.MoHTMLAsyncTask;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
-import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabSuggestion;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
@@ -38,10 +44,23 @@ public class MoTabSearchBar extends MoConstraint {
     private MoPopupWindow moPopupWindow;
     private MoSearchable moSearchable;
     private MoTabSuggestion suggestion;
-
+    private MoCardView searchBarCardView;
 
     private MoWebView moWebView;
     private MoTab tab;
+
+    // this is used as the parent layout to be dimmed
+    // when the user is typing something
+    // to make it look less distracting
+    // this should be the layout that contains the web view as well
+    // also we run animations on this layout as well
+    @NonNull private ViewGroup parentLayout;
+
+    // needed to make sure that the background is dimmed only once
+    // and not multiple times when the user is typing
+    private MoWorker dimBackgroundWorker = new MoWorker()
+            .setTask(() -> MoViewUtils.dim(parentLayout))
+            .setUndoTask(()-> MoViewUtils.clearDim(parentLayout));
 
     public MoTabSearchBar(Context context) {
         super(context);
@@ -62,12 +81,22 @@ public class MoTabSearchBar extends MoConstraint {
 
     @Override
     public void initViews() {
+        initTabSearchBarCard();
         initProgressBar();
         initMoreButton();
         initSearchText();
         initTabsButton();
         initMoSearchable();
         initSuggestion();
+    }
+
+    public MoTabSearchBar setParentLayout(ViewGroup parentLayout) {
+        this.parentLayout = parentLayout;
+        return this;
+    }
+
+    private void initTabSearchBarCard() {
+        searchBarCardView = findViewById(R.id.tab_search_bar_card_view);
     }
 
     @Override
@@ -81,7 +110,14 @@ public class MoTabSearchBar extends MoConstraint {
     }
 
     public MoTabSearchBar setNumberOfTabs(int s){
-        this.tabsButton.setText(String.valueOf(s));
+        if(s>99){
+            tabsButton.setText(R.string.a_lot_of_tabs);
+            this.tabsButton.setTextSize(12f);
+        }else{
+            this.tabsButton.setText(String.valueOf(s));
+            this.tabsButton.setTextSize(14f);
+        }
+
         return this;
     }
 
@@ -195,12 +231,14 @@ public class MoTabSearchBar extends MoConstraint {
         this.progressBar.setMax(100);
         this.progressBar.setIndeterminate(false);
         this.progressBar.setProgress(0);
+
     }
 
 
     /**
      * search edit text init
      */
+    @SuppressLint("ClickableViewAccessibility")
     private void initSearchText(){
         //search text
         searchText = findViewById(R.id.search_bar_text);
@@ -213,16 +251,32 @@ public class MoTabSearchBar extends MoConstraint {
                 if(searchText.hasFocus()){
                     // only show suggestions when user is actually editing it
                     showSuggestions(charSequence);
+                    // adding dim effect
+                    dimBackgroundWorker.perform();
                 }
             }
 
             @Override
             public void afterTextChanged(Editable editable) {}
         });
+
+
+        searchText.setOnTouchListener((v, event) -> {
+            if(MotionEvent.ACTION_UP == event.getAction()) {
+                // dim the background when user starts
+                dimBackgroundWorker.perform();
+            }
+            return searchText.performClick();
+        });
+
+
+
         searchText.setOnFocusChangeListener((view, b) -> {
-            if(!b){
+            if(!b) {
                 // hide the suggestions when user is not editing
                 suggestion.hide();
+                // removing dim effect
+                dimBackgroundWorker.undo();
             }
         });
         searchText.setOnEditorActionListener((textView, i, keyEvent) -> {
@@ -265,20 +319,26 @@ public class MoTabSearchBar extends MoConstraint {
     private void showSuggestions(CharSequence charSequence){
         if(MoSearchAutoComplete.enabled){
             // only provide them with search suggestions if they want them
-            MoHTMLAsyncTask htmlAsyncTask = new MoHTMLAsyncTask().setUrl(
-                    MoSearchEngine.instance.suggestionURL(charSequence.toString()));
-            htmlAsyncTask.setOnHtmlReceived(new MoRunnable() {
-                @SafeVarargs
-                @Override
-                public final <T> void run(T... args) {
-                    // getting suggestion from search engine
-                    MoSuggestions s = MoSearchEngine.instance.getSuggestions((String)args[0]);
-                    // add the suggestions from history
-                    MoHistoryManager.addSuggestionsFromHistory(charSequence.toString(),s);
-                    suggestion.show(s);
-                }
-            });
-            htmlAsyncTask.execute();
+            // add the suggestions from history
+            MoSuggestions s = new MoSuggestions();
+            MoHistoryManager.addSuggestionsFromHistory(charSequence.toString(),s);
+            suggestion.show(s);
+
+//            MoHTMLAsyncTask htmlAsyncTask = new MoHTMLAsyncTask().setUrl(
+//                    MoSearchEngine.instance.suggestionURL(charSequence.toString()));
+//            htmlAsyncTask.setOnHtmlReceived(new MoRunnable() {
+//                @SafeVarargs
+//                @Override
+//                public final <T> void run(T... args) {
+//                    // getting suggestion from search engine
+//                    MoSuggestions s = MoSearchEngine.instance.getSuggestions((String)args[0]);
+//
+//                    suggestion.show(s);
+//                    // canceling the async task
+//                    htmlAsyncTask.cancel(true);
+//                }
+//            });
+//            htmlAsyncTask.execute();
         }
     }
 
@@ -307,19 +367,20 @@ public class MoTabSearchBar extends MoConstraint {
      * that are available
      */
     private void showPopupMenu(){
-        this.moPopupWindow = new MoPopupWindow(this.context)
-                .groupViewsHorizontally(
-                        new MoPopupItemBuilder(this.context)
+        this.moPopupWindow = new MoPopupWindow(this.context);
+        this.moPopupWindow
+                .groupViewsHorizontally(new MoPopupItemBuilder(this.context)
+                                .setPopupWindow(moPopupWindow)
                                 .buildImageButton(R.drawable.ic_baseline_chevron_right_24,
                                         view-> moWebView.goForwardIfYouCan())
                                 .buildCheckedImageButton(R.drawable.ic_baseline_star_24,
                                         R.drawable.ic_baseline_star_border_24, view -> tab.bookmarkTheTab(),
                                         ()-> tab.urlIsBookmarked())
                                 .buildImageButton(R.drawable.ic_baseline_refresh_24, view-> moWebView.forceReload())
-                                .build()
-                )
+                                .build())
                 .setViews(
                         new MoPopupItemBuilder(this.context)
+                                .setPopupWindow(moPopupWindow)
                                 .buildTextButton(R.string.find_in_page,
                                         view -> moSearchable.activateSpecialMode())
                                 .buildTextButton(R.string.bookmark_title,
@@ -369,7 +430,7 @@ public class MoTabSearchBar extends MoConstraint {
                 .setUpFind(moFindBar.getMiddleButton())
                 .setDownFind(moFindBar.getRightButton())
                 .setCancelButton(moFindBar.LId())
-                .addNormalViews(R.id.tab_search_bar_card_view,R.id.suggestion_tab_card_view,R.id.tab_progress)
+                .addNormalViews(searchBarCardView)
                 .addUnNormalViews(moFindBar)
                 .setOnSearchListener(s -> {
                     this.moWebView.findAllAsync(s, (index, size, finishedFinding) -> {

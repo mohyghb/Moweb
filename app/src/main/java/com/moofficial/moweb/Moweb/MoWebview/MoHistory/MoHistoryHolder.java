@@ -8,14 +8,14 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoImageTextLogo;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoLogo;
 import com.moofficial.moweb.R;
 
 public class MoHistoryHolder extends RecyclerView.ViewHolder {
 
     // history
     TextView urlTextView,dateTimeTextView,titleTextView;
-    MoImageTextLogo moImageTextLogo;
+    MoLogo moImageTextLogo;
     CardView cardView;
     LinearLayout cover;
 

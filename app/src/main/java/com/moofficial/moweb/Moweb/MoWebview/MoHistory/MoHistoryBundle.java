@@ -55,7 +55,8 @@ public class MoHistoryBundle implements MoFileSavable, MoLoadable {
      * @param suggestion a list of suggestions
      */
     public void addSuggestions(String search, MoSuggestions suggestion){
-        for(MoHistory h: histories){
+        for(MoHistory h: histories) {
+            if(suggestion.reachedLimit()) break;
             h.addToSuggestionIfApplicable(search,suggestion);
         }
     }

@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoReadWrite.MoReadWrite;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoEditText.MoEditText;
+import com.moofficial.moessentials.MoEssentials.MoValidate.MoTextValidate;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.R;
@@ -162,24 +162,21 @@ public class MoHomePageManager {
      * home page or not
      * @param c
      * @param url
-     * @param editText
      * @return
      */
-    public static boolean validate(Context c,String url, MoEditText editText){
+    public static MoTextValidate validate(Context c, String url){
+        MoTextValidate textValidate = new MoTextValidate().setValidate(false);
         MoHomePage homePage = new MoHomePage(url);
         if(url.isEmpty()){
-            editText.setError(c.getString(R.string.error_bookmark_empty_url));
-            return false;
+            textValidate.setErrorMessage(c.getString(R.string.error_bookmark_empty_url));
         }else if(homePages.contains(homePage)){
-            editText.setError(c.getString(R.string.already_exist_home_page));
-            return false;
+            textValidate.setErrorMessage(c.getString(R.string.already_exist_home_page));
         }else if(homePage.isValidUrl()){
-            editText.setError(c.getString(R.string.malformed_url));
-            return false;
+            textValidate.setErrorMessage(c.getString(R.string.malformed_url));
         }else{
-            editText.removeError();
+            textValidate.setValidate(true);
         }
-        return true;
+        return textValidate;
     }
 
     /**

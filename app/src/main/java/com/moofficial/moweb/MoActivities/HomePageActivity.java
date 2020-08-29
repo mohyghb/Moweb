@@ -1,9 +1,12 @@
 package com.moofficial.moweb.MoActivities;
 
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
+import com.moofficial.moessentials.MoEssentials.MoMultiThread.MoThread.MoThread;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoMarginBuilder;
@@ -13,12 +16,15 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.Mo
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
+import com.moofficial.moessentials.MoEssentials.MoValidate.MoTextValidate;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePage;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageRecyclerAdapter;
 import com.moofficial.moweb.R;
 
 public class HomePageActivity extends MoSmartActivity {
+
+    private final int ADD_IME = 20;
 
     private MoRecyclerView recyclerView;
     private MoHomePageRecyclerAdapter recyclerAdapter;
@@ -43,7 +49,6 @@ public class HomePageActivity extends MoSmartActivity {
         initToolbars();
         initBottomDeleteBar();
         syncTitle(moDeleteToolbar.getTitle(),moToolBar.getTitle());
-        disableToolbarAnimation();
     }
 
     private void initBottomDeleteBar() {
@@ -76,8 +81,12 @@ public class HomePageActivity extends MoSmartActivity {
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        MoHomePageManager.validate(HomePageActivity.this,
-                                charSequence.toString(),moInputBar.getEditText());
+                        if(moInputBar.getEditText().hasFocus()){
+                            new MoThread<MoTextValidate>()
+                                    .after(v -> validateInputText(v))
+                                    .doBackground(() -> MoHomePageManager.validate(HomePageActivity.this, charSequence.toString()))
+                                    .begin();
+                        }
                     }
 
                     @Override
@@ -86,7 +95,25 @@ public class HomePageActivity extends MoSmartActivity {
                     }
                 });
         moInputBar.getCardView().makeCardRound();
+        moInputBar.getEditText().actionDone().getTextInputEditText()
+                .setOnEditorActionListener((textView, i, keyEvent) -> {
+                    if(i == EditorInfo.IME_ACTION_DONE) {
+                        addHomePage();
+                    }
+            return false;
+        });
+        moInputBar.getEditText().getTextInputEditText().setInputType(InputType.TYPE_CLASS_TEXT);
+
         linearNested.addView(moInputBar);
+    }
+
+    private void validateInputText(MoTextValidate v) {
+        if(v.isValidate()){
+            // then no problem with the entered string
+            runOnUiThread(()->moInputBar.getEditText().removeError());
+        }else{
+            runOnUiThread(()->moInputBar.getEditText().setError(v.getErrorMessage()));
+        }
     }
 
     private void initToolbars() {
@@ -122,9 +149,11 @@ public class HomePageActivity extends MoSmartActivity {
 
     private void initMoListDeletable(){
         this.moListDelete = new MoDeletable<>(this,getGroupRootView(),this.recyclerAdapter);
-        this.moListDelete.setCounterView(title)
+        this.moListDelete.setOnDeleteSelected(list -> recyclerAdapter.deleteSelected())
+                         .setCounterView(title)
                          .addUnNormalViews(moDeleteToolbar,moBottomDeleteBar)
                          .addNormalViews(moToolBar,moInputBar)
+                         .setSelectAllCheckBox(moDeleteToolbar.getCheckBox())
                          .setConfirmButton(moBottomDeleteBar.getDelete())
                          .setCancelButton(moBottomDeleteBar.getCancel());
         this.moListDelete.setShowOneActionAtTime(true);
@@ -136,13 +165,12 @@ public class HomePageActivity extends MoSmartActivity {
      */
     private void addHomePage(){
         String url = this.moInputBar.getInputText();
-        if(url.isEmpty()){
-            Toast.makeText(this,"Please enter an url",Toast.LENGTH_SHORT).show();
-            return;
-        }
-        boolean b = MoHomePageManager.add(this,url);
+        boolean b = MoHomePageManager.validate(this,url).isValidate();
         if(b) {
+            this.moInputBar.getEditText().clearFocusAndText();
+            MoHomePageManager.add(this,url);
             recyclerAdapter.notifyItemInsertedAtEnd();
+            Toast.makeText(this,url+" was added!",Toast.LENGTH_SHORT).show();
         }else {
             Toast.makeText(this,"Could not add the home page",Toast.LENGTH_SHORT).show();
         }

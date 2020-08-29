@@ -14,6 +14,7 @@
     <string name="empty_selection_message">You need to select items first</string>
     <string name="yes">Yes</string>
     <string name="add">Add</string>
+    <string name="a_lot_of_tabs">99+</string>
 
     <!--(dialog) pop up menu options-->
     <string name="open_in_tab">Open in tab</string>

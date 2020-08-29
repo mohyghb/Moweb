@@ -33,7 +33,8 @@
 
         <activity android:name=".MoActivities.BookmarkFolderChooserActivity" />
         <activity android:name=".MoActivities.EditBookmarkActivity" />
-        <activity android:name=".MoActivities.BookmarkActivity" />
+        <activity android:name=".MoActivities.BookmarkActivity"
+            android:configChanges="orientation|screenSize"/>
         <activity android:name=".MoActivities.HomePageActivity" />
         <activity
             android:name=".MoActivities.SettingsActivity"

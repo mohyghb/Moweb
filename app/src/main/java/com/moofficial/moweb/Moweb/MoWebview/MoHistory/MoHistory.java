@@ -18,6 +18,8 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoTabOpenable;
 import com.moofficial.moweb.Moweb.MoUrl.MoURL;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MoHistory implements MoSwitchSavable, MoLoadable,
         MoSelectableItem, MoSearchableItem, MoTextShareable, MoTabOpenable {
@@ -153,17 +155,27 @@ public class MoHistory implements MoSwitchSavable, MoLoadable,
     }
 
     void addToSuggestionIfApplicable(String search, MoSuggestions suggestions){
-        if(isAGoodSuggestion(this.title,search)){
-            suggestions.add(this.title);
-        }
-        if(isAGoodSuggestion(this.url.getUrlString(),search)){
-            suggestions.add(this.url.getUrlString());
-        }
+        addIfGoodSuggestion(suggestions,this.title,search);
+        addIfGoodSuggestion(suggestions,this.getUrl(),search);
     }
 
-    // if a is a good suggestion for what b is going to be
-    private boolean isAGoodSuggestion(String a, String b){
-        return MoString.getSimilarity(a,b) >= SUGGESTION_TOLERANCE;
+    /**
+     * adds the field to the suggestion if it is a
+     * good suggestion:
+     * we have not added a similar suggestion
+     * and search is inside one
+     * part of the field
+     * @param suggestions list of suggestions
+     * @param field to be added as the suggestion
+     * @param search user search
+     */
+    private void addIfGoodSuggestion(MoSuggestions suggestions,String field, String search){
+        if (!suggestions.has(field) && !suggestions.reachedLimit()) {
+            Matcher m = Pattern.compile(".*"+search+".*").matcher(field);
+            if(m.matches()){
+                suggestions.add(field);
+            }
+        }
     }
 
     /**

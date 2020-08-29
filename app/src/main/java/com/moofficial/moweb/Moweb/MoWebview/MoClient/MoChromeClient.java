@@ -32,6 +32,10 @@ public class MoChromeClient extends WebChromeClient {
         return this;
     }
 
+    public MoChromeClient hideProgressBarWhenFinished(boolean hideProgressBarWhenFinished) {
+        this.hideProgressBarWhenFinished = hideProgressBarWhenFinished;
+        return this;
+    }
 
     @Override
     public void onProgressChanged(WebView view, int newProgress) {
@@ -56,7 +60,7 @@ public class MoChromeClient extends WebChromeClient {
         });
         if(hideProgressBarWhenFinished && newProgress == 100){
             // then we are done so hide the progress bar
-            bar.setVisibility(View.GONE);
+            bar.setVisibility(View.INVISIBLE);
         }else{
             bar.setVisibility(View.VISIBLE);
         }

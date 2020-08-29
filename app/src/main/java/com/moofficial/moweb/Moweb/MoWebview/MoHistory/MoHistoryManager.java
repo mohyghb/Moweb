@@ -165,7 +165,8 @@ public class MoHistoryManager {
      * @param suggestion suggestions that we have created for user
      */
     public static void addSuggestionsFromHistory(String search, MoSuggestions suggestion){
-        for(MoHistoryBundle b: historyBundleHashMap.values()){
+        for(MoHistoryBundle b: historyBundleHashMap.values()) {
+            if(suggestion.reachedLimit()) break;
             b.addSuggestions(search,suggestion);
         }
     }

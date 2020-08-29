@@ -134,7 +134,8 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
      * of the tab by changing its fields
      */
     private void initSearchBar() {
-        this.moTabSearchBar = new MoTabSearchBar(this);
+        this.moTabSearchBar = new MoTabSearchBar(this)
+                .setParentLayout(coordinatorLayout);
         this.linearBottom.addView(moTabSearchBar);
     }
 
@@ -152,23 +153,25 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
         this.moToolBar.setLeftIcon(R.drawable.ic_baseline_home_24)
                 .setLeftOnClickListener(view -> tab.goToHomepage())
                 .hideTitle()
-                .setMiddleIcon(R.drawable.ic_baseline_refresh_24)
-                .setMiddleOnClickListener(view -> webView.forceReload())
-                .setRightIcon(tab.urlIsBookmarked()?
+                .setRightIcon(R.drawable.ic_baseline_refresh_24)
+                .setRightOnClickListener(view -> webView.forceReload())
+                .setMiddleIcon(tab.urlIsBookmarked()?
                         R.drawable.ic_baseline_star_24:
                         R.drawable.ic_baseline_star_border_24)
-                .setRightOnClickListener(view -> {
+                .setMiddleOnClickListener(view -> {
                     tab.bookmarkTheTab();
                 })
                 .getCardView().makeTransparent();
 
         // on tab change bookmark listener so we know which icon to use
         tab.setOnTabBookmarkChanged(isBookmarked -> {
-            this.moToolBar.setRightIcon(isBookmarked?
+            this.moToolBar.setMiddleIcon(isBookmarked?
                     R.drawable.ic_baseline_star_24:
                     R.drawable.ic_baseline_star_border_24);
         });
     }
+
+
 
     /**
      * removes all the listeners for the search bar

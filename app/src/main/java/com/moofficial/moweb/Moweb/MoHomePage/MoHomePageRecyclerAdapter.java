@@ -6,12 +6,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
-import com.moofficial.moessentials.MoEssentials.MoUI.MoAnimation.MoAnimation;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoDrawable.MoDrawableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletableInterface.MoListDeletable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
 import com.moofficial.moweb.R;
 
@@ -21,36 +20,20 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
         implements MoListDeletable<MoHomePage> {
 
 
-    private MoDeletable<MoHomePage> moListDelete;
+    private final String PAYLOAD_UPDATE_LOGO = "logo";
 
 
     public MoHomePageRecyclerAdapter(Context context, List<MoHomePage> dataSet) {
         super(context,dataSet);
-        this.context = context;
     }
 
 
 
-    private void hideRadioButton(@NonNull MoHomePageViewHolder holder) {
-        if(moListDelete.isInActionMode()){
-            MoAnimation.animateNoTag(holder.radioButton, View.INVISIBLE,MoAnimation.FADE_OUT);
-        }else{
-            MoAnimation.animateNoTag(holder.radioButton,View.VISIBLE,MoAnimation.FADE_IN);
-        }
-    }
 
-    private void radioButtonPress(@NonNull MoHomePageViewHolder holder, int position) {
-        holder.radioButton.setOnCheckedChangeListener((compoundButton, b) -> {
-            if(!compoundButton.isPressed()){
-                return;
-            }
-            activateThisHomePage(position);
-        });
-    }
 
     private void activateThisHomePage(int position) {
         MoHomePageManager.activate(context, position);
-        notifyItemRangeChanged(0, getItemCount());
+        notifyItemRangeChanged(0, getItemCount(),PAYLOAD_UPDATE_LOGO);
     }
 
     private void pressCard(@NonNull MoHomePageViewHolder holder, int position) {
@@ -58,7 +41,7 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
             @Override
             public void onClick(View view) {
                  // activate deactivate select or choosing this home page
-                if(moListDelete.isInActionMode()){
+                if(isSelecting()){
                     onSelect(position);
                 }else{
                     activateThisHomePage(position);
@@ -70,9 +53,9 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
     private void longPressCard(@NonNull MoHomePageViewHolder holder,int position) {
         holder.cardView.setOnLongClickListener(view -> {
             // this is to activate the delete mode
-            if(!moListDelete.isInActionMode()){
-                moListDelete.setDeleteMode(true);
-                onSelect(position);
+            if(isNotSelecting()) {
+               startSelecting(position);
+               notifyDataSetChanged();
             }
             return false;
         });
@@ -90,36 +73,45 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
     public void onBindViewHolder(@NonNull MoHomePageViewHolder holder, int position) {
         MoHomePage homePage = dataSet.get(position);
         holder.urlTextView.setText(homePage.getUrl());
-        holder.radioButton.setChecked(homePage.isActivated());
-        hideRadioButton(holder);
-        radioButtonPress(holder, position);
+        handleLogo(holder, homePage);
         pressCard(holder, position);
         longPressCard(holder,position);
-        MoDeletableUtils.applyDeleteColor(this.context,holder.coverLayout,homePage);
+        MoSelectableUtils.applySelectedColor(this.context,holder.coverLayout,dataSet.get(position));
+    }
+
+    private void handleLogo(@NonNull MoHomePageViewHolder holder, MoHomePage homePage) {
+        if(homePage.isActivated()){
+            holder.moLogo.filledCircle();
+        }else{
+            holder.moLogo.setLogoDrawable(MoDrawableUtils.outlineCircle(this.context));
+        }
     }
 
 
     @Override
-    public void setListSelectable(MoSelectable<MoHomePage> s) {}
+    public void onBindViewHolder(@NonNull MoHomePageViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if(payloads.isEmpty()) {
+            super.onBindViewHolder(holder, position, payloads);
+        }else{
 
-    @Override
-    public void setMoDelete(MoDeletable<MoHomePage> moDeletable) {
-        this.moListDelete = moDeletable;
+            String payload = (String)payloads.get(0);
+            switch (payload){
+                case PAYLOAD_UPDATE_LOGO:
+                    handleLogo(holder,dataSet.get(position));
+                    break;
+                case MoSelectable.PAYLOAD_SELECTED_ITEM:
+                    MoSelectableUtils.applySelectedColor(this.context,holder.coverLayout,dataSet.get(position));
+                    break;
+            }
+        }
     }
+
+
+
 
     @Override
     public void deleteSelected() {
         MoHomePageManager.deleteAllSelected(this.context);
     }
 
-    @Override
-    public int size() {
-        return this.getItemCount();
-    }
-
-
-    @Override
-    public void onSelect(int i) {
-        moListDelete.onSelect(dataSet.get(i),i);
-    }
 }

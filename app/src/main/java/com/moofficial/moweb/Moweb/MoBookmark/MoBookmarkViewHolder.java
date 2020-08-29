@@ -8,7 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoImageTextLogo;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoDrawable.MoDrawableUtils;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoLogo;
 import com.moofficial.moweb.R;
 
 public class MoBookmarkViewHolder extends RecyclerView.ViewHolder {
@@ -16,7 +17,7 @@ public class MoBookmarkViewHolder extends RecyclerView.ViewHolder {
     CardView cardView;
     TextView url,title;
     LinearLayout coverLayout;
-    MoImageTextLogo imageTextLogo;
+    MoLogo imageTextLogo;
 
     public MoBookmarkViewHolder(@NonNull View v) {
         super(v);
@@ -25,5 +26,6 @@ public class MoBookmarkViewHolder extends RecyclerView.ViewHolder {
         this.title = v.findViewById(R.id.title_bookmark);
         this.coverLayout = v.findViewById(R.id.cover_view);
         this.imageTextLogo = v.findViewById(R.id.include_logo);
+        this.imageTextLogo.setLogoDrawable(MoDrawableUtils.outlineCircle(imageTextLogo.getContext()));
     }
 }

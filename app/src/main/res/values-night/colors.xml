@@ -20,7 +20,7 @@
     <color name="color_text_disabled">@color/MoWhite</color>
     <color name="color_text">@color/MoWhite</color>
 
-    <color name="tabs_icon_color">@color/colorPrimary</color>
+    <color name="tabs_icon_color">@color/MoWhite</color>
 
     <color name="color_card_sent">@color/MoBlack</color>
 
@@ -30,6 +30,6 @@
     <color name="MoBackground">@color/MaterialGrey</color>
 
 
-    <color name="search_bar_color">@color/MaterialGrey</color>
+    <color name="search_bar_color">@color/transparent</color>
 
 </resources>
