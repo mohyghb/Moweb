@@ -40,6 +40,7 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
         super.onCreate(savedInstanceState);
         MoWebAppLoader.loadApp(this);
         MoTabController.instance.setUpdateTabActivity(this);
+        update();
     }
 
     @Override
@@ -48,7 +49,6 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
         appBarLayout.setExpanded(false);
         initSearchBar();
         initToolbar();
-        update();
     }
 
     /**
@@ -58,7 +58,10 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
      */
     @Override
     public void update() {
-        if(MoTabController.instance.isOutOfOptions()){
+        if(MoTabController.instance.isOutOfOptions()) {
+            // monote, other browsers make a tab so
+            //  it is never out of options try that
+
             // launch the main menu
             // when layout is done constructing
             getRootView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
