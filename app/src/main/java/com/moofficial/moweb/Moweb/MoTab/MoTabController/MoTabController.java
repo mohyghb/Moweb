@@ -8,6 +8,7 @@ import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManager;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
 import com.moofficial.moweb.Moweb.MoTab.MoTabId.MoTabId;
+import com.moofficial.moweb.Moweb.MoTab.MoTabType.MoTabType;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 
@@ -183,6 +184,10 @@ public class MoTabController implements MoSavable, MoLoadable {
                 return;
             this.currentTabId.load(s,context);
             this.currentTab = MoTabsManager.getTab(currentTabId.getId());
+            if(this.currentTab == null && MoTabsManager.size()>0){
+                // we need to assign it since we are not outta options
+                updateCurrent(MoTabsManager.getLastTab(MoTabType.TYPE_NORMAL));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

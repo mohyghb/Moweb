@@ -11,16 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoRunnable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoRecyclerAdapter;
 import com.moofficial.moweb.R;
 
 import java.util.List;
 
-public class MoSuggestionsAdapter extends RecyclerView.Adapter<MoSuggestionsAdapter.SuggestionViewHolder> {
+public class MoSuggestionsAdapter extends MoRecyclerAdapter<MoSuggestionsAdapter.SuggestionViewHolder,
+        MoSuggestion> {
 
 
 
-    private List<String> suggestions;
-    private Context context;
     private MoRunnable onSuggestionClicked;
 
 
@@ -43,9 +43,9 @@ public class MoSuggestionsAdapter extends RecyclerView.Adapter<MoSuggestionsAdap
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MoSuggestionsAdapter(List<String> myDataset, Context c, MoRunnable runnable) {
-        this.suggestions = myDataset;
-        this.context = c;
+    public MoSuggestionsAdapter(List<MoSuggestion> myDataset, Context c, MoRunnable runnable) {
+        super(c,myDataset);
+
         this.onSuggestionClicked = runnable;
     }
 
@@ -61,35 +61,10 @@ public class MoSuggestionsAdapter extends RecyclerView.Adapter<MoSuggestionsAdap
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(MoSuggestionsAdapter.SuggestionViewHolder holder, int position) {
-        holder.suggestion.setText(suggestions.get(position));
+        holder.suggestion.setText(dataSet.get(position).getKey() + " " + dataSet.get(position).getSimilarity());
         holder.cardView.setOnClickListener(view -> {
             if(onSuggestionClicked!=null)
-                onSuggestionClicked.run(suggestions.get(position));
+                onSuggestionClicked.run(dataSet.get(position));
         });
     }
-
-
-    // Return the size of your dataset (invoked by the layout manager)
-    @Override
-    public int getItemCount() {
-        return suggestions.size();
-    }
-
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return position;
-    }
-
-
-
-
-
-
-
 }

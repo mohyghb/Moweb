@@ -272,6 +272,8 @@ public class MoTabsManager {
      * @throws MoTabNotFoundException
      */
     public static int getIndexOf(MoTab tab) throws MoTabNotFoundException {
+        if(tab == null)
+            throw new MoTabNotFoundException();
         switch (tab.getType()){
             case MoTabType.TYPE_PRIVATE:
                 return getIndexOf(tab, privateTabs);

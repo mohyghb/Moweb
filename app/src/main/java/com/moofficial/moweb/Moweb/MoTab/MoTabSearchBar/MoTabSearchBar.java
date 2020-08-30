@@ -26,8 +26,10 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupItemBu
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupWindow;
 import com.moofficial.moweb.MoActivities.BookmarkActivity;
 import com.moofficial.moweb.MoActivities.HistoryActivity;
+import com.moofficial.moweb.MoHTML.MoHTMLAsyncTask;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
+import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabSuggestion;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
@@ -316,29 +318,32 @@ public class MoTabSearchBar extends MoConstraint {
      * current engine's auto-complete feature)
      * @param charSequence search text of user
      */
-    private void showSuggestions(CharSequence charSequence){
-        if(MoSearchAutoComplete.enabled){
+    private void showSuggestions(CharSequence charSequence) {
+        if(MoSearchAutoComplete.enabled) {
             // only provide them with search suggestions if they want them
             // add the suggestions from history
-            MoSuggestions s = new MoSuggestions();
-            MoHistoryManager.addSuggestionsFromHistory(charSequence.toString(),s);
-            suggestion.show(s);
-
-//            MoHTMLAsyncTask htmlAsyncTask = new MoHTMLAsyncTask().setUrl(
-//                    MoSearchEngine.instance.suggestionURL(charSequence.toString()));
-//            htmlAsyncTask.setOnHtmlReceived(new MoRunnable() {
-//                @SafeVarargs
-//                @Override
-//                public final <T> void run(T... args) {
-//                    // getting suggestion from search engine
-//                    MoSuggestions s = MoSearchEngine.instance.getSuggestions((String)args[0]);
-//
-//                    suggestion.show(s);
-//                    // canceling the async task
-//                    htmlAsyncTask.cancel(true);
-//                }
-//            });
-//            htmlAsyncTask.execute();
+            String search = charSequence.toString();
+            MoHTMLAsyncTask htmlAsyncTask = new MoHTMLAsyncTask().setUrl(
+                    MoSearchEngine.instance.suggestionURL(search));
+            htmlAsyncTask.setOnHtmlReceived(new MoRunnable() {
+                @SafeVarargs
+                @Override
+                public final <T> void run(T... args) {
+                    // getting suggestion from search engine
+                    MoSuggestions s = new MoSuggestions(search);
+                    // getting suggestions from search engine
+                    MoSearchEngine.instance.getSuggestions((String)args[0],s);
+                    // getting suggestions from history
+                    MoHistoryManager.addSuggestionsFromHistory(charSequence.toString().toLowerCase(),s);
+                    // sort the suggestions
+                    s.sortBySimilarityToSearch();
+                    // show suggestions
+                    suggestion.show(s);
+                    // canceling the async task
+                    htmlAsyncTask.cancel(true);
+                }
+            });
+            htmlAsyncTask.execute();
         }
     }
 

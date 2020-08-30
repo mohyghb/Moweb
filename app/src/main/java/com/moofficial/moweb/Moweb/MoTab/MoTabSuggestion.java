@@ -3,20 +3,21 @@ package com.moofficial.moweb.Moweb.MoTab;
 import android.content.Context;
 import android.view.View;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoRunnable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardRecyclerView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestionsAdapter;
 import com.moofficial.moweb.R;
 
+import java.util.ArrayList;
+
 public class MoTabSuggestion {
 
     private MoSuggestionsAdapter adapter;
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
+    private MoCardRecyclerView moCardRecyclerView;
+    private MoRecyclerView recyclerView;
 
     // list of suggestions that get updated
     private MoSuggestions suggestions;
@@ -25,9 +26,18 @@ public class MoTabSuggestion {
     private MoRunnable onSuggestionClicked;
 
     public MoTabSuggestion(Context context, View v){
-        this.recyclerView = v.findViewById(R.id.suggestion_recycler_view);
         this.context = context;
         this.view = v;
+        init();
+    }
+
+    private void init(){
+        moCardRecyclerView = view.findViewById(R.id.suggestion_tab_card_view);
+        moCardRecyclerView.getCardView().makeTransparent();
+        adapter = new MoSuggestionsAdapter(new ArrayList<>(),context,this.onSuggestionClicked);
+        recyclerView = MoRecyclerUtils.get(moCardRecyclerView.getRecyclerView(),adapter)
+                            .setOrientation(MoRecyclerView.HORIZONTAL)
+                            .show();
     }
 
 
@@ -47,13 +57,12 @@ public class MoTabSuggestion {
             return;
         }
         this.suggestions = suggestions;
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new MoSuggestionsAdapter(suggestions.getSuggestions(),context,this.onSuggestionClicked);
-        recyclerView.setAdapter(adapter);
+        adapter.setDataSet(suggestions.getSuggestions());
+        adapter.notifyDataSetChanged();
         recyclerView.setVisibility(View.VISIBLE);
     }
+
+
 
 
     public void hide(){

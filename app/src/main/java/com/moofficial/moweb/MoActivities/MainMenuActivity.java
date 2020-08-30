@@ -21,6 +21,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUt
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
+import com.moofficial.moweb.Moweb.MoTab.MoTabExceptions.MoTabNotFoundException;
 import com.moofficial.moweb.Moweb.MoTab.MoTabRecyclerAdapter;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoOnTabClickListener;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
@@ -109,8 +110,15 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
                 .setLayoutManagerType(MoRecyclerView.GRID_LAYOUT_MANAGER)
                 .show();
         // scroll to the current tab that we are on
-        // monote retrive the index some how (linear search??!!)
-       // tabRecyclerView.scrollToPosition(MoTabController.instance.getNormalIndex());
+        // monote reterive the index some how (linear search??!!)
+        //      a better way to locate the tab that we are on
+        //   maybe first time scroll to it and for the rest of them
+        //  you just save the instance and pass it back (store/re-store)
+        try {
+            tabRecyclerView.scrollToPosition(MoTabsManager.getIndexOf(MoTabController.instance.getCurrent()));
+        } catch (MoTabNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 

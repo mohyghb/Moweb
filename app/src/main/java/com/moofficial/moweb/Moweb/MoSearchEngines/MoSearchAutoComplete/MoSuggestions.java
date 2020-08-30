@@ -1,29 +1,32 @@
 package com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
 public class MoSuggestions {
 
+
     // does not prevent the add method from adding
     // suggestions to the list
     private int limit = 10;
-    private List<String> suggestions = new ArrayList<>();
+//    private List<String> suggestions = new ArrayList<>();
+    private ArrayList<MoSuggestion> suggestions=  new ArrayList<>();
     private HashSet<String> duplicates = new HashSet<>();
+    // what they are searching
+    private String search;
 
 
-    public MoSuggestions(List<String> suggestions){
-        this.suggestions = suggestions;
-        this.duplicates = new HashSet<>(suggestions);
+
+    public MoSuggestions(String search){
+        this.search = search;
     }
 
-    public MoSuggestions(){}
 
 
-
-    public List<String> getSuggestions() {
-        return suggestions;
+    public List<MoSuggestion> getSuggestions() {
+        return new ArrayList<>(suggestions);
     }
 
     public MoSuggestions setLimit(int limit) {
@@ -38,13 +41,37 @@ public class MoSuggestions {
      * @return true if we have to stop adding
      * since the suggestion list has reached to the limit
      */
-    public boolean add(String s) {
-        if(!duplicates.contains(s)) {
+    public boolean add(MoSuggestion s) {
+        String key = s.getKey();
+        if(!duplicates.contains(key)) {
             this.suggestions.add(s);
-            this.duplicates.add(s);
+            this.duplicates.add(key);
         }
         return reachedLimit();
     }
+
+    /**
+     * adds all the suggestions inside the
+     * suggestions object to this suggestions
+     * @param suggestions to be added
+     */
+    public void addAll(MoSuggestions suggestions){
+        for(MoSuggestion s: suggestions.suggestions){
+            add(s);
+        }
+    }
+
+    /**
+     * sorts the suggestions based on the
+     * similarity
+     */
+    public void sortBySimilarityToSearch() {
+        Collections.sort(this.suggestions,new MoSuggestionComparator());
+    }
+
+    // monote trim the suggestions
+    //  and make history suggestions more reliable by
+    //  factoring the time in (time they accessed it matters)
 
     /**
      *
@@ -70,4 +97,7 @@ public class MoSuggestions {
         return this.suggestions.isEmpty();
     }
 
+    public String getSearch() {
+        return search;
+    }
 }

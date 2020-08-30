@@ -39,26 +39,15 @@
             android:backgroundTint="@color/transparent">
 
 
-            <com.google.android.material.card.MaterialCardView
+            <com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardRecyclerView
                 android:id="@+id/suggestion_tab_card_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@color/search_bar_color"
-                android:backgroundTint="@color/search_bar_color"
-                android:visibility="visible"
-                app:cardElevation="@dimen/card_elevation_search_bar"
                 app:layout_constraintBottom_toTopOf="@id/tab_search_bar_text_constraint_layout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/suggestion_recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fadingEdge="horizontal"
-                    android:scrollbars="horizontal" />
-            </com.google.android.material.card.MaterialCardView>
+            </com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardRecyclerView>
 
             <ProgressBar
                 android:id="@+id/tab_progress"

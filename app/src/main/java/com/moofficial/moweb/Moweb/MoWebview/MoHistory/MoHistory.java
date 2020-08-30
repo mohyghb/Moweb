@@ -13,13 +13,12 @@ import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableItem;
+import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestion;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoTabOpenable;
 import com.moofficial.moweb.Moweb.MoUrl.MoURL;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class MoHistory implements MoSwitchSavable, MoLoadable,
         MoSelectableItem, MoSearchableItem, MoTextShareable, MoTabOpenable {
@@ -154,11 +153,6 @@ public class MoHistory implements MoSwitchSavable, MoLoadable,
         this.count++;
     }
 
-    void addToSuggestionIfApplicable(String search, MoSuggestions suggestions){
-        addIfGoodSuggestion(suggestions,this.title,search);
-        addIfGoodSuggestion(suggestions,this.getUrl(),search);
-    }
-
     /**
      * adds the field to the suggestion if it is a
      * good suggestion:
@@ -166,17 +160,20 @@ public class MoHistory implements MoSwitchSavable, MoLoadable,
      * and search is inside one
      * part of the field
      * @param suggestions list of suggestions
-     * @param field to be added as the suggestion
      * @param search user search
      */
-    private void addIfGoodSuggestion(MoSuggestions suggestions,String field, String search){
-        if (!suggestions.has(field) && !suggestions.reachedLimit()) {
-            Matcher m = Pattern.compile(".*"+search+".*").matcher(field);
-            if(m.matches()){
-                suggestions.add(field);
-            }
+    void addToSuggestionIfApplicable(String search, MoSuggestions suggestions) {
+        float similarity = MoString.getSimilarity(title,search,true);
+        if (similarity == 0f) {
+            // look inside the url for similarity
+            similarity = MoString.getSimilarity(getUrl(),search,true);
+        }
+        if(similarity>0f) {
+            suggestions.add(new MoSuggestion(this,similarity));
         }
     }
+
+
 
     /**
      *

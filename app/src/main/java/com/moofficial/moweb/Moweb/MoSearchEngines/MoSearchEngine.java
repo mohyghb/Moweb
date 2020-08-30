@@ -3,8 +3,8 @@ package com.moofficial.moweb.Moweb.MoSearchEngines;
 import android.content.Context;
 
 import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
-import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
+import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
 import com.moofficial.moweb.R;
 
 public abstract class MoSearchEngine {
@@ -72,23 +72,23 @@ public abstract class MoSearchEngine {
      * @param suggestions suggestions should be added here
      * @return suggestions
      */
-    protected abstract MoSuggestions getSuggestions(String html,MoSuggestions suggestions);
+    protected abstract MoSuggestions getSuggestions(MoSuggestions suggestions,String html);
 
     /**
      * checks to see if the html has the correct properties of being
      * parsed then passes it to the respective search engine and
      * returns those results in a mo suggestion
-     * @param html
-     * @return
+     * @param html to parse for search suggestion
+     * @param suggestions populate this class for search suggestions
+     * @return suggestions
      */
-    public MoSuggestions getSuggestions(String html){
-        MoSuggestions suggestions = new MoSuggestions();
+    public MoSuggestions getSuggestions(String html,MoSuggestions suggestions){
         if(html==null){
             // if no suggestion is returned by the html
             // return empty suggestions
             return suggestions;
         }else{
-            return getSuggestions(html,suggestions);
+            return getSuggestions(suggestions,html);
         }
     }
 

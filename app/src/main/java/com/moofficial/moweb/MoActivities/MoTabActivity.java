@@ -37,9 +37,9 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         MoWindowTransitions.apply(new MoCircularTransition(),this);
+        super.onCreate(savedInstanceState);
         MoWebAppLoader.loadApp(this);
         MoTabController.instance.setUpdateTabActivity(this);
-        super.onCreate(savedInstanceState);
     }
 
     @Override

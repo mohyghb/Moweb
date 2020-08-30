@@ -1,13 +1,11 @@
 package com.moofficial.moweb.Moweb.MoSearchEngines;
 
+import com.moofficial.moessentials.MoEssentials.MoString.MoString;
+import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestion;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DuckDuckGoSearchEngine extends MoSearchEngine {
 
@@ -24,11 +22,13 @@ public class DuckDuckGoSearchEngine extends MoSearchEngine {
 
 
     @Override
-    protected MoSuggestions getSuggestions(String html, MoSuggestions suggestions) {
+    protected MoSuggestions getSuggestions(MoSuggestions suggestions,String html) {
         try {
             JSONArray jsonArray = new JSONArray(html);
             for(int i = 0;i < jsonArray.length(); i++){
-                suggestions.add(jsonArray.getJSONObject(i).getString(PHRASE));
+                String suggestion = jsonArray.getJSONObject(i).getString(PHRASE);
+                float similarity = MoString.getSimilarity(suggestion,suggestions.getSearch(),true);
+                suggestions.add(new MoSuggestion(suggestion,similarity));
             }
         } catch (JSONException ignore) {}
         return suggestions;

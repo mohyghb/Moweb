@@ -1,5 +1,7 @@
 package com.moofficial.moweb.Moweb.MoSearchEngines;
 
+import com.moofficial.moessentials.MoEssentials.MoString.MoString;
+import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestion;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
 
 public class GoogleSearchEngine extends MoSearchEngine {
@@ -17,13 +19,15 @@ public class GoogleSearchEngine extends MoSearchEngine {
 
 
     @Override
-    protected MoSuggestions getSuggestions(String html, MoSuggestions suggestions) {
+    protected MoSuggestions getSuggestions(MoSuggestions suggestions,String html) {
         String[] ls = html.split(SPLITTER);
         for(int i = 1; i < ls.length; i++){
             // second index of \"
             int index = ls[i].indexOf("\"", 1);
-            if(index>1){
-                suggestions.add(ls[i].substring(1,index));
+            if(index>1) {
+                String suggestion = ls[i].substring(1,index);
+                float similarity = MoString.getSimilarity(suggestion,suggestions.getSearch(),true);
+                suggestions.add(new MoSuggestion(suggestion,similarity));
             }
         }
         return suggestions;
