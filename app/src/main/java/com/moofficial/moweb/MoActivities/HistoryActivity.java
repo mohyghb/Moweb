@@ -11,12 +11,12 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoListViewSync;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoSearchBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoSearchBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moweb.Moweb.MoTab.MoOpenTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistory;
@@ -70,7 +70,7 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
 
     private void initRecyclerCardView() {
         cardRecyclerView = new MoCardRecyclerView(this);
-        linearNested.addView(cardRecyclerView);
+        layout.linearNested.addView(cardRecyclerView);
     }
 
 
@@ -199,7 +199,7 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
 
     private void initSelectable(){
         this.selectable = new MoSelectable<>(this,getGroupRootView(),this.historyRecyclerAdapter)
-                .setCounterView(title)
+                .setCounterView(layout.title)
                 .setSelectAllCheckBox(selectBar.getCheckBox())
                 .addUnNormalViews(selectBar)
                 .setAllItemsAreSelectable(false);
@@ -212,7 +212,7 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
                 .setOnSearchCanceled(() -> updateAdapter(allHistories))
                 .setSearchOnTextChanged(true)
                 .setActivity(this)
-                .setAppBarLayout(appBarLayout)
+                .setAppBarLayout(layout.appBarLayout)
                 .setCancelSearch(searchBar.getLeftButton())
                 .setSearchButton(moToolBar.getMiddleButton())
                 .setClearSearch(searchBar.getRightButton())

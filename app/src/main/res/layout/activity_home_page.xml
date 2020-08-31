@@ -42,7 +42,7 @@
                     app:contentInsetStart="0dp"
                     app:contentInsetEndWithActions="0dp">
 
-                    <com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoAddBar
+                    <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoAddBar
                         android:id="@+id/include_add_bar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

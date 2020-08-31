@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoOnTabClickListener;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.R;
@@ -88,7 +88,7 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
         }else{
             v.setPadding(TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW);
         }
-        v.setLayoutParams(getMatchWrapParams());
+        v.setLayoutParams(getWrapWrapParam());
         return new TabViewHolder(v);
     }
 
@@ -97,11 +97,19 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
         MoTab tab = dataSet.get(position);
         int height = (int)(context.getResources().getDisplayMetrics()
                 .heightPixels/2.25f);
-        holder.outerCard.setLayoutParams(new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,height));
+        int width = (int)(context.getResources().getDisplayMetrics().widthPixels/2f);
+        holder.outerCard.setLayoutParams(new ConstraintLayout.LayoutParams(
+                width,height));
+
         onTabClickListener(holder, position, tab);
         updateUI(holder, tab);
         MoSelectableUtils.applySelectedColor(context,holder.coverView,tab);
         onLongTabClickListener(holder, position);
+
+
+        // mo this is for testing transition name
+//        ViewCompat.setTransitionName(holder.linearLayout, tab.getTabId().stringify());
+
     }
 
     @Override
@@ -160,14 +168,16 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
         // if its web view is loaded, then we just use that
         // as the preview, if not we load
         // in the image preview that we saved
-        holder.linearLayout.removeAllViews();
-        if(tab.isUpToDate()){
-            MoTabUtils.transitionToListTabMode(context,tab.getMoWebView(),holder.linearLayout);
-        }else{
+     //   holder.linearLayout.removeAllViews();
+//        if(tab.isUpToDate()){
+//            MoTabUtils.transitionToListTabMode(context,tab.getMoWebView(),holder.linearLayout);
+//        }else{
             holder.background.setImageBitmap(tab.getWebViewBitmap());
             holder.background.setVisibility(View.VISIBLE);
-            holder.linearLayout.addView(holder.background);
-        }
+            holder.background.setTransitionName(tab.getTabId().stringify());
+//            holder.linearLayout.addView(holder.background, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//                    ViewGroup.LayoutParams.MATCH_PARENT));
+//        }
     }
 
     /**

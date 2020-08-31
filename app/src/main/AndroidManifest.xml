@@ -40,8 +40,19 @@
             android:name=".MoActivities.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity android:name=".MoActivities.HistoryActivity" />
-        <activity
-            android:name=".MoActivities.MainActivity"/>
+
+<!--        <activity-->
+<!--            android:name=".MoActivities.MainActivity"-->
+<!--            android:alwaysRetainTaskState="true"-->
+<!--            android:windowSoftInputMode="adjustPan"-->
+<!--            android:configChanges="orientation|screenSize">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+
+<!--        </activity>-->
 
 
         <service android:name=".Moweb.MoServices.MoSaverBackgroundService" />

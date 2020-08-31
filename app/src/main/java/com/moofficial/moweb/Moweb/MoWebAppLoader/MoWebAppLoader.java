@@ -1,6 +1,7 @@
 package com.moofficial.moweb.Moweb.MoWebAppLoader;
 
 import android.content.Context;
+import android.webkit.WebView;
 
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoAnimation.MoAnimation;
@@ -15,7 +16,9 @@ import java.io.IOException;
 
 public class MoWebAppLoader {
 
-    public static void loadApp(Context context){
+    public static void loadApp(Context context) {
+
+        WebView.enableSlowWholeDocumentDraw();
         // init home pages
         MoLog.printRunTime("home pages",()-> MoHomePageManager.load(context));
         // init bookmarks

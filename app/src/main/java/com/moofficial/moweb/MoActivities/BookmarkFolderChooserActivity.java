@@ -7,12 +7,12 @@ import android.view.View;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoMarginBuilder;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoSearchBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMarginBuilder;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoSearchBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkRecyclerAdapter;
@@ -47,16 +47,15 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
     }
 
     private void initUI(){
-        disableToolbarAnimation();
         setTitle(R.string.folder_chooser_title);
         initMoToolbar();
         initMoSearchbar();
 
-        toolbar.addToolbar(moToolBar);
-        toolbar.addToolbar(searchBar);
+        layout.toolbar.addToolbar(moToolBar);
+        layout.toolbar.addToolbar(searchBar);
 
         cardRecyclerView = new MoCardRecyclerView(this);
-        linearNested.addView(cardRecyclerView, MoMarginBuilder.getLinearParams(0,8,0,0));
+        layout.linearNested.addView(cardRecyclerView, MoMarginBuilder.getLinearParams(0,8,0,0));
 
         syncTitle(moToolBar.getTitle());
     }
@@ -92,7 +91,7 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
                 .addUnNormalViews(this.searchBar)
                 .setActivity(this)
                 .setSearchOnTextChanged(true)
-                .setAppBarLayout(this.appBarLayout)
+                .setAppBarLayout(layout.appBarLayout)
                 .setSearchButton(this.moToolBar.RId())
                 .setSearchTextView(searchBar.ETId())
                 .setClearSearch(searchBar.RBId())

@@ -11,11 +11,11 @@ import androidx.annotation.Nullable;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoWindow.MoSoftInputBuilder;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoMarginBuilder;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoAcceptDenyLayout;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoInputBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoButton;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMarginBuilder;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoAcceptDenyLayout;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoInputBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoButton;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkUtils;
@@ -64,7 +64,7 @@ public class EditBookmarkActivity extends MoSmartActivity {
         initAcceptDeny();
 
         setTitle(getString(R.string.edit_title));
-        floatingActionButton.hide();
+        layout.floatingActionButton.hide();
         makeActivityRound();
         syncTitle(moToolBar.getTitle());
     }
@@ -75,8 +75,8 @@ public class EditBookmarkActivity extends MoSmartActivity {
         initFolder();
 
         // adding the content to nested linear layout
-        linearNested.addView(titleInput, MoMarginBuilder.getLinearParams(8));
-        linearNested.addView(folderButton, MoMarginBuilder.getLinearParams(0,8,0,0));
+        layout.linearNested.addView(titleInput, MoMarginBuilder.getLinearParams(8));
+        layout.linearNested.addView(folderButton, MoMarginBuilder.getLinearParams(0,8,0,0));
 
     }
 
@@ -129,7 +129,7 @@ public class EditBookmarkActivity extends MoSmartActivity {
                         }
                     })
                     .getCardView().makeCardRecRound();
-            linearNested.addView(urlInput, MoMarginBuilder.getLinearParams(8));
+            layout.linearNested.addView(urlInput, MoMarginBuilder.getLinearParams(8));
         }
     }
 
@@ -153,7 +153,7 @@ public class EditBookmarkActivity extends MoSmartActivity {
                              .setOnDenyClickedListener(view -> onCanceledPressed())
                              .getCardView().makeTransparent();
 
-        linearBottom.addView(this.acceptDenyLayout);
+        layout.linearBottom.addView(this.acceptDenyLayout);
     }
 
     private void onCanceledPressed() {
@@ -183,7 +183,7 @@ public class EditBookmarkActivity extends MoSmartActivity {
     private void initToolbar(){
         this.moToolBar = new MoToolBar(this).onlyTitleAndLeftButtonVisible();
         moToolBar.getCardView().makeTransparent();
-        toolbar.addToolbar(moToolBar);
+        layout.toolbar.addToolbar(moToolBar);
     }
 
     private void initClass(){}

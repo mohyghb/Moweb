@@ -2,23 +2,23 @@ package com.moofficial.moweb.MoActivities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.TransitionInflater;
 import android.util.Pair;
+import android.view.ViewTreeObserver;
 
 import androidx.annotation.Nullable;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoWindow.MoWindowTransitions;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoAnimation.MoTransitions.MoCircularTransition;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoListViewSync;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoMarginBuilder;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoSearchBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMarginBuilder;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoSearchBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabExceptions.MoTabNotFoundException;
@@ -48,8 +48,14 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MoWindowTransitions.apply(new MoCircularTransition(),this);
+       // MoWindowTransitions.apply(new MoCircularTransition(),this);
+        postponeEnterTransition();
+        getWindow().setSharedElementEnterTransition(TransitionInflater.from(this)
+                .inflateTransition(R.transition.shared_element_transition));
+        getWindow().setSharedElementExitTransition(TransitionInflater.from(this)
+                .inflateTransition(R.transition.shared_element_transition));
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -59,7 +65,7 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
     }
 
     private void initUI() {
-        setTitle(getString(R.string.app_name));
+        layout.setTitle(getString(R.string.app_name));
         //setSubTitle(MoTabsManager.size() + " tabs");
         //appBarLayout.setExpanded(false);
         initTabCard();
@@ -82,12 +88,13 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
     }
 
     private void syncToolbars(){
-        syncTitle(this.moToolBar.getTitle(),this.tabSelectableToolbar.getTitle());
-        setupMultipleToolbars(this.moToolBar,this.moToolBar,this.tabSelectableToolbar,this.searchBar);
+        layout.syncTitle(this.moToolBar.getTitle(),this.tabSelectableToolbar.getTitle());
+        layout.setupMultipleToolbars(this.moToolBar,this.moToolBar,this.tabSelectableToolbar,this.searchBar);
     }
 
     private void initTabSelectableToolbar(){
-        this.tabSelectableToolbar = new MoToolBar(this)
+
+        this.tabSelectableToolbar = new MoToolBar(getContext())
                 .showCheckBox()
                 .hideLeft()
                 .setMiddleIcon(R.drawable.ic_baseline_delete_24)
@@ -107,7 +114,8 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
     private void initTabRecyclerView() {
         tabRecyclerView = MoRecyclerUtils.get(tabCardRecycler.getRecyclerView(),tabRecyclerAdapter)
                 .setMaxHeight(getHeightPixels())
-                .setLayoutManagerType(MoRecyclerView.GRID_LAYOUT_MANAGER)
+                .setLayoutManagerType(MoRecyclerView.LINEAR_LAYOUT_MANAGER)
+                .setOrientation(MoRecyclerView.HORIZONTAL)
                 .show();
         // scroll to the current tab that we are on
         // monote reterive the index some how (linear search??!!)
@@ -116,33 +124,42 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
         //  you just save the instance and pass it back (store/re-store)
         try {
             tabRecyclerView.scrollToPosition(MoTabsManager.getIndexOf(MoTabController.instance.getCurrent()));
+            //startPostponedEnterTransition();
         } catch (MoTabNotFoundException e) {
             e.printStackTrace();
         }
+
+        tabRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                tabRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                startPostponedEnterTransition();
+            }
+        });
     }
 
 
 
     private void initTabAdapter() {
-        tabRecyclerAdapter = new MoTabRecyclerAdapter(MoTabsManager.getTabs(),this,true)
+        tabRecyclerAdapter = new MoTabRecyclerAdapter(MoTabsManager.getTabs(),getContext(),true)
                 .setOnTabClickListener(this);
     }
 
     private void initTabSelectable(){
-        this.tabSelectable = new MoSelectable<>(this,getGroupRootView(), this.tabRecyclerAdapter)
-                .setCounterView(title)
+        this.tabSelectable = new MoSelectable<>(getContext(),layout.getGroupRootView(), this.tabRecyclerAdapter)
+                .setCounterView(layout.title)
                 .setSelectAllCheckBox(tabSelectableToolbar.getCheckBox())
                 .addUnNormalViews(this.tabSelectableToolbar);
     }
 
     private void initTabCard() {
-        tabCardRecycler = new MoCardRecyclerView(this);
+        tabCardRecycler = new MoCardRecyclerView(getContext());
         tabCardRecycler.getCardView().makeTransparent();
-        linearNested.addView(tabCardRecycler, MoMarginBuilder.getLinearParams(0,8,0,0));
+        layout.linearNested.addView(tabCardRecycler, MoMarginBuilder.getLinearParams(0,8,0,0));
     }
 
     private void initMoToolbar(){
-        this.moToolBar = new MoToolBar(this)
+        this.moToolBar = new MoToolBar(getContext())
                 .showExtraButton()
                 .setMiddleIcon(R.drawable.ic_add_black_24dp)
                 .setMiddleOnClickListener(view -> addPopUpMenu.show(view))
@@ -153,10 +170,10 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
 
     }
 
-    private void initMoSearchable(){
-        this.searchable = new MoSearchable(this, getGroupRootView(), MoTabsManager::getTabs)
-                .setActivity(this)
-                .setAppBarLayout(this.appBarLayout)
+    private void initMoSearchable() {
+        this.searchable = new MoSearchable(getContext(), layout.getGroupRootView(), MoTabsManager::getTabs)
+                .setActivity(getActivity())
+                .setAppBarLayout(layout.appBarLayout)
                 .setClearSearch(this.searchBar.getRightButton())
                 .setCancelSearch(this.searchBar.getLeftButton())
                 .addUnNormalViews(this.searchBar)
@@ -181,17 +198,17 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
      */
     private void updateAdapter(List<MoTab> lt){
         tabRecyclerAdapter.setDataSet(lt);
-        runOnUiThread(()->tabRecyclerAdapter.notifyDataSetChanged());
+        getActivity().runOnUiThread(()->tabRecyclerAdapter.notifyDataSetChanged());
     }
 
     private void initSearchBar(){
-        this.searchBar = new MoSearchBar(this)
+        this.searchBar = new MoSearchBar(getContext())
                 .setSearchHint(R.string.tab_search_hint);
         this.searchBar.getCardView().makeTransparent();
     }
 
     private void initViewSync() {
-        this.viewSync = new MoListViewSync(getGroupRootView(),this.tabSelectable,this.searchable)
+        this.viewSync = new MoListViewSync(layout.getGroupRootView(),this.tabSelectable,this.searchable)
                 .setPutOnHold(true)
                 .setSharedElements(moToolBar);
     }
@@ -203,14 +220,16 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
      * we show this pop up menu that we have init
      */
     private void initAddPopUpMenu(){
-        addPopUpMenu = new MoPopUpMenu(this).setEntries(
+        addPopUpMenu = new MoPopUpMenu(getContext()).setEntries(
                         new Pair<>(getString(R.string.NewTab), menuItem -> {
-                            MoTabsManager.addTab(this, MoSearchEngine.instance.homePage(),false);
+                            MoTabsManager.addTab(getContext(),
+                                    MoSearchEngine.instance.homePage(),false);
                             supportFinishAfterTransition();
                             return false;
                         }),
                         new Pair<>(getString(R.string.NewIncognitoTab), menuItem -> {
-                            MoTabsManager.addPrivateTab(this,MoSearchEngine.instance.homePage(),false);
+                            MoTabsManager.addPrivateTab(getContext(),
+                                    MoSearchEngine.instance.homePage(),false);
                             supportFinishAfterTransition();
                             return false;
                         }));
@@ -222,23 +241,23 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
      * this menu pops up
      */
     private void initMorePopUpMenu(){
-        morePopUpMenu = new MoPopUpMenu(this).setEntries(
+        morePopUpMenu = new MoPopUpMenu(getContext()).setEntries(
                 new Pair<>(getString(R.string.Settings), menuItem -> {
-                    Intent setting = new Intent(this,SettingsActivity.class);
+                    Intent setting = new Intent(getContext(),SettingsActivity.class);
                     this.startActivity(setting);
                     return false;
                 }),
                 new Pair<>(getString(R.string.History), menuItem -> {
-                    HistoryActivity.launch(this,HISTORY_REQUEST_CODE);
+                    HistoryActivity.launch(getActivity(),HISTORY_REQUEST_CODE);
                     return false;
                 }),
                 new Pair<>(getString(R.string.Clear_All_Normal_Tabs), menuItem -> {
-                    MoTabsManager.clearAllNormalTabs(this);
+                    MoTabsManager.clearAllNormalTabs(getContext());
                     tabRecyclerAdapter.notifyDataSetChanged();
                     return false;
                 }),
                 new Pair<>(getString(R.string.Clear_All_Incognito_Tabs), menuItem -> {
-                    MoTabsManager.clearAllPrivateTabs(this);
+                    MoTabsManager.clearAllPrivateTabs(getContext());
                     // monote add this feature
                     //this.mIncognitoAdapter.notifyDataSetChanged();
                     return false;
@@ -251,7 +270,7 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
         // when the user clicks on a tab, this is activated
         // we only change the index if the new one is not the same
         if (!MoTabController.instance.currentIs(t)) {
-            MoTabController.instance.setNewTab(this,t);
+            MoTabController.instance.setNewTab(getContext(),t);
         }
         supportFinishAfterTransition();
     }
@@ -272,8 +291,10 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
             viewSync.removeAction();
         }else if(MoTabController.instance.isOutOfOptions()){
             finishAffinity();
-        }else{
+        }
+        else{
             super.onBackPressed();
         }
+        //return false;
     }
 }

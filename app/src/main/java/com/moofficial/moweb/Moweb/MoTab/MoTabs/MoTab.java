@@ -208,6 +208,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
                  .setOnUpdateUrlListener((url, isReload) -> updateUrl(url))
                  .setOnErrorReceived((view, request, error) -> onErrorReceived(request, error));
         moWebView.init();
+        moWebView.setTransitionName(this.tabId.stringify());
         // todo we need to set the web view for tab type
     }
 
@@ -260,17 +261,17 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
      * when the user presses back on main screen
      * if there is a parent tab, and this web view can not go back, go to
      * that parent tab
-     * @param superBackPressed super.onBackPressed in main activity
      */
-    public void onBackPressed(Runnable superBackPressed){
+    public boolean onBackPressed(){
         if(this.moWebView.canGoBack()) {
             this.moWebView.goBack();
         } else if(parentTab!=null) {
             // we can go back to the parent tab
             MoTabsManager.selectTab(context,this.parentTab);
         } else {
-            superBackPressed.run();
+            return false;
         }
+        return true;
     }
 
 
@@ -325,7 +326,9 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     public long getId(){
         return this.tabId.getId();
     }
-
+    public String getTransitionName(){
+        return this.tabId.stringify();
+    }
 
 
 
