@@ -17,14 +17,14 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoDialog.MoDialogs;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoListViewSync;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoPaddingBuilder;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoSearchBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardRecyclerView;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoEditText.MoEditText;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoPaddingBuilder;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoSearchBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoEditText.MoEditText;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkRecyclerAdapter;
@@ -358,7 +358,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
 
         this.moListSelectable = new MoSelectable<>(this, getGroupRootView(), this.recyclerAdapter)
                 .addUnNormalViews(this.moListSelectableToolbar)
-                .setCounterView(this.title)
+                .setCounterView(title)
                 .setSelectAllCheckBox(moListSelectableToolbar.getCheckBox())
                 .setOnSelectListener(bookmark -> {
                     if(bookmark.isFolder()){
@@ -382,7 +382,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     private void initListViewSync(){
         this.listViewSync = new MoListViewSync(getGroupRootView(),this.moSearchable,this.moListSelectable)
                 .setPutOnHold(true)
-                .setSharedElements(this.moToolBar,this.floatingActionButton.getView())
+                .setSharedElements(this.moToolBar,floatingActionButton.getView())
                 .setOnEmptyOnHoldsListener(() -> {
                     updateRecyclerAdapter(getCurrentFolderBookmarks());
                 });

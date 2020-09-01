@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoOnTabClickListener;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.R;
@@ -102,6 +102,9 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
         updateUI(holder, tab);
         MoSelectableUtils.applySelectedColor(context,holder.coverView,tab);
         onLongTabClickListener(holder, position);
+
+
+        holder.outerCard.setTransitionName(tab.getTransitionName());
     }
 
     @Override
@@ -160,14 +163,14 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
         // if its web view is loaded, then we just use that
         // as the preview, if not we load
         // in the image preview that we saved
-        holder.linearLayout.removeAllViews();
-        if(tab.isUpToDate()){
-            MoTabUtils.transitionToListTabMode(context,tab.getMoWebView(),holder.linearLayout);
-        }else{
+//        holder.linearLayout.removeAllViews();
+//        if(tab.isUpToDate()){
+//            MoTabUtils.transitionToListTabMode(context,tab.getMoWebView(),holder.linearLayout);
+//        }else{
             holder.background.setImageBitmap(tab.getWebViewBitmap());
             holder.background.setVisibility(View.VISIBLE);
-            holder.linearLayout.addView(holder.background);
-        }
+//            holder.linearLayout.addView(holder.background);
+//        }
     }
 
     /**

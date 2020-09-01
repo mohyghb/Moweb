@@ -129,7 +129,7 @@ public class MoTabController implements MoSavable, MoLoadable {
                 // we also want to save a preview by taking screenshot of the
                 // web view and reusing the bitmap if they close the app
                 // so we can show it later to the user
-                currentTab.captureAndSaveWebViewBitmapAsync();
+                //currentTab.captureAndSaveWebViewBitmapAsync();
             }
         }
     }

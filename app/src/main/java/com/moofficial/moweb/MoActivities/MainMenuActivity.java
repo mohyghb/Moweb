@@ -2,23 +2,23 @@ package com.moofficial.moweb.MoActivities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.TransitionInflater;
 import android.util.Pair;
+import android.view.ViewTreeObserver;
 
 import androidx.annotation.Nullable;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoWindow.MoWindowTransitions;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoAnimation.MoTransitions.MoCircularTransition;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoListViewSync;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoMarginBuilder;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoSearchBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMarginBuilder;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoSearchBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabExceptions.MoTabNotFoundException;
@@ -48,7 +48,12 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MoWindowTransitions.apply(new MoCircularTransition(),this);
+        //MoWindowTransitions.apply(new Slide(),this);
+        getWindow().setSharedElementEnterTransition(TransitionInflater.from(this)
+                .inflateTransition(R.transition.shared_element));
+        getWindow().setSharedElementExitTransition(TransitionInflater.from(this)
+                .inflateTransition(R.transition.shared_element));
+        postponeEnterTransition();
         super.onCreate(savedInstanceState);
     }
 
@@ -119,6 +124,15 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
         } catch (MoTabNotFoundException e) {
             e.printStackTrace();
         }
+
+        tabRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                tabRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                startPostponedEnterTransition();
+            }
+        });
+
     }
 
 

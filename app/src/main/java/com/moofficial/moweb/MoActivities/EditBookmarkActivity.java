@@ -11,11 +11,11 @@ import androidx.annotation.Nullable;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoWindow.MoSoftInputBuilder;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoMarginBuilder;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoAcceptDenyLayout;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoInputBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoButton;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMarginBuilder;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoAcceptDenyLayout;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoInputBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoButton;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkUtils;
@@ -24,6 +24,8 @@ import com.moofficial.moweb.R;
 import java.util.Objects;
 
 import static com.moofficial.moweb.MoActivities.BookmarkFolderChooserActivity.getChosenFolder;
+
+
 
 public class EditBookmarkActivity extends MoSmartActivity {
 
@@ -92,7 +94,8 @@ public class EditBookmarkActivity extends MoSmartActivity {
                     }
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        MoBookmarkManager.validateEditInputs(EditBookmarkActivity.this,editBookmark,titleInput.getEditText(),
+                        MoBookmarkManager.validateEditInputs(EditBookmarkActivity.this,editBookmark,
+                                titleInput.getEditText(),
                                 urlInput.getEditText(),originalKey);
                     }
 

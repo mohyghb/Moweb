@@ -325,7 +325,9 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     public long getId(){
         return this.tabId.getId();
     }
-
+    public String getTransitionName(){
+        return this.tabId.stringify();
+    }
 
 
 

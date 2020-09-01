@@ -28,7 +28,7 @@
                 android:layout_margin="8dp"
                 android:orientation="horizontal">
 
-                <com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoLogo
+                <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoLogo
                     android:id="@+id/image_text_logo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />

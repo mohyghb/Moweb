@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardView
+    <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView
         android:id="@+id/tab_mode_list_card_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
             <!--                app:layout_constraintTop_toBottomOf="@+id/tab_url_list_view"-->
             <!--                tools:srcCompat="@tools:sample/backgrounds/scenic" />-->
 
-            <com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardView
+            <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView
                 android:id="@+id/tab_mode_list_inner_card_view"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -53,7 +53,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"/>
-            </com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardView>
+            </com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView>
 
             <LinearLayout
                 android:id="@+id/tab_mode_list_linear_layout"
@@ -90,7 +90,7 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardView>
+    </com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

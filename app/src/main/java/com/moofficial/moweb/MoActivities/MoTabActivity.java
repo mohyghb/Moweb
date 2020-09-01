@@ -2,17 +2,18 @@ package com.moofficial.moweb.MoActivities;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.transition.TransitionInflater;
 import android.view.ViewTreeObserver;
 
 import androidx.annotation.Nullable;
 
+import com.moofficial.moessentials.MoEssentials.MoBitmap.MoBitmapUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartCoordinatorActivity;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoWindow.MoWindowTransitions;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoAnimation.MoTransitions.MoCircularTransition;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewGroupUtils.MoAppbar.MoAppbarUtils;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewGroupUtils.MoCoordinatorUtils;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroupUtils.MoAppbar.MoAppbarUtils;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroupUtils.MoCoordinatorUtils;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoUpdateTabActivity;
 import com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar.MoTabSearchBar;
@@ -36,7 +37,13 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MoWindowTransitions.apply(new MoCircularTransition(),this);
+        //MoWindowTransitions.apply(new Slide(),this);
+
+        getWindow().setSharedElementEnterTransition(TransitionInflater.from(this)
+                .inflateTransition(R.transition.shared_element));
+        getWindow().setSharedElementExitTransition(TransitionInflater.from(this)
+                .inflateTransition(R.transition.shared_element));
+
         super.onCreate(savedInstanceState);
         MoWebAppLoader.loadApp(this);
         MoTabController.instance.setUpdateTabActivity(this);
@@ -196,9 +203,16 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
      * to show all the tabs to the user
      */
     private void launchMainMenu() {
+
+        coordinatorLayout.setTransitionName(tab.getTransitionName());
+        Bitmap b = MoBitmapUtils.createBitmapFromView(coordinatorLayout,0,0);
+        tab.getMoBitmap().setBitmap(b);
+        // we need to save the bitmap async
+
         startActivityForResult(new Intent(MoTabActivity.this, MainMenuActivity.class),
                 MAIN_MENU_REQUEST_CODE,
-                ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+                ActivityOptions.makeSceneTransitionAnimation(this,this.coordinatorLayout,
+                        tab.getTransitionName()).toBundle());
     }
 
     @Override
