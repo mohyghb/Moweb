@@ -9,13 +9,13 @@ import android.widget.Toast;
 import com.moofficial.moessentials.MoEssentials.MoMultiThread.MoThread.MoThread;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewBuilder.MoMarginBuilder;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoBottomBars.MoBottomDeleteBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoInputBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMarginBuilder;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoBottomBars.MoBottomDeleteBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoInputBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoValidate.MoTextValidate;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePage;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
@@ -53,12 +53,12 @@ public class HomePageActivity extends MoSmartActivity {
 
     private void initBottomDeleteBar() {
         moBottomDeleteBar = new MoBottomDeleteBar(this);
-        layout.linearBottom.addView(moBottomDeleteBar.goGone());
+        linearBottom.addView(moBottomDeleteBar.goGone());
     }
 
     private void initCardRecyclerView() {
         cardRecyclerView = new MoCardRecyclerView(this).makeCardRound();
-        layout.linearNested.addView(cardRecyclerView, MoMarginBuilder.getLinearParams(0,8,0,0));
+        linearNested.addView(cardRecyclerView, MoMarginBuilder.getLinearParams(0,8,0,0));
     }
 
     private void initInputBar() {
@@ -104,7 +104,7 @@ public class HomePageActivity extends MoSmartActivity {
         });
         moInputBar.getEditText().getTextInputEditText().setInputType(InputType.TYPE_CLASS_TEXT);
 
-        layout.linearNested.addView(moInputBar);
+        linearNested.addView(moInputBar);
     }
 
     private void validateInputText(MoTextValidate v) {
@@ -150,7 +150,7 @@ public class HomePageActivity extends MoSmartActivity {
     private void initMoListDeletable(){
         this.moListDelete = new MoDeletable<>(this,getGroupRootView(),this.recyclerAdapter);
         this.moListDelete.setOnDeleteSelected(list -> recyclerAdapter.deleteSelected())
-                         .setCounterView(layout.title)
+                         .setCounterView(title)
                          .addUnNormalViews(moDeleteToolbar,moBottomDeleteBar)
                          .addNormalViews(moToolBar,moInputBar)
                          .setSelectAllCheckBox(moDeleteToolbar.getCheckBox())

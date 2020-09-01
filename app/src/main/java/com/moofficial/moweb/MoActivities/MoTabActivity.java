@@ -3,17 +3,16 @@ package com.moofficial.moweb.MoActivities;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
-import android.transition.TransitionInflater;
-import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.view.ViewTreeObserver;
 
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroupUtils.MoAppbar.MoAppbarUtils;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroupUtils.MoCoordinatorUtils;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartCoordinatorActivity;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoWindow.MoWindowTransitions;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoAnimation.MoTransitions.MoCircularTransition;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewGroupUtils.MoAppbar.MoAppbarUtils;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViewGroupUtils.MoCoordinatorUtils;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoViews.MoBars.MoToolBar;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoUpdateTabActivity;
 import com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar.MoTabSearchBar;
@@ -24,7 +23,7 @@ import com.moofficial.moweb.Moweb.MoWebAppLoader.MoWebAppLoader;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 import com.moofficial.moweb.R;
 
-public class MoTabActivity extends MoSmartActivity implements MoUpdateTabActivity {
+public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdateTabActivity {
 
     private static final int MAIN_MENU_REQUEST_CODE = 0;
     public static final int GO_TO_TAB_ACTIVITY_REQUEST = 1;
@@ -35,35 +34,21 @@ public class MoTabActivity extends MoSmartActivity implements MoUpdateTabActivit
     private MoWebView webView;
     private MoToolBar moToolBar;
 
-
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        //MoWindowTransitions.apply(new MoCircularTransition(),this);
-        getWindow().setSharedElementEnterTransition(TransitionInflater.from(this)
-                .inflateTransition(R.transition.shared_element_transition));
-        getWindow().setSharedElementExitTransition(TransitionInflater.from(this)
-                .inflateTransition(R.transition.shared_element_transition));
+    protected void onCreate(Bundle savedInstanceState) {
+        MoWindowTransitions.apply(new MoCircularTransition(),this);
         super.onCreate(savedInstanceState);
         MoWebAppLoader.loadApp(this);
         MoTabController.instance.setUpdateTabActivity(this);
-
         update();
-    }
-
-
-
-    private void initUI() {
-        MoAppbarUtils.snapNoToolbar(layout.collapsingToolbarLayout);
-        layout.appBarLayout.setExpanded(false);
-//        layout.makeActivityRound();
-        initSearchBar();
-        initToolbar();
     }
 
     @Override
     protected void init() {
-        initUI();
+        MoAppbarUtils.snapNoToolbar(collapsingToolbarLayout);
+        appBarLayout.setExpanded(false);
+        initSearchBar();
+        initToolbar();
     }
 
     /**
@@ -73,18 +58,21 @@ public class MoTabActivity extends MoSmartActivity implements MoUpdateTabActivit
      */
     @Override
     public void update() {
-        if(MoTabController.instance.isOutOfOptions()){
+        if(MoTabController.instance.isOutOfOptions()) {
+            // monote, other browsers make a tab so
+            //  it is never out of options try that
+
             // launch the main menu
             // when layout is done constructing
-//            getRootView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//                @Override
-//                public void onGlobalLayout() {
-//                    // monote: maybe make sure that other views are invisible for
-//                    //  better user interactions?
-//                    launchMainMenu();
-//                    getRootView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//                }
-//            });
+            getRootView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    // monote: maybe make sure that other views are invisible for
+                    //  better user interactions?
+                    launchMainMenu();
+                    getRootView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            });
         }else {
             removePreviousTab();
             updateTab();
@@ -109,25 +97,25 @@ public class MoTabActivity extends MoSmartActivity implements MoUpdateTabActivit
     private void removePreviousTab() {
         if(tab!=null && !MoTabController.instance.currentIs(this.tab) && webView != null){
             // then remove it from web view when updating
-            layout.coordinatorLayout.removeView(webView);
+            coordinatorLayout.removeView(webView);
             moTabSearchBar.onDestroy();
         }
     }
 
 
     private void updateTitle(){
-        layout.title.setText(this.webView.getTitle());
+        setTitle(this.webView.getTitle());
     }
 
     private void updateSubtitle(){
-        layout.subtitle.setText(this.webView.getUrl());
+        setSubTitle(this.webView.getUrl());
     }
 
     private void updateWebView() {
         this.webView = tab.getMoWebView();
-        MoTabUtils.transitionToInTabMode(webView,layout.coordinatorLayout, MoCoordinatorUtils.getScrollingParams());
+        MoTabUtils.transitionToInTabMode(webView,coordinatorLayout, MoCoordinatorUtils.getScrollingParams());
         this.webView.setOnLongClickListener(view -> {
-            webView.getHitTestResultParser().createDialogOrSmartText(getContext());
+            webView.getHitTestResultParser().createDialogOrSmartText(MoTabActivity.this);
             return false;
         });
     }
@@ -150,8 +138,8 @@ public class MoTabActivity extends MoSmartActivity implements MoUpdateTabActivit
      */
     private void initSearchBar() {
         this.moTabSearchBar = new MoTabSearchBar(this)
-                .setParentLayout(layout.coordinatorLayout);
-        layout.linearBottom.addView(moTabSearchBar);
+                .setParentLayout(coordinatorLayout);
+        this.linearBottom.addView(moTabSearchBar);
     }
 
     /**
@@ -159,9 +147,9 @@ public class MoTabActivity extends MoSmartActivity implements MoUpdateTabActivit
      * and the book mark button inside the toolbar
      */
     private void initToolbar() {
-        this.moToolBar = new MoToolBar(getContext());
+        this.moToolBar = new MoToolBar(this);
         // set it as a toolbar
-        layout.toolbar.addToolbar(this.moToolBar);
+        toolbar.addToolbar(this.moToolBar);
     }
 
     private void updateToolbar() {
@@ -198,21 +186,7 @@ public class MoTabActivity extends MoSmartActivity implements MoUpdateTabActivit
                 .clearEditTextFocus()
                 .setTextSearch(tab.getUrl())
                 .setOnTabsButtonClicked(view -> {
-                    //construction
-                    tab.captureAndSaveWebViewBitmapAsync();
-
-                    // add a preview to this root
-                    ImageView imageView = new ImageView(this);
-                    imageView.setImageBitmap(tab.getWebViewBitmap());
-                    imageView.setTransitionName(tab.getTransitionName());
-                    getGroupRootView().addView(imageView,new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT));
-
-                    startActivityForResult(new Intent(MoTabActivity.this, MainMenuActivity.class),
-                            MAIN_MENU_REQUEST_CODE,
-                            ActivityOptions.makeSceneTransitionAnimation(this,imageView,
-                                    imageView.getTransitionName()).toBundle());
-                    //launchMainMenu();
+                    launchMainMenu();
                 })
                 .setNumberOfTabs(MoTabsManager.size());
     }
@@ -222,16 +196,10 @@ public class MoTabActivity extends MoSmartActivity implements MoUpdateTabActivit
      * to show all the tabs to the user
      */
     private void launchMainMenu() {
-        //onTabPressed.run();
         startActivityForResult(new Intent(MoTabActivity.this, MainMenuActivity.class),
                 MAIN_MENU_REQUEST_CODE,
                 ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
     }
-
-//    @Override
-//    public boolean onBackPressed() {
-//        return tab.onBackPressed();
-//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -271,8 +239,6 @@ public class MoTabActivity extends MoSmartActivity implements MoUpdateTabActivit
 
     @Override
     public void onBackPressed() {
-        if(!tab.onBackPressed()){
-            super.onBackPressed();
-        }
+        tab.onBackPressed(MoTabActivity.super::onBackPressed);
     }
 }
