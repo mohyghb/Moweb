@@ -2,18 +2,17 @@ package com.moofficial.moweb.MoActivities;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.transition.TransitionInflater;
-import android.view.ViewTreeObserver;
 
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import com.moofficial.moessentials.MoEssentials.MoBitmap.MoBitmapUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartCoordinatorActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroupUtils.MoAppbar.MoAppbarUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroupUtils.MoCoordinatorUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
+import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoUpdateTabActivity;
 import com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar.MoTabSearchBar;
@@ -30,10 +29,13 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
     public static final int GO_TO_TAB_ACTIVITY_REQUEST = 1;
 
 
+
     private MoTabSearchBar moTabSearchBar;
     private MoTab tab;
     private MoWebView webView;
     private MoToolBar moToolBar;
+
+    public static CoordinatorLayout[] hello = new CoordinatorLayout[1];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,7 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
         appBarLayout.setExpanded(false);
         initSearchBar();
         initToolbar();
+        hello[0] = coordinatorLayout;
     }
 
     /**
@@ -66,20 +69,8 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
     @Override
     public void update() {
         if(MoTabController.instance.isOutOfOptions()) {
-            // monote, other browsers make a tab so
-            //  it is never out of options try that
-
-            // launch the main menu
-            // when layout is done constructing
-            getRootView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    // monote: maybe make sure that other views are invisible for
-                    //  better user interactions?
-                    launchMainMenu();
-                    getRootView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-            });
+            // if we are out of options, make a new tab
+            MoTabsManager.addTab(this, MoSearchEngine.instance.homePage(),false);
         }else {
             removePreviousTab();
             updateTab();
@@ -88,6 +79,7 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
             updateTitle();
             updateSubtitle();
             updateToolbar();
+
         }
     }
 
@@ -205,11 +197,14 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
     private void launchMainMenu() {
 
         coordinatorLayout.setTransitionName(tab.getTransitionName());
-        Bitmap b = MoBitmapUtils.createBitmapFromView(coordinatorLayout,0,0);
-        tab.getMoBitmap().setBitmap(b);
+        tab.captureAndSaveWebViewBitmapAsync(this.coordinatorLayout);
+//        Bitmap b = MoBitmapUtils.createBitmapFromView(coordinatorLayout,0,0);
+//        tab.getMoBitmap().setBitmap(b);
         // we need to save the bitmap async
 
-        startActivityForResult(new Intent(MoTabActivity.this, MainMenuActivity.class),
+        Intent intent = new Intent(MoTabActivity.this, MainMenuActivity.class);
+
+        startActivityForResult(intent,
                 MAIN_MENU_REQUEST_CODE,
                 ActivityOptions.makeSceneTransitionAnimation(this,this.coordinatorLayout,
                         tab.getTransitionName()).toBundle());
@@ -222,11 +217,6 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
             update();
         }
 
-//        if(resultCode == RESULT_OK && data != null){
-//            // only check the data if the result is okay and
-//            // data is not null
-//
-//        }
     }
 
     @Override

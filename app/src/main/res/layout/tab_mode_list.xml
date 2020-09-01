@@ -9,6 +9,7 @@
         android:id="@+id/tab_mode_list_card_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
         app:cardElevation="0dp"
         app:cardMaxElevation="0dp"
         app:contentPadding="0dp"
@@ -18,9 +19,11 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
+            android:id="@+id/tab_mode_list_linear_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
 
             <!--            <ImageView-->
@@ -36,48 +39,28 @@
             <!--                app:layout_constraintTop_toBottomOf="@+id/tab_url_list_view"-->
             <!--                tools:srcCompat="@tools:sample/backgrounds/scenic" />-->
 
-            <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView
-                android:id="@+id/tab_mode_list_inner_card_view"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:backgroundTint="@color/transparent"
-                app:cardBackgroundColor="@color/transparent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+            <!--            <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView-->
+            <!--                android:id="@+id/tab_mode_list_inner_card_view"-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="0dp"-->
+            <!--                android:background="?attr/selectableItemBackgroundBorderless"-->
+            <!--                android:backgroundTint="@color/transparent"-->
+            <!--                app:cardBackgroundColor="@color/transparent"-->
+            <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toTopOf="parent">-->
 
-                <LinearLayout
-                    android:id="@+id/tab_mode_list_cover_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"/>
-            </com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView>
-
-            <LinearLayout
-                android:id="@+id/tab_mode_list_linear_layout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tab_url_list_view">
-
-                <ImageView
-                    android:id="@+id/web_view_bitmap"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:cropToPadding="true"
-                    android:scaleType="centerInside"
-                    android:visibility="gone"
-                    tools:srcCompat="@tools:sample/backgrounds/scenic" />
-            </LinearLayout>
+            <!--                <LinearLayout-->
+            <!--                    android:id="@+id/tab_mode_list_cover_view"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="match_parent"-->
+            <!--                    android:orientation="vertical" />-->
+            <!--            </com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView>-->
 
             <TextView
                 android:id="@+id/tab_url_list_view"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/day_night_background"
                 android:fontFamily="sans-serif-light"
@@ -88,8 +71,21 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <ImageView
+                android:id="@+id/web_view_bitmap"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:cropToPadding="true"
+                android:scaleType="centerCrop"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tab_url_list_view"
+                tools:srcCompat="@color/MoGrey" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
     </com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView>
 
 

@@ -47,10 +47,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         @Override
         public void onPageFinished(WebView view, String url) {
             MoLog.print("on page finished "+view.getProgress()+"" + url);
-            // capture bitmap with a delay of one second after the page has been finished
-            if(captureBitmapWhenFinishedLoading){
-                captureBitmapWithDelay(1000);
-            }
+
             super.onPageFinished(view, url);
             MoWebView.this.onPageFinishedListener.onFinished(view,url);
         }
@@ -71,7 +68,6 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
     private MoBitmap moBitmap;
     private MoWebState webState = new MoWebState();
     private boolean captureBitmap = true;
-    private boolean captureBitmapWhenFinishedLoading = false;
     private boolean saveHistory = true;
     private boolean isInDesktopMode = false;
     private boolean isPaused = true;
@@ -261,36 +257,38 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
 
     /**
      * captures a bitmap from webview
+     * if you want to take a screen shot of the webpage
+     * do it on its container instead of directly from this
      */
-    public void captureBitmap() {
-        if(captureBitmap){
-            post(() -> moBitmap.captureBitmap(MoWebView.this));
-        }
-    }
-
-    public void captureBitmapWithDelay(long delay){
-        if(captureBitmap){
-            post(()->moBitmap.captureBitmapWithDelay(this,delay));
-        }
-    }
-
-    public void captureBitmapIfNotLoading(){
-        if(captureBitmap){
-            post(()->moBitmap.captureBitmapIfNotLoading(this));
-        }
-    }
-
-    public void forceCaptureBitmapIfNotLoading(){
-        if(captureBitmap){
-            post(()->moBitmap.forceCaptureBitmapIfNotLoading(this));
-        }
-    }
-
-    public void forceCaptureBitmap(){
-        if(captureBitmap){
-            moBitmap.forceCaptureBitmap(this);
-        }
-    }
+//    public void captureBitmap() {
+//        if(captureBitmap){
+//            post(() -> moBitmap.captureBitmap(MoWebView.this));
+//        }
+//    }
+//
+//    public void captureBitmapWithDelay(long delay){
+//        if(captureBitmap){
+//            post(()->moBitmap.captureBitmapWithDelay(this,delay));
+//        }
+//    }
+//
+//    public void captureBitmapIfNotLoading(){
+//        if(captureBitmap){
+//            post(()->moBitmap.captureBitmapIfNotLoading(this));
+//        }
+//    }
+//
+//    public void forceCaptureBitmapIfNotLoading(){
+//        if(captureBitmap){
+//            post(()->moBitmap.forceCaptureBitmapIfNotLoading(this));
+//        }
+//    }
+//
+//    public void forceCaptureBitmap(){
+//        if(captureBitmap){
+//            moBitmap.forceCaptureBitmap(this);
+//        }
+//    }
 
 
 

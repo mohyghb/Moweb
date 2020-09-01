@@ -7,18 +7,18 @@ import android.util.Pair;
 import android.view.ViewTreeObserver;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoListViewSync;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMarginBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoSearchBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoWrappers.MoWrapperToolbar;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabExceptions.MoTabNotFoundException;
@@ -30,11 +30,11 @@ import com.moofficial.moweb.R;
 
 import java.util.List;
 
-public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickListener {
+public class MainMenuActivity extends AppCompatActivity implements MoOnTabClickListener {
 
     public static final int HISTORY_REQUEST_CODE = 0;
 
-    private MoCardRecyclerView tabCardRecycler;
+   // private MoCardRecyclerView tabCardRecycler;
     private MoTabRecyclerAdapter tabRecyclerAdapter;
     private MoRecyclerView tabRecyclerView;
     private MoToolBar moToolBar;
@@ -45,28 +45,30 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
     private MoSearchBar searchBar;
 
     private MoListViewSync viewSync;
+    private MoWrapperToolbar wrapperToolbar;
+    private ConstraintLayout rootGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //MoWindowTransitions.apply(new Slide(),this);
         getWindow().setSharedElementEnterTransition(TransitionInflater.from(this)
                 .inflateTransition(R.transition.shared_element));
         getWindow().setSharedElementExitTransition(TransitionInflater.from(this)
                 .inflateTransition(R.transition.shared_element));
         postponeEnterTransition();
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main_menu);
+        init();
     }
 
-    @Override
+   // @Override
     protected void init() {
         initUI();
         initClass();
     }
 
     private void initUI() {
+        rootGroup = findViewById(R.id.main_menu_root);
         setTitle(getString(R.string.app_name));
-        //setSubTitle(MoTabsManager.size() + " tabs");
-        //appBarLayout.setExpanded(false);
         initTabCard();
         initMoToolbar();
         initTabSelectableToolbar();
@@ -86,9 +88,10 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
         initViewSync();
     }
 
-    private void syncToolbars(){
-        syncTitle(this.moToolBar.getTitle(),this.tabSelectableToolbar.getTitle());
-        setupMultipleToolbars(this.moToolBar,this.moToolBar,this.tabSelectableToolbar,this.searchBar);
+    private void syncToolbars() {
+        wrapperToolbar = new MoWrapperToolbar(findViewById(R.id.main_menu_toolbar),
+                findViewById(R.id.main_menu_toolbar_linear_layout));
+        wrapperToolbar.setupMultipleToolbars(this.moToolBar,this.moToolBar,this.tabSelectableToolbar,this.searchBar);
     }
 
     private void initTabSelectableToolbar(){
@@ -110,9 +113,9 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
     }
 
     private void initTabRecyclerView() {
-        tabRecyclerView = MoRecyclerUtils.get(tabCardRecycler.getRecyclerView(),tabRecyclerAdapter)
-                .setMaxHeight(getHeightPixels())
-                .setLayoutManagerType(MoRecyclerView.GRID_LAYOUT_MANAGER)
+        tabRecyclerView = MoRecyclerUtils.get(rootGroup,R.id.main_menu_tab_recycler,tabRecyclerAdapter)
+                .setLayoutManagerType(MoRecyclerView.LINEAR_LAYOUT_MANAGER)
+                .setOrientation(MoRecyclerView.HORIZONTAL)
                 .show();
         // scroll to the current tab that we are on
         // monote reterive the index some how (linear search??!!)
@@ -143,16 +146,16 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
     }
 
     private void initTabSelectable(){
-        this.tabSelectable = new MoSelectable<>(this,getGroupRootView(), this.tabRecyclerAdapter)
-                .setCounterView(title)
+        this.tabSelectable = new MoSelectable<>(this,rootGroup, this.tabRecyclerAdapter)
+                .setCounterView(tabSelectableToolbar.getTitle())
                 .setSelectAllCheckBox(tabSelectableToolbar.getCheckBox())
                 .addUnNormalViews(this.tabSelectableToolbar);
     }
 
     private void initTabCard() {
-        tabCardRecycler = new MoCardRecyclerView(this);
-        tabCardRecycler.getCardView().makeTransparent();
-        linearNested.addView(tabCardRecycler, MoMarginBuilder.getLinearParams(0,8,0,0));
+//        tabCardRecycler = new MoCardRecyclerView(this);
+//        tabCardRecycler.getCardView().makeTransparent();
+//        linearNested.addView(tabCardRecycler, MoMarginBuilder.getLinearParams(0,8,0,0));
     }
 
     private void initMoToolbar(){
@@ -168,9 +171,9 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
     }
 
     private void initMoSearchable(){
-        this.searchable = new MoSearchable(this, getGroupRootView(), MoTabsManager::getTabs)
+        this.searchable = new MoSearchable(this, rootGroup, MoTabsManager::getTabs)
                 .setActivity(this)
-                .setAppBarLayout(this.appBarLayout)
+                //.setAppBarLayout(this.appBarLayout)
                 .setClearSearch(this.searchBar.getRightButton())
                 .setCancelSearch(this.searchBar.getLeftButton())
                 .addUnNormalViews(this.searchBar)
@@ -205,7 +208,7 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
     }
 
     private void initViewSync() {
-        this.viewSync = new MoListViewSync(getGroupRootView(),this.tabSelectable,this.searchable)
+        this.viewSync = new MoListViewSync(rootGroup,this.tabSelectable,this.searchable)
                 .setPutOnHold(true)
                 .setSharedElements(moToolBar);
     }
@@ -266,8 +269,10 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
         // we only change the index if the new one is not the same
         if (!MoTabController.instance.currentIs(t)) {
             MoTabController.instance.setNewTab(this,t);
+            MoTabActivity.hello[0].setTransitionName(t.getTransitionName());
         }
-        supportFinishAfterTransition();
+
+        finish();
     }
 
     @Override
@@ -275,7 +280,7 @@ public class MainMenuActivity extends MoSmartActivity implements MoOnTabClickLis
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == HISTORY_REQUEST_CODE && resultCode == MoTabActivity.GO_TO_TAB_ACTIVITY_REQUEST){
             // we need to finish this activity and go to the tab activity
-            supportFinishAfterTransition();
+            finish();
         }
     }
 

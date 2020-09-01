@@ -47,7 +47,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     private MoTab parentTab;
     protected MoWebView moWebView;
     private MoURL url;
-    private MoBitmap moBitmap = new MoTabBitmap();
+    private MoBitmap moBitmap = new MoTabBitmap().setOptimized(false);
     private MoTabType tabType = new MoTabType(MoTabType.TYPE_NORMAL);
     private MoOnUpdateUrlListener onUpdateUrlListener = s -> {};
     private MoOnTabBookmarkChanged onTabBookmarkChanged = isBookmarked -> {};
@@ -384,11 +384,12 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     /**
      * captures a bitmap preview of the web view
      * and saves it async to boost the performance
+     * @param v view to capture the bitmap for
      */
-    public void captureAndSaveWebViewBitmapAsync(){
+    public void captureAndSaveWebViewBitmapAsync(View v){
         // needs to be outside of async b/c the capture bitmap should
         // occur on web view thread not async
-        moWebView.forceCaptureBitmap();
+        this.moBitmap.captureBitmap(v,this.url.getUrlString());
         AsyncTask.execute(() -> {
             MoLog.printRunTime("bitmapSave" + moBitmap.getName(), () -> {
                 try {

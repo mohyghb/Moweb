@@ -8,9 +8,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.moofficial.moessentials.MoEssentials.MoUI.MoDynamicUnit.MoDynamicUnit;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
@@ -26,8 +26,8 @@ import java.util.List;
 public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapter.TabViewHolder,MoTab>
         implements MoSelectableList<MoTab> {
 
-    private static final int TAB_PADDING = 54;
-    private static final int TAB_PADDING_GRID_VIEW = 12;
+    private static final int TAB_PADDING = MoDynamicUnit.convertDpToPixels(100f);
+    private static final int TAB_PADDING_GRID_VIEW = MoDynamicUnit.convertDpToPixels(100f);
 
 
 
@@ -50,20 +50,23 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
 
         private ImageView background;
         private TextView url;
-        private LinearLayout linearLayout;
-        private MoCardView innerCard;
+       // private LinearLayout linearLayout;
+        //private MoCardView innerCard;
         private MoCardView outerCard;
-        private LinearLayout coverView;
+     //   private LinearLayout coverView;
+        private LinearLayout linearLayout;
 
         public TabViewHolder(View v) {
             super(v);
             background = v.findViewById(R.id.web_view_bitmap);
             url = v.findViewById(R.id.tab_url_list_view);
-            linearLayout = v.findViewById(R.id.tab_mode_list_linear_layout);
-            innerCard = v.findViewById(R.id.tab_mode_list_inner_card_view);
+           // linearLayout = v.findViewById(R.id.tab_mode_list_linear_layout);
+           // innerCard = v.findViewById(R.id.tab_mode_list_inner_card_view);
             outerCard = v.findViewById(R.id.tab_mode_list_card_view);
             outerCard.makeCardRecRound();
-            coverView = v.findViewById(R.id.tab_mode_list_cover_view);
+
+            linearLayout = v.findViewById(R.id.tab_mode_list_linear_layout);
+          //  coverView = v.findViewById(R.id.tab_mode_list_cover_view);
         }
 
     }
@@ -83,24 +86,22 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
     @Override
     public TabViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = MoInflaterView.inflate(R.layout.tab_mode_list,parent.getContext());
-        if(!this.isInGrid){
-            v.setPadding(TAB_PADDING,TAB_PADDING,TAB_PADDING,TAB_PADDING);
-        }else{
-            v.setPadding(TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW);
-        }
-        v.setLayoutParams(getMatchWrapParams());
+        //new MoPaddingBuilder(this.isInGrid?TAB_PADDING_GRID_VIEW:TAB_PADDING).apply(v);
+        v.setLayoutParams(getRecyclerParams(RecyclerView.LayoutParams.WRAP_CONTENT,
+                RecyclerView.LayoutParams.WRAP_CONTENT));
         return new TabViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TabViewHolder holder, int position) {
         MoTab tab = dataSet.get(position);
-        int height = (int)(context.getResources().getDisplayMetrics()
-                .heightPixels/2.25f);
-        holder.outerCard.setLayoutParams(new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,height));
+//        int height = (int)(context.getResources().getDisplayMetrics()
+//                .heightPixels/1.5f);
+//        holder.outerCard.setLayoutParams(new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//                height));
         onTabClickListener(holder, position, tab);
         updateUI(holder, tab);
-        MoSelectableUtils.applySelectedColor(context,holder.coverView,tab);
+        MoSelectableUtils.applySelectedColor(context,holder.linearLayout,tab);
         onLongTabClickListener(holder, position);
 
 
@@ -116,7 +117,7 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
             // the payload that is coming for sure we know it is
             // from the mo selectable class
             // so just update the selectable color
-            MoSelectableUtils.applySelectedColor(context,holder.coverView,dataSet.get(position));
+            MoSelectableUtils.applySelectedColor(context,holder.linearLayout,dataSet.get(position));
         }
 
     }
@@ -132,7 +133,7 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
     }
 
     private void onLongTabClickListener(@NonNull TabViewHolder holder, int position) {
-        holder.innerCard.setOnLongClickListener(view -> {
+        holder.outerCard.setOnLongClickListener(view -> {
             if(isNotSelecting()){
                 startSelecting(position);
                 return true;
@@ -150,7 +151,7 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
 
     private void onTabClickListener(TabViewHolder holder, int position, MoTab tab) {
         // going inside the tab or selecting it to be removed or shared ...
-        holder.innerCard.setOnClickListener(view -> {
+        holder.outerCard.setOnClickListener(view -> {
             if(isSelecting()){
                 onSelect(position);
             }else{
@@ -167,8 +168,18 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
 //        if(tab.isUpToDate()){
 //            MoTabUtils.transitionToListTabMode(context,tab.getMoWebView(),holder.linearLayout);
 //        }else{
+//        if(tab.getWebViewBitmap()==null){
+//
+//        }else {
             holder.background.setImageBitmap(tab.getWebViewBitmap());
+//            holder.background.setLayoutParams(new LinearLayout.LayoutParams(
+//                    ViewGroup.LayoutParams.MATCH_PARENT,
+//                    (int)(context.getResources().getDisplayMetrics()
+//                .heightPixels/1.5f)
+//            ));
             holder.background.setVisibility(View.VISIBLE);
+        //}
+
 //            holder.linearLayout.addView(holder.background);
 //        }
     }

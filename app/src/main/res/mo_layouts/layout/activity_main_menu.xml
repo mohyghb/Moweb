@@ -3,6 +3,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MoActivities.MainMenuActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MoActivities.MainMenuActivity"
+    android:id="@+id/main_menu_root">
+
+
+    <com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/main_menu_toolbar"
+        android:id="@+id/main_menu_tab_recycler"
+        />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/main_menu_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/setting_toolbar_background"
+        android:clickable="false"
+        android:elevation="0dp"
+        android:focusable="false"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <LinearLayout
+            android:id="@+id/main_menu_toolbar_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="false"
+            android:orientation="vertical" />
+    </androidx.appcompat.widget.Toolbar>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
