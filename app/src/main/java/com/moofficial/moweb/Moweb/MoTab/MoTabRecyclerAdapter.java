@@ -15,6 +15,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterVi
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoPaddingBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoOnTabClickListener;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
@@ -26,9 +27,9 @@ import java.util.List;
 public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapter.TabViewHolder,MoTab>
         implements MoSelectableList<MoTab> {
 
-    private static final int TAB_PADDING = MoDynamicUnit.convertDpToPixels(100f);
-    private static final int TAB_PADDING_GRID_VIEW = MoDynamicUnit.convertDpToPixels(100f);
-
+    private static final int TAB_PADDING = MoDynamicUnit.convertDpToPixels(8f);
+    private static final int TAB_PADDING_GRID_VIEW = MoDynamicUnit.convertDpToPixels(8f);
+    private final float SCREEN_TO_TAB_RATIO = 1.5f;
 
 
     private boolean isInGrid;
@@ -53,8 +54,8 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
        // private LinearLayout linearLayout;
         //private MoCardView innerCard;
         private MoCardView outerCard;
-     //   private LinearLayout coverView;
-        private LinearLayout linearLayout;
+        private LinearLayout coverView;
+       // private LinearLayout linearLayout;
 
         public TabViewHolder(View v) {
             super(v);
@@ -65,8 +66,9 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
             outerCard = v.findViewById(R.id.tab_mode_list_card_view);
             outerCard.makeCardRecRound();
 
-            linearLayout = v.findViewById(R.id.tab_mode_list_linear_layout);
-          //  coverView = v.findViewById(R.id.tab_mode_list_cover_view);
+
+           // linearLayout = v.findViewById(R.id.tab_mode_list_linear_layout);
+            coverView = v.findViewById(R.id.tab_modE_list_cover_view);
         }
 
     }
@@ -85,27 +87,35 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
     @NonNull
     @Override
     public TabViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         View v = MoInflaterView.inflate(R.layout.tab_mode_list,parent.getContext());
-        //new MoPaddingBuilder(this.isInGrid?TAB_PADDING_GRID_VIEW:TAB_PADDING).apply(v);
+        new MoPaddingBuilder(this.isInGrid?TAB_PADDING_GRID_VIEW:TAB_PADDING).apply(v);
         v.setLayoutParams(getRecyclerParams(RecyclerView.LayoutParams.WRAP_CONTENT,
-                RecyclerView.LayoutParams.WRAP_CONTENT));
+                RecyclerView.LayoutParams.MATCH_PARENT));
         return new TabViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TabViewHolder holder, int position) {
         MoTab tab = dataSet.get(position);
-//        int height = (int)(context.getResources().getDisplayMetrics()
-//                .heightPixels/1.5f);
-//        holder.outerCard.setLayoutParams(new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-//                height));
+
+        positionTab(holder);
         onTabClickListener(holder, position, tab);
         updateUI(holder, tab);
-        MoSelectableUtils.applySelectedColor(context,holder.linearLayout,tab);
+        MoSelectableUtils.applySelectedColor(context,holder.coverView,tab);
         onLongTabClickListener(holder, position);
 
-
         holder.outerCard.setTransitionName(tab.getTransitionName());
+    }
+
+    private void positionTab(@NonNull TabViewHolder holder) {
+        int height = (int)(context.getResources().getDisplayMetrics()
+                .heightPixels/ SCREEN_TO_TAB_RATIO);
+        int width = (int)(context.getResources().getDisplayMetrics()
+                .widthPixels/SCREEN_TO_TAB_RATIO);
+        LinearLayout.LayoutParams p =new LinearLayout.LayoutParams(width,
+                height);
+        holder.outerCard.setLayoutParams(p);
     }
 
     @Override
@@ -117,7 +127,7 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
             // the payload that is coming for sure we know it is
             // from the mo selectable class
             // so just update the selectable color
-            MoSelectableUtils.applySelectedColor(context,holder.linearLayout,dataSet.get(position));
+            MoSelectableUtils.applySelectedColor(context,holder.coverView,dataSet.get(position));
         }
 
     }

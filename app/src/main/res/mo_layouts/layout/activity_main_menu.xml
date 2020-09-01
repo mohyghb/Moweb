@@ -9,14 +9,13 @@
 
 
     <com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView
+        android:id="@+id/main_menu_tab_recycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/main_menu_toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/main_menu_toolbar"
-        android:id="@+id/main_menu_tab_recycler"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/main_menu_toolbar"

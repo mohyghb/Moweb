@@ -114,7 +114,8 @@ public class MainMenuActivity extends AppCompatActivity implements MoOnTabClickL
 
     private void initTabRecyclerView() {
         tabRecyclerView = MoRecyclerUtils.get(rootGroup,R.id.main_menu_tab_recycler,tabRecyclerAdapter)
-                .setLayoutManagerType(MoRecyclerView.LINEAR_LAYOUT_MANAGER)
+                .setLayoutManagerType(MoRecyclerView.STAGGERED_GRID_LAYOUT_MANAGER)
+                .setSpanCount(1)
                 .setOrientation(MoRecyclerView.HORIZONTAL)
                 .show();
         // scroll to the current tab that we are on
