@@ -55,4 +55,12 @@ public class MoSuggestion {
             return searchEngineSuggestion;
         }
     }
+
+    public String getSearch(){
+        if(type == TYPE_HISTORY) {
+            return history.getUrl();
+        } else {
+            return searchEngineSuggestion;
+        }
+    }
 }

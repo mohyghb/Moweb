@@ -28,7 +28,7 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
 
     private static final int TAB_PADDING = MoDynamicUnit.convertDpToPixels(8f);
     private static final int TAB_PADDING_GRID_VIEW = MoDynamicUnit.convertDpToPixels(8f);
-    private final float SCREEN_TO_TAB_RATIO = 1.5f;
+    private final float SCREEN_TO_TAB_RATIO = 1.6f;
 
 
     private boolean isInGrid;

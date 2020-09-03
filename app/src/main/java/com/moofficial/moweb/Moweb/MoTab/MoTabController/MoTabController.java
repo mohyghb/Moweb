@@ -125,7 +125,7 @@ public class MoTabController implements MoSavable, MoLoadable {
                 currentTab.onPause();
                 // we want to pause all the activities inside the web view
                 // but we also want to be able to show it to user about what is happening
-                currentTab.onResume();
+                //currentTab.onResume();
                 // we also want to save a preview by taking screenshot of the
                 // web view and reusing the bitmap if they close the app
                 // so we can show it later to the user

@@ -98,6 +98,7 @@ public class SettingsActivity extends AppCompatActivity {
                 MoSearchEngine.updateSearchEngine(activity);
             }else if(s.equals(string(R.string.theme_version))){
                 MoTheme.updateTheme(activity);
+                requireActivity().recreate();
             }else if(s.equals(string(R.string.auto_complete))){
                 MoSearchAutoComplete.updateSearchAutoComplete(activity);
             }else if(s.equals(string(R.string.history_enabled))){

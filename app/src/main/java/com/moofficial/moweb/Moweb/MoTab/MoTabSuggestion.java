@@ -28,16 +28,16 @@ public class MoTabSuggestion {
     public MoTabSuggestion(Context context, View v){
         this.context = context;
         this.view = v;
-        init();
     }
 
-    private void init(){
+    public MoTabSuggestion init(){
         moCardRecyclerView = view.findViewById(R.id.suggestion_tab_card_view);
         moCardRecyclerView.getCardView().makeTransparent();
         adapter = new MoSuggestionsAdapter(new ArrayList<>(),context,this.onSuggestionClicked);
         recyclerView = MoRecyclerUtils.get(moCardRecyclerView.getRecyclerView(),adapter)
                             .setOrientation(MoRecyclerView.HORIZONTAL)
                             .show();
+        return this;
     }
 
 
@@ -58,6 +58,7 @@ public class MoTabSuggestion {
         }
         this.suggestions = suggestions;
         adapter.setDataSet(suggestions.getSuggestions());
+
         adapter.notifyDataSetChanged();
         recyclerView.setVisibility(View.VISIBLE);
     }

@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -41,7 +42,7 @@ public class MoTabSearchBar extends MoConstraint {
     private TextView tabsButton;
     private ProgressBar progressBar;
     private ImageButton moreTabButton;
-    private TextInputEditText searchText;
+    private EditText searchText;
     private MoFindBar moFindBar;
     private MoPopupWindow moPopupWindow;
     private MoSearchable moSearchable;
@@ -155,9 +156,7 @@ public class MoTabSearchBar extends MoConstraint {
         return this;
     }
 
-    public TextInputEditText getSearchText() {
-        return searchText;
-    }
+
 
     public MoTabSearchBar setSearchText(TextInputEditText searchText) {
         this.searchText = searchText;
@@ -298,7 +297,7 @@ public class MoTabSearchBar extends MoConstraint {
                             tab.search(suggestion);
                         }
                     }
-                });
+                }).init();
         hideSuggestions();
     }
 

@@ -260,17 +260,19 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
      * when the user presses back on main screen
      * if there is a parent tab, and this web view can not go back, go to
      * that parent tab
-     * @param superBackPressed super.onBackPressed in main activity
+     * @return true if the on back pressed method was consumed
+     * by the tab and false if it did nothing
      */
-    public void onBackPressed(Runnable superBackPressed){
+    public boolean onBackPressed(){
         if(this.moWebView.canGoBack()) {
             this.moWebView.goBack();
         } else if(parentTab!=null) {
             // we can go back to the parent tab
             MoTabsManager.selectTab(context,this.parentTab);
         } else {
-            superBackPressed.run();
+            return false;
         }
+        return true;
     }
 
 

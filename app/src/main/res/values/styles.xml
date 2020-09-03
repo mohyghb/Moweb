@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:colorBackground">@color/MoBackground</item>
+<!--        <item name="android:colorBackground">@color/MoBackground</item>-->
 <!--        <item name="android:colorBackgroundCacheHint">@color/MoBackground</item>-->
 <!--        <item name="android:color">@color/MoBackground</item>-->
 
@@ -17,7 +17,7 @@
 
         <item name="materialCardViewStyle">@style/MoMaterialCardViewStyleBright</item>
 
-        <item name="android:statusBarColor">@color/MoBackground</item>
+        <item name="android:statusBarColor">@color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>

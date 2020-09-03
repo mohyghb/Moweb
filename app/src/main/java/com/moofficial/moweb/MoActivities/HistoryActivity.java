@@ -269,7 +269,7 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
 
     private void goBackToTabActivity() {
         historyRecyclerAdapter.clearSelection();
-        setResult(MoTabActivity.GO_TO_TAB_ACTIVITY_REQUEST);
+        setResult(MoTabSection.GO_TO_TAB_ACTIVITY_REQUEST);
         finish();
     }
 

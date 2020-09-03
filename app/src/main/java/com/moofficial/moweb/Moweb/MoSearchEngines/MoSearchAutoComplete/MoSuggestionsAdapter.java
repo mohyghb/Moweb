@@ -61,10 +61,10 @@ public class MoSuggestionsAdapter extends MoRecyclerAdapter<MoSuggestionsAdapter
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(MoSuggestionsAdapter.SuggestionViewHolder holder, int position) {
-        holder.suggestion.setText(dataSet.get(position).getKey() + " " + dataSet.get(position).getSimilarity());
+        holder.suggestion.setText(dataSet.get(position).getKey());
         holder.cardView.setOnClickListener(view -> {
             if(onSuggestionClicked!=null)
-                onSuggestionClicked.run(dataSet.get(position));
+                onSuggestionClicked.run(dataSet.get(position).getSearch());
         });
     }
 }
