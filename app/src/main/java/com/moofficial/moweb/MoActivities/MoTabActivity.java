@@ -1,29 +1,32 @@
 package com.moofficial.moweb.MoActivities;
 
-import android.app.ActivityOptions;
-import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Transition;
 import android.transition.TransitionInflater;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartCoordinatorActivity;
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoFragment.MoBasicFragment;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroupUtils.MoAppbar.MoAppbarUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroupUtils.MoCoordinatorUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
-import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoUpdateTabActivity;
 import com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar.MoTabSearchBar;
 import com.moofficial.moweb.Moweb.MoTab.MoTabUtils;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
-import com.moofficial.moweb.Moweb.MoWebAppLoader.MoWebAppLoader;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 import com.moofficial.moweb.R;
 
-public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdateTabActivity {
+@SuppressWarnings("ConstantConditions")
+public class MoTabActivity extends MoBasicFragment implements MoUpdateTabActivity {
 
     private static final int MAIN_MENU_REQUEST_CODE = 0;
     public static final int GO_TO_TAB_ACTIVITY_REQUEST = 1;
@@ -34,31 +37,117 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
     private MoTab tab;
     private MoWebView webView;
     private MoToolBar moToolBar;
-
-    public static CoordinatorLayout[] hello = new CoordinatorLayout[1];
+    ImageView imageView;
+    private MainTransitionTo moveToMainMenu;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        //MoWindowTransitions.apply(new Slide(),this);
-
-        getWindow().setSharedElementEnterTransition(TransitionInflater.from(this)
-                .inflateTransition(R.transition.shared_element));
-        getWindow().setSharedElementExitTransition(TransitionInflater.from(this)
-                .inflateTransition(R.transition.shared_element));
-
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MoWebAppLoader.loadApp(this);
-        MoTabController.instance.setUpdateTabActivity(this);
-        update();
+        setSharedElementEnterTransition(TransitionInflater.from(getContext())
+                .inflateTransition(R.transition.shared_element));
+        setSharedElementReturnTransition(TransitionInflater.from(getContext())
+                .inflateTransition(R.transition.shared_element));
+    }
+
+
+    //    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//
+//
+////        getWindow().setSharedElementEnterTransition(TransitionInflater.from(this)
+////                .inflateTransition(R.transition.shared_element));
+////        getWindow().setSharedElementExitTransition(TransitionInflater.from(this)
+////                .inflateTransition(R.transition.shared_element));
+//
+//        super.onCreate(savedInstanceState);
+//
+//
+//
+//
+//
+//        // mo for shared transition this is needed
+//        //coordinatorLayout.setTransitionName(tab.getTransitionName());
+//
+//
+//
+//        //postponeEnterTransition();
+
+//
+//
+//    }
+
+
+    public void showTransition() {
+
+        imageView.setImageBitmap(tab.getWebViewBitmap());
+        imageView.setTransitionName(tab.getTransitionName());
+        ((Transition)getSharedElementEnterTransition()).addListener(new Transition.TransitionListener() {
+            @Override
+            public void onTransitionStart(Transition transition) {
+                webView.setVisibility(View.GONE);
+                imageView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                MoLog.print("transition end");
+                imageView.post(() -> imageView.setVisibility(View.GONE));
+                webView.setVisibility(View.VISIBLE);
+                transition.removeListener(this);
+            }
+
+            @Override
+            public void onTransitionCancel(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionPause(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionResume(Transition transition) {
+
+            }
+        });
+    }
+
+
+    public MoTabActivity setMoveToMainMenu(MainTransitionTo moveToMainMenu) {
+        this.moveToMainMenu = moveToMainMenu;
+        return this;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        MoLog.print("on create view is called once");
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        init();
+    }
+
+
+
     protected void init() {
-        MoAppbarUtils.snapNoToolbar(collapsingToolbarLayout);
-        appBarLayout.setExpanded(false);
+        MoLog.print("init is called");
+
+        MoAppbarUtils.snapNoToolbar(layout.collapsingToolbarLayout);
+        layout.appBarLayout.setExpanded(false);
         initSearchBar();
         initToolbar();
-        hello[0] = coordinatorLayout;
+        MoTabController.instance.setUpdateTabActivity(this);
+
+        imageView = new ImageView(getContext());
+        layout.coordinatorLayout.addView(imageView,MoCoordinatorUtils.getScrollingParams());
+
+
+        update();
     }
 
     /**
@@ -68,10 +157,12 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
      */
     @Override
     public void update() {
-        if(MoTabController.instance.isOutOfOptions()) {
-            // if we are out of options, make a new tab
-            MoTabsManager.addTab(this, MoSearchEngine.instance.homePage(),false);
-        }else {
+//        if(MoTabController.instance.isOutOfOptions()) {
+//            // if we are out of options, make a new tab
+//            MoTabsManager.addTab(this, MoSearchEngine.instance.homePage(),false);
+//        }else {
+
+            imageView.setVisibility(View.GONE);
             removePreviousTab();
             updateTab();
             updateWebView();
@@ -79,9 +170,11 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
             updateTitle();
             updateSubtitle();
             updateToolbar();
-
-        }
+            MoLog.print("update tab");
+//        }
     }
+
+
 
     /**
      * removes the previous tab from the coordinator
@@ -96,25 +189,25 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
     private void removePreviousTab() {
         if(tab!=null && !MoTabController.instance.currentIs(this.tab) && webView != null){
             // then remove it from web view when updating
-            coordinatorLayout.removeView(webView);
+            layout.coordinatorLayout.removeView(webView);
             moTabSearchBar.onDestroy();
         }
     }
 
 
     private void updateTitle(){
-        setTitle(this.webView.getTitle());
+        layout.setTitle(this.webView.getTitle());
     }
 
     private void updateSubtitle(){
-        setSubTitle(this.webView.getUrl());
+        layout.setSubTitle(this.webView.getUrl());
     }
 
     private void updateWebView() {
         this.webView = tab.getMoWebView();
-        MoTabUtils.transitionToInTabMode(webView,coordinatorLayout, MoCoordinatorUtils.getScrollingParams());
+        MoTabUtils.transitionToInTabMode(webView,layout.coordinatorLayout, MoCoordinatorUtils.getScrollingParams());
         this.webView.setOnLongClickListener(view -> {
-            webView.getHitTestResultParser().createDialogOrSmartText(MoTabActivity.this);
+            webView.getHitTestResultParser().createDialogOrSmartText(getContext());
             return false;
         });
     }
@@ -136,9 +229,9 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
      * of the tab by changing its fields
      */
     private void initSearchBar() {
-        this.moTabSearchBar = new MoTabSearchBar(this)
-                .setParentLayout(coordinatorLayout);
-        this.linearBottom.addView(moTabSearchBar);
+        this.moTabSearchBar = new MoTabSearchBar(getContext())
+                .setParentLayout(layout.coordinatorLayout);
+        layout.linearBottom.addView(moTabSearchBar);
     }
 
     /**
@@ -146,9 +239,9 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
      * and the book mark button inside the toolbar
      */
     private void initToolbar() {
-        this.moToolBar = new MoToolBar(this);
+        this.moToolBar = new MoToolBar(getContext());
         // set it as a toolbar
-        toolbar.addToolbar(this.moToolBar);
+        layout.toolbar.addToolbar(this.moToolBar);
     }
 
     private void updateToolbar() {
@@ -185,7 +278,7 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
                 .clearEditTextFocus()
                 .setTextSearch(tab.getUrl())
                 .setOnTabsButtonClicked(view -> {
-                    launchMainMenu();
+                    onTabsButtonPressed();
                 })
                 .setNumberOfTabs(MoTabsManager.size());
     }
@@ -194,55 +287,67 @@ public class MoTabActivity extends MoSmartCoordinatorActivity implements MoUpdat
      * goes to the main menu activity
      * to show all the tabs to the user
      */
-    private void launchMainMenu() {
+    private void onTabsButtonPressed() {
 
-        coordinatorLayout.setTransitionName(tab.getTransitionName());
-        tab.captureAndSaveWebViewBitmapAsync(this.coordinatorLayout);
-//        Bitmap b = MoBitmapUtils.createBitmapFromView(coordinatorLayout,0,0);
-//        tab.getMoBitmap().setBitmap(b);
-        // we need to save the bitmap async
+        tab.captureAndSaveWebViewBitmapAsync(layout.coordinatorLayout);
+        imageView.setImageBitmap(tab.getWebViewBitmap());
+        imageView.setVisibility(View.VISIBLE);
+        imageView.setTransitionName(tab.getTransitionName());
+        webView.setVisibility(View.GONE);
 
-        Intent intent = new Intent(MoTabActivity.this, MainMenuActivity.class);
+        moveToMainMenu.transition(imageView);
 
-        startActivityForResult(intent,
-                MAIN_MENU_REQUEST_CODE,
-                ActivityOptions.makeSceneTransitionAnimation(this,this.coordinatorLayout,
-                        tab.getTransitionName()).toBundle());
+
+//
+//        getActivity().supportFinishAfterTransition();
+    }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == MAIN_MENU_REQUEST_CODE) {
+//            update();
+//        }
+//
+//    }
+
+
+    public View getSharedView() {
+        return this.imageView;
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == MAIN_MENU_REQUEST_CODE) {
-            update();
-        }
-
-    }
-
-    @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-        // todo
+        //
+      //  update();
+        //showTransition();
+        //
+        postponeEnterTransition();
+        showTransition();
+        startPostponedEnterTransition();
+        MoLog.print("on resume tab");
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
-        // todo
+        MoLog.print("on pause tab");
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
     }
 
     @Override
-    public void onBackPressed() {
-        tab.onBackPressed(MoTabActivity.super::onBackPressed);
+    public boolean onBackPressed() {
+//        tab.onBackPressed(MoTabActivity.super::onBackPressed);
+        return false;
     }
 }

@@ -77,7 +77,6 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/search_bar_text"
-                    style="@style/MoSearchAppBarCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"

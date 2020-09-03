@@ -21,7 +21,6 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoOnTabClickListener;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapter.TabViewHolder,MoTab>
@@ -34,7 +33,7 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
 
     private boolean isInGrid;
 
-    private MoOnTabClickListener onTabClickListener = (t, index) -> {};
+    private MoOnTabClickListener onTabClickListener = (t, v,index) -> {};
 
     public MoOnTabClickListener getOnTabClickListener() {
         return onTabClickListener;
@@ -74,7 +73,7 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MoTabRecyclerAdapter(ArrayList<MoTab> dataSet,Context c,boolean isInGrid) {
+    public MoTabRecyclerAdapter(List<MoTab> dataSet,Context c,boolean isInGrid) {
         super(c,dataSet);
 
         this.isInGrid = isInGrid;
@@ -105,7 +104,7 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
         MoSelectableUtils.applySelectedColor(context,holder.coverView,tab);
         onLongTabClickListener(holder, position);
 
-        holder.outerCard.setTransitionName(tab.getTransitionName());
+        holder.background.setTransitionName(tab.getTransitionName());
     }
 
     private void positionTab(@NonNull TabViewHolder holder) {
@@ -164,8 +163,8 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
         holder.outerCard.setOnClickListener(view -> {
             if(isSelecting()){
                 onSelect(position);
-            }else{
-                onTabClickListener.onTabClickListener(tab,position);
+            }else {
+                onTabClickListener.onTabClickListener(tab,holder.outerCard,position);
             }
         });
     }

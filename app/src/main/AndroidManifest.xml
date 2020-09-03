@@ -16,36 +16,34 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MoActivities.MainMenuActivity"/>
-
-        <activity
-            android:name=".MoActivities.MoTabActivity"
-            android:alwaysRetainTaskState="true"
-            android:windowSoftInputMode="adjustPan"
-            android:configChanges="orientation|screenSize">
+        <activity android:name=".MoActivities.MainActivity"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<!--        <activity android:name=".MoActivities.MainMenu.MainMenuActivity">-->
 
-
+<!--        </activity> &lt;!&ndash; <activity &ndash;&gt;-->
+        <!-- android:name=".MoActivities.MoTabActivity" -->
+        <!-- android:alwaysRetainTaskState="true" -->
+        <!-- android:windowSoftInputMode="adjustPan" -->
+        <!-- android:configChanges="orientation|screenSize"> -->
+        <!-- </activity> -->
         <activity android:name=".MoActivities.BookmarkFolderChooserActivity" />
         <activity android:name=".MoActivities.EditBookmarkActivity" />
-        <activity android:name=".MoActivities.BookmarkActivity"
-            android:configChanges="orientation|screenSize"/>
+        <activity
+            android:name=".MoActivities.BookmarkActivity"
+            android:configChanges="orientation|screenSize" />
         <activity android:name=".MoActivities.HomePageActivity" />
         <activity
             android:name=".MoActivities.SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".MoActivities.HistoryActivity" />
-        <activity
-            android:name=".MoActivities.MainActivity"/>
-
-
+        <activity android:name=".MoActivities.HistoryActivity" /> <!-- <activity -->
+        <!-- android:name=".MoActivities.MainActivity"/> -->
         <service android:name=".Moweb.MoServices.MoSaverBackgroundService" />
-
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -54,10 +52,8 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_path"/>
+                android:resource="@xml/provider_path" />
         </provider>
-
-
     </application>
 
 </manifest>

@@ -391,16 +391,14 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
         // occur on web view thread not async
         this.moBitmap.captureBitmap(v,this.url.getUrlString());
         AsyncTask.execute(() -> {
-            MoLog.printRunTime("bitmapSave" + moBitmap.getName(), () -> {
-                try {
-                    // save it if the bitmap is not null
-                    if(moBitmap.getBitmap()!=null){
-                        moBitmap.saveBitmap(context);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+            try {
+                // save it if the bitmap is not null
+                if(moBitmap.getBitmap()!=null){
+                    moBitmap.saveBitmap(context);
                 }
-            });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 

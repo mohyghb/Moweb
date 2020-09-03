@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackgroundBorderless"
+        style="@style/Widget.MaterialComponents.CardView"
         app:cardElevation="0dp"
         app:cardMaxElevation="0dp"
         app:contentPadding="0dp"
@@ -87,7 +88,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tab_url_list_view"
-                tools:srcCompat="@color/MoGrey" />
+                tools:srcCompat="@color/transparent" />
 
             <LinearLayout
                 android:id="@+id/tab_modE_list_cover_view"

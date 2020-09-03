@@ -27,9 +27,10 @@
 
     <color name="notification_text_color">@android:color/black</color>
 
-    <color name="MoBackground">@color/MaterialGrey</color>
+<!--    <color name="MoBackground">@color/MaterialGrey</color>-->
 
 
     <color name="search_bar_color">@color/transparent</color>
+
 
 </resources>

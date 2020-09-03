@@ -521,14 +521,14 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
 
     @Override
     public void onResume(){
-        MoLog.print("web view on Resume()");
+       // MoLog.print("web view on Resume()");
         super.onResume();
         isPaused = false;
     }
 
     @Override
     public void onPause(){
-        MoLog.print("web view on pause()");
+      //  MoLog.print("web view on pause()");
         super.onPause();
         isPaused = true;
     }

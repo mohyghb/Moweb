@@ -42,6 +42,7 @@
     <color name="MoBlack">#E9212427</color>
     <color name="MaterialDark">#121212</color>
     <color name="MaterialGrey">#232323</color>
+    <color name="MaterialElevatedCard">#2E2E2E</color>
     <color name="MaterialWhite">#F2E3E3E3</color>
     <color name="MoWhite">#F2FAFAFA</color>
     <color name="MoWhite_v2">#FCFCFC</color>
@@ -51,7 +52,7 @@
 <!--    <color name="MaterialDark">#121212</color>-->
 <!--    <color name="MaterialGrey">#1A1A1A</color>-->
 
-    <color name="MoBackground">@color/MoWhite</color>
+<!--    <color name="MoBackground">@color/MaterialWhite</color>-->
 
     <color name="notification_timer_background">#66bb6a</color>
     <color name="notification_stopwatch_background">#66bb6a</color>
@@ -67,7 +68,6 @@
 
 
     <color name="search_bar_color">@color/transparent</color>
-
 
 
 
