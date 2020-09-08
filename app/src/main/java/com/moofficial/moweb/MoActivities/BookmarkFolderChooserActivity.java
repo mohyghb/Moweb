@@ -51,11 +51,11 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
         initMoToolbar();
         initMoSearchbar();
 
-        toolbar.addToolbar(moToolBar);
-        toolbar.addToolbar(searchBar);
+        l.toolbar.addToolbar(moToolBar);
+        l.toolbar.addToolbar(searchBar);
 
         cardRecyclerView = new MoCardRecyclerView(this);
-        linearNested.addView(cardRecyclerView, MoMarginBuilder.getLinearParams(0,8,0,0));
+        l.linearNested.addView(cardRecyclerView, MoMarginBuilder.getLinearParams(0,8,0,0));
 
         syncTitle(moToolBar.getTitle());
     }
@@ -91,7 +91,7 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
                 .addUnNormalViews(this.searchBar)
                 .setActivity(this)
                 .setSearchOnTextChanged(true)
-                .setAppBarLayout(appBarLayout)
+                .setAppBarLayout(l.appBarLayout)
                 .setSearchButton(this.moToolBar.RId())
                 .setSearchTextView(searchBar.ETId())
                 .setClearSearch(searchBar.RBId())

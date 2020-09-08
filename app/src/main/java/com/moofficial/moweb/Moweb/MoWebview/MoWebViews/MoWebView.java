@@ -291,6 +291,10 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
 //    }
 
 
+    public MoWebView neverOverScroll(){
+        setOverScrollMode(View.OVER_SCROLL_NEVER);
+        return this;
+    }
 
 
 

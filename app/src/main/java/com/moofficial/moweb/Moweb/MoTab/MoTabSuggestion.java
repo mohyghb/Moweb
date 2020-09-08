@@ -9,7 +9,6 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerVi
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestionsAdapter;
-import com.moofficial.moweb.R;
 
 import java.util.ArrayList;
 
@@ -22,16 +21,14 @@ public class MoTabSuggestion {
     // list of suggestions that get updated
     private MoSuggestions suggestions;
     private Context context;
-    private View view;
     private MoRunnable onSuggestionClicked;
 
-    public MoTabSuggestion(Context context, View v){
+    public MoTabSuggestion(Context context, MoCardRecyclerView v){
         this.context = context;
-        this.view = v;
+        this.moCardRecyclerView = v;
     }
 
     public MoTabSuggestion init(){
-        moCardRecyclerView = view.findViewById(R.id.suggestion_tab_card_view);
         moCardRecyclerView.getCardView().makeTransparent();
         adapter = new MoSuggestionsAdapter(new ArrayList<>(),context,this.onSuggestionClicked);
         recyclerView = MoRecyclerUtils.get(moCardRecyclerView.getRecyclerView(),adapter)
@@ -60,14 +57,14 @@ public class MoTabSuggestion {
         adapter.setDataSet(suggestions.getSuggestions());
 
         adapter.notifyDataSetChanged();
-        recyclerView.setVisibility(View.VISIBLE);
+        moCardRecyclerView.setVisibility(View.VISIBLE);
     }
 
 
 
 
     public void hide(){
-        this.recyclerView.setVisibility(View.GONE);
+        this.moCardRecyclerView.setVisibility(View.GONE);
     }
 
 

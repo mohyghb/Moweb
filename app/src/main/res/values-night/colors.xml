@@ -3,7 +3,7 @@
 
 
     <color name="colorPrimary">#64b5f6</color>
-    <color name="colorPrimaryDark">#1565c0</color>
+    <color name="colorPrimaryDark">#548CCC</color>
     <color name="colorAccent">#bbdefb</color>
 
     <color name="divider_color">@color/colorPrimaryDark</color>

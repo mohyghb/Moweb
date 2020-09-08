@@ -70,7 +70,7 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
 
     private void initRecyclerCardView() {
         cardRecyclerView = new MoCardRecyclerView(this);
-        linearNested.addView(cardRecyclerView);
+        l.linearNested.addView(cardRecyclerView);
     }
 
 
@@ -199,7 +199,7 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
 
     private void initSelectable(){
         this.selectable = new MoSelectable<>(this,getGroupRootView(),this.historyRecyclerAdapter)
-                .setCounterView(title)
+                .setCounterView(l.title)
                 .setSelectAllCheckBox(selectBar.getCheckBox())
                 .addUnNormalViews(selectBar)
                 .setAllItemsAreSelectable(false);
@@ -212,7 +212,7 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
                 .setOnSearchCanceled(() -> updateAdapter(allHistories))
                 .setSearchOnTextChanged(true)
                 .setActivity(this)
-                .setAppBarLayout(appBarLayout)
+                .setAppBarLayout(l.appBarLayout)
                 .setCancelSearch(searchBar.getLeftButton())
                 .setSearchButton(moToolBar.getMiddleButton())
                 .setClearSearch(searchBar.getRightButton())

@@ -15,7 +15,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterVi
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoPaddingBuilder;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewInterfaces.MoOnSizeChanged;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoOnTabClickListener;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
@@ -28,7 +28,7 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
 
     private static final int TAB_PADDING = MoDynamicUnit.convertDpToPixels(8f);
     private static final int TAB_PADDING_GRID_VIEW = MoDynamicUnit.convertDpToPixels(8f);
-    private final float SCREEN_TO_TAB_RATIO = 1.6f;
+    private final float SCREEN_TO_TAB_RATIO = 2.25f;
 
 
     private boolean isInGrid;
@@ -50,23 +50,15 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
 
         private ImageView background;
         private TextView url;
-       // private LinearLayout linearLayout;
-        //private MoCardView innerCard;
         private MoCardView outerCard;
         private LinearLayout coverView;
-       // private LinearLayout linearLayout;
 
         public TabViewHolder(View v) {
             super(v);
             background = v.findViewById(R.id.web_view_bitmap);
             url = v.findViewById(R.id.tab_url_list_view);
-           // linearLayout = v.findViewById(R.id.tab_mode_list_linear_layout);
-           // innerCard = v.findViewById(R.id.tab_mode_list_inner_card_view);
             outerCard = v.findViewById(R.id.tab_mode_list_card_view);
             outerCard.makeCardRecRound();
-
-
-           // linearLayout = v.findViewById(R.id.tab_mode_list_linear_layout);
             coverView = v.findViewById(R.id.tab_modE_list_cover_view);
         }
 
@@ -88,9 +80,9 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
     public TabViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View v = MoInflaterView.inflate(R.layout.tab_mode_list,parent.getContext());
-        new MoPaddingBuilder(this.isInGrid?TAB_PADDING_GRID_VIEW:TAB_PADDING).apply(v);
-        v.setLayoutParams(getRecyclerParams(RecyclerView.LayoutParams.WRAP_CONTENT,
-                RecyclerView.LayoutParams.MATCH_PARENT));
+        //new MoPaddingBuilder(this.isInGrid?TAB_PADDING_GRID_VIEW:TAB_PADDING).apply(v);
+        v.setLayoutParams(getRecyclerParams(RecyclerView.LayoutParams.MATCH_PARENT,
+                RecyclerView.LayoutParams.WRAP_CONTENT));
         return new TabViewHolder(v);
     }
 
@@ -110,10 +102,11 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
     private void positionTab(@NonNull TabViewHolder holder) {
         int height = (int)(context.getResources().getDisplayMetrics()
                 .heightPixels/ SCREEN_TO_TAB_RATIO);
-        int width = (int)(context.getResources().getDisplayMetrics()
-                .widthPixels/SCREEN_TO_TAB_RATIO);
-        LinearLayout.LayoutParams p =new LinearLayout.LayoutParams(width,
+//        int width = (int)(context.getResources().getDisplayMetrics()
+//                .widthPixels/SCREEN_TO_TAB_RATIO);
+        LinearLayout.LayoutParams p =new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 height);
+        p.setMargins(TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW);
         holder.outerCard.setLayoutParams(p);
     }
 
@@ -126,7 +119,12 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
             // the payload that is coming for sure we know it is
             // from the mo selectable class
             // so just update the selectable color
-            MoSelectableUtils.applySelectedColor(context,holder.coverView,dataSet.get(position));
+            String payload = (String)payloads.get(0);
+            if (MoOnSizeChanged.ON_SIZE_CHANGED.equals(payload)) {
+                positionTab(holder);
+            } else {
+                MoSelectableUtils.applySelectedColor(context, holder.coverView, dataSet.get(position));
+            }
         }
 
     }

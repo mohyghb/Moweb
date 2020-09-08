@@ -66,8 +66,7 @@ public class EditBookmarkActivity extends MoSmartActivity {
         initAcceptDeny();
 
         setTitle(getString(R.string.edit_title));
-        floatingActionButton.hide();
-        makeActivityRound();
+        l.floatingActionButton.hide();
         syncTitle(moToolBar.getTitle());
     }
 
@@ -77,8 +76,8 @@ public class EditBookmarkActivity extends MoSmartActivity {
         initFolder();
 
         // adding the content to nested linear layout
-        linearNested.addView(titleInput, MoMarginBuilder.getLinearParams(8));
-        linearNested.addView(folderButton, MoMarginBuilder.getLinearParams(0,8,0,0));
+        l.linearNested.addView(titleInput, MoMarginBuilder.getLinearParams(8));
+        l.linearNested.addView(folderButton, MoMarginBuilder.getLinearParams(0,8,0,0));
 
     }
 
@@ -132,7 +131,7 @@ public class EditBookmarkActivity extends MoSmartActivity {
                         }
                     })
                     .getCardView().makeCardRecRound();
-            linearNested.addView(urlInput, MoMarginBuilder.getLinearParams(8));
+            l.linearNested.addView(urlInput, MoMarginBuilder.getLinearParams(8));
         }
     }
 
@@ -156,7 +155,7 @@ public class EditBookmarkActivity extends MoSmartActivity {
                              .setOnDenyClickedListener(view -> onCanceledPressed())
                              .getCardView().makeTransparent();
 
-        linearBottom.addView(this.acceptDenyLayout);
+        l.linearBottom.addView(this.acceptDenyLayout);
     }
 
     private void onCanceledPressed() {
@@ -186,7 +185,7 @@ public class EditBookmarkActivity extends MoSmartActivity {
     private void initToolbar(){
         this.moToolBar = new MoToolBar(this).onlyTitleAndLeftButtonVisible();
         moToolBar.getCardView().makeTransparent();
-        toolbar.addToolbar(moToolBar);
+        l.toolbar.addToolbar(moToolBar);
     }
 
     private void initClass(){}

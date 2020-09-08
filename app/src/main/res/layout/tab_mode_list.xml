@@ -9,11 +9,12 @@
 
     <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView
         android:id="@+id/tab_mode_list_card_view"
+        style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        style="@style/Widget.MaterialComponents.CardView"
-        app:cardElevation="0dp"
+        app:cardElevation="5dp"
         app:cardMaxElevation="0dp"
         app:contentPadding="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -27,40 +28,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-
-            <!--            <ImageView-->
-            <!--                android:id="@+id/web_view_bitmap"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:adjustViewBounds="true"-->
-            <!--                android:cropToPadding="true"-->
-            <!--                android:scaleType="centerInside"-->
-            <!--                app:layout_constraintBottom_toTopOf="@id/tab_delete_button"-->
-            <!--                app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintTop_toBottomOf="@+id/tab_url_list_view"-->
-            <!--                tools:srcCompat="@tools:sample/backgrounds/scenic" />-->
-
-            <!--            <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView-->
-            <!--                android:id="@+id/tab_mode_list_inner_card_view"-->
-            <!--                android:layout_width="0dp"-->
-            <!--                android:layout_height="0dp"-->
-            <!--                android:background="?attr/selectableItemBackgroundBorderless"-->
-            <!--                android:backgroundTint="@color/transparent"-->
-            <!--                app:cardBackgroundColor="@color/transparent"-->
-            <!--                app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--                app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintTop_toTopOf="parent">-->
-
-            <!--                <LinearLayout-->
-            <!--                    android:id="@+id/tab_mode_list_cover_view"-->
-            <!--                    android:layout_width="match_parent"-->
-            <!--                    android:layout_height="match_parent"-->
-            <!--                    android:orientation="vertical" />-->
-            <!--            </com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView>-->
-
 
 
             <TextView
@@ -95,10 +62,10 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:orientation="vertical"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

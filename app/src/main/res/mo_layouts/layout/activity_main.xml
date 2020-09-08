@@ -15,10 +15,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
 
-    <com.moofficial.moweb.MoActivities.MainMenu.MainMenuTabSection
+    <com.moofficial.moweb.MoActivities.MainMenu.MainMenuSection
         android:id="@+id/main_main_menu"
         android:layout_width="0dp"
         android:layout_height="0dp"

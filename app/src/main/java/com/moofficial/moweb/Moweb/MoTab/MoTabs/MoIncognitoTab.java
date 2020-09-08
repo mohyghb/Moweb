@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.WindowManager;
 
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moweb.Moweb.MoTab.MoTabType.MoTabType;
 
 // no web view cache
@@ -30,6 +31,7 @@ public class MoIncognitoTab extends MoTab {
     @Override
     public void saveTab() {
         // no saving the tab
+        MoLog.print("private tab id: " + this.getTabId().stringify());
     }
 
     @Override

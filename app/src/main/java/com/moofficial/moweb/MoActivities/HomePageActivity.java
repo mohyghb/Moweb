@@ -53,12 +53,12 @@ public class HomePageActivity extends MoSmartActivity {
 
     private void initBottomDeleteBar() {
         moBottomDeleteBar = new MoBottomDeleteBar(this);
-        linearBottom.addView(moBottomDeleteBar.goGone());
+        l.linearBottom.addView(moBottomDeleteBar.goGone());
     }
 
     private void initCardRecyclerView() {
         cardRecyclerView = new MoCardRecyclerView(this).makeCardRound();
-        linearNested.addView(cardRecyclerView, MoMarginBuilder.getLinearParams(0,8,0,0));
+        l.linearNested.addView(cardRecyclerView, MoMarginBuilder.getLinearParams(0,8,0,0));
     }
 
     private void initInputBar() {
@@ -104,7 +104,7 @@ public class HomePageActivity extends MoSmartActivity {
         });
         moInputBar.getEditText().getTextInputEditText().setInputType(InputType.TYPE_CLASS_TEXT);
 
-        linearNested.addView(moInputBar);
+        l.linearNested.addView(moInputBar);
     }
 
     private void validateInputText(MoTextValidate v) {
@@ -130,7 +130,7 @@ public class HomePageActivity extends MoSmartActivity {
         setupMultipleToolbars(moToolBar,moToolBar,moDeleteToolbar);
     }
 
-    private void initClass(){
+    private void initClass() {
         initRecyclerAdapter();
         initRecyclerView();
         initMoListDeletable();
@@ -150,7 +150,7 @@ public class HomePageActivity extends MoSmartActivity {
     private void initMoListDeletable(){
         this.moListDelete = new MoDeletable<>(this,getGroupRootView(),this.recyclerAdapter);
         this.moListDelete.setOnDeleteSelected(list -> recyclerAdapter.deleteSelected())
-                         .setCounterView(title)
+                         .setCounterView(l.title)
                          .addUnNormalViews(moDeleteToolbar,moBottomDeleteBar)
                          .addNormalViews(moToolBar,moInputBar)
                          .setSelectAllCheckBox(moDeleteToolbar.getCheckBox())
@@ -163,7 +163,7 @@ public class HomePageActivity extends MoSmartActivity {
      * adds the text inside edit text to the home pages
      * if it does not already exist
      */
-    private void addHomePage(){
+    private void addHomePage() {
         String url = this.moInputBar.getInputText();
         boolean b = MoHomePageManager.validate(this,url).isValidate();
         if(b) {

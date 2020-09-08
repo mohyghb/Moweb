@@ -6,7 +6,7 @@ import android.transition.Slide;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoSwitchers.MoSectionViewManager;
-import com.moofficial.moweb.MoActivities.MainMenu.MainMenuTabSection;
+import com.moofficial.moweb.MoActivities.MainMenu.MainMenuSection;
 import com.moofficial.moweb.Moweb.MoWebAppLoader.MoWebAppLoader;
 import com.moofficial.moweb.R;
 
@@ -19,18 +19,20 @@ public class MainActivity extends AppCompatActivity {
 
 
     private MoTabSection tabSection;
-    private MainMenuTabSection mainMenuFragment;
+    private MainMenuSection mainMenuFragment;
     private MoSectionViewManager sectionViewManager;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        MoSettingsSection.init(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         MoWebAppLoader.loadApp(this);
         init();
-
     }
+
+    
 
     private void init() {
         // mo load the app completely
@@ -51,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     private void initMainMenuSection() {
         this.mainMenuFragment = findViewById(R.id.main_main_menu);
         this.mainMenuFragment.setActivity(this)
+                .setFragmentManager(getSupportFragmentManager())
+                .setLifecycle(getLifecycle())
                 .setTransitionToTab(this::moveToTabFragment)
                 .init();
     }
@@ -62,12 +66,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     void moveToTabFragment() {
+//        mainMenuFragment.pauseCurrentFragment();
         sectionViewManager.setActiveSection(SECTION_TAB);
     }
 
     void moveToMainMenuFragment() {
         sectionViewManager.setActiveSection(SECTION_MAIN_MENU);
-        mainMenuFragment.notifyDataSetChanged();
+        mainMenuFragment.onResume();
     }
 
     @Override

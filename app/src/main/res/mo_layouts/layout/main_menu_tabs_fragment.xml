@@ -8,38 +8,14 @@
 
 
 
-    <com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView
-        android:id="@+id/main_menu_tab_recycler"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/main_menu_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:backgroundTint="@color/transparent"
-        android:overScrollMode="never"
-        />
+        android:layout_marginBottom="?actionBarSize"
+        android:overScrollMode="never" />
 
 
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/main_menu_second_bottom_app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:animateLayoutChanges="true"
-        android:visibility="invisible"
-        app:contentInsetEnd="0dp"
-        app:contentInsetLeft="0dp"
-        app:contentInsetRight="0dp"
-        app:contentInsetStart="0dp"
-        app:contentInsetStartWithNavigation="0dp"
-        app:fabAlignmentMode="center"
-        app:fabAnimationMode="scale"
-        app:fabCradleRoundedCornerRadius="16dp">
-
-        <LinearLayout
-            android:id="@+id/main_menu_bars_linear_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:animateLayoutChanges="false"
-            android:orientation="vertical" />
-    </com.google.android.material.bottomappbar.BottomAppBar>
 
 
     <com.google.android.material.bottomappbar.BottomAppBar
@@ -65,17 +41,6 @@
             android:orientation="vertical" />
     </com.google.android.material.bottomappbar.BottomAppBar>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/main_menu_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorAccent"
-        android:backgroundTintMode="add"
-        android:src="@drawable/ic_add_black_24dp"
-        app:backgroundTint="@color/colorAccent"
-        app:borderWidth="0dp"
-        app:fabSize="normal"
-        app:layout_anchor="@id/main_menu_toolbar" />
 
 
 

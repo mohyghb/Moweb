@@ -206,6 +206,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
         moWebView.setMoBitmap(this.moBitmap)
                  .setChromeClient(new MoChromeClient(this.context))
                  .setOnUpdateUrlListener((url, isReload) -> updateUrl(url))
+                 .neverOverScroll()
                  .setOnErrorReceived((view, request, error) -> onErrorReceived(request, error));
         moWebView.init();
         // todo we need to set the web view for tab type
@@ -418,6 +419,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
      */
     public void saveTab(){
         try {
+            MoLog.print("saving " + tabId.stringify());
             MoFileManagerUtils.write(context,this);
         } catch (IOException e) {
             e.printStackTrace();

@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -23,6 +22,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupItemBu
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupWindow;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroups.MoConstraint;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoFindBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoViewUtils;
 import com.moofficial.moweb.MoActivities.BookmarkActivity;
@@ -39,7 +39,7 @@ import com.moofficial.moweb.R;
 
 public class MoTabSearchBar extends MoConstraint {
 
-    private TextView tabsButton;
+    private MoTabsButton tabsButton;
     private ProgressBar progressBar;
     private ImageButton moreTabButton;
     private EditText searchText;
@@ -48,6 +48,7 @@ public class MoTabSearchBar extends MoConstraint {
     private MoSearchable moSearchable;
     private MoTabSuggestion suggestion;
     private MoCardView searchBarCardView;
+    private MoCardRecyclerView suggestionCardRecyclerView;
 
     private MoWebView moWebView;
     private MoTab tab;
@@ -84,6 +85,10 @@ public class MoTabSearchBar extends MoConstraint {
 
     @Override
     public void initViews() {
+
+    }
+
+    public void init() {
         initTabSearchBarCard();
         initProgressBar();
         initMoreButton();
@@ -113,28 +118,19 @@ public class MoTabSearchBar extends MoConstraint {
     }
 
     public MoTabSearchBar setNumberOfTabs(int s){
-        if(s>99){
-            tabsButton.setText(R.string.a_lot_of_tabs);
-            this.tabsButton.setTextSize(12f);
-        }else{
-            this.tabsButton.setText(String.valueOf(s));
-            this.tabsButton.setTextSize(14f);
-        }
-
+        tabsButton.setNumberOfTabs(s);
         return this;
     }
 
     public MoTabSearchBar setOnTabsButtonClicked(View.OnClickListener l){
-        this.tabsButton.setOnClickListener(l);
+        this.tabsButton.setOnTabsButtonClicked(l);
         return this;
     }
 
-    public TextView getTabsButton() {
-        return tabsButton;
-    }
 
-    public MoTabSearchBar setTabsButton(TextView tabsButton) {
-        this.tabsButton = tabsButton;
+
+    public MoTabSearchBar setSuggestionCardRecyclerView(MoCardRecyclerView suggestionCardRecyclerView) {
+        this.suggestionCardRecyclerView = suggestionCardRecyclerView;
         return this;
     }
 
@@ -288,7 +284,7 @@ public class MoTabSearchBar extends MoConstraint {
     }
 
     private void initSuggestion() {
-        this.suggestion = new MoTabSuggestion(this.context,this)
+        this.suggestion = new MoTabSuggestion(this.context,suggestionCardRecyclerView)
                 .setOnSuggestionClicked(new MoRunnable() {
                     @Override
                     public <T> void run(T... args) {
@@ -353,7 +349,7 @@ public class MoTabSearchBar extends MoConstraint {
      * to show all of the web views
      */
     private void initTabsButton() {
-        this.tabsButton = findViewById(R.id.tabs_button);;
+        this.tabsButton = findViewById(R.id.include);
     }
 
 
@@ -403,13 +399,13 @@ public class MoTabSearchBar extends MoConstraint {
     }
 
 
-    /**
-     * for performing find operation
-     * we need a find bar
-     */
-    private void initMoFindBar(){
-        this.moFindBar = findViewById(R.id.tab_find_bar);
-    }
+//    /**
+////     * for performing find operation
+////     * we need a find bar
+////     */
+////    private void initMoFindBar(){
+////        this.moFindBar = findViewById(R.id.tab_find_bar);
+////    }
 
 
     /**
@@ -417,8 +413,7 @@ public class MoTabSearchBar extends MoConstraint {
      * connects find bar and mo web view functionality
      */
     private void initMoSearchable(){
-        initMoFindBar();
-        this.moSearchable = new MoSearchable(this.context,this){
+        this.moSearchable = new MoSearchable(this.context,parentLayout){
             @Override
             public void onUpFindPressed() {
                 moWebView.findPrevious();
@@ -430,12 +425,6 @@ public class MoTabSearchBar extends MoConstraint {
             }
         };
         this.moSearchable.setSearchOnTextChanged(true)
-                .setSearchTextView(moFindBar.getEditText())
-                .setUpFind(moFindBar.getMiddleButton())
-                .setDownFind(moFindBar.getRightButton())
-                .setCancelButton(moFindBar.LId())
-                .addNormalViews(searchBarCardView)
-                .addUnNormalViews(moFindBar)
                 .setOnSearchListener(s -> {
                     this.moWebView.findAllAsync(s, (index, size, finishedFinding) -> {
                         //disable or enable the buttons based on the index and size
@@ -447,7 +436,14 @@ public class MoTabSearchBar extends MoConstraint {
                     this.moSearchable.deactivateSpecialMode();
                     this.moWebView.clearMatches();
                     this.moSearchable.clearSearch();
-                });
+                })
+                .setSearchTextView(moFindBar.getEditText())
+                .setUpFind(moFindBar.getMiddleButton())
+                .setDownFind(moFindBar.getRightButton())
+                .setCancelButton(moFindBar.getLeftButton())
+                .addNormalViews(this,suggestionCardRecyclerView)
+                .addUnNormalViews(moFindBar)
+                ;
     }
 
     /**

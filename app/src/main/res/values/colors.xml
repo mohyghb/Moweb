@@ -63,8 +63,6 @@
     <color name="color_text">@color/MoBlack</color>
 
 
-    <color name="color_card_sent">@color/MoWhite</color>
-
 
 
     <color name="search_bar_color">@color/transparent</color>

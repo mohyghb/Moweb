@@ -16,19 +16,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MoActivities.MainActivity"
-            android:windowSoftInputMode="adjustPan"
+        <activity android:name=".MoActivities.MoSplashScreen"></activity>
+        <activity
+            android:name=".MoActivities.MainActivity"
             android:alwaysRetainTaskState="true"
-            android:configChanges="orientation|screenSize">
+            android:configChanges="orientation|screenSize"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-<!--        <activity android:name=".MoActivities.MainMenu.MainMenuActivity">-->
-
-<!--        </activity> &lt;!&ndash; <activity &ndash;&gt;-->
+        </activity> <!-- <activity android:name=".MoActivities.MainMenu.MainMenuActivity"> -->
+        <!-- </activity> &lt;!&ndash; <activity &ndash;&gt; -->
         <!-- android:name=".MoActivities.MoTabActivity" -->
         <!-- android:alwaysRetainTaskState="true" -->
         <!-- android:windowSoftInputMode="adjustPan" -->

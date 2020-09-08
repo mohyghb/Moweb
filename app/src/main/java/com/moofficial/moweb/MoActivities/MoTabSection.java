@@ -1,14 +1,22 @@
 package com.moofficial.moweb.MoActivities;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
+
+import androidx.cardview.widget.CardView;
 
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoActivitySettings.MoActivitySettings;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoFragment.MoOnBackPressed;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoBasicLayout;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroupUtils.MoAppbar.MoAppbarUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroupUtils.MoCoordinatorUtils;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoFindBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoUpdateTabActivity;
@@ -32,6 +40,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
     private MoWebView webView;
     private MoToolBar moToolBar;
     private MainTransitionTo moveToMainMenu;
+    private MoCardView webCard;
 
     public MoTabSection(Context context) {
         super(context);
@@ -51,8 +60,11 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
         return this;
     }
 
-
-
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        onAppbarLayoutHeightChanged(MoActivitySettings.MO_GOLDEN_RATIO);
+    }
 
     protected void init() {
         MoAppbarUtils.snapNoToolbar(collapsingToolbarLayout);
@@ -60,6 +72,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
         appBarLayout.setExpanded(false);
         initSearchBar();
         initToolbar();
+        initWebCardView();
         MoTabController.instance.setUpdateTabActivity(this);
         update();
     }
@@ -117,7 +130,8 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
 
     private void updateWebView() {
         this.webView = tab.getMoWebView();
-        MoTabUtils.transitionToInTabMode(webView,coordinatorLayout, MoCoordinatorUtils.getScrollingParams());
+        MoTabUtils.transitionToInTabMode(webView,webCard, new CardView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
         this.webView.onResume();
         this.webView.setOnLongClickListener(view -> {
             webView.getHitTestResultParser().createDialogOrSmartText(getContext());
@@ -142,9 +156,14 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
      * of the tab by changing its fields
      */
     private void initSearchBar() {
+        MoFindBar findBar = new MoFindBar(getContext());
+        MoCardRecyclerView suggestionCard = new MoCardRecyclerView(getContext());
         this.moTabSearchBar = new MoTabSearchBar(getContext())
-                .setParentLayout(coordinatorLayout);
-        linearBottom.addView(moTabSearchBar);
+                .setParentLayout(coordinatorLayout)
+                .setSuggestionCardRecyclerView(suggestionCard)
+                .setMoFindBar(findBar);
+        this.moTabSearchBar.init();
+        linearBottom.setupMultipleBars(moTabSearchBar,suggestionCard,moTabSearchBar,findBar);
     }
 
     /**
@@ -155,6 +174,11 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
         this.moToolBar = new MoToolBar(getContext());
         // set it as a toolbar
         toolbar.addToolbar(this.moToolBar);
+    }
+
+    private void initWebCardView() {
+        webCard = new MoCardView(getContext()).makeCardRecRound().makeTransparent();
+        coordinatorLayout.addView(webCard,MoCoordinatorUtils.getScrollingParams());
     }
 
     private void updateToolbar() {
@@ -186,7 +210,8 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
      * on the previous tab and loads this tabs
      * search bar module
      */
-    private void updateSearchBar(){
+    private void updateSearchBar() {
+        //monote hide suggestion on every update
         moTabSearchBar.syncWith(tab)
                 .clearEditTextFocus()
                 .setTextSearch(tab.getUrl())

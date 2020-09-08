@@ -182,6 +182,7 @@ public class MoTabController implements MoSavable, MoLoadable {
             s = MoFileManager.readInternalFile(context,FILE_NAME);
             if(s.isEmpty())
                 return;
+            reset();
             this.currentTabId.load(s,context);
             this.currentTab = MoTabsManager.getTab(currentTabId.getId());
             if(this.currentTab == null && MoTabsManager.size()>0){
@@ -191,6 +192,11 @@ public class MoTabController implements MoSavable, MoLoadable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void reset() {
+        this.currentTab = null;
+        this.currentTabId = new MoTabId();
     }
 
     @Override

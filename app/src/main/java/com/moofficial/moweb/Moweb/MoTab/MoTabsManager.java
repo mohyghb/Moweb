@@ -136,6 +136,7 @@ public class MoTabsManager {
         if(tabs == null || tabs.isEmpty()){
            reload(context);
         }
+        MoLog.print("number of tabs: " + tabs.size());
     }
 
     /**
@@ -317,7 +318,7 @@ public class MoTabsManager {
      * @param selected selected tabs to be removed
      */
     public static void removeSelectedTabs(List<MoTab> selected){
-        for(MoTab t: selected){
+        for(MoTab t: selected) {
             delete(t);
         }
     }

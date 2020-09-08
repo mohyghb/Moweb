@@ -8,55 +8,52 @@ import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.google.android.material.bottomappbar.BottomAppBar;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoFragment.MoOnBackPressed;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoListViewSync;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoEmptyLayout;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoSearchBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoWrappers.MoWrapperLinearLayout;
 import com.moofficial.moweb.MoActivities.HistoryActivity;
 import com.moofficial.moweb.MoActivities.MainActivity;
+import com.moofficial.moweb.MoActivities.MainMenu.MainMenuFragments.NormalMainFragment;
+import com.moofficial.moweb.MoActivities.MainMenu.MainMenuFragments.PrivateMainFragment;
 import com.moofficial.moweb.MoActivities.MainTransitionTo;
 import com.moofficial.moweb.MoActivities.SettingsActivity;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
-import com.moofficial.moweb.Moweb.MoTab.MoTabExceptions.MoTabNotFoundException;
-import com.moofficial.moweb.Moweb.MoTab.MoTabRecyclerAdapter;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoOnTabClickListener;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.R;
 
-import java.util.List;
+import java.util.Arrays;
 
 @SuppressWarnings("ConstantConditions")
-public abstract class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed ,MoOnTabClickListener{
+public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed ,MoOnTabClickListener{
 
 
 
-    protected MoTabRecyclerAdapter tabRecyclerAdapter;
-    protected MoRecyclerView tabRecyclerView;
-    protected MoToolBar moToolBar;
-   // protected MoPopUpMenu addPopUpMenu;
+
+    protected MoMainMenuBottomBar moToolBar;
     protected MoPopUpMenu morePopUpMenu;
     protected MoSelectable<MoTab> tabSelectable;
     protected MoToolBar tabSelectableToolbar;
-    protected MoSearchable searchable;
-    protected MoSearchBar searchBar;
-    protected MoListViewSync viewSync;
-    protected FloatingActionButton floatingActionButton;
+
     protected BottomAppBar bottomAppBar;
-    protected BottomAppBar barsAppBar;
-    //protected MoWrapperToolbar wrapperToolbar;
     protected MainTransitionTo transitionToTab;
+    protected ViewPager2 pager2;
+    protected AbstractStateAdapter abstractStateAdapter;
+
     protected Activity activity;
+    protected FragmentManager fragmentManager;
+    protected Lifecycle lifecycle;
+
 
     public MainMenuSection(Context context) {
         super(context);
@@ -79,7 +76,15 @@ public abstract class MainMenuSection extends MoEmptyLayout implements MoOnBackP
         return activity;
     }
 
-    abstract List<MoTab> getTabs();
+    public MainMenuSection setFragmentManager(FragmentManager fragmentManager) {
+        this.fragmentManager = fragmentManager;
+        return this;
+    }
+
+    public MainMenuSection setLifecycle(Lifecycle lifecycle) {
+        this.lifecycle = lifecycle;
+        return this;
+    }
 
     public MainMenuSection setTransitionToTab(MainTransitionTo transitionToTab) {
         this.transitionToTab = transitionToTab;
@@ -91,6 +96,12 @@ public abstract class MainMenuSection extends MoEmptyLayout implements MoOnBackP
 
     }
 
+    @Override
+    public int[] getAttrs() {
+        return new int[0];
+    }
+
+
 
     public void init(){
         initUI();
@@ -98,41 +109,37 @@ public abstract class MainMenuSection extends MoEmptyLayout implements MoOnBackP
     }
 
     void initUI() {
+        initViewPager();
         initMoToolbar();
         initTabSelectableToolbar();
-        initSearchBar();
-        initFloatingActionButton();
         initBottomAppbar();
         syncToolbars();
     }
 
     void initClass() {
-        initTabAdapter();
-        initTabRecyclerView();
-        //initAddPopUpMenu();
         initMorePopUpMenu();
         initTabSelectable();
-        initMoSearchable();
-        initViewSync();
     }
 
-    private void initFloatingActionButton() {
-        floatingActionButton = findViewById(R.id.main_menu_fab);
-        floatingActionButton.setOnClickListener(view -> createNewTab());
+
+
+
+    private void initViewPager() {
+        pager2 = findViewById(R.id.main_menu_view_pager);
+        abstractStateAdapter = new AbstractStateAdapter(getActivity(),
+                Arrays.asList(new NormalMainFragment().setTabClickListener(this).initTabAdapter(getContext()),
+                        new PrivateMainFragment().setTabClickListener(this).initTabAdapter(getContext())))
+                .setOnTabClickListener(this);
+        pager2.setAdapter(abstractStateAdapter);
     }
 
     private void initBottomAppbar(){
         bottomAppBar = findViewById(R.id.main_menu_toolbar);
-        barsAppBar = findViewById(R.id.main_menu_second_bottom_app_bar);
     }
 
     private void syncToolbars() {
         MoWrapperLinearLayout w = new MoWrapperLinearLayout(findViewById(R.id.main_menu_toolbar_linear_layout));
-        //w.setupMultipleBars(this.moToolBar, this.moToolBar, this.tabSelectableToolbar, this.searchBar);
-        w.addView(this.moToolBar);
-
-        new MoWrapperLinearLayout(findViewById(R.id.main_menu_bars_linear_layout))
-                .setupMultipleBars(this.tabSelectableToolbar,this.tabSelectableToolbar, this.searchBar);
+        w.setupMultipleBars(this.moToolBar, this.moToolBar, this.tabSelectableToolbar);
     }
 
     private void initTabSelectableToolbar() {
@@ -143,131 +150,52 @@ public abstract class MainMenuSection extends MoEmptyLayout implements MoOnBackP
                 .setMiddleOnClickListener(view -> performDelete())
                 .setRightIcon(R.drawable.ic_baseline_share_24);
         this.tabSelectableToolbar.getCardView().makeTransparent();
-    }// delete the selected tabs
+    }
 
+    //monote delete private tabs as well
     private void performDelete() {
-        tabRecyclerAdapter.deleteSelectedItems();
+        abstractStateAdapter.performDelete();
         if (tabSelectable.isInActionMode()) {
-            viewSync.removeAction();
+            tabSelectable.removeAction();
         }
     }
 
-    private void initTabRecyclerView() {
-        tabRecyclerView = MoRecyclerUtils.get((ViewGroup)this, R.id.main_menu_tab_recycler, tabRecyclerAdapter)
-                .setLayoutManagerType(MoRecyclerView.LINEAR_LAYOUT_MANAGER)
-                .setOrientation(MoRecyclerView.HORIZONTAL)
-                .show();
-        tabRecyclerView.setNestedScrollingEnabled(true);
-        // scroll to the current tab that we are on
-        // monote reterive the index some how (linear search??!!)
-        //      a better way to locate the tab that we are on
-        //   maybe first time scroll to it and for the rest of them
-        //  you just save the instance and pass it back (store/re-store)
-        try {
-            tabRecyclerView.scrollToPosition(MoTabsManager.getIndexOf(MoTabController.instance.getCurrent()));
-        } catch (MoTabNotFoundException e) {
-            e.printStackTrace();
-        }
 
-    }
 
-    private void initTabAdapter() {
-        tabRecyclerAdapter = new MoTabRecyclerAdapter(getTabs(), getContext(), false)
-                .setOnTabClickListener(this);
-    }
+
+
 
     private void initTabSelectable() {
-        this.tabSelectable = new MoSelectable<MoTab>(getContext(), (ViewGroup) this, this.tabRecyclerAdapter)
+        this.tabSelectable = new MoSelectable<>(getContext(), (ViewGroup) this,
+                abstractStateAdapter.get())
                 .setCounterView(tabSelectableToolbar.getTitle())
                 .setSelectAllCheckBox(tabSelectableToolbar.getCheckBox())
-                .addNormalViews(this.searchBar)
-                .addUnNormalViews(barsAppBar,this.tabSelectableToolbar);
+                .addUnNormalViews(this.tabSelectableToolbar)
+                .addNormalViews(this.moToolBar);
     }
 
 
     private void initMoToolbar() {
-        this.moToolBar = new MoToolBar(getActivity())
-                .setRightIcon(R.drawable.ic_baseline_more_vert_24)
-                .setRightOnClickListener(view -> morePopUpMenu.show(view))
-                .setMiddleIcon(R.drawable.ic_baseline_search_24);
-        this.moToolBar.getCardView().makeTransparent();
+        // monote number of tabs should be updated
+        this.moToolBar = new MoMainMenuBottomBar(getActivity())
+                .setAddNormalTab(this::createNewTab)
+                .setAddPrivateTab(this::createNewPrivateTab)
+                .setMoreClickListener(view -> morePopUpMenu.show(view))
+                .setTabsNumber(MoTabsManager.size())
+                .syncWithViewPager2(pager2);
     }
 
-    private void initMoSearchable() {
-        this.searchable = new MoSearchable(getActivity(), (ViewGroup) this, MoTabsManager::getTabs)
-                .setActivity(getActivity())
-                //.setAppBarLayout(this.appBarLayout)
-                .setClearSearch(this.searchBar.getRightButton())
-                .setCancelSearch(this.searchBar.getLeftButton())
-                .addUnNormalViews(barsAppBar,this.searchBar)
-                .addNormalViews(this.tabSelectableToolbar)
-                .setSearchButton(this.moToolBar.getMiddleButton())
-                .setSearchTextView(this.searchBar.getEditText())
-                .setSearchOnTextChanged(true)
-                .setOnSearchFinished(list -> {
-                    //noinspection unchecked
-                    updateAdapter((List<MoTab>) list);
-                })
-                .setOnSearchCanceled(() -> {
-                    // restore the tabs
-                    updateAdapter(MoTabsManager.getTabs());
-                });
-        //this.searchable.setTransitionIn(new Slide()).setTransitionOut(new Slide());
 
 
-    }
 
-//    public void hideFab() {
-//        CoordinatorLayout.LayoutParams p = new CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-//                ViewGroup.LayoutParams.WRAP_CONTENT);
-//        p.setAnchorId(View.NO_ID);
-//        floatingActionButton.setLayoutParams(p);
-//        bottomAppBar.post(()->bottomAppBar.());
-//        MoLog.print("hide fab");
-//    }
-
-    /**
-     * updates the adapter with a new list
-     * of tabs
-     *
-     * @param lt list of tabs to update the
-     *           adapter to
-     */
-    private void updateAdapter(List<MoTab> lt) {
-        tabRecyclerAdapter.setDataSet(lt);
-        getActivity().runOnUiThread(() -> tabRecyclerAdapter.notifyDataSetChanged());
-    }
-
-    private void initSearchBar() {
-        this.searchBar = new MoSearchBar(getActivity())
-                .setSearchHint(R.string.tab_search_hint);
-        this.searchBar.getCardView().makeTransparent();
-    }
-
-    private void initViewSync() {
-        this.viewSync = new MoListViewSync((ViewGroup) this, this.tabSelectable, this.searchable)
-                .setPutOnHold(true)
-                .setSharedElements(bottomAppBar,floatingActionButton);
-    }
-
-//    /**
-//     * when the user clicks the middle toolbar icon
-//     * we show this pop up menu that we have init
-//     */
-//    private void initAddPopUpMenu() {
-//        addPopUpMenu = new MoPopUpMenu(getContext()).setEntries(
-//                new Pair<>(getContext().getString(R.string.NewTab), menuItem -> {
-//                    createNewTab();
-//                    return false;
-//                }),
-//                new Pair<>(getContext().getString(R.string.NewIncognitoTab), menuItem -> {
-//                    MoTabsManager.addPrivateTab(getContext(), MoSearchEngine.instance.homePage(), false);
-//                    return false;
-//                }));
-//    }
 
     private void createNewTab() {
         MoTabsManager.addTab(getActivity(), MoSearchEngine.instance.homePage(), false);
+        transitionToTab.transition();
+    }
+
+    private void createNewPrivateTab() {
+        MoTabsManager.addPrivateTab(getActivity(), MoSearchEngine.instance.homePage(), false);
         transitionToTab.transition();
     }
 
@@ -288,20 +216,33 @@ public abstract class MainMenuSection extends MoEmptyLayout implements MoOnBackP
                 }),
                 new Pair<>(getContext().getString(R.string.Clear_All_Normal_Tabs), menuItem -> {
                     MoTabsManager.clearAllNormalTabs(getActivity());
-                    tabRecyclerAdapter.notifyDataSetChanged();
+                    abstractStateAdapter.notifyDataSetChanged(0);
+                    return false;
+                }),
+                new Pair<>(getContext().getString(R.string.Clear_All_Incognito_Tabs), menuItem -> {
+                    MoTabsManager.clearAllPrivateTabs(getActivity());
+                    abstractStateAdapter.notifyDataSetChanged(1);
                     return false;
                 })
         );
     }
 
 
-    public void notifyDataSetChanged() {
-        tabRecyclerAdapter.notifyDataSetChanged();
+    public void onResume() {
+        abstractStateAdapter.notifyAllSections();
+        updateNumberOfTabs();
     }
+
+    public void updateNumberOfTabs() {
+        moToolBar.setTabsNumber(MoTabsManager.size());
+    }
+
+
+
 
     @Override
     public void onTabClickListener(MoTab t, View sharedView, int index) {
-        MoTabController.instance.setNewTab(getActivity(),t);
+        MoTabController.instance.setNewTab(getContext(),t);
         transitionToTab.transition();
     }
 
@@ -311,4 +252,15 @@ public abstract class MainMenuSection extends MoEmptyLayout implements MoOnBackP
     }
 
 
+    @Override
+    public boolean onBackPressed() {
+        if(tabSelectable.hasAction()) {
+            tabSelectable.removeAction();
+            return true;
+        }else if(MoTabController.instance.isNotOutOfOptions()){
+            transitionToTab.transition();
+            return true;
+        }
+        return false;
+    }
 }
