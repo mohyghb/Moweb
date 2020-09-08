@@ -37,6 +37,14 @@ public class MoTabType implements MoSavable, MoLoadable {
         this.load(type,c);
     }
 
+    public boolean isPrivate() {
+        return this.type == TYPE_PRIVATE;
+    }
+
+    public boolean isNormal() {
+        return this.type == TYPE_NORMAL;
+    }
+
     public int getType() {
         return type;
     }

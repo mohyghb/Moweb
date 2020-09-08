@@ -356,7 +356,12 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     public boolean isCaptureImage() {
         return captureImage;
     }
-
+    public boolean isPrivate() {
+        return this.tabType.isPrivate();
+    }
+    public boolean isNormal(){
+        return this.tabType.isNormal();
+    }
 
     /**
      * makes sure that you can take screen

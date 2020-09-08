@@ -1,8 +1,10 @@
 package com.moofficial.moweb.MoActivities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.transition.Slide;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoSwitchers.MoSectionViewManager;
@@ -66,13 +68,23 @@ public class MainActivity extends AppCompatActivity {
 
 
     void moveToTabFragment() {
-//        mainMenuFragment.pauseCurrentFragment();
+        tabSection.update();
         sectionViewManager.setActiveSection(SECTION_TAB);
     }
 
     void moveToMainMenuFragment() {
-        sectionViewManager.setActiveSection(SECTION_MAIN_MENU);
         mainMenuFragment.onResume();
+        sectionViewManager.setActiveSection(SECTION_MAIN_MENU);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == HISTORY_FROM_MAIN_MENU_REQUEST && resultCode == MoTabSection.GO_TO_TAB_ACTIVITY_REQUEST){
+            // the user has opened something from the history activity
+            // therefore, we need to transition to the tab
+            moveToTabFragment();
+        }
     }
 
     @Override

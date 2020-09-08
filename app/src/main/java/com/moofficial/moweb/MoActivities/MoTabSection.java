@@ -73,7 +73,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
         initSearchBar();
         initToolbar();
         initWebCardView();
-        MoTabController.instance.setUpdateTabActivity(this);
+//        MoTabController.instance.setUpdateTabActivity(this);
         update();
     }
 

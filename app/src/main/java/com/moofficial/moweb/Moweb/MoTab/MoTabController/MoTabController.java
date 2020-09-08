@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManager;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moweb.Moweb.MoTab.MoTabId.MoTabId;
 import com.moofficial.moweb.Moweb.MoTab.MoTabType.MoTabType;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
@@ -48,7 +49,6 @@ public class MoTabController implements MoSavable, MoLoadable {
         saveCurrentTabState(newTab);
         updateCurrent(newTab);
         save(context);
-        updateTabActivity.update();
     }
 
     /**
@@ -101,6 +101,7 @@ public class MoTabController implements MoSavable, MoLoadable {
             // then we are removing the current tab
             // change the current tab to the last item inside
             // the tab array or null if none exist
+            MoLog.print("deleted current tab");
             updateCurrent(MoTabsManager.getLastTab(t.getType()));
         }
     }

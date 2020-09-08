@@ -155,6 +155,7 @@ public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed ,M
     //monote delete private tabs as well
     private void performDelete() {
         abstractStateAdapter.performDelete();
+        updateNumberOfTabs();
         if (tabSelectable.isInActionMode()) {
             tabSelectable.removeAction();
         }
@@ -217,6 +218,7 @@ public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed ,M
                 new Pair<>(getContext().getString(R.string.Clear_All_Normal_Tabs), menuItem -> {
                     MoTabsManager.clearAllNormalTabs(getActivity());
                     abstractStateAdapter.notifyDataSetChanged(0);
+                    updateNumberOfTabs();
                     return false;
                 }),
                 new Pair<>(getContext().getString(R.string.Clear_All_Incognito_Tabs), menuItem -> {
@@ -229,12 +231,22 @@ public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed ,M
 
 
     public void onResume() {
+        // updating both pages
         abstractStateAdapter.notifyAllSections();
+        // updating the number of tabs
         updateNumberOfTabs();
+        // set to current page
+        setToCurrentPage();
     }
 
     public void updateNumberOfTabs() {
         moToolBar.setTabsNumber(MoTabsManager.size());
+    }
+
+    public void setToCurrentPage() {
+        MoTab t = MoTabController.instance.getCurrent();
+        if(t==null) return;
+        pager2.setCurrentItem(t.isPrivate()?1:0);
     }
 
 
