@@ -17,7 +17,7 @@ import com.moofficial.moweb.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class MoTabsManager {
@@ -147,6 +147,7 @@ public class MoTabsManager {
      */
     @SuppressWarnings("SynchronizeOnNonFinalField")
     private synchronized static void reload(Context context) {
+        tabs = new ArrayList<>();
         MoTab[] retainOrder = new MoTab[MoDir.getFilesSizeDir(context,TAB_DIR)];
         MoFileManager.readAllDirFilesAsync(context, TAB_DIR, (s, i) -> {
             MoTab tab = new MoTab(context);
@@ -158,7 +159,7 @@ public class MoTabsManager {
                 addToSparseArray(tab);
             }
         });
-        tabs = Arrays.asList(retainOrder);
+        Collections.addAll(tabs,retainOrder);
     }
 
 

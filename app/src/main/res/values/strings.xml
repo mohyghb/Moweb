@@ -140,6 +140,8 @@
     <string name="error_bookmark_url_already_exist">URL already exist</string>
     <string name="error_bookmark_folder_already_exist">Folder already exist</string>
     <string name="move_bookmarks">Move bookmarks</string>
+    <string name="clear_all_bookmarks_title">Clear All</string>
+    <string name="clear_all_bookmarks_message">Do you want to clear all bookmarks/folders?</string>
 
 
 

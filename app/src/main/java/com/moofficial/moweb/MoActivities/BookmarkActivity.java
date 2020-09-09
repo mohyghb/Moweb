@@ -34,7 +34,6 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.R;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Stack;
 
@@ -92,6 +91,8 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
 
     private void initToolBar(){
         this.moToolBar = new MoToolBar(this)
+                .setRightIcon(R.drawable.ic_baseline_delete_outline_24)
+                .setRightOnClickListener(view -> performClearAll())
                 .setLeftOnClickListener(view -> onBackPressed());
         this.moToolBar.getCardView().makeTransparent();
     }
@@ -102,16 +103,19 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
                 .showExtraButton()
                 .hideLeft()
                 .setRightIcon(R.drawable.ic_baseline_more_vert_24)
-                .setRightOnClickListener(view -> {
-                    showSelectionPopupMenu();
-                })
+                .setRightOnClickListener(view -> showSelectionPopupMenu())
                 .setMiddleIcon(R.drawable.ic_baseline_folder_24)
                 .setMiddleOnClickListener(view -> performMoveToAnotherFolder())
                 .setExtraIcon(R.drawable.ic_baseline_delete_24)
-                .setExtraOnClickListener(view -> {
-                    performDelete();
-                });
+                .setExtraOnClickListener(view -> performDelete())
+                .setForthIcon(R.drawable.ic_baseline_edit_24)
+                .setForthOnClickListener(view -> performEdit());
         this.moListSelectableToolbar.getCardView().makeTransparent();
+    }
+
+    private void performEdit() {
+        EditBookmarkActivity.startActivityForResult(this,recyclerAdapter.getSelectedItems().get(0),
+                BookmarkActivity.EDIT_BOOKMARK_REQUEST);
     }
 
 
@@ -185,6 +189,25 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     }
 
     /**
+     * clears all the items inside the current folder
+     */
+    private void performClearAll() {
+        if(recyclerAdapter.getItemCount() == 0) {
+            Toast.makeText(this,"There is nothing to delete",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        MoDialogs.showAlertDialog(this,
+                "Clear All",
+                "Do you want to clear everything in " + getCurrentTitle(),
+                (dialogInterface, i) -> {
+                    MoBookmarkManager.deleteSelectedBookmarks(this,new ArrayList<>(recyclerAdapter.getDataSet()));
+                    recyclerAdapter.setDataSet(new ArrayList<>());
+                    TransitionManager.beginDelayedTransition(getGroupRootView());
+                    recyclerAdapter.notifyDataSetChanged();
+                });
+    }
+
+    /**
      *
      * @return true if the selection array list is empty
      */
@@ -201,8 +224,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     }
 
 
-    private void initClass(){
-        removeUnsavableBookmarks();
+    private void initClass() {
         initCreateNewFile();
         initTitle();
         initRecyclerAdapter();
@@ -254,14 +276,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
 
 
 
-    private void removeUnsavableBookmarks(){
-        List<MoBookmark> bookmarks = getCurrentFolderBookmarks();
-        for(int i = bookmarks.size()-1;i>=0;i--){
-            if(!bookmarks.get(i).isSavable()){
-                bookmarks.remove(i);
-            }
-        }
-    }
+
 
     /**
      * shows a dialog to create a new folder
@@ -298,6 +313,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     private void createFolder(MoEditText folderInput, DialogInterface dialogInterface) {
         String s = folderInput.getInputText().trim();
         MoBookmarkManager.createFolder(this, s, folders.peek(), () -> {
+            TransitionManager.beginDelayedTransition(getGroupRootView());
             recyclerAdapter.notifyItemInserted(recyclerAdapter.getItemCount()-1);
             Toast.makeText(BookmarkActivity.this,
                     String.format("Folder %s was created!",s),Toast.LENGTH_SHORT).show();
@@ -346,7 +362,10 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
 
     private void updateRecyclerAdapter(ArrayList<MoBookmark> list) {
         recyclerAdapter.setDataSet(list);
-        runOnUiThread(() -> recyclerAdapter.notifyDataSetChanged());
+        recyclerView.post(() -> {
+            TransitionManager.beginDelayedTransition(getGroupRootView());
+            recyclerAdapter.notifyDataSetChanged();
+        });
     }
 
 
@@ -361,22 +380,37 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
                 .setCounterView(l.title)
                 .setSelectAllCheckBox(moListSelectableToolbar.getCheckBox())
                 .setOnSelectListener(bookmark -> {
-                    if(bookmark.isFolder()){
-                        if(bookmark.isSelected()){
+                    hideShowEdit();
+                    if(bookmark.isFolder()) {
+                        if(bookmark.isSelected()) {
                             selectedFolderCount++;
-                        }else{
+                        } else {
                             selectedFolderCount--;
                         }
                     }
-                })
-                .setOnEmptySelectionListener(() -> {
+                }).setOnEmptySelectionListener(() -> {
                     listViewSync.removeAction();
-                    int i = 0;
                 })
                 .setOnCanceledListener(() -> recyclerAdapter.getSelectedItems().clear())
                 .setOnSelectFinishedListener(list -> {
                     Toast.makeText(this,list.size()+"",Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    /**
+     * hides or shows the edit button based
+     * on the number of selected items
+     */
+    private void hideShowEdit() {
+        if(recyclerAdapter.onlyOneIsSelected()) {
+            // then we can show edit
+            TransitionManager.beginDelayedTransition(getGroupRootView());
+            moListSelectableToolbar.showForthButton();
+        } else {
+            // hide edit
+            TransitionManager.beginDelayedTransition(getGroupRootView());
+            moListSelectableToolbar.hideForthButton();
+        }
     }
 
     private void initListViewSync(){
@@ -387,7 +421,6 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
                     updateRecyclerAdapter(getCurrentFolderBookmarks());
                 });
     }
-
 
 
 

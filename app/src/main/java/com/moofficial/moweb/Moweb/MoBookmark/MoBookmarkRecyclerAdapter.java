@@ -1,8 +1,6 @@
 package com.moofficial.moweb.Moweb.MoBookmark;
 
-import android.app.Activity;
 import android.content.Context;
-import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -10,14 +8,11 @@ import androidx.annotation.NonNull;
 
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableList;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
-import com.moofficial.moweb.MoActivities.BookmarkActivity;
-import com.moofficial.moweb.MoActivities.EditBookmarkActivity;
 import com.moofficial.moweb.R;
 
 import java.util.List;
@@ -78,7 +73,6 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
     @Override
     public void onBindViewHolder(@NonNull MoBookmarkViewHolder h, int i) {
         MoBookmark bookmark = dataSet.get(i);
-        if (wasDeleted(h, bookmark,i)) return;
         switch (bookmark.getType()) {
             case MoBookmark.BOOKMARK:
                 h.url.setText(bookmark.getUrl());
@@ -92,45 +86,28 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
         h.imageTextLogo.setText(MoString.getSignature(bookmark.getName()));
         onClickListener(h, bookmark,i);
         onLongClickListener(h, bookmark,i);
-        MoDeletableUtils.applyDeleteColor(this.context,h.coverLayout,bookmark);
+        MoSelectableUtils.applySelectedColor(this.context,h.coverLayout,bookmark);
     }
 
-
-    private boolean wasDeleted(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark, int po) {
-        if(!bookmark.isSavable()){
-            // make it so that the user thinks it's gone (or deleted for the time being)
-            // then with the next load, everything will be right
-            h.itemView.setVisibility(View.GONE);
-            return true;
+    @Override
+    public void onBindViewHolder(@NonNull MoBookmarkViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if(payloads.isEmpty()) {
+            super.onBindViewHolder(holder, position, payloads);
         }else{
-            h.itemView.setVisibility(View.VISIBLE);
+            // 100 percent this is the select payload
+            MoSelectableUtils.applySelectedColor(this.context,holder.coverLayout,dataSet.get(position));
         }
-        return false;
+
+
     }
 
-    private void onLongClickListener(@NonNull MoBookmarkViewHolder h, MoBookmark b,int i) {
+    private void onLongClickListener(@NonNull MoBookmarkViewHolder h, MoBookmark b, int i) {
         if(!disableLongClick){
             h.cardView.setOnLongClickListener(view -> {
-                if(this.selectable.isInActionMode()){
+                if(this.selectable.isInActionMode()) {
                     return false;
                 }
-
-                MoPopUpMenu p =new MoPopUpMenu(context).setEntries(
-                        new Pair<>(context.getString(R.string.share), menuItem -> {
-                            MoBookmarkManager.shareBookmark(context,true,b);
-                            return false;
-                        }),
-                        new Pair<>(context.getString(R.string.edit), menuItem -> {
-                            EditBookmarkActivity.startActivityForResult((Activity) context,b,
-                                    BookmarkActivity.EDIT_BOOKMARK_REQUEST);
-                            return false;
-                        }),
-                        new Pair<>(context.getString(R.string.select),menuItem -> {
-                            activateSelectMode(i);
-                            return false;
-                        })
-                );
-                p.show(view);
+                activateSelectMode(i);
                 return true;
             });
         }
@@ -166,6 +143,7 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
      */
     public void deleteSelected() {
         MoBookmarkManager.deleteSelectedBookmarks(this.context,this.selectedItems);
+        this.dataSet.removeAll(selectedItems);
     }
 
 

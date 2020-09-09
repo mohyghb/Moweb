@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 
 import static com.moofficial.moweb.Moweb.MoBookmark.MoBookmark.BOOKMARK;
 import static com.moofficial.moweb.Moweb.MoBookmark.MoBookmark.FOLDER;
@@ -57,24 +56,23 @@ public class MoBookmarkManager {
     public static boolean addOrRemoveIfWasAddedAlready(Context context,String url,String title){
         if(!add(context,url,title)){
             // it did not add it to the bookmarks because we already had one with the same url
-            remove(context,url);
+            removeAndSave(context,mapOfBookmarks.get(url));
             return false;
         }
         return true;
     }
 
     /**
-     * removes the bookmark with this url
-     * @param url
+     * removes the bookmark from the list
+     * and saves it for future references
+     * @param c context
+     * @param b bookmark to be removed
      */
-    @SuppressWarnings("ConstantConditions")
-    static void remove(Context context,String url){
-        if(has(url)){
-            mapOfBookmarks.get(url).setSavable(false);
-            Toast.makeText(context, "Removed " + url, Toast.LENGTH_SHORT).show();
-            save(context);
-        }
+    public static void removeAndSave(Context c,MoBookmark b){
+        remove(b);
+        save(c);
     }
+
 
 
     /**
@@ -236,13 +234,30 @@ public class MoBookmarkManager {
      * this is used to remove or find bookmarks
      * @param b
      */
-    public static void addToMap(MoBookmark b){
+    public static void addToMap(MoBookmark b) {
         switch (b.getType()){
             case FOLDER:
                 mapOfFolders.put(b.getName(),b);
                 break;
             case BOOKMARK:
                 mapOfBookmarks.put(b.getUrl(),b);
+                break;
+        }
+    }
+
+
+    /**
+     * removes the bookmark from their
+     * respective map
+     * @param b bookmark to be removed from map
+     */
+    public static void removeFromMap(MoBookmark b) {
+        switch (b.getType()){
+            case FOLDER:
+                mapOfFolders.remove(b.getName());
+                break;
+            case BOOKMARK:
+                mapOfBookmarks.remove(b.getUrl());
                 break;
         }
     }
@@ -255,7 +270,7 @@ public class MoBookmarkManager {
      * @return
      */
     public static boolean has(String url){
-        return mapOfBookmarks.containsKey(url) && Objects.requireNonNull(mapOfBookmarks.get(url)).isSavable();
+        return mapOfBookmarks.containsKey(url);
     }
 
     /**
@@ -265,7 +280,7 @@ public class MoBookmarkManager {
      * @return
      */
     public static boolean hasFolder(String title){
-        return mapOfFolders.containsKey(title) && Objects.requireNonNull(mapOfFolders.get(title)).isSavable();
+        return mapOfFolders.containsKey(title);
     }
 
 
@@ -367,37 +382,37 @@ public class MoBookmarkManager {
         Collections.sort(a,(bookmark, t1) -> bookmark.getName().compareTo(t1.getName()));
     }
 
-    /**
-     * removes the bookmark completely
-     */
-    private static void remove(HashMap<String,MoBookmark> map,String key){
-        if(map.containsKey(key)){
-            Objects.requireNonNull(map.get(key)).setSavable(false);
-            map.remove(key);
-        }
-    }
+//    /**
+//     * removes the bookmark completely
+//     */
+//    private static void remove(HashMap<String,MoBookmark> map,String key){
+//        if(map.containsKey(key)){
+//            Objects.requireNonNull(map.get(key)).setSavable(false);
+//            map.remove(key);
+//        }
+//    }
 
-    /**
-     * removes the bookmark based on their type
-     * @param bm
-     */
-    public static void remove(MoBookmark bm){
-        switch (bm.getType()){
-            case BOOKMARK:
-                remove(mapOfBookmarks,bm.getUrl());
-                break;
-            case FOLDER:
-                remove(mapOfFolders,bm.getName());
-                break;
-        }
-    }
+//    /**
+//     * removes the bookmark based on their type
+//     * @param bm
+//     */
+//    public static void remove(MoBookmark bm){
+//        switch (bm.getType()){
+//            case BOOKMARK:
+//                remove(mapOfBookmarks,bm.getUrl());
+//                break;
+//            case FOLDER:
+//                remove(mapOfFolders,bm.getName());
+//                break;
+//        }
+//    }
 
-    public static void clear(Context c){
+//    public static void clear(Context c) {
 //        mapOfFolders.clear();
 //        mapOfBookmarks.clear();
 //        mainFolder.clear();
-        save(c);
-    }
+//        save(c);
+//    }
 
 
     public static MoBookmark getBookmark(String url){
@@ -539,21 +554,26 @@ public class MoBookmarkManager {
     }
 
     /**
+     * monote consider a case where user deletes these selected
+     *  bookmarks, and the tab they are on contains one of these(therefore the icons inside tab
+     *  mode are not updated)
      * deletes all the selected items inside the list
      * @param c context
      * @param list items that are selected
      */
     public static void deleteSelectedBookmarks(Context c, List<MoBookmark> list){
-        for(MoBookmark b: list){
-            MoBookmarkManager.remove(b);
+        for(MoBookmark b:list) {
+            remove(b);
         }
         save(c);
     }
 
-
-
-
-
+    private static void remove(MoBookmark b) {
+        // removes from main folder
+        b.removeFromParent();
+        // removes from maps
+        removeFromMap(b);
+    }
 
 
 }

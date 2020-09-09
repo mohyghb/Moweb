@@ -5,7 +5,7 @@ import android.content.Context;
 import com.moofficial.moessentials.MoEssentials.MoDate.MoDate;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
-import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSwitchSavable;
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableItem;
@@ -20,7 +20,7 @@ import java.util.Objects;
  * a class which can be both a bookmark and a folder
  * based on the type that is given to it
  */
-public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem, MoSearchableItem, MoTabOpenable {
+public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSearchableItem, MoTabOpenable {
 
 
     public static final int FOLDER = 0;
@@ -39,7 +39,6 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
 
     private boolean isSelected;
     private boolean isSearched = true;
-    private boolean isSavable = true;
 
     public MoBookmark(String url,String name){
         this.name = name;
@@ -165,10 +164,20 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
         }
     }
 
-    public void remove(MoBookmark b){
+    public void remove(MoBookmark b) {
         b.setParent(null);
         subs.remove(b);
         removeFromRespectiveList(b);
+    }
+
+    /**
+     * removes this bookmark
+     * from its parent
+     */
+    public void removeFromParent() {
+         if(this.parent!=null){
+             parent.remove(this);
+         }
     }
 
     private void removeFromRespectiveList(MoBookmark b) {
@@ -204,6 +213,20 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
     }
     public boolean isBookmark(){return this.type==BOOKMARK;}
 
+
+//    public void clear() {
+//        this.subs.clear();
+//        this.subBookmarks.clear();
+//        this.subFolders.clear();
+//
+//    }
+//
+//    public void clearAndSave(Context c) {
+//        this.subs.clear();
+//        this.subBookmarks.clear();
+//        this.subFolders.clear();
+//        MoBookmarkManager.save(c);
+//    }
 
     /**
      * recursively adds all the bookmarks
@@ -342,17 +365,6 @@ public class MoBookmark implements MoSwitchSavable, MoLoadable, MoSelectableItem
         this.isSearched = b;
     }
 
-    // savable
-
-    @Override
-    public boolean isSavable() {
-        return this.isSavable;
-    }
-
-    @Override
-    public void setSavable(boolean b) {
-        this.isSavable = b;
-    }
 
     @Override
     public String getSearchString() {
