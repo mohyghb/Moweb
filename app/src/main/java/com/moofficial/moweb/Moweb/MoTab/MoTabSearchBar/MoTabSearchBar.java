@@ -451,7 +451,7 @@ public class MoTabSearchBar extends MoConstraint {
      * object
      */
     public void onDestroy(){
-        if(tab!=null){
+        if(tab!=null) {
             tab.setSearchText(null);
             tab.setProgressBar(null);
             tab.setOnUpdateUrlListener(s -> {});

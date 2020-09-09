@@ -49,6 +49,7 @@ public class MoTabController implements MoSavable, MoLoadable {
         saveCurrentTabState(newTab);
         updateCurrent(newTab);
         save(context);
+        updateTabActivity.update();
     }
 
     /**
@@ -86,7 +87,7 @@ public class MoTabController implements MoSavable, MoLoadable {
         return !isOutOfOptions();
     }
 
-    public boolean currentIs(MoTab t){
+    public boolean currentIs(MoTab t) {
         return currentTab!=null && currentTab.equals(t);
     }
 

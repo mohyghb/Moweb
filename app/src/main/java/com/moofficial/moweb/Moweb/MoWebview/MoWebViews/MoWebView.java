@@ -548,6 +548,8 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
 
     @Override
     public void load(String s, Context context) {
+        if(s==null || s.isEmpty())
+            return;
         String[] c = MoFile.loadable(s);
         this.stackTabHistory.load(c[0],context);
         this.isInDesktopMode = Boolean.parseBoolean(c[1]);

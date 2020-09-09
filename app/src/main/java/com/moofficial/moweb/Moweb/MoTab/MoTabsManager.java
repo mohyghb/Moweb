@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.LongSparseArray;
 import android.widget.Toast;
 
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoDir;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManager;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManagerUtils;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
@@ -16,6 +17,7 @@ import com.moofficial.moweb.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MoTabsManager {
@@ -26,14 +28,14 @@ public class MoTabsManager {
     public static final String TAB_DIR = "mo_tab_dir";
 
 
-    private static ArrayList<MoTab> tabs = new ArrayList<>();
-    private static ArrayList<MoTab> privateTabs = new ArrayList<>();
+    private static List<MoTab> tabs = new ArrayList<>();
+    private static List<MoTab> privateTabs = new ArrayList<>();
     private static LongSparseArray<MoTab> tabSparseArray = new LongSparseArray<>();
 
-    public static ArrayList<MoTab> getTabs(){
+    public static List<MoTab> getTabs(){
         return tabs;
     }
-    public static ArrayList<MoTab> getPrivateTabs(){
+    public static List<MoTab> getPrivateTabs(){
         return privateTabs;
     }
 
@@ -109,7 +111,7 @@ public class MoTabsManager {
             case MoTabType.TYPE_NORMAL:
                 return tabs.isEmpty()?null:tabs.get(tabs.size()-1);
             case MoTabType.TYPE_PRIVATE:
-                return privateTabs.isEmpty()?null:tabs.get(tabs.size()-1);
+                return privateTabs.isEmpty()?null:privateTabs.get(privateTabs.size()-1);
         }
         return null;
     }
@@ -137,23 +139,26 @@ public class MoTabsManager {
            reload(context);
         }
         MoLog.print("number of tabs: " + tabs.size());
+        MoLog.print("sparse of tabs: " + tabSparseArray.size());
     }
 
     /**
      * reloads the tabs
      */
-    private static void reload(Context context) {
-        tabs = new ArrayList<>();
-        try {
-            MoFileManager.readAllDirFiles(context, TAB_DIR, (s, i) -> {
-                MoTab tab = new MoTab(context);
-                tab.load(s, context);
-                tabs.add(tab);
+    @SuppressWarnings("SynchronizeOnNonFinalField")
+    private synchronized static void reload(Context context) {
+        MoTab[] retainOrder = new MoTab[MoDir.getFilesSizeDir(context,TAB_DIR)];
+        MoFileManager.readAllDirFilesAsync(context, TAB_DIR, (s, i) -> {
+            MoTab tab = new MoTab(context);
+            tab.load(s, context);
+            synchronized (retainOrder) {
+                retainOrder[i] = tab;
+            }
+            synchronized (tabSparseArray) {
                 addToSparseArray(tab);
-            });
-        } catch (IOException e) {
-            Toast.makeText(context,"error loading tabs",Toast.LENGTH_SHORT).show();
-        }
+            }
+        });
+        tabs = Arrays.asList(retainOrder);
     }
 
 
@@ -251,7 +256,7 @@ public class MoTabsManager {
      * @param context
      * @param t
      */
-    static void setCurrentTab(Context context,MoTab t){
+    static void setCurrentTab(Context context,MoTab t) {
         MoTabController.instance.setNewTab(context,t);
     }
 
@@ -291,7 +296,7 @@ public class MoTabsManager {
      * @return
      * @throws MoTabNotFoundException
      */
-    private static int getIndexOf(MoTab t, ArrayList<MoTab> ts) throws MoTabNotFoundException{
+    private static int getIndexOf(MoTab t, List<MoTab> ts) throws MoTabNotFoundException{
         for(int i =0; i < ts.size(); i++){
             if(t==ts.get(i)){
                 return i;

@@ -59,6 +59,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     private boolean wasInitAlready = false;
     private boolean isSearched = false;
     private boolean isUpToDate = false;
+    private String webViewData = "";
 
 
     public MoTab(Context context, String url) {
@@ -69,7 +70,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
 
     private void initContextView(Context context) {
         this.context = context;
-        this.moWebView = new MoWebView(context);
+
     }
 
     public MoTab(String searchText,Context context){
@@ -203,6 +204,8 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
 
     //@SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
     protected void initWebView(){
+        moWebView = new MoWebView(context);
+        moWebView.load(webViewData,context);
         moWebView.setMoBitmap(this.moBitmap)
                  .setChromeClient(new MoChromeClient(this.context))
                  .setOnUpdateUrlListener((url, isReload) -> updateUrl(url))
@@ -401,7 +404,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
         AsyncTask.execute(() -> {
             try {
                 // save it if the bitmap is not null
-                if(moBitmap.getBitmap()!=null){
+                if(moBitmap.getBitmap()!=null) {
                     moBitmap.saveBitmap(context);
                 }
             } catch (IOException e) {
@@ -472,7 +475,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
         String[] c = MoFile.loadable(data);
         this.url = new MoURL(c[0],context);
         this.moBitmap.load(c[1],context);
-        this.moWebView.load(c[2],context);
+        this.webViewData = c[2];
         this.tabId.load(c[3],context);
     }
 

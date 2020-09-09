@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     
 
     private void init() {
-        // mo load the app completely
         initTabSection();
         initMainMenuSection();
         initSectionManager();
@@ -68,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     void moveToTabFragment() {
-        tabSection.update();
         sectionViewManager.setActiveSection(SECTION_TAB);
     }
 
@@ -83,6 +81,10 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == HISTORY_FROM_MAIN_MENU_REQUEST && resultCode == MoTabSection.GO_TO_TAB_ACTIVITY_REQUEST){
             // the user has opened something from the history activity
             // therefore, we need to transition to the tab
+            // we need to call update because if we don't
+            // it captures the wrong image from coordinator layout
+            // when we are going back to the main menu
+            tabSection.update();
             moveToTabFragment();
         }
     }

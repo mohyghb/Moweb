@@ -26,6 +26,7 @@ public class MoOpenTab {
         for(T o : l){
             MoTabsManager.newTab(context,o.getSearchString(),null);
         }
+
         MoTabsManager.setCurrentTab(context,MoTabsManager.getLastTab(MoTabType.TYPE_NORMAL));
     }
 
@@ -43,7 +44,7 @@ public class MoOpenTab {
         if(l.isEmpty())
             return;
 
-        for(T o : l){
+        for(T o : l) {
             MoTabsManager.newPrivateTab(context,o.getSearchString(),null);
         }
         MoTabsManager.setCurrentTab(context,MoTabsManager.getLastTab(MoTabType.TYPE_PRIVATE));

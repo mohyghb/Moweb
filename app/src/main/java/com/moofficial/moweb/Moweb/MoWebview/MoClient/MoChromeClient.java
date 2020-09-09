@@ -48,7 +48,7 @@ public class MoChromeClient extends WebChromeClient {
      * if it is not null
      * @param newProgress of the progress bar to be set
      */
-    private void updateProgressBar(int newProgress) {
+    private synchronized void updateProgressBar(int newProgress) {
         if(bar == null)
             return;
         bar.post(() -> {

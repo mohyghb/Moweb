@@ -73,7 +73,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
         initSearchBar();
         initToolbar();
         initWebCardView();
-//        MoTabController.instance.setUpdateTabActivity(this);
+        MoTabController.instance.setUpdateTabActivity(this);
         update();
     }
 
@@ -88,6 +88,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
             // if we are out of options, make a new tab
             MoTabsManager.addTab(getContext(), MoSearchEngine.instance.homePage(),false);
         }else {
+            // only perform update when the new tab is different than the old tab
             removePreviousTab();
             updateTab();
             updateWebView();
@@ -112,7 +113,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
      * and the current tab is not the same as the new one
      */
     private void removePreviousTab() {
-        if(tab!=null && !MoTabController.instance.currentIs(this.tab) && webView != null){
+        if(tab!=null && webView != null){
             // then remove it from web view when updating
             coordinatorLayout.removeView(webView);
             moTabSearchBar.onDestroy();
@@ -215,10 +216,8 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
         moTabSearchBar.syncWith(tab)
                 .clearEditTextFocus()
                 .setTextSearch(tab.getUrl())
-                .setOnTabsButtonClicked(view -> {
-                    onTabsButtonPressed();
-                })
-                .setNumberOfTabs(MoTabsManager.size());
+                .setOnTabsButtonClicked(view -> onTabsButtonPressed())
+                .setNumberOfTabs(tab.isPrivate()?MoTabsManager.sizePrivate():MoTabsManager.size());
     }
 
     /**
