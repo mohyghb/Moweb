@@ -1,4 +1,4 @@
-package com.moofficial.moweb.MoActivities;
+package com.moofficial.moweb.MoActivities.Bookmark;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMarginBuilder;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoInputBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoSearchBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
@@ -29,12 +30,14 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
     public static final String CHOSEN_FOLDER_TAG = "chosen_folder";
     public static final String EXTRA_FOLDER_NAME = "extrafoldername";
 
+
     private MoRecyclerView recyclerView;
     private MoBookmarkRecyclerAdapter recyclerAdapter;
     private MoCardRecyclerView cardRecyclerView;
     private MoSearchable moSearchable;
     private MoSearchBar searchBar;
     private MoToolBar moToolBar;
+    private MoInputBar inputBar;
     private MoBookmark[] currentBookmark;
     private ArrayList<MoBookmark> allPossibleFolders,showingFolders = new ArrayList<>();
 
@@ -72,7 +75,11 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
                 .setLeftOnClickListener(view -> onBackPressed())
                 .setRightIcon(R.drawable.ic_baseline_search_24);
         moToolBar.getCardView().makeTransparent();
-        ;
+
+    }
+
+    private void initAddNewFolder() {
+
     }
 
 
@@ -152,6 +159,14 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
         return extras.getString(CHOSEN_FOLDER_TAG);
     }
 
+    /**
+     * if no book marks are passed, we show
+     * all the folders that are in the system
+     * @param a activity
+     * @param code request code for activity result
+     * @param b bookmarks, can be empty and we will show all the folders
+     *          instead of choosing which folders pass the requirements
+     */
     public static void startActivityForResult(Activity a,int code,MoBookmark ... b){
         Intent i = new Intent(a,BookmarkFolderChooserActivity.class);
         i.putExtra(EXTRA_FOLDER_NAME, MoBookmarkUtils.encodeBookmarks(b));

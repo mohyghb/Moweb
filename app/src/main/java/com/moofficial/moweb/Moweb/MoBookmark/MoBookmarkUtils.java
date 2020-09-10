@@ -46,7 +46,7 @@ public class MoBookmarkUtils {
      * @return
      */
     public static String[] encodeBookmarks(MoBookmark ... bookmarks){
-        if(bookmarks == null)
+        if(bookmarks == null || bookmarks.length == 0)
             return new String[]{};
 
         String[] encoded = new String[bookmarks.length*2];
@@ -66,7 +66,7 @@ public class MoBookmarkUtils {
      * @return
      */
     public static MoBookmark[] decodeBookmarks(String[] encoded){
-        if(encoded == null)
+        if(encoded == null || encoded.length == 0)
             return new MoBookmark[]{};
 
         MoBookmark[] decoded = new MoBookmark[encoded.length/2];

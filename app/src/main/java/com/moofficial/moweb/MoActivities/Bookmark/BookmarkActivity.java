@@ -1,14 +1,11 @@
-package com.moofficial.moweb.MoActivities;
+package com.moofficial.moweb.MoActivities.Bookmark;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Pair;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.transition.TransitionManager;
 
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
@@ -20,11 +17,9 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoPaddingBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoSearchBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoEditText.MoEditText;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkRecyclerAdapter;
@@ -43,6 +38,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
 
     public static final int EDIT_BOOKMARK_REQUEST = 3;
     public static final int CHOOSE_FOLDER_REQUEST = 4;
+    public static final int ADD_FOLDER_REQUEST = 5;
 
     private MoRecyclerView recyclerView;
     private MoBookmarkRecyclerAdapter recyclerAdapter;
@@ -285,42 +281,11 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
         l.floatingActionButton.setIcon(R.drawable.ic_baseline_create_new_folder_24)
         .setBackgroundColor(R.color.colorAccent)
         .setOnClickListener(view -> {
-            MoEditText editText = new MoEditText(this)
-                    .setHint(R.string.add_folder_in_bookmark_hint_dialog)
-                    .setBoxBackgroundColor(R.color.MoBackground);
-            editText.getCardView().makeTransparent();
-
-            new MoPaddingBuilder(16)
-                    .convertValuesToDp()
-                    .apply(editText);
-
-            // making the alert dialog
-            AlertDialog ad = new AlertDialog.Builder(BookmarkActivity.this)
-                    .setTitle(R.string.new_folder)
-                    .setMessage(R.string.new_folder_message)
-                    .setView(editText)
-                    .setPositiveButton(R.string.done, null)
-                    .setNegativeButton(R.string.cancel, (dialogInterface, i) -> {})
-                    .create();
-            ad.setOnShowListener(dialogInterface -> {
-                Button button = ad.getButton(AlertDialog.BUTTON_POSITIVE);
-                button.setOnClickListener(view1 -> createFolder(editText,dialogInterface));
-            });
-            ad.show();
+            AddFolderBookmarkActivity.launch(this,ADD_FOLDER_REQUEST);
         }).show();
     }
 
-    private void createFolder(MoEditText folderInput, DialogInterface dialogInterface) {
-        String s = folderInput.getInputText().trim();
-        MoBookmarkManager.createFolder(this, s, folders.peek(), () -> {
-            TransitionManager.beginDelayedTransition(getGroupRootView());
-            recyclerAdapter.notifyItemInserted(recyclerAdapter.getItemCount()-1);
-            Toast.makeText(BookmarkActivity.this,
-                    String.format("Folder %s was created!",s),Toast.LENGTH_SHORT).show();
-            dialogInterface.dismiss();
-        });
 
-    }
 
     private void initTitle(){
         setTitle(getCurrentTitle());
@@ -485,6 +450,11 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
                                 (dialogInterface, i) -> moveSelectedToNewFolder(newFolderName));
                     }
                     break;
+                case ADD_FOLDER_REQUEST:
+                    // show the new folder
+                    TransitionManager.beginDelayedTransition(getGroupRootView());
+                    recyclerAdapter.notifyDataSetChanged();
+                    break;
             }
         }
     }
@@ -494,7 +464,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
                 MoBookmarkManager.getFolder(newFolderName),
                 recyclerAdapter.getSelectedItems());
         // giving them progress update
-        Toast.makeText(BookmarkActivity.this,"Updated!",Toast.LENGTH_SHORT).show();
+        Toast.makeText(BookmarkActivity.this,R.string.changes_saved,Toast.LENGTH_SHORT).show();
         // done selecting
         listViewSync.removeAction();
     }

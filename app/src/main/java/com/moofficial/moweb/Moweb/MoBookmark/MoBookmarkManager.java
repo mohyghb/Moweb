@@ -1,7 +1,6 @@
 package com.moofficial.moweb.Moweb.MoBookmark;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoReadWrite.MoReadWrite;
@@ -81,8 +80,8 @@ public class MoBookmarkManager {
      * @param c
      * @param title
      */
-    public static void createFolder(Context c,String title,MoBookmark parent,Runnable onAddDone){
-        if (!canCreateThisFolder(c, title)) return;
+    public static void createFolder(Context c,String title,MoBookmark parent,MoEditText editText,Runnable onAddDone){
+        if (!canCreateThisFolder(c, title,editText)) return;
         MoBookmark folder = buildFolder(title);
         addToMap(folder);
         parent.add(folder);
@@ -97,13 +96,15 @@ public class MoBookmarkManager {
      * @param title of the new folder
      * @return true if this folder can be created
      */
-    private static boolean canCreateThisFolder(Context c, String title) {
+    private static boolean canCreateThisFolder(Context c, String title,MoEditText editText) {
         if(title.isEmpty()){
-            Toast.makeText(c,"Name can not be empty",Toast.LENGTH_SHORT).show();
+            editText.setError("Name can not be empty");
             return false;
         }else if(MoBookmarkManager.hasFolder(title)){
-            Toast.makeText(c,"Folder " +title + " already exits",Toast.LENGTH_SHORT).show();
+            editText.setError("Folder " +title + " already exits");
             return false;
+        }else{
+            editText.removeError();
         }
         return true;
     }

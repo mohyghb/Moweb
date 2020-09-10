@@ -1,4 +1,4 @@
-package com.moofficial.moweb.MoActivities;
+package com.moofficial.moweb.MoActivities.Bookmark;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -23,7 +23,7 @@ import com.moofficial.moweb.R;
 
 import java.util.Objects;
 
-import static com.moofficial.moweb.MoActivities.BookmarkFolderChooserActivity.getChosenFolder;
+import static com.moofficial.moweb.MoActivities.Bookmark.BookmarkFolderChooserActivity.getChosenFolder;
 
 
 

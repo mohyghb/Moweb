@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MoActivities.MoSplashScreen"></activity>
+        <activity android:name=".MoActivities.Bookmark.AddFolderBookmarkActivity"></activity>
+        <activity android:name=".MoActivities.MoSplashScreen" />
         <activity
             android:name=".MoActivities.MainActivity"
             android:alwaysRetainTaskState="true"
@@ -34,10 +35,10 @@
         <!-- android:windowSoftInputMode="adjustPan" -->
         <!-- android:configChanges="orientation|screenSize"> -->
         <!-- </activity> -->
-        <activity android:name=".MoActivities.BookmarkFolderChooserActivity" />
-        <activity android:name=".MoActivities.EditBookmarkActivity" />
+        <activity android:name=".MoActivities.Bookmark.BookmarkFolderChooserActivity" />
+        <activity android:name=".MoActivities.Bookmark.EditBookmarkActivity" />
         <activity
-            android:name=".MoActivities.BookmarkActivity"
+            android:name=".MoActivities.Bookmark.BookmarkActivity"
             android:configChanges="orientation|screenSize" />
         <activity android:name=".MoActivities.HomePageActivity" />
         <activity

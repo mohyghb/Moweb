@@ -25,7 +25,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoFin
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoViewUtils;
-import com.moofficial.moweb.MoActivities.BookmarkActivity;
+import com.moofficial.moweb.MoActivities.Bookmark.BookmarkActivity;
 import com.moofficial.moweb.MoActivities.HistoryActivity;
 import com.moofficial.moweb.MoHTML.MoHTMLAsyncTask;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
