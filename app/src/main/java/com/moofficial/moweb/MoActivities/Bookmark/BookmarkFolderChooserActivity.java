@@ -3,14 +3,16 @@ package com.moofficial.moweb.MoActivities.Bookmark;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.TransitionManager;
 import android.view.View;
+
+import androidx.annotation.Nullable;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMarginBuilder;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoInputBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoSearchBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
@@ -29,6 +31,7 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
 
     public static final String CHOSEN_FOLDER_TAG = "chosen_folder";
     public static final String EXTRA_FOLDER_NAME = "extrafoldername";
+    private  final int ADD_FOLDER_REQUEST = 1;
 
 
     private MoRecyclerView recyclerView;
@@ -37,9 +40,8 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
     private MoSearchable moSearchable;
     private MoSearchBar searchBar;
     private MoToolBar moToolBar;
-    private MoInputBar inputBar;
     private MoBookmark[] currentBookmark;
-    private ArrayList<MoBookmark> allPossibleFolders,showingFolders = new ArrayList<>();
+    private ArrayList<MoBookmark> allPossibleFolders = new ArrayList<>();
 
     @Override
     protected void init() {
@@ -71,24 +73,25 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
 
     private void initMoToolbar() {
         moToolBar = new MoToolBar(this)
-                .hideMiddle()
+                .setMiddleIcon(R.drawable.ic_add_black_24dp)
+                .setMiddleOnClickListener(view -> AddFolderBookmarkActivity.launch(this,ADD_FOLDER_REQUEST))
                 .setLeftOnClickListener(view -> onBackPressed())
                 .setRightIcon(R.drawable.ic_baseline_search_24);
         moToolBar.getCardView().makeTransparent();
 
     }
 
-    private void initAddNewFolder() {
-
-    }
 
 
     private void initClass(){
-        allPossibleFolders = MoBookmarkManager.getFolders(this.currentBookmark);
-        MoBookmarkManager.sortAlphabetically(allPossibleFolders);
-        showingFolders.addAll(allPossibleFolders);
+        initAllPossibleFolders();
         initRecyclerView();
         initSearch();
+    }
+
+    private void initAllPossibleFolders() {
+        allPossibleFolders = MoBookmarkManager.getFolders(this.currentBookmark);
+        MoBookmarkManager.sortAlphabetically(allPossibleFolders);
     }
 
 
@@ -119,10 +122,10 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
 
     private void initRecyclerView() {
 
-        recyclerAdapter = new MoBookmarkRecyclerAdapter(this, showingFolders)
+        recyclerAdapter = new MoBookmarkRecyclerAdapter(this, allPossibleFolders)
                 .setOpenBookmarkListener(this)
                 .setDisableLongClick(true)
-        ;
+                .setDisableSelectColor(true);
         recyclerView = MoRecyclerUtils.get(cardRecyclerView.getRecyclerView(),recyclerAdapter);
         recyclerView.show();
     }
@@ -154,6 +157,16 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == ADD_FOLDER_REQUEST && resultCode == RESULT_OK && data!=null){
+            // we need to refresh the available folders
+            TransitionManager.beginDelayedTransition(getGroupRootView());
+            initAllPossibleFolders();
+            updateAdapter(this.allPossibleFolders);
+        }
+    }
 
     public static String getChosenFolder(Bundle extras) {
         return extras.getString(CHOSEN_FOLDER_TAG);

@@ -24,8 +24,8 @@ public class MoIncognitoTab extends MoTab {
     protected void initWebView() {
         // we do not need to add anything to the search history
         // because this tab is incognito
-        moWebView.setSaveHistory(false);
         super.initWebView();
+        moWebView.setSaveHistory(false);
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.transition.TransitionManager;
 
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoDialog.MoDialogs;
@@ -439,6 +440,10 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
                     Toast.makeText(this, "Successfully updated!", Toast.LENGTH_SHORT).show();
                     break;
                 case CHOOSE_FOLDER_REQUEST:
+                    //monote, we are ignoring a case where
+                    // we update the folders from
+                    // the folder chooser activity, and when we come back,
+                    // the results are not updated
                     if (data != null) {
                         String newFolderName = BookmarkFolderChooserActivity.getChosenFolder(
                             Objects.requireNonNull(data.getExtras()));
@@ -454,6 +459,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
                     // show the new folder
                     TransitionManager.beginDelayedTransition(getGroupRootView());
                     recyclerAdapter.notifyDataSetChanged();
+                    MoLog.print("folder was created");
                     break;
             }
         }

@@ -16,9 +16,13 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoE
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.R;
 
+import java.util.Objects;
+
 public class AddFolderBookmarkActivity extends MoSmartActivity {
 
     private static final int CHOOSE_FOLDER_REQUEST_CODE = 1;
+    public static final String EXTRA_FOLDER_NAME = "exfolname";
+
     private MoButton folderButton;
     private MoEditText editText;
     private MoToolBar moToolBar;
@@ -84,9 +88,20 @@ public class AddFolderBookmarkActivity extends MoSmartActivity {
                 MoBookmarkManager.getFolder(this.folderParent), editText,() -> {
             Toast.makeText(this,
                     String.format("Folder %s was created!",name),Toast.LENGTH_SHORT).show();
-            setResult(RESULT_OK);
-            finish();
-        });
+                    setResultAndFinish(name);
+                });
+    }
+
+    /**
+     * pass the name of the created folder as
+     * data in case it is waiting for on result activity
+     * @param name of the newly created folder
+     */
+    private void setResultAndFinish(String name) {
+        Intent data = new Intent();
+        data.putExtra(EXTRA_FOLDER_NAME,name);
+        setResult(RESULT_OK,data);
+        finish();
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -101,6 +116,10 @@ public class AddFolderBookmarkActivity extends MoSmartActivity {
 
     public static void launch(Activity a, int requestCode) {
         a.startActivityForResult(new Intent(a,AddFolderBookmarkActivity.class),requestCode);
+    }
+
+    public static String getExtraFolderName(Intent data){
+        return Objects.requireNonNull(data.getExtras()).getString(EXTRA_FOLDER_NAME);
     }
 
 }

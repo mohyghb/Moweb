@@ -311,9 +311,7 @@ public class MoTabsManager {
      * from our database
      */
     public static void clearAllNormalTabs(Context context){
-        for(MoTab t:tabs) {
-            delete(t);
-        }
+        clearAll(tabs);
         save(context);
         Toast.makeText(context,context.getString(R.string.toast_closed_all_normal_tabs),Toast.LENGTH_SHORT).show();
     }
@@ -334,12 +332,19 @@ public class MoTabsManager {
      * from our database
      */
     public static void clearAllPrivateTabs(Context context){
-        for(MoTab t: privateTabs){
-            delete(t);
-        }
+        clearAll(privateTabs);
         Toast.makeText(context,context.getString(R.string.toast_closed_all_incognito_tabs),Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * deletes all the tabs inside ts
+     * @param ts
+     */
+    private static void clearAll(List<MoTab> ts) {
+        for (int i = ts.size() - 1; i >= 0; i--) {
+            delete(ts.get(i));
+        }
+    }
 
 
     /**

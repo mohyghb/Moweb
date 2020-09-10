@@ -23,6 +23,7 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
 
 
     private boolean disableLongClick = false;
+    private boolean disableSelectColor = false;
     private MoOnOpenBookmarkListener openBookmarkListener = new MoOnOpenBookmarkListener() {
         @Override
         public void openFolder(MoBookmark folder) {
@@ -61,6 +62,10 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
         return this;
     }
 
+    public MoBookmarkRecyclerAdapter setDisableSelectColor(boolean disableSelectColor) {
+        this.disableSelectColor = disableSelectColor;
+        return this;
+    }
 
     @NonNull
     @Override
@@ -86,7 +91,14 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
         h.imageTextLogo.setText(MoString.getSignature(bookmark.getName()));
         onClickListener(h, bookmark,i);
         onLongClickListener(h, bookmark,i);
-        MoSelectableUtils.applySelectedColor(this.context,h.coverLayout,bookmark);
+        addSelectColorToHolder(h, bookmark);
+
+    }
+
+    private void addSelectColorToHolder(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark) {
+        if(!disableSelectColor) {
+            MoSelectableUtils.applySelectedColor(this.context,h.coverLayout,bookmark);
+        }
     }
 
     @Override
@@ -95,7 +107,7 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
             super.onBindViewHolder(holder, position, payloads);
         }else{
             // 100 percent this is the select payload
-            MoSelectableUtils.applySelectedColor(this.context,holder.coverLayout,dataSet.get(position));
+            addSelectColorToHolder(holder,dataSet.get(position));
         }
 
 
