@@ -1,5 +1,6 @@
 package com.moofficial.moweb.MoActivities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.util.AttributeSet;
@@ -129,6 +130,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
         setSubTitle(this.webView.getUrl());
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void updateWebView() {
         this.webView = tab.getMoWebView();
         MoTabUtils.transitionToInTabMode(webView,webCard, new CardView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,

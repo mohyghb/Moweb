@@ -5,7 +5,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.ValueCallback;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -14,12 +13,12 @@ import android.webkit.WebView;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
-import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoWebClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoHitTestResultParser;
+import com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces.MoJsInput;
 import com.moofficial.moweb.Moweb.MoWebview.MoStackTabHistory.MoStackWebHistory;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnPageFinishedListener;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnReceivedError;
@@ -46,17 +45,9 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         }
         @Override
         public void onPageFinished(WebView view, String url) {
-            MoLog.print("on page finished "+view.getProgress()+"" + url);
-
             super.onPageFinished(view, url);
             MoWebView.this.onPageFinishedListener.onFinished(view,url);
-
-            view.evaluateJavascript("javascript:window.onload= (function(){ document.getElementById('password').value = 'test';})();", new ValueCallback<String>() {
-                @Override
-                public void onReceiveValue(String s) {
-
-                }
-            });
+            evaluateJavascript(MoJsInput.SCRIPT,null);
         }
 
 
@@ -224,7 +215,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
      * that are included inside the js interface list
      */
     private void addJsInterfaces() {
-
+        addJavascriptInterface(new MoJsInput(),MoJsInput.NAME);
     }
 
 

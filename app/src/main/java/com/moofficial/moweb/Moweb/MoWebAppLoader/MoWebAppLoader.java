@@ -10,6 +10,7 @@ import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
+import com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces.MoJsInput;
 
 import java.io.IOException;
 
@@ -51,6 +52,13 @@ public class MoWebAppLoader {
 
         MoCache.printCache(context);
 
+        loadJsScripts(context);
+
     }
+
+    private static void loadJsScripts(Context context) {
+        MoJsInput.loadScript(context);
+    }
+
 
 }
