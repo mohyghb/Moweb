@@ -2,6 +2,7 @@ package com.moofficial.moweb.Moweb.MoWebAppLoader;
 
 import android.content.Context;
 
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoCache.MoCache;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoAnimation.MoAnimation;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
@@ -46,6 +47,10 @@ public class MoWebAppLoader {
                 e.printStackTrace();
             }
         });
+
+
+        MoCache.printCache(context);
+
     }
 
 }

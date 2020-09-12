@@ -19,7 +19,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoEmptyLayout;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoWrappers.MoWrapperLinearLayout;
-import com.moofficial.moweb.MoActivities.HistoryActivity;
+import com.moofficial.moweb.MoActivities.History.HistoryActivity;
 import com.moofficial.moweb.MoActivities.MainActivity;
 import com.moofficial.moweb.MoActivities.MainMenu.MainMenuFragments.NormalMainFragment;
 import com.moofficial.moweb.MoActivities.MainMenu.MainMenuFragments.PrivateMainFragment;

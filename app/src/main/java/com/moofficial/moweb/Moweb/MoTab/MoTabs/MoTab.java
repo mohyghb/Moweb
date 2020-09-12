@@ -206,8 +206,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     protected void initWebView(){
         moWebView = new MoWebView(context);
         moWebView.load(webViewData,context);
-        moWebView.setMoBitmap(this.moBitmap)
-                 .setChromeClient(new MoChromeClient(this.context))
+        moWebView.setChromeClient(new MoChromeClient(this.context))
                  .setOnUpdateUrlListener((url, isReload) -> updateUrl(url))
                  .neverOverScroll()
                  .setOnErrorReceived((view, request, error) -> onErrorReceived(request, error));

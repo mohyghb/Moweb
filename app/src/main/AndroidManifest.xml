@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MoActivities.Bookmark.AddFolderBookmarkActivity"></activity>
+        <activity android:name=".MoActivities.History.MoBrowsingData"></activity>
+        <activity android:name=".MoActivities.Bookmark.AddFolderBookmarkActivity" />
         <activity android:name=".MoActivities.MoSplashScreen" />
         <activity
             android:name=".MoActivities.MainActivity"
@@ -44,7 +45,7 @@
         <activity
             android:name=".MoActivities.SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".MoActivities.HistoryActivity" /> <!-- <activity -->
+        <activity android:name=".MoActivities.History.HistoryActivity" /> <!-- <activity -->
         <!-- android:name=".MoActivities.MainActivity"/> -->
         <service android:name=".Moweb.MoServices.MoSaverBackgroundService" />
 

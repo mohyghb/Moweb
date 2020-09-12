@@ -1,4 +1,4 @@
-package com.moofficial.moweb.MoActivities;
+package com.moofficial.moweb.MoActivities.History;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,6 +17,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerVi
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoSearchBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
+import com.moofficial.moweb.MoActivities.MoTabSection;
 import com.moofficial.moweb.Moweb.MoTab.MoOpenTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistory;
@@ -148,6 +149,8 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
 
     private void initMoToolbar() {
         moToolBar = new MoToolBar(this)
+                .setRightIcon(R.drawable.ic_baseline_delete_outline_24)
+                .setRightOnClickListener(view -> startActivity(new Intent(this,MoBrowsingData.class)))
                 .setLeftOnClickListener(view -> onBackPressed());
         moToolBar.getCardView().makeTransparent();
     }

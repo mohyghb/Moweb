@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -80,6 +81,31 @@ public class MoWebUtils {
     public static boolean isInDesktopMode(WebView webView){
         return !webView.getSettings().getUserAgentString().contains("Mobile");
     }
+
+
+    /**
+     * clears all the cookies that
+     * are stored inside the app
+     */
+    public static void clearCookies() {
+        CookieManager c = CookieManager.getInstance();
+        c.removeAllCookies(null);
+        c.flush();
+    }
+
+    public static void clearCachedImages(Context context){
+        // we need to remove it from both mo_images and the cached images
+    }
+
+    /**
+     * enables cookies for the web view
+     * that is passed as parameter
+     * @param v web view
+     */
+    public static void acceptThirdPartyCookies(WebView v) {
+        CookieManager.getInstance().acceptThirdPartyCookies(v);
+    }
+
 
 
 

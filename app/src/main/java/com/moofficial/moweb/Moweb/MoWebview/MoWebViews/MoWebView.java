@@ -5,12 +5,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.ValueCallback;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import com.moofficial.moessentials.MoEssentials.MoBitmap.MoBitmap;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
@@ -32,7 +32,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
 
 
 
-    private Context context;
+
     private MoWebClient client = new MoWebClient() {
         @Override
         public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
@@ -50,6 +50,13 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
 
             super.onPageFinished(view, url);
             MoWebView.this.onPageFinishedListener.onFinished(view,url);
+
+            view.evaluateJavascript("javascript:window.onload= (function(){ document.getElementById('password').value = 'test';})();", new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String s) {
+
+                }
+            });
         }
 
 
@@ -65,7 +72,6 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
     private MoOnUpdateUrlListener onUpdateUrlListener = (url, isReload) -> {};
     private MoOnReceivedError onErrorReceived = (view, request, error) -> {};
     private MoOnPageFinishedListener onPageFinishedListener = (view, url) -> {};
-    private MoBitmap moBitmap;
     private MoWebState webState = new MoWebState();
     private boolean captureBitmap = true;
     private boolean saveHistory = true;
@@ -74,25 +80,18 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
 
     public MoWebView(Context context) {
         super(context);
-        this.context = context;
     }
 
     public MoWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
     }
 
     public MoWebView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.context = context;
     }
 
 
 
-    public MoWebView setContext(Context context) {
-        this.context = context;
-        return this;
-    }
 
     public MoWebClient getClient() {
         return client;
@@ -143,14 +142,6 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         return this;
     }
 
-    public MoBitmap getMoBitmap() {
-        return moBitmap;
-    }
-
-    public MoWebView setMoBitmap(MoBitmap moBitmap) {
-        this.moBitmap = moBitmap;
-        return this;
-    }
 
     public MoWebState getWebState() {
         return webState;
@@ -215,25 +206,17 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         // showing inside overlay scroll bars
         setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        // dom storage
+        webSettings.setDomStorageEnabled(true);
+        // database
+        webSettings.setDatabaseEnabled(true);
+        // cookies
+        MoWebUtils.acceptThirdPartyCookies(this);
     }
 
 
     private void initHitTestResult() {
         this.hitTestResultParser = new MoHitTestResultParser(this);
-        // init touch position
-       // this.touchPosition = new MoTouchPosition(this).setLongClickListener(()->{
-            // monote
-            //  these should be moved inside the tab activity
-            //  and we have to set the long click listener there
-            //  we do not need touch position since we are not showing the
-            //  dialog at that position
-//            boolean dialogCreated = hitTestResultParser.createDialog();
-//            if(!dialogCreated){
-//                // only show the bottom search if dialog was not created
-//                Handler handler = new Handler();
-//                handler.postDelayed(() -> hitTestResultParser.onTextSelected(), 100);
-//            }
-       // });
     }
 
     /**

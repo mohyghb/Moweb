@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--    browsing clearing-->
+    <string name="histories_clear_title">Histories</string>
+    <string name="histories_clear_description">Clear all the histories</string>
+    <drawable name="history_clear_icon">@drawable/ic_baseline_history_24</drawable>
+
+    <string name="cookies_clear_title">Cookies</string>
+    <string name="cookies_clear_description">Clear all the cookies stored from different websites</string>
+    <drawable name="cookies_clear_icon">@drawable/ic_baseline_palette_24</drawable>
+
+    <string name="cached_image_clear_title">Cached Images</string>
+    <string name="cached_image_clear_description">Clear all the cached images gathered from websites</string>
+    <drawable name="cached_image_clear_icon">@drawable/ic_baseline_image_24</drawable>
+
+    <string name="saved_passwords_clear_title">Saved Passwords</string>
+    <string name="saved_passwords_clear_description">Clear all the saved passwords from all websites</string>
+    <drawable name="saved_passwords_clear_icon">@drawable/ic_baseline_insert_drive_file_24</drawable>
+
+
+    <string name="auto_fill_clear_title">Auto-fill</string>
+    <string name="auto_fill_clear_description">Clear all form data that is saved</string>
+    <drawable name="auto_fill_clear_icon">@drawable/ic_baseline_text_format_24</drawable>
+
+    <string name="site_settings_clear_title">Site Settings</string>
+    <string name="site_settings_clear_description">Clear all site settings</string>
+    <drawable name="site_settings_clear_icon">@drawable/ic_baseline_settings_24</drawable>
+
+
+    <string name="browsing_data_clear_data">Clear data</string>
+</resources>
