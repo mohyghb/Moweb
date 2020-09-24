@@ -4,22 +4,26 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.transition.Slide;
+import android.transition.TransitionManager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.textfield.TextInputEditText;
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoRunnable;
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoWorker.MoWorker;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoBottomSheet.MoBottomSheet;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupItemBuilder;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupWindow;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMenuBuilder.MoMenuBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroups.MoConstraint;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoFindBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
@@ -44,7 +48,8 @@ public class MoTabSearchBar extends MoConstraint {
     private ImageButton moreTabButton;
     private EditText searchText;
     private MoFindBar moFindBar;
-    private MoPopupWindow moPopupWindow;
+    //private MoPopupWindow moPopupWindow;
+    private MoBottomSheet bottomSheet;
     private MoSearchable moSearchable;
     private MoTabSuggestion suggestion;
     private MoCardView searchBarCardView;
@@ -59,6 +64,7 @@ public class MoTabSearchBar extends MoConstraint {
     // this should be the layout that contains the web view as well
     // also we run animations on this layout as well
     @NonNull private ViewGroup parentLayout;
+    private ViewGroup bottomParentLayout;
 
     // needed to make sure that the background is dimmed only once
     // and not multiple times when the user is typing
@@ -152,7 +158,10 @@ public class MoTabSearchBar extends MoConstraint {
         return this;
     }
 
-
+    public MoTabSearchBar setBottomParentLayout(ViewGroup bottomParentLayout) {
+        this.bottomParentLayout = bottomParentLayout;
+        return this;
+    }
 
     public MoTabSearchBar setSearchText(TextInputEditText searchText) {
         this.searchText = searchText;
@@ -168,14 +177,6 @@ public class MoTabSearchBar extends MoConstraint {
         return this;
     }
 
-    public MoPopupWindow getMoPopupWindow() {
-        return moPopupWindow;
-    }
-
-    public MoTabSearchBar setMoPopupWindow(MoPopupWindow moPopupWindow) {
-        this.moPopupWindow = moPopupWindow;
-        return this;
-    }
 
     public MoSearchable getMoSearchable() {
         return moSearchable;
@@ -271,7 +272,7 @@ public class MoTabSearchBar extends MoConstraint {
         searchText.setOnFocusChangeListener((view, b) -> {
             if(!b) {
                 // hide the suggestions when user is not editing
-                suggestion.hide();
+                hideSuggestions();
                 // removing dim effect
                 dimBackgroundWorker.undo();
             }
@@ -284,7 +285,7 @@ public class MoTabSearchBar extends MoConstraint {
     }
 
     private void initSuggestion() {
-        this.suggestion = new MoTabSuggestion(this.context,suggestionCardRecyclerView)
+        this.suggestion = new MoTabSuggestion(getContext(),suggestionCardRecyclerView)
                 .setOnSuggestionClicked(new MoRunnable() {
                     @Override
                     public <T> void run(T... args) {
@@ -301,9 +302,15 @@ public class MoTabSearchBar extends MoConstraint {
      * hides the suggestions
      * @return this
      */
-    public MoTabSearchBar hideSuggestions(){
+    public MoTabSearchBar hideSuggestions() {
+        TransitionManager.beginDelayedTransition(bottomParentLayout);
         this.suggestion.hide();
         return this;
+    }
+
+    private void showSuggestions(MoSuggestions s) {
+        TransitionManager.beginDelayedTransition(bottomParentLayout, new Slide());
+        suggestion.show(s);
     }
 
 
@@ -333,7 +340,7 @@ public class MoTabSearchBar extends MoConstraint {
                     // sort the suggestions
                     s.sortBySimilarityToSearch();
                     // show suggestions
-                    suggestion.show(s);
+                    MoTabSearchBar.this.showSuggestions(s);
                     // canceling the async task
                     htmlAsyncTask.cancel(true);
                 }
@@ -341,6 +348,8 @@ public class MoTabSearchBar extends MoConstraint {
             htmlAsyncTask.execute();
         }
     }
+
+
 
     /**
      * init the tab button
@@ -358,7 +367,7 @@ public class MoTabSearchBar extends MoConstraint {
         this.moreTabButton = findViewById(R.id.more_bar_button);
         this.moreTabButton.setOnClickListener(view -> {
             showPopupMenu();
-            moPopupWindow.show(view);
+            //moPopupWindow.show(view);
         });
     }
 
@@ -366,46 +375,29 @@ public class MoTabSearchBar extends MoConstraint {
      * shows a pop up menu of many different options
      * that are available
      */
-    private void showPopupMenu(){
-        this.moPopupWindow = new MoPopupWindow(this.context);
-        this.moPopupWindow
-                .groupViewsHorizontally(new MoPopupItemBuilder(this.context)
-                                .setPopupWindow(moPopupWindow)
-                                .buildImageButton(R.drawable.ic_baseline_chevron_right_24,
-                                        view-> moWebView.goForwardIfYouCan())
-                                .buildCheckedImageButton(R.drawable.ic_baseline_star_24,
-                                        R.drawable.ic_baseline_star_border_24, view -> tab.bookmarkTheTab(),
-                                        ()-> tab.urlIsBookmarked())
-                                .buildImageButton(R.drawable.ic_baseline_refresh_24, view-> moWebView.forceReload())
-                                .build())
-                .setViews(
-                        new MoPopupItemBuilder(this.context)
-                                .setPopupWindow(moPopupWindow)
-                                .buildTextButton(R.string.find_in_page,
-                                        view -> moSearchable.activateSpecialMode())
-                                .buildTextButton(R.string.bookmark_title,
-                                        view-> BookmarkActivity.startActivity(this.context))
-                                .buildTextButton(R.string.home_page_title,
-                                        view -> tab.goToHomepage())
-                                .buildTextButton(R.string.history,
-                                        view-> HistoryActivity.launch(this.context))
-                                .buildTextButton(R.string.share, view -> tab.shareTheTab())
-                                .buildTextButton(R.string.desktop_mode,moWebView.isInDesktopMode()?
-                                        R.drawable.ic_baseline_check_box_24:R.drawable.ic_baseline_check_box_outline_blank_24 , view -> {
-                                    moWebView.enableReverseMode();
-                                })
-                                .build()
-                ).build();
+    private void showPopupMenu() {
+        View[] views = new MoMenuBuilder(getContext())
+                .with(R.string.find_in_page,R.drawable.ic_baseline_search_24,view -> moSearchable.activateSpecialMode())
+                .with(R.string.bookmark_title,R.drawable.ic_baseline_bookmarks_24,view-> BookmarkActivity.startActivity(getContext()))
+                .with(R.string.home_page_title,R.drawable.ic_baseline_home_24,view -> tab.goToHomepage())
+                .with(R.string.history,R.drawable.ic_baseline_history_24,view-> HistoryActivity.launch(getContext()))
+                .with(R.string.share, R.drawable.ic_baseline_share_24, view -> tab.shareTheTab())
+                .with(R.string.desktop_mode,moWebView.isInDesktopMode()?
+                        R.drawable.ic_baseline_check_box_24:R.drawable.ic_baseline_check_box_outline_blank_24 ,
+                        view -> moWebView.enableReverseMode())
+                .allWith(16)
+                .allWith(() -> bottomSheet.dismiss())
+                .build()
+                .asArray();
+        bottomSheet = new MoBottomSheet(getContext())
+                .setState(BottomSheetBehavior.STATE_EXPANDED)
+                .add(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT),views)
+                .build()
+                .show();
     }
 
 
-//    /**
-////     * for performing find operation
-////     * we need a find bar
-////     */
-////    private void initMoFindBar(){
-////        this.moFindBar = findViewById(R.id.tab_find_bar);
-////    }
 
 
     /**
@@ -413,7 +405,7 @@ public class MoTabSearchBar extends MoConstraint {
      * connects find bar and mo web view functionality
      */
     private void initMoSearchable(){
-        this.moSearchable = new MoSearchable(this.context,parentLayout){
+        this.moSearchable = new MoSearchable(getContext(),parentLayout){
             @Override
             public void onUpFindPressed() {
                 moWebView.findPrevious();

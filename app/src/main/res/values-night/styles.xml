@@ -10,6 +10,7 @@
 <!--        <item name="android:colorBackground">@color/MoBackground</item>-->
 
 <!--        <item name="toolbarStyle">@style/MoToolbarStyle</item>-->
+        <item name="android:navigationBarColor">@color/MaterialDark</item>
 
         <item name="imageButtonStyle">@style/MoImageButton_Style_Dark</item>
         <item name="materialCardViewStyle">@style/MoCardStyle_Dark</item>

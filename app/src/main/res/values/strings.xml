@@ -146,6 +146,8 @@
     <string name="clear_all_bookmarks_message">Do you want to clear all bookmarks/folders?</string>
 
 
-
+<!--    save password values-->
+    <string name="save_password_title">Save Password</string>
+    <string name="save_password_description">Do you want to save this information about your account?</string>
 
 </resources>

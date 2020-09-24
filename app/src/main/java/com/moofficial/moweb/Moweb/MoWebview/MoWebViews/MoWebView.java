@@ -13,6 +13,7 @@ import android.webkit.WebView;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoWebClient;
@@ -33,6 +34,8 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
 
 
     private MoWebClient client = new MoWebClient() {
+
+
         @Override
         public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
             url = MoUrlUtils.removeUrlUniqueness(url);
@@ -42,18 +45,24 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
                 MoHistoryManager.add(view);
             }
             MoWebView.this.url = url;
+            MoLog.print("update visited history " + url);
         }
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             MoWebView.this.onPageFinishedListener.onFinished(view,url);
-            evaluateJavascript(MoJsInput.SCRIPT,null);
         }
 
 
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
             onErrorReceived.onReceivedError(view,request,error);
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            moJsInput.gatherData(view);
+            return super.shouldOverrideUrlLoading(view, request);
         }
     };
     private String url;
@@ -64,6 +73,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
     private MoOnReceivedError onErrorReceived = (view, request, error) -> {};
     private MoOnPageFinishedListener onPageFinishedListener = (view, url) -> {};
     private MoWebState webState = new MoWebState();
+    private MoJsInput moJsInput = new MoJsInput();
     private boolean captureBitmap = true;
     private boolean saveHistory = true;
     private boolean isInDesktopMode = false;
@@ -172,13 +182,14 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
     }
 
     @SuppressLint({"ClickableViewAccessibility"})
-    public void init() {
+    public MoWebView init() {
         initWebView();
         // for showing pop up menu when
         // user long presses over an element of web view
         initHitTestResult();
         addJsInterfaces();
         enableCorrectMode();
+        return this;
     }
 
 
@@ -215,7 +226,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
      * that are included inside the js interface list
      */
     private void addJsInterfaces() {
-        addJavascriptInterface(new MoJsInput(),MoJsInput.NAME);
+        addJavascriptInterface(this.moJsInput,MoJsInput.NAME);
     }
 
 
@@ -229,40 +240,6 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         return this.url;
     }
 
-    /**
-     * captures a bitmap from webview
-     * if you want to take a screen shot of the webpage
-     * do it on its container instead of directly from this
-     */
-//    public void captureBitmap() {
-//        if(captureBitmap){
-//            post(() -> moBitmap.captureBitmap(MoWebView.this));
-//        }
-//    }
-//
-//    public void captureBitmapWithDelay(long delay){
-//        if(captureBitmap){
-//            post(()->moBitmap.captureBitmapWithDelay(this,delay));
-//        }
-//    }
-//
-//    public void captureBitmapIfNotLoading(){
-//        if(captureBitmap){
-//            post(()->moBitmap.captureBitmapIfNotLoading(this));
-//        }
-//    }
-//
-//    public void forceCaptureBitmapIfNotLoading(){
-//        if(captureBitmap){
-//            post(()->moBitmap.forceCaptureBitmapIfNotLoading(this));
-//        }
-//    }
-//
-//    public void forceCaptureBitmap(){
-//        if(captureBitmap){
-//            moBitmap.forceCaptureBitmap(this);
-//        }
-//    }
 
 
     public MoWebView neverOverScroll(){

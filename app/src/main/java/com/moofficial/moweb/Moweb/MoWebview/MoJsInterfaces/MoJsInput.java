@@ -1,9 +1,11 @@
 package com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces;
 
 import android.content.Context;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebView;
 
-import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoWebAutoFillSession;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,20 +15,74 @@ import java.io.InputStream;
 // text field to enter things
 public class MoJsInput {
 
+    public static final String MO_JS = "MoJs";
     public static String SCRIPT = "";
     public static final String NAME = "jsInput";
 
-    // when the interface returns an id
+    /**
+     * a boolean indicating that there is
+     * a form on the current page
+     * and the user tried to edit it
+     * false initially because we do not know
+     */
+    private boolean thereIsAForm = false;
+    private Context context;
+    private MoWebAutoFillSession session;
+
+
+
+    /**
+     * notifies the class that there is
+     * a form inside the current page and
+     * the user has edit it
+     */
     @JavascriptInterface
-    public void onReturn(String id,String innerText,String value,String type) {
-        int i = 0;
-        int p = 0;
-        MoLog.print(String.format("%s,%s,%s,%s",id,innerText,value,type));
+    public void activate() {
+        this.thereIsAForm = true;
+    }
+
+    /**
+     * gathers all the forms
+     * data into our system
+     * @param webView to gather auto-fill data for
+     *
+     */
+    public void gatherData(WebView webView) {
+        this.context = webView.getContext();
+        session = new MoWebAutoFillSession(webView);
+        webView.evaluateJavascript(SCRIPT,null);
+    }
+
+    /**
+     * one by one the script will call this method
+     * to pass in the id, value, and type of the
+     * input that user typed into
+     * and then we process them
+     * @param id of the input
+     * @param value of the input
+     * @param type of the input
+     * @param name used to find the input that we are looking for if
+     *             the element does not have any ids
+     */
+    @JavascriptInterface
+    public void onGather(String name,String id,String value,String type) {
+        session.add(id.isEmpty()?name:id,value,type);
+        print(String.format("{name = %s, id = %s,value = %s, type == %s}",name,id,value,type));
+    }
+
+    /**
+     * called from the js interface
+     * when it is done calling on gathered
+     */
+    @JavascriptInterface
+    public void onFinishedGathering() {
+        session.processAndClearSession(this.context);
+        print("on finished gathering");
     }
 
     @JavascriptInterface
-    public void isWorking() {
-        MoLog.print("is working");
+    public void print(String p) {
+        Log.d(MO_JS,p);
     }
 
     /**

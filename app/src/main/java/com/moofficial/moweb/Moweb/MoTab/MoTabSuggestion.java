@@ -1,6 +1,7 @@
 package com.moofficial.moweb.Moweb.MoTab;
 
 import android.content.Context;
+import android.transition.TransitionManager;
 import android.view.View;
 
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoRunnable;
@@ -55,7 +56,7 @@ public class MoTabSuggestion {
         }
         this.suggestions = suggestions;
         adapter.setDataSet(suggestions.getSuggestions());
-
+        TransitionManager.beginDelayedTransition(recyclerView);
         adapter.notifyDataSetChanged();
         moCardRecyclerView.setVisibility(View.VISIBLE);
     }
@@ -63,7 +64,7 @@ public class MoTabSuggestion {
 
 
 
-    public void hide(){
+    public void hide() {
         this.moCardRecyclerView.setVisibility(View.GONE);
     }
 

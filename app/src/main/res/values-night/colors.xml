@@ -11,8 +11,6 @@
     <color name="error_color">#cf6679</color>
     <color name="delete_item_low_transparency_color">#7ECF6679</color>
 
-    <color name="snack_bar_text">@color/MoBlack</color>
-
     <color name="setting_toolbar_background">@color/MaterialDark</color>
 
 
@@ -22,7 +20,8 @@
 
     <color name="tabs_icon_color">@color/MoWhite</color>
 
-    <color name="color_card_sent">@color/MoBlack</color>
+    <color name="snack_bar_text">@color/MoWhite</color>
+    <color name="snack_bar_background">@color/MaterialElevatedCard</color>
 
 
     <color name="notification_text_color">@android:color/black</color>

@@ -164,6 +164,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
         this.moTabSearchBar = new MoTabSearchBar(getContext())
                 .setParentLayout(coordinatorLayout)
                 .setSuggestionCardRecyclerView(suggestionCard)
+                .setBottomParentLayout(linearBottom.getLinearLayout())
                 .setMoFindBar(findBar);
         this.moTabSearchBar.init();
         linearBottom.setupMultipleBars(moTabSearchBar,suggestionCard,moTabSearchBar,findBar);
@@ -218,7 +219,34 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
         moTabSearchBar.syncWith(tab)
                 .clearEditTextFocus()
                 .setTextSearch(tab.getUrl())
-                .setOnTabsButtonClicked(view -> onTabsButtonPressed())
+                .setOnTabsButtonClicked(view -> {
+
+                    // construction
+
+//                    MoSavePasswordView savePasswordView = new MoSavePasswordView(getContext());
+//
+//                    MoPopupWindow popupWindow = new MoPopupWindow(getContext())
+//                            .setViews(savePasswordView)
+//                            .setWidth(ViewGroup.LayoutParams.MATCH_PARENT)
+//                            .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+//                            .setFocusable(false)
+//                            .setOutsideTouchable(false)
+//                            .setOverlapAnchor(false)
+//                            .setDuration(3000)
+//                            .build();
+//
+//                    savePasswordView
+//                            .setOnCloseClickListener((v)-> popupWindow.dismiss())
+//                            .setOnSaveClickListener((v)-> {
+//                                Toast.makeText(getContext(),
+//                                        "Password saved!", Toast.LENGTH_SHORT).show();
+//                                popupWindow.dismiss();
+//                            });
+//
+//                    popupWindow.showOn(webView,0,0, Gravity.BOTTOM);
+
+                    onTabsButtonPressed();
+                })
                 .setNumberOfTabs(tab.isPrivate()?MoTabsManager.sizePrivate():MoTabsManager.size());
     }
 
@@ -233,6 +261,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
 
     @Override
     public boolean onBackPressed() {
+
         return tab.onBackPressed();
     }
 

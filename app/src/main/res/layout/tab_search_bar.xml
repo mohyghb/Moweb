@@ -70,9 +70,9 @@
 
             <com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar.MoTabsButton
                 android:id="@+id/include"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/more_bar_button"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -81,9 +81,8 @@
                 android:id="@+id/more_bar_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="4dp"
+                android:padding="@dimen/mo_image_button_padding"
                 android:src="@drawable/ic_more_vert_black_24dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

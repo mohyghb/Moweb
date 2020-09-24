@@ -12,6 +12,7 @@ import android.transition.TransitionManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,19 +23,19 @@ import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileProvider.MoFileProvider;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoShare.MoShare;
 import com.moofficial.moessentials.MoEssentials.MoShare.MoShareUtils;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoBottomSheet.MoBottomSheet;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moweb.MoClipboard.MoClipboardUtils;
-import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoPopUpTab;
-import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
+import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoWebManifest;
+import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
+import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoWebClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoHitTestResult.MoHitTestResult;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 import com.moofficial.moweb.R;
@@ -150,7 +151,7 @@ public class MoHitTestResultParser {
                     this.title = title;
                     if(!createDialog(context)){
                         // try smart search
-                        smartTextSearch(context);
+                        onTextSelected(context);
                     }
                 })
                 .request();
@@ -166,21 +167,23 @@ public class MoHitTestResultParser {
         if(selectedText == null || selectedText.isEmpty())
             return false;
 
-        MoTab tab = new MoPopUpTab(selectedText,context).setCaptureImage(false);
-        tab.init();
+        WebView web = new WebView(context);
+        web.setWebChromeClient(new MoChromeClient(context));
+        web.setWebViewClient(new MoWebClient());
+        web.loadUrl(MoSearchEngine.instance.getURL(selectedText));
 
-        BottomSheetDialog bottomSheerDialog = new BottomSheetDialog(context);
-        View parentView = MoInflaterView.inflate(R.layout.smart_text_search_layout,context);
-        LinearLayout linearLayout = parentView.findViewById(R.id.nested_linear_bottom_sheet);
-        linearLayout.addView(tab.getMoWebView());
-        bottomSheerDialog.setContentView(parentView);
-        bottomSheerDialog.getBehavior().setSkipCollapsed(false);
-        bottomSheerDialog.getBehavior().setState(BottomSheetBehavior.STATE_COLLAPSED);
-        bottomSheerDialog.getBehavior().setPeekHeight(BOTTOM_SHEET_PEEK_HEIGHT);
-        bottomSheerDialog.getBehavior().setDraggable(true);
-        bottomSheerDialog.getBehavior().setFitToContents(false);
-        //Objects.requireNonNull(bottomSheerDialog.getWindow()).clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        bottomSheerDialog.show();
+        TextView tv = new TextView(context);
+        tv.setText(selectedText);
+
+        new MoBottomSheet(context)
+                .setPeekHeight(BOTTOM_SHEET_PEEK_HEIGHT)
+                .setDraggable(true)
+                .setFitToContents(false)
+                .add(web)
+                .addTitle(tv)
+                .build()
+                .show();
+
         return true;
     }
 
@@ -258,7 +261,7 @@ public class MoHitTestResultParser {
     /**
      * this method returns the text that is selected in web view
      */
-    public void onTextSelected(Context context){
+    public void onTextSelected(Context context) {
         webView.post(() -> webView.evaluateJavascript("(function(){return window.getSelection().toString()})()",
                 value -> {
                     selectedText = value.replace("\"","");

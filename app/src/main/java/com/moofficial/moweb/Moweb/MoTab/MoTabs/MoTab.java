@@ -70,7 +70,6 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
 
     private void initContextView(Context context) {
         this.context = context;
-
     }
 
     public MoTab(String searchText,Context context){

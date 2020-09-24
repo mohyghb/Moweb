@@ -53,7 +53,7 @@ public class HomePageActivity extends MoSmartActivity {
 
     private void initBottomDeleteBar() {
         moBottomDeleteBar = new MoBottomDeleteBar(this);
-        l.linearBottom.addView(moBottomDeleteBar.goGone());
+        l.linearBottom.addView(moBottomDeleteBar.gone());
     }
 
     private void initCardRecyclerView() {
