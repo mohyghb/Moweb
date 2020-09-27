@@ -204,13 +204,12 @@ public class MoBookmarkManager {
      * @param c
      */
     public static void load(Context c){
-        if(mainFolder.isEmpty()){
+        if(mainFolder.isEmpty()) {
             String[] d = MoFile.loadable(MoReadWrite.readFile(FILE_NAME,c));
             if(MoFile.isValidData(d)) {
-                 mainFolder.load(d[0],c);
-                 addToMap(mainFolder);
-                //loadInto(c, MoFile.loadable(d[0]), mainFolder.getSubBookmarks());
+                mainFolder.load(d[0], c);
             }
+            addToMap(mainFolder);
         }
     }
 

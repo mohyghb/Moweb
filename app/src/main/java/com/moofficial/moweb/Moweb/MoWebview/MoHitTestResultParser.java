@@ -1,35 +1,31 @@
 package com.moofficial.moweb.Moweb.MoWebview;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.transition.TransitionManager;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.webkit.WebView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.transition.TransitionManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.google.android.material.button.MaterialButton;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileProvider.MoFileProvider;
-import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoShare.MoShare;
 import com.moofficial.moessentials.MoEssentials.MoShare.MoShareUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoBottomSheet.MoBottomSheet;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMarginBuilder;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMenuBuilder.MoMenuBuilder;
 import com.moofficial.moweb.MoClipboard.MoClipboardUtils;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
@@ -39,8 +35,6 @@ import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoWebClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoHitTestResult.MoHitTestResult;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 import com.moofficial.moweb.R;
-
-import java.util.Objects;
 
 public class MoHitTestResultParser {
 
@@ -56,7 +50,9 @@ public class MoHitTestResultParser {
     private String title;
     private String src;
     private Bitmap bitmap;
-    private Dialog dialog;
+//    private Dialog dialog;
+    private MoBottomSheet bottomSheet;
+
 
 
     public MoHitTestResultParser(MoWebView webView){
@@ -86,18 +82,13 @@ public class MoHitTestResultParser {
             return false;
         }
         this.context = c;
-        this.dialog = new Dialog(c);
-        this.dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.dialog.setCancelable(true);
+
         View v = MoInflaterView.inflate(R.layout.popup_menu__webview,c);
-        LinearLayout linearLayout = v.findViewById(R.id.dialog_actions_linear_layout);
         ((TextView)v.findViewById(R.id.title_dialog)).setText(title);
         ((TextView)v.findViewById(R.id.description_dialog)).setText(url);
 
         ImageView imageView = v.findViewById(R.id.popup_web_view_image);
-        //monote image
-        if(src!=null && !src.isEmpty()){
-            MoLog.print("should see an image");
+        if (src!=null && !src.isEmpty()) {
             imageView.setVisibility(View.VISIBLE);
             Glide.with(context).asBitmap().load(this.src).into(new CustomTarget<Bitmap>() {
                 @Override
@@ -105,8 +96,6 @@ public class MoHitTestResultParser {
                     bitmap = resource;
                     TransitionManager.beginDelayedTransition((ViewGroup) v);
                     imageView.setImageBitmap(resource);
-                    addAction(true,MoHitTestResultParser.this::shareImage,
-                            context.getString(R.string.share_image),context,linearLayout);
                 }
 
                 @Override
@@ -114,20 +103,31 @@ public class MoHitTestResultParser {
 
                 }
             });
-        }else{
+        } else {
             imageView.setVisibility(View.GONE);
         }
 
+        MoMenuBuilder builder = new MoMenuBuilder(context)
+                .textsWith(16);
 
-        addAction(isValidVar(title), this::copyLinkText,c.getString(R.string.copy_link_text),c,linearLayout);
-        addAction(isValidVar(url), this::copyLinkAddress,c.getString(R.string.copy_link_address),c,linearLayout);
-        addAction(isValidVar(url), this::openInNewTab,c.getString(R.string.open_in_tab),c,linearLayout);
-        addAction(isValidVar(url), this::openInNewIncognitoTab,c.getString(R.string.open_in_private_tab),c,linearLayout);
-        addAction(isValidVar(url), this::downloadLink,c.getString(R.string.download_link),c,linearLayout);
-        addAction(isValidVar(url), this::shareLink,c.getString(R.string.share_link),c,linearLayout);
-        dialog.setContentView(v);
-        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
+        addAction(isValidVar(title), this::copyLinkText,c.getString(R.string.copy_link_text),builder);
+        addAction(isValidVar(url), this::copyLinkAddress,c.getString(R.string.copy_link_address),builder);
+        addAction(isValidVar(url), this::openInNewTab,c.getString(R.string.open_in_tab),builder);
+        addAction(isValidVar(url), this::openInNewIncognitoTab,c.getString(R.string.open_in_private_tab),builder);
+        addAction(isValidVar(url), this::downloadLink,c.getString(R.string.download_link),builder);
+        addAction(isValidVar(url), this::shareLink,c.getString(R.string.share_link),builder);
+        addAction(isValidVar(src),MoHitTestResultParser.this::shareImage,
+                context.getString(R.string.share_image),builder);
+        builder.allWith((v1)->bottomSheet.dismiss()).build();
+
+
+        this.bottomSheet = new MoBottomSheet(context)
+                .addTitle(v)
+                .add(MoMarginBuilder.getLinearParams(0),builder.asArray())
+                .setState(BottomSheetBehavior.STATE_EXPANDED)
+                .build()
+                .show();
+
         return true;
     }
 
@@ -194,50 +194,40 @@ public class MoHitTestResultParser {
      * @param condition
      * @param onClickListener
      * @param text
-     * @param context
      * @return
      */
-    private void addAction(boolean condition,Runnable onClickListener,String text,Context context,LinearLayout linearLayout){
+    private void addAction(boolean condition, Runnable onClickListener, String text, MoMenuBuilder b){
         if(!condition)
             return;
-        MaterialButton button = new MaterialButton(context,null, R.attr.borderlessButtonStyle);
-        button.setText(text);
-        button.setOnClickListener(view -> onClickListener.run());
-        linearLayout.addView(button);
+        b.text(text,(v)->onClickListener.run());
     }
 
 
     // copies the link text in clip board
     private void copyLinkText() {
         MoClipboardUtils.add(context,title,"Link Text");
-        dismissDialog();
     }
 
     // copies the link address
     private void copyLinkAddress(){
         MoClipboardUtils.add(context, url,"Link Address");
-        dismissDialog();
     }
 
     // opens this url in new tab
     private void openInNewTab(){
         MoTabsManager.addTab(context, url,true);
-        dismissDialog();
     }
 
     private void openInNewIncognitoTab(){
         MoTabsManager.addPrivateTab((Activity) context, url, true);
-        dismissDialog();
     }
 
     private void downloadLink(){
         MoDownloadListener.download(context, url);
-        dismissDialog();
     }
 
     private void shareLink() {
         new MoShare().setText(this.url).shareText(this.context);
-        dismissDialog();
     }
 
     // shares the current bitmap with other apps
@@ -245,14 +235,12 @@ public class MoHitTestResultParser {
         Uri uri = MoFileProvider.getImageUri(this.context,this.bitmap,
                 "mo_images",(title==null?"image":title)+".png",
                 MoWebManifest.FILE_PROVIDER_AUTHORITY);
-        new MoShare().setType(MoShareUtils.TYPE_PNG_IMAGE)
-                .addImage(uri).shareImages(this.context);
+        new MoShare()
+                .setType(MoShareUtils.TYPE_PNG_IMAGE)
+                .addImage(uri)
+                .shareImages(this.context);
     }
 
-    // quits the dialog
-    private void dismissDialog(){
-        dialog.dismiss();
-    }
 
     public static boolean isValidVar(String input){
         return input != null && !input.isEmpty();

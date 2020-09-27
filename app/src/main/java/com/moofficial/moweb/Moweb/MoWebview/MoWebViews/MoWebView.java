@@ -308,6 +308,8 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         }
     }
 
+
+
     /**
      * whether or not this web view can go back a
      * URL or not
@@ -325,8 +327,18 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
      * we load from cache if possible
      */
     @Override
-    public void goBack(){
+    public void goBack() {
         loadUrl(this.stackTabHistory.goBack());
+    }
+
+
+    /**
+     * goes backwards if it can
+     */
+    public void goBackIfYouCan(){
+        if(canGoBack()){
+            goBack();
+        }
     }
 
 

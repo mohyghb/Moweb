@@ -377,18 +377,29 @@ public class MoTabSearchBar extends MoConstraint {
      */
     private void showPopupMenu() {
         View[] views = new MoMenuBuilder(getContext())
-                .with(R.string.find_in_page,R.drawable.ic_baseline_search_24,view -> moSearchable.activateSpecialMode())
-                .with(R.string.bookmark_title,R.drawable.ic_baseline_bookmarks_24,view-> BookmarkActivity.startActivity(getContext()))
-                .with(R.string.home_page_title,R.drawable.ic_baseline_home_24,view -> tab.goToHomepage())
-                .with(R.string.history,R.drawable.ic_baseline_history_24,view-> HistoryActivity.launch(getContext()))
-                .with(R.string.share, R.drawable.ic_baseline_share_24, view -> tab.shareTheTab())
-                .with(R.string.desktop_mode,moWebView.isInDesktopMode()?
+                .rowFill(b -> {
+                    b.icon(R.drawable.ic_baseline_refresh_24,(v)-> moWebView.forceReload())
+                            .icon(tab.urlIsBookmarked()?
+                                            R.drawable.ic_baseline_star_24:
+                                            R.drawable.ic_baseline_star_border_24,
+                                    (v)-> tab.bookmarkTheTab())
+                            .icon(R.drawable.ic_baseline_chevron_left_24, (v) -> moWebView.goBackIfYouCan())
+                            .icon(R.drawable.ic_baseline_chevron_right_24, (v)-> moWebView.goForwardIfYouCan());
+                })
+                .text(R.string.find_in_page,R.drawable.ic_baseline_search_24,view -> moSearchable.activateSpecialMode())
+                .text(R.string.bookmark_title,R.drawable.ic_baseline_bookmarks_24,view-> BookmarkActivity.startActivity(getContext()))
+                .text(R.string.home_page_title,R.drawable.ic_baseline_home_24,view -> tab.goToHomepage())
+                .text(R.string.history,R.drawable.ic_baseline_history_24,view-> HistoryActivity.launch(getContext()))
+                .text(R.string.share, R.drawable.ic_baseline_share_24, view -> tab.shareTheTab())
+                .text(R.string.desktop_mode,moWebView.isInDesktopMode()?
                         R.drawable.ic_baseline_check_box_24:R.drawable.ic_baseline_check_box_outline_blank_24 ,
                         view -> moWebView.enableReverseMode())
-                .allWith(16)
-                .allWith(() -> bottomSheet.dismiss())
+                .textsWith(16)
+                .iconsWith(0,8,0,0)
+                .allWith((v) -> bottomSheet.dismiss())
                 .build()
                 .asArray();
+
         bottomSheet = new MoBottomSheet(getContext())
                 .setState(BottomSheetBehavior.STATE_EXPANDED)
                 .add(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
