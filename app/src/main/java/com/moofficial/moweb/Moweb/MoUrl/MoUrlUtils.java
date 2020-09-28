@@ -2,6 +2,8 @@ package com.moofficial.moweb.Moweb.MoUrl;
 
 import android.webkit.URLUtil;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.regex.Pattern;
 
 public class MoUrlUtils {
@@ -76,5 +78,18 @@ public class MoUrlUtils {
         }
     }
 
+    /**
+     * get the host of the url
+     * @param url to get the host for
+     * @return the host of the given url
+     * or empty if the url is malformed
+     */
+    public static String getHost(String url) {
+        try {
+            return new URL(url).getHost();
+        } catch (MalformedURLException e) {
+            return "";
+        }
+    }
 
 }

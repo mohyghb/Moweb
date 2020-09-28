@@ -1,11 +1,16 @@
 package com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill;
 
 import android.content.Context;
+import android.view.Gravity;
+import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupWindow;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,45 +74,47 @@ public class MoWebAutoFillSession {
         // the map is empty
         if(autoFills.isEmpty())
             return;
-
         String url = webView.getUrl();
-        //try {
-            MoWebAutoFills f = new MoWebAutoFills(url).addAll(autoFills.values());
-            // monote ask the user if they want to save this data
-
-            webView.post(()->{
-                TextView[] passwords = new TextView[passwordFills.size()];
-                int i = 0;
-                for (MoWebAutoFill l: passwordFills) {
-                    passwords[i] = new TextView(c);
-                    passwords[i].setText("Do you want to save this password? " + l.getValue());
-                    i++;
-                }
-
-
-//                MoSavePasswordView savePasswordView = new MoSavePasswordView(c);
-//
-//
-//                new MoPopupWindow(c)
-//                        .setViews(savePasswordView)
-//                        .setWidth(ViewGroup.LayoutParams.MATCH_PARENT)
-//                        .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
-//                        .setFocusable(true)
-//                        .setOutsideTouchable(true)
-//                        .setOverlapAnchor(false)
-//                        .build()
-//                        .show(webView);
-            });
-
-
-
-
-//            MoWebAutoFillManager.add(c,f);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        MoWebAutoFills f = new MoWebAutoFills(url).addAll(autoFills.values());
+        webView.post(()-> askUserToSave(c, f));
         // new session
         clearSession();
+    }
+
+    /**
+     * we get permission to save their
+     * passwords
+     * @param c
+     * @param f
+     */
+    private void askUserToSave(Context c, MoWebAutoFills f) {
+        MoSavePasswordView savePasswordView = new MoSavePasswordView(c);
+        MoPopupWindow popupWindow = new MoPopupWindow(c)
+                .setViews(savePasswordView)
+                .setWidth(ViewGroup.LayoutParams.MATCH_PARENT)
+                .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                .setFocusable(false)
+                .setOutsideTouchable(false)
+                .setOverlapAnchor(false)
+                .setDuration(3000)
+                .build();
+
+        savePasswordView
+                .setOnCloseClickListener((v)-> popupWindow.dismiss())
+                .setOnSaveClickListener((v)-> {
+                    // save password
+                    try {
+                        MoWebAutoFillManager.add(c,f);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    // tell them it is saved
+                    Toast.makeText(c,
+                            "Password saved!", Toast.LENGTH_SHORT).show();
+                    popupWindow.dismiss();
+                });
+        popupWindow.showOn(webView,0,0, Gravity.BOTTOM);
     }
 
     /**

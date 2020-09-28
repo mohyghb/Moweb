@@ -5,10 +5,13 @@ import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
+import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManager;
+import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoWebAutoFillManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoWebAutoFillSession;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoWebAutoFills;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 // sends js inputs back to the app
 // for example when the user uses a
@@ -16,7 +19,8 @@ import java.io.InputStream;
 public class MoJsInput {
 
     public static final String MO_JS = "MoJs";
-    public static String SCRIPT = "";
+    public static String AUTO_FILL_SCRIPT = "";
+    public static String LISTENER_SCRIPT = "";
     public static final String NAME = "jsInput";
 
     /**
@@ -28,7 +32,13 @@ public class MoJsInput {
     private boolean thereIsAForm = false;
     private Context context;
     private MoWebAutoFillSession session;
+    private WebView webView;
 
+
+    public MoJsInput(WebView v) {
+        this.webView = v;
+        this.webView.addJavascriptInterface(this, MoJsInput.NAME);
+    }
 
 
     /**
@@ -44,13 +54,23 @@ public class MoJsInput {
     /**
      * gathers all the forms
      * data into our system
-     * @param webView to gather auto-fill data for
      *
      */
-    public void gatherData(WebView webView) {
+    public void gatherData() {
         this.context = webView.getContext();
-        session = new MoWebAutoFillSession(webView);
-        webView.evaluateJavascript(SCRIPT,null);
+        this.session = new MoWebAutoFillSession(webView);
+        webView.evaluateJavascript(AUTO_FILL_SCRIPT,null);
+    }
+
+
+    /**
+     * we set our on click listeners
+     * to the text inputs of the web site
+     * and whenever the user clicks
+     * on them, we provide auto-fill data
+     */
+    public void setupListeners() {
+        webView.evaluateJavascript(LISTENER_SCRIPT,null);
     }
 
     /**
@@ -77,7 +97,6 @@ public class MoJsInput {
     @JavascriptInterface
     public void onFinishedGathering() {
         session.processAndClearSession(this.context);
-        print("on finished gathering");
     }
 
     @JavascriptInterface
@@ -85,23 +104,48 @@ public class MoJsInput {
         Log.d(MO_JS,p);
     }
 
+
     /**
-     * reads the js file inside the asset folder
-     * and loads it inside a string and save it
+     * this is called every
+     * time the user clicks on a input field
+     * @param id of the element
+     * @param name of the element
+     * @param type of the element
+     */
+    @JavascriptInterface
+    public void onClicked(String id, String name, String type) {
+        print("on clicked " + id + " " + name + " " + type);
+        String host = MoUrlUtils.getHost(webView.getUrl());
+        MoWebAutoFills autoFills = MoWebAutoFillManager.get(host);
+        autoFills.printStructure();
+        // todo show them something that allows them to fill in the password and user name field easily
+    }
+
+    /**
+     * reads the js files inside the asset folder
+     * and loads it inside string and save it
      * so we don't load it multiple times
      * @param c context
      */
     public static void loadScript(Context c) {
-        if(!SCRIPT.isEmpty())
-            return;
         try {
-            InputStream f = c.getAssets().open("TextFieldDetection.js");
-            byte[] b = new byte[f.available()];
-            f.read(b);
-            SCRIPT = new String(b);
+            autoFillScript(c);
+            listenerScript(c);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void autoFillScript(Context c) throws IOException {
+        if(!AUTO_FILL_SCRIPT.isEmpty())
+            return;
+        AUTO_FILL_SCRIPT = MoFileManager.readAssetFile(c,"TextFieldDetection.js");
+    }
+
+    public static void listenerScript(Context c) throws IOException {
+        if(!LISTENER_SCRIPT.isEmpty())
+            return;
+        LISTENER_SCRIPT = MoFileManager.readAssetFile(c,"TextFieldListener.js");
     }
 
 }

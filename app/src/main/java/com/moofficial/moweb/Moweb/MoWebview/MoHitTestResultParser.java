@@ -242,7 +242,7 @@ public class MoHitTestResultParser {
     }
 
 
-    public static boolean isValidVar(String input){
+    public static boolean isValidVar(String input) {
         return input != null && !input.isEmpty();
     }
 

@@ -2,41 +2,61 @@ package com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill;
 
 import android.content.Context;
 
-import com.moofficial.moessentials.MoEssentials.MoFileManager.MoDir;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManager;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
 
 // manages the auto fills
 public class MoWebAutoFillManager {
 
     public static final String DIR_NAME = "auto_fills";
-    private static List<MoWebAutoFills> autoFills = new ArrayList<>();
+    private static final HashMap<String,MoWebAutoFills> autoFills = new HashMap<>();
 
 
-    public static void add(Context context,MoWebAutoFills a) throws IOException {
-        autoFills.add(a);
+    /**
+     * add the auto-fill to the
+     * map and save it
+     * @param context context of the app
+     * @param a auto-fill to be added
+     * @throws IOException
+     */
+    public static synchronized void add(Context context,MoWebAutoFills a) throws IOException {
+        addAutoFill(a);
         a.save(context);
     }
 
-    public static void remove(Context c,int index) {
-        autoFills.get(index).delete(c);
-        autoFills.remove(index);
+    /**
+     * adds the auto fill to the map
+     * @param a auto-fill to be added
+     */
+    private static void addAutoFill(MoWebAutoFills a) {
+        autoFills.put(a.getHost(), a);
     }
 
 
+    /**
+     * loads all the auto-fills into
+     * the map of auto-fills
+     * @param context context
+     */
     public static void load(Context context) {
-        MoWebAutoFills[] temp = new MoWebAutoFills[MoDir.getFilesSizeDir(context,DIR_NAME)];
         MoFileManager.readAllDirFilesAsync(context, DIR_NAME, (s, i) -> {
             MoWebAutoFills autoFill = new MoWebAutoFills(s,context);
-            synchronized (temp) {
-                temp[i] = autoFill;
+            synchronized (autoFills) {
+                addAutoFill(autoFill);
             }
         });
-        Collections.addAll(autoFills,temp);
+    }
+
+    /**
+     * return the auto-fill for the host
+     * @param host of the web to return
+     *            the auto-fill for
+     * @return auto-fill for the given host
+     */
+    public static MoWebAutoFills get(String host) {
+        return autoFills.get(host);
     }
 
 

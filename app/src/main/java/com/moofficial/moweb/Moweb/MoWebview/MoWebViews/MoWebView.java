@@ -34,8 +34,6 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
 
 
     private MoWebClient client = new MoWebClient() {
-
-
         @Override
         public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
             url = MoUrlUtils.removeUrlUniqueness(url);
@@ -51,6 +49,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             MoWebView.this.onPageFinishedListener.onFinished(view,url);
+            moJsInput.setupListeners();
         }
 
 
@@ -61,7 +60,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-            moJsInput.gatherData(view);
+            moJsInput.gatherData();
             return super.shouldOverrideUrlLoading(view, request);
         }
     };
@@ -73,7 +72,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
     private MoOnReceivedError onErrorReceived = (view, request, error) -> {};
     private MoOnPageFinishedListener onPageFinishedListener = (view, url) -> {};
     private MoWebState webState = new MoWebState();
-    private MoJsInput moJsInput = new MoJsInput();
+    private MoJsInput moJsInput;
     private boolean captureBitmap = true;
     private boolean saveHistory = true;
     private boolean isInDesktopMode = false;
@@ -224,9 +223,11 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
     /**
      * adds all the necessary js interfaces
      * that are included inside the js interface list
+     * (classes themselves add
+     * themselves to the js interfaces)
      */
     private void addJsInterfaces() {
-        addJavascriptInterface(this.moJsInput,MoJsInput.NAME);
+        this.moJsInput = new MoJsInput(this);
     }
 
 

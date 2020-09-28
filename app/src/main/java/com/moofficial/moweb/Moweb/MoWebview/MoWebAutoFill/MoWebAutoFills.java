@@ -5,6 +5,7 @@ import android.content.Context;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFileSavable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -67,6 +68,20 @@ public class MoWebAutoFills implements MoFileSavable, MoLoadable {
     public MoWebAutoFills addAll(Collection<MoWebAutoFill> collection) {
         autoFills.addAll(collection);
         return this;
+    }
+
+    /**
+     * prints the structure of the auto-fill
+     * inside the command line
+     */
+    public void printStructure() {
+        for (MoWebAutoFill a: autoFills) {
+            MoLog.print(a.getValue() + " " + a.getType() + " " + a.getId());
+        }
+    }
+
+    public String getHost() {
+        return host;
     }
 
     @Override

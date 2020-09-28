@@ -219,34 +219,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
         moTabSearchBar.syncWith(tab)
                 .clearEditTextFocus()
                 .setTextSearch(tab.getUrl())
-                .setOnTabsButtonClicked(view -> {
-
-                    // construction
-
-//                    MoSavePasswordView savePasswordView = new MoSavePasswordView(getContext());
-//
-//                    MoPopupWindow popupWindow = new MoPopupWindow(getContext())
-//                            .setViews(savePasswordView)
-//                            .setWidth(ViewGroup.LayoutParams.MATCH_PARENT)
-//                            .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
-//                            .setFocusable(false)
-//                            .setOutsideTouchable(false)
-//                            .setOverlapAnchor(false)
-//                            .setDuration(3000)
-//                            .build();
-//
-//                    savePasswordView
-//                            .setOnCloseClickListener((v)-> popupWindow.dismiss())
-//                            .setOnSaveClickListener((v)-> {
-//                                Toast.makeText(getContext(),
-//                                        "Password saved!", Toast.LENGTH_SHORT).show();
-//                                popupWindow.dismiss();
-//                            });
-//
-//                    popupWindow.showOn(webView,0,0, Gravity.BOTTOM);
-
-                    onTabsButtonPressed();
-                })
+                .setOnTabsButtonClicked(view -> onTabsButtonPressed())
                 .setNumberOfTabs(tab.isPrivate()?MoTabsManager.sizePrivate():MoTabsManager.size());
     }
 

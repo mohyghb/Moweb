@@ -2,7 +2,6 @@ package com.moofficial.moweb.Moweb.MoWebAppLoader;
 
 import android.content.Context;
 
-import com.moofficial.moessentials.MoEssentials.MoFileManager.MoCache.MoCache;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoAnimation.MoAnimation;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
@@ -11,6 +10,7 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces.MoJsInput;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoWebAutoFillManager;
 
 import java.io.IOException;
 
@@ -50,7 +50,9 @@ public class MoWebAppLoader {
         });
 
 
-        MoCache.printCache(context);
+        // init auto-fills
+        MoWebAutoFillManager.load(context);
+
 
         loadJsScripts(context);
 
