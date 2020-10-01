@@ -1,4 +1,4 @@
-package com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill;
+package com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoGeneralAutoFill;
 
 import android.content.Context;
 
@@ -6,9 +6,8 @@ import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFileSavable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoWebAutoFill;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -19,26 +18,28 @@ public class MoWebAutoFills implements MoFileSavable, MoLoadable {
 
     public static final String NULL_HOST = "null_host";
 
+
+
     private List<MoWebAutoFill> autoFills = new ArrayList<>();
     private MoWebAutoFillId autoFillId = new MoWebAutoFillId();
-    private String host;
 
 
-    public MoWebAutoFills(String url){
-        extractHost(url);
-    }
+
+//    public MoWebAutoFills(String url){
+//        extractHost(url);
+//    }
 
     public MoWebAutoFills(String data,Context c){
         this.load(data,c);
     }
 
-    private void extractHost(String url) {
-        try {
-            this.host = new URL(url).getHost();
-        } catch (MalformedURLException e) {
-            this.host = NULL_HOST;
-        }
-    }
+//    private void extractHost(String url) {
+//        try {
+//            this.host = new URL(url).getHost();
+//        } catch (MalformedURLException e) {
+//            this.host = NULL_HOST;
+//        }
+//    }
 
     /**
      * adds the auto fill
@@ -76,13 +77,54 @@ public class MoWebAutoFills implements MoFileSavable, MoLoadable {
      */
     public void printStructure() {
         for (MoWebAutoFill a: autoFills) {
-            MoLog.print(a.getValue() + " " + a.getType() + " " + a.getId());
+            MoLog.print(a.getValue() + " " + a.getFieldType() + " " + a.getId());
         }
     }
 
-    public String getHost() {
-        return host;
-    }
+//    /**
+//     *
+//     * @return the pair of username password
+//     * based on the stored information inside this auto fill
+//     * or null if we can not find a pair of username password
+//     */
+//    public Pair<MoWebAutoFill,MoWebAutoFill> getUsernamePassword () {
+//        MoWebAutoFill user = null, pass = null;
+//        for (MoWebAutoFill webAutoFill: autoFills) {
+//            if (webAutoFill.isPassword()) {
+//                pass = webAutoFill;
+//            }else if (webAutoFill.isText() || webAutoFill.isEmail()) {
+//                user = webAutoFill;
+//            }
+//        }
+//        if (pass == null || user == null) {
+//            // either we don't have a user name or a password
+//            // that means we are not sure about the account of the user
+//            return null;
+//        } else {
+//            return new Pair<>(user,pass);
+//        }
+//    }
+//
+//    /**
+//     *
+//     * @param c context
+//     * @return view showing the username and password
+//     * of the user's account
+//     */
+//    public MoPasswordAutoFill getPasswordAutoFillView(Context c) {
+//        Pair<MoWebAutoFill,MoWebAutoFill> p = getUsernamePassword();
+//        if (p == null) {
+//            return null;
+//        }
+//        MoPasswordAutoFill view = new MoPasswordAutoFill(c)
+//                .setUsername(p.first.getValue())
+//                .setPassword(p.second.getValue());
+//        return view;
+//    }
+
+    //public String getHost() {
+//        return host;
+//    }
 
     @Override
     public String getDirName() {
@@ -103,11 +145,11 @@ public class MoWebAutoFills implements MoFileSavable, MoLoadable {
             a.load(s1,context1);
             return a;
         });
-        this.host = l[2];
+      //  this.host = l[2];
     }
 
     @Override
     public String getData() {
-        return MoFile.getData(this.autoFillId,this.autoFills,this.host);
+        return MoFile.getData(this.autoFillId,this.autoFills);
     }
 }

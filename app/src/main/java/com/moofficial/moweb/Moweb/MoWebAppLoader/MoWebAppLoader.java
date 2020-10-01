@@ -10,7 +10,7 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces.MoJsInput;
-import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoWebAutoFillManager;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoGeneralAutoFill.MoWebAutoFillManager;
 
 import java.io.IOException;
 

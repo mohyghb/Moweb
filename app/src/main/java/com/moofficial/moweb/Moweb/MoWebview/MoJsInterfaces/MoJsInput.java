@@ -6,10 +6,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManager;
-import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
-import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoWebAutoFillManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoWebAutoFillSession;
-import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoWebAutoFills;
 
 import java.io.IOException;
 
@@ -86,6 +83,9 @@ public class MoJsInput {
      */
     @JavascriptInterface
     public void onGather(String name,String id,String value,String type) {
+        // construction, there might be an error later on since
+        //  we are either passing name or id and we don't know which one to use
+        //  to find the view inside js
         session.add(id.isEmpty()?name:id,value,type);
         print(String.format("{name = %s, id = %s,value = %s, type == %s}",name,id,value,type));
     }
@@ -114,11 +114,39 @@ public class MoJsInput {
      */
     @JavascriptInterface
     public void onClicked(String id, String name, String type) {
-        print("on clicked " + id + " " + name + " " + type);
-        String host = MoUrlUtils.getHost(webView.getUrl());
-        MoWebAutoFills autoFills = MoWebAutoFillManager.get(host);
-        autoFills.printStructure();
-        // todo show them something that allows them to fill in the password and user name field easily
+        // todo, based on the text field, we provide different
+        //  kind of auto-fills, like general or user password
+        //  currently we are only giving user password data
+
+
+        // todo look into js auto complete attribute redesing TIME!!!
+
+//        print("on clicked " + id + " " + name + " " + type);
+//        String host = MoUrlUtils.getHost(webView.getUrl());
+//        List<MoWebAutoFills> autoFills = MoWebAutoFillManager.get(host);
+//
+//        MoBottomSheet bottomSheet = new MoBottomSheet(context);
+//        boolean atLeastOneChild = false;
+//        for (MoWebAutoFills a : autoFills) {
+//            View v = a.getPasswordAutoFillView(context);
+//            if (v != null) {
+//                bottomSheet.add(v);
+//                atLeastOneChild = true;
+//            }
+//        }
+//        // we show the bottom sheet if there is something
+//        // to show
+//        if (atLeastOneChild) {
+//            bottomSheet.expanded()
+//                    .build()
+//                    .show();
+//        }
+
+
+        // todo close the keyboard
+        // todo if they closed it one time already, don't show them the message anymore
+        //  also if they close the bottom sheet, focus on the textfield and bring the keyboard up
+
     }
 
     /**

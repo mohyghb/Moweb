@@ -1,4 +1,4 @@
-package com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill;
+package com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoGeneralAutoFill;
 
 import android.content.Context;
 
@@ -6,12 +6,14 @@ import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManager;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 // manages the auto fills
 public class MoWebAutoFillManager {
 
     public static final String DIR_NAME = "auto_fills";
-    private static final HashMap<String,MoWebAutoFills> autoFills = new HashMap<>();
+    // <host, list of auto-fills>
+    private static final HashMap<String, List<MoWebAutoFills>> autoFills = new HashMap<>();
 
 
     /**
@@ -27,11 +29,20 @@ public class MoWebAutoFillManager {
     }
 
     /**
-     * adds the auto fill to the map
+     * adds the auto fill to list of
+     * auto-fills inside the map
+     * for the host of that auto-fill
      * @param a auto-fill to be added
      */
+    @SuppressWarnings("ConstantConditions")
     private static void addAutoFill(MoWebAutoFills a) {
-        autoFills.put(a.getHost(), a);
+//        if (autoFills.containsKey(a.getHost())) {
+//            autoFills.get(a.getHost()).add(a);
+//        } else {
+//            List<MoWebAutoFills> list = new ArrayList<>();
+//            list.add(a);
+//            autoFills.put(a.getHost(),list);
+//        }
     }
 
 
@@ -53,9 +64,9 @@ public class MoWebAutoFillManager {
      * return the auto-fill for the host
      * @param host of the web to return
      *            the auto-fill for
-     * @return auto-fill for the given host
+     * @return list of auto-fills for the given host
      */
-    public static MoWebAutoFills get(String host) {
+    public static List<MoWebAutoFills> get(String host) {
         return autoFills.get(host);
     }
 

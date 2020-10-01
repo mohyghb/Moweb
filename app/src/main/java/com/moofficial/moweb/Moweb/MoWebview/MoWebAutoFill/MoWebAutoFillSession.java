@@ -9,6 +9,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupWindow;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoGeneralAutoFill.MoWebAutoFillManager;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoGeneralAutoFill.MoWebAutoFills;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoWebAutoFill;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.Views.MoSavePasswordView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,7 +32,7 @@ public class MoWebAutoFillSession {
      * one session, therefore, when we process them,
      * we can put them inside one list of auto fills
      */
-    private final HashMap<String,MoWebAutoFill> autoFills = new HashMap<>();
+    private final HashMap<String, MoWebAutoFill> autoFills = new HashMap<>();
     private final List<MoWebAutoFill> passwordFills = new ArrayList<>();
     private WebView webView;
 
@@ -52,9 +56,9 @@ public class MoWebAutoFillSession {
             return;
         if(autoFills.containsKey(id)) {
             // then we already have it, update the reference
-            autoFills.get(id).setValue(value).setType(type);
+            autoFills.get(id).setValue(value).setFieldType(type);
         }else {
-            MoWebAutoFill f = new MoWebAutoFill().setValue(value).setId(id).setType(type);
+            MoWebAutoFill f = new MoWebAutoFill().setValue(value).setId(id).setFieldType(type);
             autoFills.put(id, f);
             if (f.isPassword()) {
                 passwordFills.add(f);
@@ -75,8 +79,9 @@ public class MoWebAutoFillSession {
         if(autoFills.isEmpty())
             return;
         String url = webView.getUrl();
-        MoWebAutoFills f = new MoWebAutoFills(url).addAll(autoFills.values());
-        webView.post(()-> askUserToSave(c, f));
+       // MoWebAutoFills f = new MoWebAutoFills().addAll(autoFills.values());
+        // webView.post(()-> askUserToSave(c, f));
+
         // new session
         clearSession();
     }
