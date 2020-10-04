@@ -24,7 +24,7 @@
             android:name=".MoActivities.MainActivity"
             android:alwaysRetainTaskState="true"
             android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

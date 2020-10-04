@@ -122,6 +122,10 @@ public class MoJsInput {
      */
     @JavascriptInterface
     public void onClicked(String id, String name, String type) {
+        // todo check if auto complete is not turned off
+        // todo change the bottom layout to suggestion layout when typing for general
+        // todo same thing as above but for passwords.
+
         // todo, based on the text field, we provide different
         //  kind of auto-fills, like general or user password
         //  currently we are only giving user password data
@@ -140,6 +144,8 @@ public class MoJsInput {
         for (MoUserPassAutoFill a : autoFills) {
             View v = a.getView(context, a1 -> {
                 // what happens when the click the user pass auto fill
+                a1.fill(webView);
+                bottomSheet.dismiss();
             });
             if (v != null) {
                 bottomSheet.add(v);

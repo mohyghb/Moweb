@@ -1,10 +1,12 @@
 package com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoUserPassAutoFill;
 
 import android.content.Context;
+import android.webkit.WebView;
 
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFileSavable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
+import com.moofficial.moessentials.MoEssentials.MoMultiThread.MoThread.MoThread;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableItem;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoWebAutoFill;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.Views.MoUserPassHolderView;
@@ -115,6 +117,22 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
                 .setPassword(password.getValue())
                 .setHost(this.host)
                 .setOnAutoFillClickListener(()->onClick.onClick(this));
+    }
+
+    /**
+     * fills in the password and username
+     * inside the given web view
+     * @param webView to fill the values in
+     */
+    public void fill(WebView webView) {
+        new MoThread<String>()
+                .doBackground(() -> {
+                    String sb = "javascript:fillUserPass('%s','%s','%s','%s')";
+                    String formatted = String.format(sb,username.getId(),username.getValue(),
+                            password.getId(),password.getValue());
+                    return formatted; })
+                .after(val -> webView.post( () -> webView.loadUrl(val)))
+                .begin();
     }
 
 
