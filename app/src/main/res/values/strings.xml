@@ -10,6 +10,7 @@
     <string name="url">URL</string>
     <string name="folder_chooser_title">Choose folder</string>
     <string name="save">Save</string>
+    <string name="never">Never</string>
     <string name="create">Create</string>
     <string name="select">Select</string>
     <string name="empty_selection_message">You need to select items first</string>
@@ -154,5 +155,6 @@
 <!--    save password values-->
     <string name="save_password_title">Save Password</string>
     <string name="save_password_description">Do you want to save this information about your account?</string>
+    <string name="passwords">Passwords</string>
 
 </resources>

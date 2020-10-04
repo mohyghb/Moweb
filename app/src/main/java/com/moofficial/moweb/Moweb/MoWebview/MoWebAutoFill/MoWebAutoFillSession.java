@@ -1,23 +1,22 @@
 package com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill;
 
 import android.content.Context;
-import android.view.Gravity;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupWindow;
-import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoGeneralAutoFill.MoWebAutoFillManager;
-import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoGeneralAutoFill.MoWebAutoFills;
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoGeneralAutoFill.MoGeneralAutoFillManager;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoGeneralAutoFill.MoLinkedAutoFills;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoUserPassAutoFill.MoUserPassAutoFill;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoUserPassAutoFill.MoUserPassManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoWebAutoFill;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.Views.MoSavePasswordView;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 // saves and organizes all the inputs
 // of the web inside here
@@ -33,7 +32,6 @@ public class MoWebAutoFillSession {
      * we can put them inside one list of auto fills
      */
     private final HashMap<String, MoWebAutoFill> autoFills = new HashMap<>();
-    private final List<MoWebAutoFill> passwordFills = new ArrayList<>();
     private WebView webView;
 
     // creates an auto-fill session for web view
@@ -51,20 +49,25 @@ public class MoWebAutoFillSession {
      * @param type
      */
     @SuppressWarnings("ConstantConditions")
-    public void add (@NonNull String id, @NonNull String value, String type) {
+    public void add (@NonNull String id, @NonNull String value, String type, String autoComplete) {
         if(id == null || id.isEmpty() || value == null || value.isEmpty())
             return;
-        if(autoFills.containsKey(id)) {
+        if (autoFills.containsKey(id)) {
             // then we already have it, update the reference
-            autoFills.get(id).setValue(value).setFieldType(type);
-        }else {
-            MoWebAutoFill f = new MoWebAutoFill().setValue(value).setId(id).setFieldType(type);
+            autoFills.get(id)
+                    .setValue(value)
+                    .setFieldType(type)
+                    .setAutoCompleteType(autoComplete);
+        } else {
+            MoWebAutoFill f = new MoWebAutoFill()
+                    .setValue(value)
+                    .setId(id)
+                    .setFieldType(type)
+                    .setAutoCompleteType(autoComplete);
             autoFills.put(id, f);
-            if (f.isPassword()) {
-                passwordFills.add(f);
-            }
         }
     }
+
 
     /**
      * processes the information that is currently
@@ -79,55 +82,115 @@ public class MoWebAutoFillSession {
         if(autoFills.isEmpty())
             return;
         String url = webView.getUrl();
-       // MoWebAutoFills f = new MoWebAutoFills().addAll(autoFills.values());
-        // webView.post(()-> askUserToSave(c, f));
-
+        // it is okay to save general auto-fills without confirmation
+        saveGeneralAutoFill(c);
+        // we need permission for user pass auto fill
+        saveUserPassAutoFill(c,url);
         // new session
         clearSession();
     }
 
     /**
-     * we get permission to save their
-     * passwords
-     * @param c
-     * @param f
+     * ask the user if they want to save it or not
      */
-    private void askUserToSave(Context c, MoWebAutoFills f) {
-        MoSavePasswordView savePasswordView = new MoSavePasswordView(c);
-        MoPopupWindow popupWindow = new MoPopupWindow(c)
-                .setViews(savePasswordView)
-                .setWidth(ViewGroup.LayoutParams.MATCH_PARENT)
-                .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
-                .setFocusable(false)
-                .setOutsideTouchable(false)
-                .setOverlapAnchor(false)
-                .setDuration(3000)
-                .build();
-
-        savePasswordView
-                .setOnCloseClickListener((v)-> popupWindow.dismiss())
-                .setOnSaveClickListener((v)-> {
-                    // save password
-                    try {
-                        MoWebAutoFillManager.add(c,f);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    // tell them it is saved
-                    Toast.makeText(c,
-                            "Password saved!", Toast.LENGTH_SHORT).show();
-                    popupWindow.dismiss();
-                });
-        popupWindow.showOn(webView,0,0, Gravity.BOTTOM);
+    private void saveUserPassAutoFill(Context c,String url) {
+        String host = MoUrlUtils.getHost(url);
+        if(MoUserPassManager.neverSave(host)) {
+            MoLog.print("avoided saving user name password for " + host);
+            return;
+        }
+        MoUserPassAutoFill userPassAutoFill = extractUserPassword(host);
+        if (userPassAutoFill.isValid()) {
+            // we only ask the user if the combination is valid
+            if (MoUserPassManager.has(userPassAutoFill)) {
+                MoLog.print("we already saved pass for this account");
+                return;
+            }
+            MoSavePasswordView.askUserToSave(c, webView,
+                    () -> saveUsernamePassword(c, userPassAutoFill),
+                    () -> neverSaveUserPassForThisHost(c, userPassAutoFill));
+        }
     }
+
+    /**
+     * save password and username
+     * @param c context needed for saving
+     * @param userPassAutoFill instance to save
+     */
+    private void saveUsernamePassword(Context c, MoUserPassAutoFill userPassAutoFill) {
+        try {
+            MoUserPassManager.add(c, userPassAutoFill);
+            Toast.makeText(c,"Password saved!",Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(c,"Error in saving password",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * they don't want to get this ever again on this site
+     * @param c context for saving
+     * @param userPassAutoFill to get the host from
+     */
+    private void neverSaveUserPassForThisHost(Context c, MoUserPassAutoFill userPassAutoFill) {
+        MoUserPassManager.neverSave(c,userPassAutoFill.getHost());
+    }
+
+    /**
+     * save general auto-fills like name, last name
+     * automatically, todo currently the credit card is
+     *                   considered to be general THAT'S NOT GOOD change it
+     * @param c
+     */
+    private void saveGeneralAutoFill(Context c) {
+        MoLinkedAutoFills linkedAutoFills = extractGeneralAutoFill();
+        try {
+            MoGeneralAutoFillManager.add(c,linkedAutoFills);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * we can only extract one user pass per
+     * page of the web view
+     */
+    private MoUserPassAutoFill extractUserPassword(String host) {
+        MoUserPassAutoFill passAutoFill = new MoUserPassAutoFill();
+        for (MoWebAutoFill autoFill: autoFills.values()) {
+            passAutoFill.add(autoFill);
+        }
+        passAutoFill.chooseTopSuggestionIfNoUsername();
+        passAutoFill.setHost(host);
+        return passAutoFill;
+    }
+
+    /**
+     * extract general auto-fills and create a link
+     * todo, when you add a general auto-fill, then you should remove it
+     *  since it is definitely not used inside pass word extraction
+     * between them
+     * @return linked auto fills
+     */
+    private MoLinkedAutoFills extractGeneralAutoFill() {
+        MoLinkedAutoFills linkedAutoFills = new MoLinkedAutoFills();
+        for (MoWebAutoFill autoFill : autoFills.values()) {
+            if (autoFill.isNotUserPass() && autoFill.isNotOff()) {
+                // it is general auto fill and auto-fill is not off
+                linkedAutoFills.add(autoFill);
+            }
+        }
+        return linkedAutoFills;
+    }
+
+
 
     /**
      * clears the map of auto fills
      */
     public void clearSession() {
         autoFills.clear();
-        passwordFills.clear();
     }
 
 }

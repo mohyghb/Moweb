@@ -3,13 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardElevation="5dp">
+    app:cardElevation="5dp"
+    android:id="@+id/user_pass_holder_card_view">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/user_pass_host"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="host"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/password_auto_fill_username"

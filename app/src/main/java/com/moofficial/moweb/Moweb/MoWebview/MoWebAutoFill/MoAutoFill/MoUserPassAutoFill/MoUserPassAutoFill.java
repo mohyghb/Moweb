@@ -5,18 +5,29 @@ import android.content.Context;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFileSavable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableItem;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoWebAutoFill;
-import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.Views.MoPasswordAutoFill;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.Views.MoUserPassHolderView;
 
-public class MoUserPassAutoFill implements MoFileSavable, MoLoadable {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectableItem {
 
 
 
+    public interface MoOnUserPassClicked {
+        void onClick(MoUserPassAutoFill a);
+    }
 
-    private MoWebAutoFill username = new MoWebAutoFill(), password = new MoWebAutoFill();
+
+    private MoWebAutoFill username, password;
+    // these might be substituted for the username or password instead of the things we saved
+    private List<MoWebAutoFill> suggestions = new ArrayList<>();
     private String host;
     private MoUserPassId id = new MoUserPassId();
-
+    private boolean selected = false;
     /**
      *
      * @param u username of the user's account
@@ -43,24 +54,76 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable {
         return host;
     }
 
+    public MoUserPassAutoFill setUsername(MoWebAutoFill username) {
+        this.username = username;
+        return this;
+    }
+
+    public MoUserPassAutoFill setPassword(MoWebAutoFill password) {
+        this.password = password;
+        return this;
+    }
+
+    public MoUserPassAutoFill setHost(String host) {
+        this.host = host;
+        return this;
+    }
+
+    public MoUserPassAutoFill add (MoWebAutoFill autoFill) {
+        if (autoFill.isPassword()) {
+            // todo if the type of the password is NEW_PASSWORD,  then we can just update the ref
+            //  if we have it
+            this.setPassword(autoFill);
+        } else if (autoFill.isUsername()) {
+            this.setUsername(autoFill);
+        } else {
+            // add this to suggestions
+            suggestions.add(autoFill);
+        }
+        return this;
+    }
+
+    /**
+     * chooses the top suggestion as the
+     * username
+     */
+    public void chooseTopSuggestionIfNoUsername(){
+        if (this.username == null && !this.suggestions.isEmpty()) {
+            this.username = suggestions.get(0);
+        }
+    }
+
+    /**
+     *
+     * @return true if the
+     * username and password are not null
+     * and host is not null or empty
+     */
+    public boolean isValid() {
+        return this.password!=null && this.username!=null && this.host!=null && !this.host.isEmpty();
+    }
+
     /**
      *
      * @param c context
      * @return view showing the username and password
      * of the user's account
      */
-    public MoPasswordAutoFill getView(Context c) {
-        // todo when they click on the item, these auto-fills
-        //  should apply to the correct fields inside js
-        return new MoPasswordAutoFill(c)
+    public MoUserPassHolderView getView(Context c, MoOnUserPassClicked onClick) {
+        return new MoUserPassHolderView(c)
                 .setUsername(username.getValue())
-                .setPassword(password.getValue());
+                .setPassword(password.getValue())
+                .setHost(this.host)
+                .setOnAutoFillClickListener(()->onClick.onClick(this));
     }
+
 
     @Override
     public void load(String s, Context context) {
         String[] c = MoFile.loadable(s);
+        this.username = new MoWebAutoFill();
         this.username.load(c[0],context);
+        this.password = new MoWebAutoFill();
         this.password.load(c[1],context);
         this.host = c[2];
         this.id.load(c[3],context);
@@ -79,5 +142,31 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable {
     @Override
     public String getFileName() {
         return id.stringify();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MoUserPassAutoFill that = (MoUserPassAutoFill) o;
+        return Objects.equals(username, that.username) &&
+                Objects.equals(password, that.password) &&
+                Objects.equals(host, that.host);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, password, host);
+    }
+
+
+    @Override
+    public void setSelected(boolean b) {
+        this.selected = b;
+    }
+
+    @Override
+    public boolean isSelected() {
+        return this.selected;
     }
 }

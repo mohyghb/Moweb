@@ -281,11 +281,6 @@ public class MoHistory implements MoSwitchSavable, MoLoadable,
         this.isSavable = b;
     }
 
-    @Override
-    public boolean onSelect() {
-        this.isSelected = !this.isSelected;
-        return this.isSelected;
-    }
 
     // mo selectable
 

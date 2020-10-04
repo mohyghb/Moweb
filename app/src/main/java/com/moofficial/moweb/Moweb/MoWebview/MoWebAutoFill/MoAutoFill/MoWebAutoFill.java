@@ -9,9 +9,12 @@ import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 // coming soon moved to another time to add this feature
 public class MoWebAutoFill implements MoSavable, MoLoadable {
+
+    public static final int OFF = 0;
 
     public static final int NAME = 1;
     public static final int HONORIFIC_PREFIX = 2;
@@ -77,6 +80,7 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
 
 
     public static HashMap<String, Integer> autoCompleteTypes = new HashMap<String,Integer>(){{
+        put("off", OFF);
         put("name",NAME);
         put("honorific-prefix",HONORIFIC_PREFIX);
         put("given-name",GIVEN_NAME);
@@ -153,6 +157,7 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
     private String value;
     @FieldType
     private int fieldType;
+    private int autoCompleteType;
 
     public String getId() {
         return id;
@@ -172,20 +177,42 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
         return this;
     }
 
+    public int getAutoCompleteType() {
+        return autoCompleteType;
+    }
+
     public int getFieldType() {
         return fieldType;
     }
 
     public boolean isPassword() {
-        return this.fieldType == TYPE_PASSWORD;
+        return this.fieldType == TYPE_PASSWORD ||
+                this.autoCompleteType == CURRENT_PASSWORD ||
+                this.autoCompleteType == NEW_PASSWORD;
     }
 
     public boolean isEmail() {
-        return this.fieldType == TYPE_EMAIL;
+        return this.fieldType == TYPE_EMAIL || this.autoCompleteType == EMAIL;
     }
 
     public boolean isText() {
         return this.fieldType == TYPE_TEXT;
+    }
+
+    public boolean isUsername() {
+        return this.autoCompleteType == USERNAME;
+    }
+
+    public boolean isNotUserPass() {
+        return !this.isUsername() && !this.isPassword();
+    }
+
+    public boolean isOff() {
+        return this.autoCompleteType == OFF;
+    }
+
+    public boolean isNotOff() {
+        return !this.isOff();
     }
 
     /**
@@ -210,6 +237,23 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
         return this;
     }
 
+    /**
+     * sets the auto complete
+     * type of this class
+     * @param a
+     * @return
+     */
+    @SuppressWarnings("ConstantConditions")
+    public MoWebAutoFill setAutoCompleteType(String a) {
+        if (autoCompleteTypes.containsKey(a)) {
+            // then we have that type
+            this.autoCompleteType = autoCompleteTypes.get(a);
+        } else {
+            this.autoCompleteType = OFF;
+        }
+        return this;
+    }
+
 
     @Override
     public void load(String s, Context context) {
@@ -217,12 +261,28 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
         this.id = l[0];
         this.value = l[1];
         this.fieldType = Integer.parseInt(l[2]);
+        this.autoCompleteType = Integer.parseInt(l[3]);
     }
 
     @Override
     public String getData() {
-        return MoFile.getData(id,value, fieldType);
+        return MoFile.getData(id,value, fieldType,autoCompleteType);
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MoWebAutoFill autoFill = (MoWebAutoFill) o;
+        return fieldType == autoFill.fieldType &&
+                autoCompleteType == autoFill.autoCompleteType &&
+                Objects.equals(id, autoFill.id) &&
+                Objects.equals(value, autoFill.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, value, fieldType, autoCompleteType);
+    }
 }

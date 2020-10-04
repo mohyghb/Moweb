@@ -22,14 +22,19 @@
 //    // monote testing name instead of id for saving it inside auto fill
 //    jsInput.onReturn(e.id,e.value,e.type);
 //});
+let run = false;
 
-let inputs = document.getElementsByTagName('input');
-for(const inp of inputs) {
-    if(inp.type === 'text' || inp.type === 'password' || inp.type === 'email'){
-        jsInput.onGather(inp.name,inp.id,inp.value,inp.type);
+if(!run) {
+    let inputs = document.getElementsByTagName('input');
+    for(const inp of inputs) {
+        if(inp.type === 'text' || inp.type === 'password' || inp.type === 'email'){
+            jsInput.onGather(inp.name,inp.id,inp.value,inp.type,inp.autocomplete);
+        }
     }
+    jsInput.onFinishedGathering();
+    run = true;
 }
-jsInput.onFinishedGathering();
+
 
 
 

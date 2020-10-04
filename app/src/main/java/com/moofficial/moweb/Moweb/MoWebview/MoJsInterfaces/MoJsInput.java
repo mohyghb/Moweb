@@ -2,13 +2,19 @@ package com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManager;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoBottomSheet.MoBottomSheet;
+import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoUserPassAutoFill.MoUserPassAutoFill;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoUserPassAutoFill.MoUserPassManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoWebAutoFillSession;
 
 import java.io.IOException;
+import java.util.List;
 
 // sends js inputs back to the app
 // for example when the user uses a
@@ -35,6 +41,8 @@ public class MoJsInput {
     public MoJsInput(WebView v) {
         this.webView = v;
         this.webView.addJavascriptInterface(this, MoJsInput.NAME);
+        this.context = webView.getContext();
+        this.session = new MoWebAutoFillSession(webView);
     }
 
 
@@ -54,9 +62,8 @@ public class MoJsInput {
      *
      */
     public void gatherData() {
-        this.context = webView.getContext();
-        this.session = new MoWebAutoFillSession(webView);
         webView.evaluateJavascript(AUTO_FILL_SCRIPT,null);
+        print("gather data");
     }
 
 
@@ -82,11 +89,11 @@ public class MoJsInput {
      *             the element does not have any ids
      */
     @JavascriptInterface
-    public void onGather(String name,String id,String value,String type) {
+    public void onGather(String name,String id,String value,String type,String autoComplete) {
         // construction, there might be an error later on since
         //  we are either passing name or id and we don't know which one to use
         //  to find the view inside js
-        session.add(id.isEmpty()?name:id,value,type);
+        session.add(id.isEmpty()?name:id,value,type,autoComplete);
         print(String.format("{name = %s, id = %s,value = %s, type == %s}",name,id,value,type));
     }
 
@@ -97,6 +104,7 @@ public class MoJsInput {
     @JavascriptInterface
     public void onFinishedGathering() {
         session.processAndClearSession(this.context);
+        print("on finish gather");
     }
 
     @JavascriptInterface
@@ -121,26 +129,30 @@ public class MoJsInput {
 
         // todo look into js auto complete attribute redesing TIME!!!
 
-//        print("on clicked " + id + " " + name + " " + type);
-//        String host = MoUrlUtils.getHost(webView.getUrl());
-//        List<MoWebAutoFills> autoFills = MoWebAutoFillManager.get(host);
-//
-//        MoBottomSheet bottomSheet = new MoBottomSheet(context);
-//        boolean atLeastOneChild = false;
-//        for (MoWebAutoFills a : autoFills) {
-//            View v = a.getPasswordAutoFillView(context);
-//            if (v != null) {
-//                bottomSheet.add(v);
-//                atLeastOneChild = true;
-//            }
-//        }
+        print("on clicked " + id + " " + name + " " + type);
+        String host = MoUrlUtils.getHost(webView.getUrl());
+        List<MoUserPassAutoFill> autoFills = MoUserPassManager.get(host);
+        if (autoFills == null)
+            return;
+
+        MoBottomSheet bottomSheet = new MoBottomSheet(context);
+        boolean atLeastOneChild = false;
+        for (MoUserPassAutoFill a : autoFills) {
+            View v = a.getView(context, a1 -> {
+                // what happens when the click the user pass auto fill
+            });
+            if (v != null) {
+                bottomSheet.add(v);
+                atLeastOneChild = true;
+            }
+        }
 //        // we show the bottom sheet if there is something
 //        // to show
-//        if (atLeastOneChild) {
-//            bottomSheet.expanded()
-//                    .build()
-//                    .show();
-//        }
+        if (atLeastOneChild) {
+            bottomSheet.expanded()
+                    .build()
+                    .show();
+        }
 
 
         // todo close the keyboard
