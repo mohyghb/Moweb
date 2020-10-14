@@ -2,16 +2,20 @@ package com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.Views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.TextView;
 
+import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroups.MoConstraint;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoLogo;
 import com.moofficial.moweb.R;
 
 public class MoUserPassHolderView extends MoConstraint {
 
     private TextView username,password,host;
     private MoCardView cardView;
+    private MoLogo logo;
 
 
     public MoUserPassHolderView(Context context) {
@@ -28,6 +32,7 @@ public class MoUserPassHolderView extends MoConstraint {
 
     public MoUserPassHolderView setUsername(String user) {
         username.setText(user);
+        this.logo.setText(MoString.getSignature(user));
         return this;
     }
 
@@ -46,6 +51,16 @@ public class MoUserPassHolderView extends MoConstraint {
         return this;
     }
 
+    public MoUserPassHolderView setOnLongSelectListener(View.OnLongClickListener r) {
+        this.cardView.setOnLongClickListener(r);
+        return this;
+    }
+
+    public MoUserPassHolderView setOnSelectListener(View.OnClickListener r) {
+        this.cardView.setOnClickListener(r);
+        return this;
+    }
+
     public MoCardView getCardView() {
         return this.cardView;
     }
@@ -61,6 +76,8 @@ public class MoUserPassHolderView extends MoConstraint {
         this.password = findViewById(R.id.password_auto_fill_password);
         this.cardView = findViewById(R.id.user_pass_holder_card_view);
         this.host = findViewById(R.id.user_pass_host);
+        this.logo = findViewById(R.id.user_pass_logo);
+
     }
 
     @Override

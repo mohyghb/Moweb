@@ -1,13 +1,18 @@
 package com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoUserPassAutoFill;
 
 import android.content.Context;
+import android.view.View;
 import android.webkit.WebView;
 
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFileSavable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoMultiThread.MoThread.MoThread;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoBottomSheet.MoBottomSheet;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableItem;
+import com.moofficial.moessentials.MoEssentials.MoUtils.MoKeyboardUtils.MoKeyboardUtils;
+import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoUserPassAutoFill.Views.MoUserPassTitle;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoWebAutoFill;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.Views.MoUserPassHolderView;
 
@@ -187,4 +192,49 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
     public boolean isSelected() {
         return this.selected;
     }
+
+
+    /**
+     * shows a bottom sheet in which all the
+     * user pass for the host are shown
+     * @param context of app
+     * @param webView to find out what host is and where
+     *               the fields are for filling them in
+     */
+    public static void showUserPassAutoFill(Context context,WebView webView) {
+        String host = MoUrlUtils.getHost(webView.getUrl());
+        List<MoUserPassAutoFill> autoFills = MoUserPassManager.get(host);
+        if (autoFills == null)
+            return;
+        MoBottomSheet bottomSheet = new MoBottomSheet(context);
+
+        // add title
+        MoUserPassTitle title = new MoUserPassTitle(context);
+        bottomSheet.addTitle(title);
+
+
+        boolean atLeastOneChild = false;
+        for (MoUserPassAutoFill a : autoFills) {
+            View v = a.getView(context, a1 -> {
+                // what happens when the click the user pass auto fill
+                a1.fill(webView);
+                bottomSheet.dismissWithoutListener();
+            });
+            if (v != null) {
+                bottomSheet.add(v);
+                atLeastOneChild = true;
+            }
+        }
+
+        // todo opening another tab then trying to use password auto fill causes crash
+        //  error: is your activity still running
+        if (atLeastOneChild) {
+            // bring the keyboard up on web view when dismissed
+            bottomSheet.expanded()
+                    .setOnDismissedListener(()-> MoKeyboardUtils.showKeyboard(webView,context))
+                    .build()
+                    .show();
+        }
+    }
+
 }

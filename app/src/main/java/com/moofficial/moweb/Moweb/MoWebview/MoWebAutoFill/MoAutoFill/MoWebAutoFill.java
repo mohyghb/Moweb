@@ -285,4 +285,56 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
     public int hashCode() {
         return Objects.hash(id, value, fieldType, autoCompleteType);
     }
+
+
+    /**
+     *
+     * @param autocomplete from input field inside js
+     * @return true if the auto fill is turned off
+     * for the field
+     */
+    @SuppressWarnings("ConstantConditions")
+    public static boolean autoFillIsOff(String autocomplete) {
+        if(autocomplete==null || autocomplete.isEmpty()) {
+            // if the auto complete is null or empty or off
+            return true;
+        }
+        Integer val = autoCompleteTypes.get(autocomplete);
+        return val==null || val == OFF;
+    }
+
+    /**
+     * if the auto complete is a current password
+     *  or username then this is a user pass auto fill
+     * @param autocomplete
+     * @return
+     */
+    public static boolean isUserPassAutoFill(String autocomplete) {
+        Integer val = autoCompleteTypes.get(autocomplete);
+        return  val!=null && val!= OFF && (val == CURRENT_PASSWORD || val == USERNAME);
+    }
+
+    /**
+     * anything that is not a user password
+     *  and not add credit card as another type of auto fill
+     * then it is a general auto complete
+     * @param autocomplete
+     * @return true if it is a general auto fill
+     */
+    public static boolean isGeneralAutoFill(String autocomplete) {
+        return !isUserPassAutoFill(autocomplete) && !isCreditCardAutoFill(autocomplete);
+    }
+
+    /**
+     * if auto fill that is passed in is
+     * related to credit card auto fill
+     * @param autocomplete from field inside js
+     * @return true if req are met
+     */
+    public static boolean isCreditCardAutoFill(String autocomplete) {
+        // todo stub
+        return false;
+    }
+
+
 }

@@ -2,11 +2,11 @@ package com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoUserPass
 
 import android.content.Context;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoUserPassAutoFill.MoUserPassAutoFill;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.Views.MoUserPassHolderView;
@@ -35,11 +35,21 @@ public class MoUserPassAdapter extends MoSelectableAdapter<MoUserPassHolder, MoU
                 .setUsername(a.getUsername().getValue())
                 .setPassword(MoString.repeat("*", passwordLength))
                 .setHost(a.getHost())
-                .getCardView()
-                .setOnClickListener((v) -> {
-                    // edit the user pass
-                    // Todo stub
-                    Toast.makeText(context,"edit " + a.getUsername().getValue(),Toast.LENGTH_SHORT).show();
+                .setOnSelectListener((v)-> {
+                    if(isSelecting()) {
+                        onSelect(position);
+                    } else {
+                        // open for view in another activity
+                    }
+                })
+                .setOnLongSelectListener(v -> {
+                    if(isNotSelecting()) {
+                        // todo not working currently
+                        startSelecting(position);
+                        return true;
+                    }
+                    return false;
                 });
+        MoSelectableUtils.applySelectedColor(context,holder.layout,a);
     }
 }

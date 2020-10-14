@@ -2,19 +2,16 @@ package com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManager;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoBottomSheet.MoBottomSheet;
-import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
+import com.moofficial.moessentials.MoEssentials.MoUtils.MoKeyboardUtils.MoKeyboardUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoUserPassAutoFill.MoUserPassAutoFill;
-import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoUserPassAutoFill.MoUserPassManager;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoWebAutoFill;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoWebAutoFillSession;
 
 import java.io.IOException;
-import java.util.List;
 
 // sends js inputs back to the app
 // for example when the user uses a
@@ -121,51 +118,28 @@ public class MoJsInput {
      * @param type of the element
      */
     @JavascriptInterface
-    public void onClicked(String id, String name, String type) {
-        // todo check if auto complete is not turned off
-        // todo change the bottom layout to suggestion layout when typing for general
-        // todo same thing as above but for passwords.
-
-        // todo, based on the text field, we provide different
-        //  kind of auto-fills, like general or user password
-        //  currently we are only giving user password data
-
-
-        // todo look into js auto complete attribute redesing TIME!!!
-
-        print("on clicked " + id + " " + name + " " + type);
-        String host = MoUrlUtils.getHost(webView.getUrl());
-        List<MoUserPassAutoFill> autoFills = MoUserPassManager.get(host);
-        if (autoFills == null)
+    public void onClicked(String id, String name, String type,String autocomplete) {
+        if(MoWebAutoFill.autoFillIsOff(autocomplete)) {
+            // if auto complete is off we don't do anything here
             return;
-
-        MoBottomSheet bottomSheet = new MoBottomSheet(context);
-        boolean atLeastOneChild = false;
-        for (MoUserPassAutoFill a : autoFills) {
-            View v = a.getView(context, a1 -> {
-                // what happens when the click the user pass auto fill
-                a1.fill(webView);
-                bottomSheet.dismiss();
-            });
-            if (v != null) {
-                bottomSheet.add(v);
-                atLeastOneChild = true;
-            }
-        }
-//        // we show the bottom sheet if there is something
-//        // to show
-        if (atLeastOneChild) {
-            bottomSheet.expanded()
-                    .build()
-                    .show();
         }
 
+        if (MoWebAutoFill.isUserPassAutoFill(autocomplete)) {
+            // this is a user password auto fill
+            MoKeyboardUtils.hideSoftKeyboard(webView);
+            MoUserPassAutoFill.showUserPassAutoFill(context,webView);
+            // todo same thing as above but for passwords.
+        } else if (MoWebAutoFill.isCreditCardAutoFill(autocomplete)){
+            // todo credit card auto fill
+        } else {
+            // todo general auto fill
+            // todo change the bottom layout to suggestion layout when typing for general
+        }
 
-        // todo close the keyboard
-        // todo if they closed it one time already, don't show them the message anymore
-        //  also if they close the bottom sheet, focus on the textfield and bring the keyboard up
 
     }
+
+
 
     /**
      * reads the js files inside the asset folder

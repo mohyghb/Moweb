@@ -10,7 +10,7 @@ if(!ranAlready) {
             let e = f.target;
             let tagName = e.tagName;
             if (tagName === 'INPUT') {
-                 jsInput.onClicked(e.id,e.name,e.type);
+                 jsInput.onClicked(e.id,e.name,e.type,e.autocomplete);
                //autocomplete(e,['hello','what','okay']);
 
 //                 if(e.hasAttributes()) {
