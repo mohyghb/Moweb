@@ -1,6 +1,7 @@
 package com.moofficial.moweb.MoActivities;
 
 import android.annotation.SuppressLint;
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -19,7 +20,6 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoFin
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
-import com.moofficial.moweb.MoActivities.History.SavedPasswordsActivity;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoUpdateTabActivity;
@@ -29,6 +29,8 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 import com.moofficial.moweb.R;
+
+import static android.content.Context.KEYGUARD_SERVICE;
 
 @SuppressWarnings("ConstantConditions")
 public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, MoOnBackPressed {
@@ -222,7 +224,18 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
                 .clearEditTextFocus()
                 .setTextSearch(tab.getUrl())
                 .setOnTabsButtonClicked(view -> {
-                    getContext().startActivity(new Intent(getContext(),SavedPasswordsActivity.class));
+
+                    KeyguardManager km = (KeyguardManager) getContext().getSystemService(KEYGUARD_SERVICE);
+
+                    // todo implement so they can only access it if they are authenticated
+                    //  this already works, just need to connect it with on activity result and other things
+                    if (km.isKeyguardSecure()) {
+                        Intent authIntent = km.createConfirmDeviceCredentialIntent("title", "description");
+                        //startActivityForResult(authIntent, INTENT_AUTHENTICATE);
+                        getContext().startActivity(authIntent);
+                    }
+
+                    //getContext().startActivity(new Intent(getContext(),SavedPasswordsActivity.class));
 //                    onTabsButtonPressed();
                 })
                 .setNumberOfTabs(tab.isPrivate()?MoTabsManager.sizePrivate():MoTabsManager.size());

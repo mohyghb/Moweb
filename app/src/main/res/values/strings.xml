@@ -19,6 +19,12 @@
     <string name="a_lot_of_tabs">99+</string>
     <string name="changes_saved">Changes were saved!</string>
 
+
+    <string name="copy_password">Copy Password</string>
+    <string name="copy_username">Copy Username</string>
+    <string name="copy_host">Copy Host</string>
+    <string name="search_username_host">Search username or host …</string>
+
     <!--(dialog) pop up menu options-->
     <string name="open_in_tab">Open in tab</string>
     <string name="open_in_private_tab">Open in private tab</string>

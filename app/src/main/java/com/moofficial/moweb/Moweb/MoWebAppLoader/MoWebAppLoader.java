@@ -60,6 +60,8 @@ public class MoWebAppLoader {
 
     }
 
+
+
     private static void loadJsScripts(Context context) {
         MoJsInput.loadScript(context);
     }

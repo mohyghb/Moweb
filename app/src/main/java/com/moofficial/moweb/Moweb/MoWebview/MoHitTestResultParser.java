@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.moofficial.moessentials.MoEssentials.MoClipboard.MoClipboardUtils;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileProvider.MoFileProvider;
 import com.moofficial.moessentials.MoEssentials.MoShare.MoShare;
 import com.moofficial.moessentials.MoEssentials.MoShare.MoShareUtils;
@@ -26,7 +27,6 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoBottomSheet.MoBottomSheet
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMarginBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMenuBuilder.MoMenuBuilder;
-import com.moofficial.moweb.MoClipboard.MoClipboardUtils;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoWebManifest;

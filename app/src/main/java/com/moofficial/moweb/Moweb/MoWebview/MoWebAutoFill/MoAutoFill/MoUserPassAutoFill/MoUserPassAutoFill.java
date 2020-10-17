@@ -9,6 +9,8 @@ import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFileSavable
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoMultiThread.MoThread.MoThread;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoBottomSheet.MoBottomSheet;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableItem;
 import com.moofficial.moessentials.MoEssentials.MoUtils.MoKeyboardUtils.MoKeyboardUtils;
 import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
@@ -17,10 +19,12 @@ import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoWebAutoFi
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.Views.MoUserPassHolderView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
-public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectableItem {
+public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectableItem, MoSearchableItem {
+
 
 
 
@@ -35,6 +39,8 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
     private String host;
     private MoUserPassId id = new MoUserPassId();
     private boolean selected = false;
+    private long dateTime = Calendar.getInstance().getTimeInMillis();
+    private boolean searched = true;
     /**
      *
      * @param u username of the user's account
@@ -74,6 +80,10 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
     public MoUserPassAutoFill setHost(String host) {
         this.host = host;
         return this;
+    }
+
+    public long getDateTime() {
+        return dateTime;
     }
 
     public MoUserPassAutoFill add (MoWebAutoFill autoFill) {
@@ -150,11 +160,18 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
         this.password.load(c[1],context);
         this.host = c[2];
         this.id.load(c[3],context);
+        parseDateTime(c);
+    }
+
+    private void parseDateTime(String[] c) {
+        if (c.length >= 5) {
+            this.dateTime = Long.parseLong(c[4]);
+        }
     }
 
     @Override
     public String getData() {
-        return MoFile.getData(this.username,this.password,this.host,this.id);
+        return MoFile.getData(this.username,this.password,this.host,this.id,this.dateTime);
     }
 
     @Override
@@ -191,6 +208,21 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
     @Override
     public boolean isSelected() {
         return this.selected;
+    }
+
+    @Override
+    public boolean updateSearchable(Object... objects) {
+        return MoSearchableUtils.isSearchable(true,objects,this.username.getValue(),this.host);
+    }
+
+    @Override
+    public boolean isSearchable() {
+        return this.searched;
+    }
+
+    @Override
+    public void setSearchable(boolean b) {
+        this.searched = b;
     }
 
 

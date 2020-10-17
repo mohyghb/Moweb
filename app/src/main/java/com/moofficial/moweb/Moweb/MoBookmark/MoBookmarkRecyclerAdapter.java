@@ -97,7 +97,7 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
 
     private void addSelectColorToHolder(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark) {
         if(!disableSelectColor) {
-            MoSelectableUtils.applySelectedColor(this.context,h.cardView,bookmark);
+            MoSelectableUtils.applySelectedColor(this.context,h.coverLayout,bookmark);
         }
     }
 

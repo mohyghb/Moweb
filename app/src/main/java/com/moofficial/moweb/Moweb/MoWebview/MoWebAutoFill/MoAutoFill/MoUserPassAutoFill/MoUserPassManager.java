@@ -4,9 +4,11 @@ import android.content.Context;
 
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManager;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoWebAutoFill;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,6 +19,7 @@ public class MoUserPassManager {
     public static final String NEVER_SAVE_FILE_NAME = "never_save_auto_fills";
     // <host, list of auto-fills>
     private static final HashMap<String, List<MoUserPassAutoFill>> userPasses = new HashMap<>();
+    private static final List<MoUserPassAutoFill> allPasses = new ArrayList<>();
     // do not save any password for any host inside this set
     private static final HashSet<String> neverSaveSet = new HashSet<>();
 
@@ -45,6 +48,16 @@ public class MoUserPassManager {
             p.add(autoFill);
             userPasses.put(autoFill.getHost(),p);
         }
+        allPasses.add(autoFill);
+    }
+
+    /**
+     * removes the auto fill from map and list
+     * @param autoFill to be removed from both databases
+     */
+    private static synchronized void removeFromMap(MoUserPassAutoFill autoFill) {
+        userPasses.get(autoFill.getHost()).remove(autoFill);
+        allPasses.remove(autoFill);
     }
 
     /**
@@ -115,6 +128,7 @@ public class MoUserPassManager {
             MoUserPassAutoFill userPassAutoFill = new MoUserPassAutoFill();
             userPassAutoFill.load(s,c);
             putToMap(userPassAutoFill);
+            //generateFakePasswordAutoFills(c);
         });
     }
 
@@ -125,11 +139,8 @@ public class MoUserPassManager {
      * @return list of all passwords
      */
     public static List<MoUserPassAutoFill> get() {
-        List<MoUserPassAutoFill> fills = new ArrayList<>();
-        for (List<MoUserPassAutoFill> l: userPasses.values()) {
-            fills.addAll(l);
-        }
-        return fills;
+        Collections.sort(allPasses, (o1, o2) -> Long.compare(o1.getDateTime(),o2.getDateTime()));
+        return allPasses;
     }
 
     /**
@@ -139,5 +150,37 @@ public class MoUserPassManager {
      */
     public static List<MoUserPassAutoFill> get(String host) {
         return userPasses.get(host);
+    }
+
+
+    /**
+     * delete all the selected password
+     * auto fills from the database
+     */
+    public static void deleteSelected(Context context,List<MoUserPassAutoFill> selected) {
+        for (MoUserPassAutoFill a: selected) {
+            removeFromMap(a);
+            a.delete(context);
+        }
+    }
+
+
+    // generate fake auto completes for passwords
+    private static void generateFakePasswordAutoFills(Context context) {
+        String host = "accounts.google.com";
+        List<MoUserPassAutoFill> list =  MoUserPassManager.get(host);
+        MoUserPassAutoFill main = list.get(0);
+        MoWebAutoFill pass = main.getPassword();
+        MoWebAutoFill user = main.getUsername();
+        for(int i = 0; i < 10; i++) {
+            MoUserPassAutoFill autoFill = new MoUserPassAutoFill().setHost(main.getHost())
+                    .setUsername(new MoWebAutoFill(user.getId(),i+"user",user.getFieldType(),user.getAutoCompleteType()))
+                    .setPassword(new MoWebAutoFill(pass.getId(),i+"pass",pass.getFieldType(),pass.getAutoCompleteType()));
+            try {
+                MoUserPassManager.add(context,autoFill);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

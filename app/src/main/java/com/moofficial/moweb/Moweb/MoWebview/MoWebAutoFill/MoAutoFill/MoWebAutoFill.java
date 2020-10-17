@@ -159,6 +159,16 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
     private int fieldType;
     private int autoCompleteType;
 
+
+    public MoWebAutoFill(){}
+
+    public MoWebAutoFill(String id,String value,int fieldType, int autoCompleteType) {
+        this.setId(id);
+        this.setValue(value);
+        this.fieldType = fieldType;
+        this.autoCompleteType = autoCompleteType;
+    }
+
     public String getId() {
         return id;
     }
