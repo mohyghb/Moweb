@@ -12,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
+import com.moofficial.moessentials.MoEssentials.MoKeyGuard.MoKeyGuard;
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.moofficial.moweb.MoActivities.History.SavedPasswordsActivity;
 import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
 import com.moofficial.moweb.MoSettingsEssentials.MoTheme.MoTheme;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
@@ -39,11 +42,22 @@ public class SettingsActivity extends AppCompatActivity {
         back.setOnClickListener(view -> finish());
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        MoLog.print("secure something " + resultCode);
+        if (requestCode == MoKeyGuard.AUTHENTICATION_REQUEST_CODE && resultCode == RESULT_OK) {
+            // they have been authenticated
+            startActivity(new Intent(this, SavedPasswordsActivity.class));
+        }
+    }
+
     public static class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener{
 
 
         private Activity activity;
         private Preference homePagePref;
+        private Preference savePasswordsPref;
 
         public SettingsFragment(Activity a){
             this.activity = a;
@@ -52,12 +66,13 @@ public class SettingsActivity extends AppCompatActivity {
         public SettingsFragment(){}
 
 
-        private void init(){
+        private void init() {
             initHomePagePref();
+            initSavePasswordPref();
         }
 
         private void initHomePagePref() {
-            this.homePagePref = findPreference(activity.getString(R.string.home_page));
+            this.homePagePref = findPreference(string(R.string.home_page));
             if (this.homePagePref != null) {
                 this.homePagePref.setOnPreferenceClickListener(preference -> {
                     Intent i = new Intent(activity, HomePageActivity.class);
@@ -66,6 +81,18 @@ public class SettingsActivity extends AppCompatActivity {
                 });
             }
         }
+
+        private void initSavePasswordPref() {
+            this.savePasswordsPref = findPreference(string(R.string.passwords));
+            if (this.savePasswordsPref != null) {
+                this.savePasswordsPref.setOnPreferenceClickListener(preference -> {
+                    MoKeyGuard.authenticateUser(getActivity(),"Authentication",
+                            "Please authenticate yourself in order to access the passwords of this device");
+                    return false;
+                });
+            }
+        }
+
 
         @Override
         public void onResume() {
