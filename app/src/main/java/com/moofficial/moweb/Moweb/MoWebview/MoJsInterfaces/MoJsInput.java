@@ -119,12 +119,12 @@ public class MoJsInput {
      */
     @JavascriptInterface
     public void onClicked(String id, String name, String type,String autocomplete) {
-        if(MoWebAutoFill.autoFillIsOff(autocomplete)) {
-            // if auto complete is off we don't do anything here
-            return;
-        }
+//        if(MoWebAutoFill.autoFillIsOff(autocomplete)) {
+//            // if auto complete is off we don't do anything here
+//            return;
+//        }
 
-        if (MoWebAutoFill.isUserPassAutoFill(autocomplete)) {
+        if (MoWebAutoFill.isUserPassAutoFill(id, type, autocomplete)) {
             // this is a user password auto fill
             MoKeyboardUtils.hideSoftKeyboard(webView);
             MoUserPassAutoFill.showUserPassAutoFill(context,webView);

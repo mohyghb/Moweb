@@ -18,6 +18,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoFin
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
+import com.moofficial.moessentials.MoEssentials.MoUtils.MoKeyboardUtils.MoKeyboardUtils;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoUpdateTabActivity;
@@ -223,9 +224,8 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
                 .setTextSearch(tab.getUrl())
                 .setOnTabsButtonClicked(view -> {
 
-
-
-                    //getContext().startActivity(new Intent(getContext(),SavedPasswordsActivity.class));
+                   // getContext().startActivity(new Intent(getContext(), SavedPasswordsActivity.class));
+                    MoKeyboardUtils.hideSoftKeyboard(view);
                     onTabsButtonPressed();
                 })
                 .setNumberOfTabs(tab.isPrivate()?MoTabsManager.sizePrivate():MoTabsManager.size());

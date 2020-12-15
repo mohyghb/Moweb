@@ -77,6 +77,8 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
 
     public static final int URL = 51;
     public static final int PHOTO = 52;
+    public static final String PASSWORD_KEY = "password";
+    public static final String USERNAME_KEY = "username";
 
 
     public static HashMap<String, Integer> autoCompleteTypes = new HashMap<String,Integer>(){{
@@ -134,8 +136,6 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
         put("url",URL);
         put("photo",PHOTO);
     }};
-
-
 
 
     public static final HashMap<String,Integer> fieldTypes = new HashMap<String,Integer>(){{
@@ -319,10 +319,19 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
      * @param autocomplete
      * @return
      */
-    public static boolean isUserPassAutoFill(String autocomplete) {
+    @SuppressWarnings("ConstantConditions")
+    public static boolean isUserPassAutoFill(String id, String type, String autocomplete) {
+        if (id != null && (id.toLowerCase().contains(USERNAME_KEY)
+                || id.toLowerCase().contains(PASSWORD_KEY))) {
+            return true;
+        }
+        if (type != null && fieldTypes.containsKey(type) && fieldTypes.get(type) == TYPE_PASSWORD) {
+            return true;
+        }
         Integer val = autoCompleteTypes.get(autocomplete);
         return  val!=null && val!= OFF && (val == CURRENT_PASSWORD || val == USERNAME);
     }
+
 
     /**
      * anything that is not a user password
@@ -331,8 +340,8 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
      * @param autocomplete
      * @return true if it is a general auto fill
      */
-    public static boolean isGeneralAutoFill(String autocomplete) {
-        return !isUserPassAutoFill(autocomplete) && !isCreditCardAutoFill(autocomplete);
+    public static boolean isGeneralAutoFill(String id, String type,String autocomplete) {
+        return !isUserPassAutoFill(id,type,autocomplete) && !isCreditCardAutoFill(autocomplete);
     }
 
     /**

@@ -143,9 +143,8 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
         new MoThread<String>()
                 .doBackground(() -> {
                     String sb = "javascript:fillUserPass('%s','%s','%s','%s')";
-                    String formatted = String.format(sb,username.getId(),username.getValue(),
-                            password.getId(),password.getValue());
-                    return formatted; })
+                    return String.format(sb,username.getId(),username.getValue(),
+                            password.getId(),password.getValue()); })
                 .after(val -> webView.post( () -> webView.loadUrl(val)))
                 .begin();
     }
@@ -189,9 +188,9 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MoUserPassAutoFill that = (MoUserPassAutoFill) o;
-        return Objects.equals(username, that.username) &&
-                Objects.equals(password, that.password) &&
-                Objects.equals(host, that.host);
+        boolean b = Objects.equals(username, that.username);
+        boolean b1 = Objects.equals(password, that.password);
+        return  b && b1 && Objects.equals(host, that.host);
     }
 
     @Override

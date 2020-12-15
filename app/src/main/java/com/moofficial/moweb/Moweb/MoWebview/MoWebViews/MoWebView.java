@@ -27,7 +27,7 @@ import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnUpdateUrlListene
 import com.moofficial.moweb.Moweb.MoWebview.MoWebState;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebUtils;
 
-// a web view which has more helper functions
+// a better web view!
 public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable {
 
 
