@@ -33,6 +33,7 @@ public class MoJsInput {
     private Context context;
     private MoWebAutoFillSession session;
     private WebView webView;
+    private String previousUrl = "";
 
 
     public MoJsInput(WebView v) {
@@ -59,8 +60,12 @@ public class MoJsInput {
      *
      */
     public void gatherData() {
-        webView.evaluateJavascript(AUTO_FILL_SCRIPT,null);
-        print("gather data");
+        // todo test this b/c detect when the url is a redirect
+        if(!previousUrl.equals(webView.getUrl())) {
+            webView.evaluateJavascript(AUTO_FILL_SCRIPT,null);
+            print("gather data " + webView.getUrl());
+            this.previousUrl = webView.getUrl();
+        }
     }
 
 

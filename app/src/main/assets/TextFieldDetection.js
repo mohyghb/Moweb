@@ -34,18 +34,3 @@ if(!run) {
     jsInput.onFinishedGathering();
     run = true;
 }
-
-
-
-
-//let m = document.getElementById("password");
-//m.value = "hlelafoiwd";
-//jsInput.print(m.name);
-//let pass = document.getElementsByTagName('input');
-//jsInput.print(pass.length);
-//for(const s of pass) {
-//    if(s.type === 'password'){
-//        s.value = 'jello';
-//    }
-//        //jsInput.print(s.type + s.name);
-//}
