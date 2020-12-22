@@ -113,7 +113,6 @@ public class MoHistoryManager {
                 historyBundle.load(s,context);
                 historyBundleHashMap.put(historyBundle.getKey(),historyBundle);
             });
-            // when we are done loading all the histories
             sortBundles();
         }
     }
@@ -239,7 +238,7 @@ public class MoHistoryManager {
      * @param c
      */
     public static void updateSharedPref(Context c){
-        historyEnabled = MoSharedPref.get(c.getString(R.string.history_enabled),true);
+        historyEnabled = MoSharedPref.get(c).getBoolean(c.getString(R.string.history_enabled),true);
     }
 
 

@@ -5,11 +5,11 @@ import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
 
-import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
 import com.moofficial.moweb.MoSettingsEssentials.MoTheme.MoTheme;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoUserPassAutoFill.MoUserPassManager;
 
 public class MoSettingsSection {
 
@@ -35,8 +35,7 @@ public class MoSettingsSection {
         init();
     }
 
-    private void init(){
-        initLoadAll();
+    private void init() {
         updateAll();
     }
 
@@ -45,12 +44,10 @@ public class MoSettingsSection {
         initTheme();
         initAutoComplete();
         initHistorySettings();
+        initPasswords();
     }
 
-    // loads all the shared prefs inside a hash map
-    private void initLoadAll(){
-        MoSharedPref.loadAll(context);
-    }
+
 
 
     private void initSearchEngine(){
@@ -67,6 +64,10 @@ public class MoSettingsSection {
 
     private void initHistorySettings(){
         MoHistoryManager.updateSharedPref(context);
+    }
+
+    private void initPasswords() {
+        MoUserPassManager.updatePreference(this.context);
     }
 
 

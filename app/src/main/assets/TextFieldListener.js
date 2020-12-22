@@ -1,8 +1,3 @@
-//document.addEventListener('input', function (f) {
-//    let e = f.target;
-//    let tagName = e.tagName;
-//    jsInput.onClicked(e.id,e.name,e.type);
-//});
 let ranAlready = false;
 
 if(!ranAlready) {
@@ -11,8 +6,6 @@ if(!ranAlready) {
             let tagName = e.tagName;
             if (tagName === 'INPUT') {
                  jsInput.onClicked(e.id,e.name,e.type,e.autocomplete);
-            } else {
-                closeAllLists(e);
             }
     });
     ranAlready = true;

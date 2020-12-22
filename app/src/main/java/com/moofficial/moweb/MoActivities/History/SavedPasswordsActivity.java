@@ -2,6 +2,8 @@ package com.moofficial.moweb.MoActivities.History;
 
 import android.transition.TransitionManager;
 
+import androidx.preference.PreferenceManager;
+
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoListViewSync;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
@@ -12,6 +14,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMarg
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoSearchBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoSwitchButton;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoUserPassAutoFill.MoUserPassAutoFill;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoUserPassAutoFill.MoUserPassManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoUserPassAutoFill.Views.MoUserPassAdapter;
@@ -34,6 +37,8 @@ public class SavedPasswordsActivity extends MoSmartActivity {
     private MoSearchable searchable;
     private List<MoUserPassAutoFill> allAutoFills;
 
+    private MoSwitchButton switchButton;
+
     private MoListViewSync sync;
 
     @Override
@@ -48,6 +53,27 @@ public class SavedPasswordsActivity extends MoSmartActivity {
         initSelectable();
         initSearchable();
         initSync();
+        initTurnOffButton();
+    }
+
+    private void initTurnOffButton() {
+        this.switchButton = new MoSwitchButton(this)
+                .setOnSwitchChanged(v -> {
+                    PreferenceManager.getDefaultSharedPreferences(this)
+                            .edit()
+                            .putBoolean(getString(R.string.passwords_enabled), this.switchButton.isChecked())
+                            .apply();
+                    MoUserPassManager.updatePreference(this);
+                    updateSwitchText();
+                });
+        this.switchButton.setChecked(MoUserPassManager.enabled);
+        updateSwitchText();
+        this.switchButton.getCardView().makeCardRound().removeElevation();
+        this.l.linearNested.addView(this.switchButton, MoMarginBuilder.getLinearParams(8));
+    }
+
+    private void updateSwitchText() {
+        this.switchButton.setText(switchButton.isChecked()?"On":"Off");
     }
 
     private void initCardRecyclerView() {

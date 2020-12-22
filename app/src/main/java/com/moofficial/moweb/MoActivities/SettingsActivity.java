@@ -15,7 +15,6 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.moofficial.moessentials.MoEssentials.MoKeyGuard.MoKeyGuard;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moweb.MoActivities.History.SavedPasswordsActivity;
-import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
 import com.moofficial.moweb.MoSettingsEssentials.MoTheme.MoTheme;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
@@ -120,7 +119,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-            MoSharedPref.loadAll(activity);
             if(s.equals(string(R.string.search_engine))){
                 MoSearchEngine.updateSearchEngine(activity);
             }else if(s.equals(string(R.string.theme_version))){

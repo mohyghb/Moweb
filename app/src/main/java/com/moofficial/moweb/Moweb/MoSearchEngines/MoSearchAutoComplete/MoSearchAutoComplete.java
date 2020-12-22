@@ -11,7 +11,7 @@ public class MoSearchAutoComplete {
 
 
     public static void updateSearchAutoComplete(Context c){
-        enabled = MoSharedPref.get(c.getString(R.string.auto_complete),true);
+        enabled = MoSharedPref.get(c).getBoolean(c.getString(R.string.auto_complete),true);
     }
 
 }

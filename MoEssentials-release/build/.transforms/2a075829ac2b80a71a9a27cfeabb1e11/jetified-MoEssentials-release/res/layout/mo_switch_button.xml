@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mo_check_button_card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/mo_check_button_text"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fadingEdgeLength="@dimen/mo_fade_edge_text_view"
+            android:gravity="center_vertical"
+            android:requiresFadingEdge="horizontal"
+            android:singleLine="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/mo_check_button_check"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/mo_check_button_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView>
+
+
+
+

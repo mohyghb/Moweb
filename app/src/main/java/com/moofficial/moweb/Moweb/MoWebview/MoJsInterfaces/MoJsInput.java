@@ -76,7 +76,9 @@ public class MoJsInput {
      * on them, we provide auto-fill data
      */
     public void setupListeners() {
-        webView.evaluateJavascript(LISTENER_SCRIPT,null);
+        //if(!MoString.containsSmaller(previousUrl,webView.getUrl())) {
+            webView.evaluateJavascript(LISTENER_SCRIPT,null);
+        //}
     }
 
     /**

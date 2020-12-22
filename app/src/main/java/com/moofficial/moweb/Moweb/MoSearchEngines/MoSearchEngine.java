@@ -102,8 +102,8 @@ public abstract class MoSearchEngine {
      */
     public static MoSearchEngine getPrefSearchEngine(Context c){
         // get shared preference one
-        int searchEngine = Integer.parseInt(MoSharedPref.get(c.getString(R.string.search_engine),
-                GOOGLE+""));
+        int searchEngine = MoSharedPref.get(c).getInt(c.getString(R.string.search_engine),
+                GOOGLE);
         switch (searchEngine){
             case GOOGLE:
                 return new GoogleSearchEngine();

@@ -85,7 +85,9 @@ public class MoWebAutoFillSession {
         // it is okay to save general auto-fills without confirmation
         saveGeneralAutoFill(c);
         // we need permission for user pass auto fill
-        saveUserPassAutoFill(c,url);
+        if (MoUserPassManager.enabled) {
+            saveUserPassAutoFill(c,url);
+        }
         // new session
         clearSession();
     }

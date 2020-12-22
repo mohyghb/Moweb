@@ -4,7 +4,9 @@ import android.content.Context;
 
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManager;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
+import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoWebAutoFill;
+import com.moofficial.moweb.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ public class MoUserPassManager {
     private static final List<MoUserPassAutoFill> allPasses = new ArrayList<>();
     // do not save any password for any host inside this set
     private static final HashSet<String> neverSaveSet = new HashSet<>();
+    public static boolean enabled = true;
 
     /**
      * creates a new username and password
@@ -164,8 +167,16 @@ public class MoUserPassManager {
         }
     }
 
+    /**
+     * updates the enabled or disabled for password saving
+     * @param context
+     */
+    public static void updatePreference(Context context) {
+        enabled = MoSharedPref.get(context)
+                .getBoolean(context.getString(R.string.passwords_enabled),true);
+    }
 
-    // generate fake auto completes for passwords
+    // generate fake auto completes for passwords TESTING
     private static void generateFakePasswordAutoFills(Context context) {
         String host = "accounts.google.com";
         List<MoUserPassAutoFill> list =  MoUserPassManager.get(host);

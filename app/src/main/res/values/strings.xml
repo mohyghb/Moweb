@@ -144,6 +144,7 @@
 
     <string name="passwords_title">Passwords</string>
     <string name="passwords_summary">Edit the saved password settings</string>
+    <string name="passwords_enabled">Passwords_enable</string>
 
     <!--Bookmark-->
     <string name="bookmark_title">Bookmarks</string>

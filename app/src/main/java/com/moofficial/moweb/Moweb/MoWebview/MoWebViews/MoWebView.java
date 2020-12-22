@@ -43,7 +43,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
                 MoHistoryManager.add(view);
             }
             MoWebView.this.url = url;
-            MoLog.print("update visited history " + url);
+            //MoLog.print("update visited history " + url);
         }
         @Override
         public void onPageFinished(WebView view, String url) {
@@ -58,8 +58,15 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
             onErrorReceived.onReceivedError(view,request,error);
         }
 
+
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            if (request.getUrl().toString().equals(view.getUrl())) {
+                MoLog.print("they are the same");
+                forceReload();
+                return true;
+            }
+            MoLog.print(request.getUrl().toString()  + "but for  web view this is: " + view.getUrl());
             moJsInput.gatherData();
             return super.shouldOverrideUrlLoading(view, request);
         }
