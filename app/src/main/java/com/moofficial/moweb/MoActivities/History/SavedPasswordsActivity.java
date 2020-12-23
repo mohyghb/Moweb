@@ -45,6 +45,7 @@ public class SavedPasswordsActivity extends MoSmartActivity {
     protected void init() {
         allAutoFills = MoUserPassManager.get();
         setTitle(R.string.passwords);
+        initTurnOffButton();
         initPassAdapter();
         initPassRecycler();
         initSelectToolbar();
@@ -53,7 +54,6 @@ public class SavedPasswordsActivity extends MoSmartActivity {
         initSelectable();
         initSearchable();
         initSync();
-        initTurnOffButton();
     }
 
     private void initTurnOffButton() {
@@ -69,7 +69,7 @@ public class SavedPasswordsActivity extends MoSmartActivity {
         this.switchButton.setChecked(MoUserPassManager.enabled);
         updateSwitchText();
         this.switchButton.getCardView().makeCardRound().removeElevation();
-        this.l.linearNested.addView(this.switchButton, MoMarginBuilder.getLinearParams(8));
+        this.l.linearNested.addView(this.switchButton);
     }
 
     private void updateSwitchText() {

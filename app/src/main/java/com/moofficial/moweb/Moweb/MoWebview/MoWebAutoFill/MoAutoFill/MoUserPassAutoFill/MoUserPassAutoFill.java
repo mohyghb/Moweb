@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.webkit.WebView;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFileSavable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
@@ -131,7 +132,8 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
                 .setUsername(username.getValue())
                 .setPassword(password.getValue())
                 .setHost(this.host)
-                .setOnAutoFillClickListener(()->onClick.onClick(this));
+                .setOnAutoFillClickListener(()->onClick.onClick(this))
+                .hideCopies();
     }
 
     /**
@@ -145,7 +147,7 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
                     String sb = "javascript:fillUserPass('%s','%s','%s','%s')";
                     return String.format(sb,username.getId(),username.getValue(),
                             password.getId(),password.getValue()); })
-                .after(val -> webView.post( () -> webView.loadUrl(val)))
+                .after(val -> webView.post( () -> webView.evaluateJavascript(val,null)))
                 .begin();
     }
 
@@ -261,7 +263,7 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
         //  error: is your activity still running
         if (atLeastOneChild) {
             // bring the keyboard up on web view when dismissed
-            bottomSheet.expanded()
+            bottomSheet.setState(BottomSheetBehavior.STATE_EXPANDED)
                     .setOnDismissedListener(()-> MoKeyboardUtils.showKeyboard(webView,context))
                     .build()
                     .show();
