@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
+import com.moofficial.moessentials.MoEssentials.MoString.MoString;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoDrawable.MoDrawableBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoDrawable.MoDrawableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletableInterface.MoListDeletable;
@@ -72,6 +74,7 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
     @Override
     public void onBindViewHolder(@NonNull MoHomePageViewHolder holder, int position) {
         MoHomePage homePage = dataSet.get(position);
+        holder.moLogo.setText(MoString.getSignature(homePage.getUrl()));
         holder.urlTextView.setText(homePage.getUrl());
         handleLogo(holder, homePage);
         pressCard(holder, position);
@@ -81,9 +84,18 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
 
     private void handleLogo(@NonNull MoHomePageViewHolder holder, MoHomePage homePage) {
         if(homePage.isActivated()){
-            holder.moLogo.filledCircle();
-        }else{
-            holder.moLogo.setLogoDrawable(MoDrawableUtils.outlineCircle(this.context));
+            holder.moLogo.setLogoDrawable(new MoDrawableBuilder(this.context)
+                    .oval()
+                    .strokeWidth(7)
+                    .strokeColor(R.color.colorAccent)
+                    .withColor(R.color.transparent)
+                    .build())
+                    .setTextColor(R.color.colorAccent);
+            holder.urlTextView.setTextColor(context.getColor(R.color.colorAccent));
+        } else {
+            holder.moLogo.setLogoDrawable(MoDrawableUtils.outlineCircle(this.context))
+                         .setTextColor(R.color.MoInverseColor);
+            holder.urlTextView.setTextColor(context.getColor(R.color.MoInverseColor));
         }
     }
 
@@ -93,7 +105,6 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
         if(payloads.isEmpty()) {
             super.onBindViewHolder(holder, position, payloads);
         }else{
-
             String payload = (String)payloads.get(0);
             switch (payload){
                 case PAYLOAD_UPDATE_LOGO:

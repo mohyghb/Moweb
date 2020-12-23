@@ -1,6 +1,7 @@
 package com.moofficial.moweb.MoActivities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,6 +25,11 @@ import com.moofficial.moweb.R;
 public class SettingsActivity extends AppCompatActivity {
 
     private ImageButton back;
+
+
+    public static void launch(Context c) {
+        c.startActivity(new Intent(c, SettingsActivity.class));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -177,4 +177,12 @@ public class HomePageActivity extends MoSmartActivity {
     }
 
 
+    @Override
+    public void onBackPressed() {
+        if (moListDelete.hasAction()) {
+            moListDelete.removeAction();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }
