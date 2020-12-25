@@ -153,6 +153,7 @@ public class HomePageActivity extends MoSmartActivity {
                          .setCounterView(l.title)
                          .addUnNormalViews(moDeleteToolbar,moBottomDeleteBar)
                          .addNormalViews(moToolBar,moInputBar)
+                         .setOnDeleteFinished(() -> recyclerAdapter.notifyDataSetChanged())
                          .setSelectAllCheckBox(moDeleteToolbar.getCheckBox())
                          .setConfirmButton(moBottomDeleteBar.getDelete())
                          .setCancelButton(moBottomDeleteBar.getCancel());

@@ -84,16 +84,16 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
 
     private void handleLogo(@NonNull MoHomePageViewHolder holder, MoHomePage homePage) {
         if(homePage.isActivated()){
-            holder.moLogo.setLogoDrawable(new MoDrawableBuilder(this.context)
+            holder.moLogo.setOuter(new MoDrawableBuilder(this.context)
                     .oval()
-                    .strokeWidth(7)
+                    .strokeWidth(8)
                     .strokeColor(R.color.colorAccent)
                     .withColor(R.color.transparent)
                     .build())
                     .setTextColor(R.color.colorAccent);
             holder.urlTextView.setTextColor(context.getColor(R.color.colorAccent));
         } else {
-            holder.moLogo.setLogoDrawable(MoDrawableUtils.outlineCircle(this.context))
+            holder.moLogo.setOuter(MoDrawableUtils.outlineCircle(this.context))
                          .setTextColor(R.color.MoInverseColor);
             holder.urlTextView.setTextColor(context.getColor(R.color.MoInverseColor));
         }

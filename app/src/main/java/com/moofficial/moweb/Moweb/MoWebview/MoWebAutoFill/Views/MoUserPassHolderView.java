@@ -35,6 +35,10 @@ public class MoUserPassHolderView extends MoConstraint {
         super(context, attrs, defStyleAttr);
     }
 
+    public MoLogo getLogo() {
+        return logo;
+    }
+
     public MoUserPassHolderView setUsername(String user) {
         username.setText(user);
         this.logo.setText(MoString.getSignature(user));

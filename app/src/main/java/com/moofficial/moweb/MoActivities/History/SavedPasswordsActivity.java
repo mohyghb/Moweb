@@ -5,6 +5,7 @@ import android.transition.TransitionManager;
 import androidx.preference.PreferenceManager;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoDrawable.MoDrawableBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoListViewSync;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
@@ -69,11 +70,23 @@ public class SavedPasswordsActivity extends MoSmartActivity {
         this.switchButton.setChecked(MoUserPassManager.enabled);
         updateSwitchText();
         this.switchButton.getCardView().makeCardRound().removeElevation();
-        this.l.linearNested.addView(this.switchButton);
+        this.l.linearNested.addView(this.switchButton, MoMarginBuilder.getLinearParams(0,8,0,8));
     }
 
     private void updateSwitchText() {
+        TransitionManager.beginDelayedTransition(switchButton.getCardView());
         this.switchButton.setText(switchButton.isChecked()?"On":"Off");
+        if(switchButton.isChecked()) {
+            this.switchButton.getLayout().setBackground(new MoDrawableBuilder(this)
+                    .rectangle()
+                    .roundRadius()
+                    .strokeColor(R.color.colorPrimary)
+                    .strokeWidth(6)
+                    .withColor(R.color.transparent)
+                    .build());
+        } else {
+            this.switchButton.getLayout().setBackground(null);
+        }
     }
 
     private void initCardRecyclerView() {
@@ -167,7 +180,7 @@ public class SavedPasswordsActivity extends MoSmartActivity {
     private void initSync() {
         sync = new MoListViewSync(getGroupRootView(),selectable,searchable)
                 .setPutOnHold(true)
-                .setSharedElements(moToolBar);
+                .setSharedElements(moToolBar, this.switchButton);
     }
 
     @Override

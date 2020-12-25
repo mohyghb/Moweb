@@ -263,6 +263,7 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
         //  error: is your activity still running
         if (atLeastOneChild) {
             // bring the keyboard up on web view when dismissed
+            MoKeyboardUtils.hideSoftKeyboard(webView);
             bottomSheet.setState(BottomSheetBehavior.STATE_EXPANDED)
                     .setOnDismissedListener(()-> MoKeyboardUtils.showKeyboard(webView,context))
                     .build()

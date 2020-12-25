@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 
 import com.moofficial.moessentials.MoEssentials.MoClipboard.MoClipboardUtils;
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoDrawable.MoDrawableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
@@ -56,7 +57,9 @@ public class MoUserPassAdapter extends MoSelectableAdapter<MoUserPassHolder, MoU
                         return true;
                     }
                     return false;
-                });
+                })
+                .getLogo().setOuter(MoDrawableUtils.outlineCircle(context));
+
 
         MoSelectableUtils.applySelectedColor(context,holder.layout.getCoverLayout(),a);
     }

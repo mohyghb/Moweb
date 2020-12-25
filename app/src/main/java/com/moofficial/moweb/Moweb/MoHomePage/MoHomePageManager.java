@@ -57,7 +57,7 @@ public class MoHomePageManager {
      */
     public static void activateOneIfNoneIsActivated(Context c){
         if(activeHomePageIndex == NONE_ACTIVATED || activeHomePageIndex >= homePages.size()){
-            if(homePages.isEmpty()){
+            if(homePages.isEmpty()) {
                 activeHomePageIndex = NONE_ACTIVATED;
             }else{
                 activate(c,homePages.size()-1);
@@ -73,6 +73,9 @@ public class MoHomePageManager {
         for(int i = homePages.size()-1;i>=0;i--){
             if(homePages.get(i).isSelected()){
                 homePages.remove(i);
+                if (i == activeHomePageIndex) {
+                    activeHomePageIndex = NONE_ACTIVATED;
+                }
             }
         }
         activateOneIfNoneIsActivated(context);

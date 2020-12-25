@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
@@ -75,6 +76,7 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
         return new MoBookmarkViewHolder(v);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull MoBookmarkViewHolder h, int i) {
         MoBookmark bookmark = dataSet.get(i);
@@ -84,11 +86,18 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
                 h.title.setText(bookmark.getName());
                 break;
             case MoBookmark.FOLDER:
-                h.url.setText(bookmark.size()+" items");
+                h.url.setText(bookmark.size() + " items");
                 h.title.setText(bookmark.getName());
                 break;
         }
-        h.imageTextLogo.setText(MoString.getSignature(bookmark.getName()));
+        if (bookmark.isFolder()) {
+            h.imageTextLogo
+                    .showLogoHideText()
+                    .setInner(ContextCompat.getDrawable(context,R.drawable.ic_baseline_folder_open_24));
+        } else {
+            h.imageTextLogo.setText(MoString.getSignature(bookmark.getName())).hideLogo().showText();
+        }
+
         onClickListener(h, bookmark,i);
         onLongClickListener(h, bookmark,i);
         addSelectColorToHolder(h, bookmark);

@@ -6,8 +6,8 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManager;
-import com.moofficial.moessentials.MoEssentials.MoUtils.MoKeyboardUtils.MoKeyboardUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoUserPassAutoFill.MoUserPassAutoFill;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoUserPassAutoFill.MoUserPassManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoWebAutoFill;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoWebAutoFillSession;
 
@@ -126,16 +126,13 @@ public class MoJsInput {
      */
     @JavascriptInterface
     public void onClicked(String id, String name, String type,String autocomplete) {
-//        if(MoWebAutoFill.autoFillIsOff(autocomplete)) {
-//            // if auto complete is off we don't do anything here
-//            return;
-//        }
+        if(!MoUserPassManager.enabled) {
+            // if auto complete is off we don't do anything here
+            return;
+        }
 
         if (MoWebAutoFill.isUserPassAutoFill(id, type, autocomplete)) {
-            // this is a user password auto fill
-            MoKeyboardUtils.hideSoftKeyboard(webView);
             MoUserPassAutoFill.showUserPassAutoFill(context,webView);
-            // todo same thing as above but for passwords.
         } else if (MoWebAutoFill.isCreditCardAutoFill(autocomplete)){
             // todo credit card auto fill
         } else {

@@ -127,7 +127,7 @@ class MoNestedWebView extends WebView implements NestedScrollingChild {
                 mLastMotionY = y - mScrollOffset[1];
 
                 int oldY = getScrollY();
-                int newScrollY = Math.max(0, oldY + deltaY);
+                int newScrollY = Math.max(0, oldY + deltaY) ;
                 int dyConsumed = newScrollY - oldY;
                 int dyUnconsumed = deltaY - dyConsumed;
 
