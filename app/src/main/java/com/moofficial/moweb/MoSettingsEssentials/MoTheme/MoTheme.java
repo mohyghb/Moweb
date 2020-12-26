@@ -14,8 +14,8 @@ public class MoTheme {
     public static final int FOLLOW_SYSTEM_THEME = -1;
 
     public static void updateTheme(Context context){
-        int themeValue = MoSharedPref.get(context).getInt(context.getString(R.string.theme_version)
-                ,FOLLOW_SYSTEM_THEME);
+        int themeValue = Integer.parseInt(MoSharedPref.get(context).getString(context.getString(R.string.theme_version)
+                ,FOLLOW_SYSTEM_THEME+""));
         switch (themeValue){
             case LIGHT_THEME:
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
