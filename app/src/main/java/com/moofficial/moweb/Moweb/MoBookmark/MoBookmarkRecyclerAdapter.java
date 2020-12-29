@@ -144,7 +144,7 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
 
     private void onClickListener(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark,int i) {
         h.cardView.setOnClickListener(view -> {
-            if(selectable !=null && selectable.isInActionMode()){
+            if(isSelecting()){
                 onSelect(i);
             }
             else{

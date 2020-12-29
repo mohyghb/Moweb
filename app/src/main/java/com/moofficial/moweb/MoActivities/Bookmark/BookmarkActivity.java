@@ -370,11 +370,11 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     private void hideShowEdit() {
         if(recyclerAdapter.onlyOneIsSelected()) {
             // then we can show edit
-            TransitionManager.beginDelayedTransition(getGroupRootView());
+            TransitionManager.beginDelayedTransition(moListSelectableToolbar);
             moListSelectableToolbar.showForthButton();
         } else {
             // hide edit
-            TransitionManager.beginDelayedTransition(getGroupRootView());
+            TransitionManager.beginDelayedTransition(moListSelectableToolbar);
             moListSelectableToolbar.hideForthButton();
         }
     }
