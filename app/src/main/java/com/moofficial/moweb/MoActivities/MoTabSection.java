@@ -185,7 +185,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
     }
 
     private void initWebCardView() {
-        webCard = new MoCardView(getContext()).makeCardMediumRound().makeTransparent();
+        webCard = new MoCardView(getContext()).makeCardMediumRound().makeTransparent().removeElevation();
         coordinatorLayout.addView(webCard,MoCoordinatorUtils.getScrollingParams());
     }
 
