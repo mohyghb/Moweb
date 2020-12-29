@@ -84,26 +84,18 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
 
     private void handleLogo(@NonNull MoHomePageViewHolder holder, MoHomePage homePage) {
         if(isNotSelecting()) {
-            if(homePage.isActivated()){
-                holder.coverLayout.setBackground(new MoDrawableBuilder(context)
-                        .roundRadius()
-                        .withColor(R.color.transparent)
-                        .strokeColor(R.color.colorPrimary)
-                        .strokeWidth(4)
+            if(homePage.isActivated()) {
+                holder.moLogo.setOuter(new MoDrawableBuilder(this.context)
+                        .oval()
+                        .withColor(holder.moLogo.getColorRes())
                         .build());
-//                holder.moLogo.setOuter(new MoDrawableBuilder(this.context)
-//                        .oval()
-//                        .strokeWidth(8)
-//                        .strokeColor(R.color.colorAccent)
-//                        .withColor(R.color.transparent)
-//                        .build());
-                ///.setTextColor(R.color.colorAccent);
-                // holder.urlTextView.setTextColor(context.getColor(R.color.colorAccent));
             } else {
-                holder.coverLayout.setBackground(null);
-//                holder.moLogo.setOuter(MoDrawableUtils.outlineCircle(this.context))
-//                        .setTextColor(R.color.MoInverseColor);
-//                holder.urlTextView.setTextColor(context.getColor(R.color.MoInverseColor));
+                holder.moLogo.setOuter(new MoDrawableBuilder(this.context)
+                        .oval()
+                        .strokeWidth(2)
+                        .strokeColor(holder.moLogo.getColorRes())
+                        .withColor(R.color.transparent)
+                        .build());
             }
         }
     }
@@ -127,11 +119,7 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
     }
 
     private void applySelected(@NonNull MoHomePageViewHolder holder, int position) {
-        if (dataSet.get(position).isSelected()) {
-            holder.moLogo.select();
-        } else {
-            holder.moLogo.unSelect();
-        }
+        holder.moLogo.onSelectFill(dataSet.get(position));
     }
 
 

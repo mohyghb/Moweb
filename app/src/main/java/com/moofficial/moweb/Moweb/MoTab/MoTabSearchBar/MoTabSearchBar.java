@@ -447,8 +447,7 @@ public class MoTabSearchBar extends MoConstraint {
                 .setDownFind(moFindBar.getRightButton())
                 .setCancelButton(moFindBar.getLeftButton())
                 .addNormalViews(this,suggestionCardRecyclerView)
-                .addUnNormalViews(moFindBar)
-                ;
+                .addUnNormalViews(moFindBar);
     }
 
     /**

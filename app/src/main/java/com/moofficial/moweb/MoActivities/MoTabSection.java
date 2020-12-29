@@ -136,7 +136,8 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
     @SuppressLint("ClickableViewAccessibility")
     private void updateWebView() {
         this.webView = tab.getMoWebView();
-        MoTabUtils.transitionToInTabMode(webView,webCard, new CardView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        MoTabUtils.transitionToInTabMode(webView,webCard,
+                new CardView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
         this.webView.onResume();
         this.webView.setOnLongClickListener(view -> {
@@ -171,7 +172,6 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
                 .setMoFindBar(findBar);
         this.moTabSearchBar.init();
         linearBottom.setupMultipleBars(moTabSearchBar,suggestionCard,moTabSearchBar,findBar);
-        bottomCardView.makeCardRound();
     }
 
     /**
@@ -185,7 +185,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
     }
 
     private void initWebCardView() {
-        webCard = new MoCardView(getContext()).makeCardRecRound().makeTransparent();
+        webCard = new MoCardView(getContext()).makeCardMediumRound().makeTransparent();
         coordinatorLayout.addView(webCard,MoCoordinatorUtils.getScrollingParams());
     }
 
