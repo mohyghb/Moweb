@@ -92,7 +92,7 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
             // todo if the type of the password is NEW_PASSWORD,  then we can just update the ref
             //  if we have it
             this.setPassword(autoFill);
-        } else if (autoFill.isUsername()) {
+        } else if (autoFill.isUsername() || autoFill.isEmail()) {
             this.setUsername(autoFill);
         } else {
             // add this to suggestions
@@ -144,9 +144,9 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
     public void fill(WebView webView) {
         new MoThread<String>()
                 .doBackground(() -> {
-                    String sb = "javascript:fillUserPass('%s','%s','%s','%s')";
-                    return String.format(sb,username.getId(),username.getValue(),
-                            password.getId(),password.getValue()); })
+                    String sb = "fillUserPass('%s','%s','%s','%s');";
+                    return String.format(sb,username.getAutocomplete(),username.getValue(),
+                            password.getAutocomplete(),password.getValue()); })
                 .after(val -> webView.post( () -> webView.evaluateJavascript(val,null)))
                 .begin();
     }

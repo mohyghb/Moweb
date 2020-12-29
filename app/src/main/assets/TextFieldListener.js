@@ -6,6 +6,7 @@ if(!ranAlready) {
             let tagName = e.tagName;
             if (tagName === 'INPUT') {
                  jsInput.onClicked(e.id,e.name,e.type,e.autocomplete);
+                 jsInput.print("value = " + e.value);
             }
     });
     ranAlready = true;
@@ -31,7 +32,7 @@ function bruteForceFill(idOrName, autocomplete, value) {
             // then we can auto fill this input
 
             inp.value = value;
-            jsInput.print(autocomplete + ' yay ' + value);
+            jsInput.print(autocomplete + ' yay ' + inp.value);
             break;
         }
     }
@@ -40,8 +41,8 @@ function bruteForceFill(idOrName, autocomplete, value) {
     returns true if the input parameter
     meets the requirements that are passed in as params
 */
-function meetsReq(input, autocomplete, id) {
-    return  input.id === id ||
+function meetsReq(input, autocomplete, auto) {
+    return  input.autocomplete === auto ||
             input.autocomplete === autocomplete ||
             autocomplete.includes(input.name);
 }

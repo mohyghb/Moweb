@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.cardview.widget.CardView
+    <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView
         android:id="@+id/suggestion_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,6 +26,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TextView" />
-    </androidx.cardview.widget.CardView>
+    </com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

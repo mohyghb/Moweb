@@ -6,12 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoRunnable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoRecyclerAdapter;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
 import com.moofficial.moweb.R;
 
 import java.util.List;
@@ -27,16 +27,12 @@ public class MoSuggestionsAdapter extends MoRecyclerAdapter<MoSuggestionsAdapter
     public static class SuggestionViewHolder extends RecyclerView.ViewHolder {
 
         private TextView suggestion;
-        private CardView cardView;
+        private MoCardView cardView;
 
         public SuggestionViewHolder(View v) {
             super(v);
             suggestion = v.findViewById(R.id.suggestion_text_view);
             cardView = v.findViewById(R.id.suggestion_button);
-        }
-
-        public void removeView(){
-            ((ViewGroup) itemView).removeAllViews();
         }
 
 
@@ -62,7 +58,9 @@ public class MoSuggestionsAdapter extends MoRecyclerAdapter<MoSuggestionsAdapter
     @Override
     public void onBindViewHolder(MoSuggestionsAdapter.SuggestionViewHolder holder, int position) {
         holder.suggestion.setText(dataSet.get(position).getKey());
-        holder.cardView.setOnClickListener(view -> {
+        holder.cardView
+                .makeCardRound()
+                .setOnClickListener(view -> {
             if(onSuggestionClicked!=null)
                 onSuggestionClicked.run(dataSet.get(position).getSearch());
         });

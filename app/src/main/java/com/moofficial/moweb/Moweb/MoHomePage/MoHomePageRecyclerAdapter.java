@@ -8,11 +8,9 @@ import androidx.annotation.NonNull;
 
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoDrawable.MoDrawableBuilder;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoDrawable.MoDrawableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletableInterface.MoListDeletable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
 import com.moofficial.moweb.R;
 
@@ -79,23 +77,34 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
         handleLogo(holder, homePage);
         pressCard(holder, position);
         longPressCard(holder,position);
-        MoSelectableUtils.applySelectedColor(this.context,holder.coverLayout,dataSet.get(position));
+        applySelected(holder,position);
+        // todo  we can use this to make sure that the selected home page has a outline near it
+       // holder.coverLayout.setBackground(new MoDrawableBuilder(context).oval().primaryColor().build());
     }
 
     private void handleLogo(@NonNull MoHomePageViewHolder holder, MoHomePage homePage) {
-        if(homePage.isActivated()){
-            holder.moLogo.setOuter(new MoDrawableBuilder(this.context)
-                    .oval()
-                    .strokeWidth(8)
-                    .strokeColor(R.color.colorAccent)
-                    .withColor(R.color.transparent)
-                    .build())
-                    .setTextColor(R.color.colorAccent);
-            holder.urlTextView.setTextColor(context.getColor(R.color.colorAccent));
-        } else {
-            holder.moLogo.setOuter(MoDrawableUtils.outlineCircle(this.context))
-                         .setTextColor(R.color.MoInverseColor);
-            holder.urlTextView.setTextColor(context.getColor(R.color.MoInverseColor));
+        if(isNotSelecting()) {
+            if(homePage.isActivated()){
+                holder.coverLayout.setBackground(new MoDrawableBuilder(context)
+                        .roundRadius()
+                        .withColor(R.color.transparent)
+                        .strokeColor(R.color.colorPrimary)
+                        .strokeWidth(4)
+                        .build());
+//                holder.moLogo.setOuter(new MoDrawableBuilder(this.context)
+//                        .oval()
+//                        .strokeWidth(8)
+//                        .strokeColor(R.color.colorAccent)
+//                        .withColor(R.color.transparent)
+//                        .build());
+                ///.setTextColor(R.color.colorAccent);
+                // holder.urlTextView.setTextColor(context.getColor(R.color.colorAccent));
+            } else {
+                holder.coverLayout.setBackground(null);
+//                holder.moLogo.setOuter(MoDrawableUtils.outlineCircle(this.context))
+//                        .setTextColor(R.color.MoInverseColor);
+//                holder.urlTextView.setTextColor(context.getColor(R.color.MoInverseColor));
+            }
         }
     }
 
@@ -111,13 +120,19 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
                     handleLogo(holder,dataSet.get(position));
                     break;
                 case MoSelectable.PAYLOAD_SELECTED_ITEM:
-                    MoSelectableUtils.applySelectedColor(this.context,holder.coverLayout,dataSet.get(position));
+                    applySelected(holder, position);
                     break;
             }
         }
     }
 
-
+    private void applySelected(@NonNull MoHomePageViewHolder holder, int position) {
+        if (dataSet.get(position).isSelected()) {
+            holder.moLogo.select();
+        } else {
+            holder.moLogo.unSelect();
+        }
+    }
 
 
     @Override

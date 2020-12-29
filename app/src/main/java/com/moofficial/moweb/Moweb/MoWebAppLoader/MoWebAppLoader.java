@@ -9,7 +9,7 @@ import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
-import com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces.MoJsInput;
+//import com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces.MoJsInput;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoGeneralAutoFill.MoGeneralAutoFillManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoUserPassAutoFill.MoUserPassManager;
 
@@ -56,15 +56,15 @@ public class MoWebAppLoader {
         MoUserPassManager.load(context);
 
 
-        loadJsScripts(context);
+//        loadJsScripts(context);
 
     }
 
 
 
-    private static void loadJsScripts(Context context) {
-        MoJsInput.loadScript(context);
-    }
+//    private static void loadJsScripts(Context context) {
+//        MoJsInput.loadScript(context);
+//    }
 
 
 }

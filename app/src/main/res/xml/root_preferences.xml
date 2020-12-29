@@ -41,10 +41,10 @@
             app:defaultValue="true"
             app:iconSpaceReserved="false"/>
 
-        <Preference android:key="@string/passwords"
-            android:title="@string/passwords_title"
-            android:summary="@string/passwords_summary"
-            app:iconSpaceReserved="false"/>
+<!--        <Preference android:key="@string/passwords"-->
+<!--            android:title="@string/passwords_title"-->
+<!--            android:summary="@string/passwords_summary"-->
+<!--            app:iconSpaceReserved="false"/>-->
 
     </PreferenceCategory>
 

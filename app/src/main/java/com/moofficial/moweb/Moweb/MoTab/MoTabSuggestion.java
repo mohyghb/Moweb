@@ -30,7 +30,7 @@ public class MoTabSuggestion {
     }
 
     public MoTabSuggestion init(){
-        moCardRecyclerView.getCardView().makeTransparent();
+        moCardRecyclerView.getCardView().makeCardRectangular();
         adapter = new MoSuggestionsAdapter(new ArrayList<>(),context,this.onSuggestionClicked);
         recyclerView = MoRecyclerUtils.get(moCardRecyclerView.getRecyclerView(),adapter)
                             .setOrientation(MoRecyclerView.HORIZONTAL)

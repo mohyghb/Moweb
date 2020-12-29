@@ -13,13 +13,12 @@ import android.webkit.WebView;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
-import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoWebClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoHitTestResultParser;
-import com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces.MoJsInput;
+//import com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces.MoJsInput;
 import com.moofficial.moweb.Moweb.MoWebview.MoStackTabHistory.MoStackWebHistory;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnPageFinishedListener;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnReceivedError;
@@ -49,7 +48,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             MoWebView.this.onPageFinishedListener.onFinished(view,url);
-            moJsInput.setupListeners();
+//            moJsInput.setupListeners();
         }
 
 
@@ -61,13 +60,13 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-            if (request.getUrl().toString().equals(view.getUrl())) {
-                MoLog.print("they are the same");
-                forceReload();
-                return true;
-            }
-            MoLog.print(request.getUrl().toString()  + "but for  web view this is: " + view.getUrl());
-            moJsInput.gatherData();
+//            if (request.getUrl().toString().equals(view.getUrl())) {
+//                MoLog.print("they are the same");
+//                forceReload();
+//                return true;
+//            }
+//            MoLog.print(request.getUrl().toString()  + "but for  web view this is: " + view.getUrl());
+//            moJsInput.gatherData();
             return super.shouldOverrideUrlLoading(view, request);
         }
     };
@@ -79,7 +78,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
     private MoOnReceivedError onErrorReceived = (view, request, error) -> {};
     private MoOnPageFinishedListener onPageFinishedListener = (view, url) -> {};
     private MoWebState webState = new MoWebState();
-    private MoJsInput moJsInput;
+//    private MoJsInput moJsInput;
     private boolean captureBitmap = true;
     private boolean saveHistory = true;
     private boolean isInDesktopMode = false;
@@ -234,7 +233,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
      * themselves to the js interfaces)
      */
     private void addJsInterfaces() {
-        this.moJsInput = new MoJsInput(this);
+//        this.moJsInput = new MoJsInput(this);
     }
 
 

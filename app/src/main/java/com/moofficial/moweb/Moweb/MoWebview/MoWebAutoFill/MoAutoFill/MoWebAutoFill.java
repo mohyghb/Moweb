@@ -265,6 +265,15 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
     }
 
 
+    public String getAutocomplete() {
+        for(String s : autoCompleteTypes.keySet()) {
+            if (autoCompleteTypes.get(s) == this.autoCompleteType) {
+                return s;
+            }
+        }
+        return "";
+    }
+
     @Override
     public void load(String s, Context context) {
         String[] l = MoFile.loadable(s);
@@ -329,7 +338,7 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
             return true;
         }
         Integer val = autoCompleteTypes.get(autocomplete);
-        return  val!=null && val!= OFF && (val == CURRENT_PASSWORD || val == USERNAME);
+        return  val!=null && val!= OFF && (val == CURRENT_PASSWORD || val == USERNAME || val == EMAIL);
     }
 
 
