@@ -8,11 +8,11 @@ import androidx.annotation.NonNull;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
 import com.moofficial.moweb.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolder,MoHistory> implements
         MoSelectableList<MoHistory> {
@@ -62,14 +62,27 @@ public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolde
                 holder.moImageTextLogo.setText(history.getSignatureLetter());
                 makeHistoryClickable(holder, history,position);
                 makeHistoryLongClickable(holder, position);
-                MoSelectableUtils.applySelectedColor(context,holder.cover,history);
+                addSelectedColor(holder, history);
                 break;
         }
     }
 
+    private void addSelectedColor(@NonNull MoHistoryHolder holder, MoHistory history) {
+        holder.moImageTextLogo.onSelectFill(history);
+    }
 
+    @Override
+    public void onBindViewHolder(@NonNull MoHistoryHolder holder, int position, @NonNull List<Object> payloads) {
+        if (payloads.isEmpty()) {
+            super.onBindViewHolder(holder, position, payloads);
+        } else {
+            // selected payload
+            addSelectedColor(holder,dataSet.get(position));
+        }
 
-    private void makeHistoryClickable(@NonNull MoHistoryHolder holder,MoHistory h,int position) {
+    }
+
+    private void makeHistoryClickable(@NonNull MoHistoryHolder holder, MoHistory h, int position) {
         holder.cardView.setOnClickListener(view -> {
             if(isSelecting()){
                 onSelect(position);
