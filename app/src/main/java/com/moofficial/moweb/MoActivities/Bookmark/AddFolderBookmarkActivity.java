@@ -110,6 +110,7 @@ public class AddFolderBookmarkActivity extends MoSmartActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK && requestCode == CHOOSE_FOLDER_REQUEST_CODE && data!=null) {
             folderParent = BookmarkFolderChooserActivity.getChosenFolder(data.getExtras());
+            folderButton.setDescription(folderParent);
         }
     }
 
