@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.ViewGroup;
 
 import androidx.cardview.widget.CardView;
+import androidx.core.view.GestureDetectorCompat;
 
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoActivitySettings.MoActivitySettings;
@@ -43,6 +44,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
     private MoToolBar moToolBar;
     private MainTransitionTo moveToMainMenu;
     private MoCardView webCard;
+    private GestureDetectorCompat gestureDetector;
 
     public MoTabSection(Context context) {
         super(context);
@@ -77,6 +79,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
         initSearchBar();
         initToolbar();
         initWebCardView();
+        initGesture();
         MoTabController.instance.setUpdateTabActivity(this);
         update();
     }
@@ -104,7 +107,40 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
         }
     }
 
+    /**
+     * perform different tasks based on
+     * the gestures the user does on the screen
+     */
+    private void initGesture() {
+//        this.gestureDetector = new GestureDetectorCompat(getContext(), new MoWebViewGestures());
+//        this.gestureDetector.setOnDoubleTapListener(new GestureDetector.OnDoubleTapListener() {
+//            @Override
+//            public boolean onSingleTapConfirmed(MotionEvent e) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onDoubleTap(MotionEvent e) {
+//                MoLog.print("now works");
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean onDoubleTapEvent(MotionEvent e) {
+//                return false;
+//            }
+//        });
+    }
 
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        return gestureDetector.onTouchEvent(event);
+//    }
+//
+//    @Override
+//    public boolean performClick() {
+//        return super.performClick();
+//    }
 
     /**
      * removes the previous tab from the coordinator
@@ -142,6 +178,16 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
         this.webView.onResume();
         this.webView.setOnLongClickListener(view -> {
             webView.getHitTestResultParser().createDialogOrSmartText(getContext());
+            return false;
+        });
+        // todo test this
+        this.webView.setOnTouchListener((v, event) -> {
+            if (moTabSearchBar.isInSearch()) {
+                // we need to cancel it
+                moTabSearchBar.setToSearchMode(false);
+                MoKeyboardUtils.hideSoftKeyboard(v);
+                return true;
+            }
             return false;
         });
     }

@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         initSectionManager();
     }
 
+
+
     private void initSectionManager() {
         this.sectionViewManager = new MoSectionViewManager(findViewById(R.id.main_activity_frame))
                 .addSection(SECTION_TAB,this.tabSection)

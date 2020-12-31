@@ -28,7 +28,6 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroups.MoConst
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoFindBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoViewUtils;
 import com.moofficial.moweb.MoActivities.Bookmark.BookmarkActivity;
 import com.moofficial.moweb.MoActivities.History.HistoryActivity;
 import com.moofficial.moweb.MoActivities.SettingsActivity;
@@ -58,6 +57,7 @@ public class MoTabSearchBar extends MoConstraint {
 
     private MoWebView moWebView;
     private MoTab tab;
+    private boolean isInSearch = false;
 
     // this is used as the parent layout to be dimmed
     // when the user is typing something
@@ -69,9 +69,9 @@ public class MoTabSearchBar extends MoConstraint {
 
     // needed to make sure that the background is dimmed only once
     // and not multiple times when the user is typing
-    private MoWorker dimBackgroundWorker = new MoWorker()
-            .setTask(() -> MoViewUtils.dim(parentLayout))
-            .setUndoTask(()-> MoViewUtils.clearDim(parentLayout));
+    private MoWorker dimBackgroundWorker = new MoWorker();
+          //  .setTask(() -> MoViewUtils.dim(parentLayout))
+           // .setUndoTask(()-> MoViewUtils.clearDim(parentLayout));
 
     public MoTabSearchBar(Context context) {
         super(context);
@@ -93,6 +93,15 @@ public class MoTabSearchBar extends MoConstraint {
     @Override
     public void initViews() {
 
+    }
+
+    public boolean isInSearch() {
+        return isInSearch;
+    }
+
+
+    public void setToSearchMode(boolean b) {
+        this.isInSearch = b;
     }
 
     public void init() {
@@ -230,7 +239,6 @@ public class MoTabSearchBar extends MoConstraint {
         this.progressBar.setMax(100);
         this.progressBar.setIndeterminate(false);
         this.progressBar.setProgress(0);
-
     }
 
 
@@ -247,9 +255,10 @@ public class MoTabSearchBar extends MoConstraint {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(searchText.hasFocus()){
+                if(searchText.hasFocus()) {
                     // only show suggestions when user is actually editing it
                     showSuggestions(charSequence);
+                    isInSearch = true;
                     // adding dim effect
                     dimBackgroundWorker.perform();
                 }
@@ -264,6 +273,7 @@ public class MoTabSearchBar extends MoConstraint {
             if(MotionEvent.ACTION_UP == event.getAction()) {
                 // dim the background when user starts
                 dimBackgroundWorker.perform();
+                isInSearch = true;
             }
             return searchText.performClick();
         });
@@ -276,8 +286,12 @@ public class MoTabSearchBar extends MoConstraint {
                 hideSuggestions();
                 // removing dim effect
                 dimBackgroundWorker.undo();
+                isInSearch = false;
             }
         });
+
+
+
         searchText.setOnEditorActionListener((textView, i, keyEvent) -> {
             tab.search(textView.getText().toString());
             searchText.clearFocus();
