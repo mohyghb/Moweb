@@ -68,7 +68,9 @@ public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolde
     }
 
     private void addSelectedColor(@NonNull MoHistoryHolder holder, MoHistory history) {
-        holder.moImageTextLogo.onSelectFill(history);
+        if (history.isTypeHistory()) {
+            holder.moImageTextLogo.onSelectFill(history);
+        }
     }
 
     @Override
