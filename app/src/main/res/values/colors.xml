@@ -16,10 +16,6 @@
     <color name="tabs_icon_color">@color/MoBlack</color>
 
 
-<!--    <color name="Dark_Green">@color/MaterialDark</color>-->
-<!--    <color name="Center_Green">@color/colorPrimary_DarkMode</color>-->
-<!--    <color name="Not_Dark_Green">@color/colorAccent_DarkMode</color>-->
-
 
 
     <color name="setting_toolbar_background">@android:color/white</color>

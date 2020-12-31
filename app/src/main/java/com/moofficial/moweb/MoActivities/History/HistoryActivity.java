@@ -3,6 +3,7 @@ package com.moofficial.moweb.MoActivities.History;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.transition.TransitionManager;
 import android.util.Pair;
 import android.widget.Toast;
 
@@ -132,6 +133,7 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
     private void performDeleteHistory() {
         if(nothingHasBeenSelected()) return;
         try {
+            TransitionManager.beginDelayedTransition(getGroupRootView());
             // remove it from files, and the data set shown inside the recycler adapter
             MoHistoryManager.remove(this,historyRecyclerAdapter.getSelectedItems(),historyRecyclerAdapter.getDataSet());
             // notify the adapter that we have changed the data set

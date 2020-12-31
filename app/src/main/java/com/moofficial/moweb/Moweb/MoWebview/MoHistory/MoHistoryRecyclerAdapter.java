@@ -76,7 +76,6 @@ public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolde
         if (payloads.isEmpty()) {
             super.onBindViewHolder(holder, position, payloads);
         } else {
-            // selected payload
             addSelectedColor(holder,dataSet.get(position));
         }
 
