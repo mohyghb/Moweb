@@ -8,9 +8,9 @@
         android:id="@+id/bookmark_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="0dp"
         android:background="?attr/selectableItemBackgroundBorderless"
+        app:cardCornerRadius="@dimen/mo_style_card_corner"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,19 +18,12 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
 
                 <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoLogo
                     android:id="@+id/include_logo"
@@ -41,52 +34,39 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/include_logo"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <TextView
-                        android:id="@+id/title_bookmark"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="TextView"
-                        android:requiresFadingEdge="horizontal"
-                        android:fadingEdgeLength="40dp"
-                        android:ellipsize="none"
-                        android:singleLine="true"
-                        />
-
-                    <TextView
-                        android:id="@+id/url_bookmark"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-light"
-                        android:text="TextView"
-                        android:requiresFadingEdge="horizontal"
-                        android:fadingEdgeLength="40dp"
-                        android:singleLine="true"
-                        android:ellipsize="none"/>
-                </LinearLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
             <LinearLayout
-                android:id="@+id/cover_view"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:gravity="center_vertical"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toEndOf="@id/include_logo"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/title_bookmark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="none"
+                    android:fadingEdgeLength="40dp"
+                    android:requiresFadingEdge="horizontal"
+                    android:singleLine="true"
+                    android:text="TextView" />
+
+                <TextView
+                    android:id="@+id/url_bookmark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="none"
+                    android:fadingEdgeLength="40dp"
+                    android:fontFamily="sans-serif-light"
+                    android:requiresFadingEdge="horizontal"
+                    android:singleLine="true"
+                    android:text="TextView" />
+            </LinearLayout>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

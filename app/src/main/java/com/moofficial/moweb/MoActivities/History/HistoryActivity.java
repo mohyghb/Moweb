@@ -71,7 +71,7 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
 
     private void initRecyclerCardView() {
         cardRecyclerView = new MoCardRecyclerView(this);
-        cardRecyclerView.getCardView().makeCardRecRound();
+        cardRecyclerView.getCardView().makeCardRound();
         l.linearNested.addView(cardRecyclerView);
     }
 

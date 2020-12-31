@@ -30,6 +30,7 @@
 
 
     <color name="search_bar_color">@color/transparent</color>
+    <color name="search_text_background">@color/MaterialGrey</color>
 
 
 </resources>

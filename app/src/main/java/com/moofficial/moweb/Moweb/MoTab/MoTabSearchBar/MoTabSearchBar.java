@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.transition.Slide;
 import android.transition.TransitionManager;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,6 +128,27 @@ public class MoTabSearchBar extends MoConstraint {
     public int[] getAttrs() {
         return new int[0];
     }
+
+
+    /**
+     * activates the search bar for searching
+     */
+    public void activateSearch() {
+        this.isInSearch = true;
+        showSuggestions(this.searchText.getText().toString());
+        // todo
+    }
+
+    /**
+     * deactivates the search bar for searching
+     */
+    public void deactivateSearch() {
+        this.isInSearch = false;
+        hideSuggestions();
+        // todo
+    }
+
+
 
     public MoTabSearchBar setTextSearch(String s){
         this.searchText.setText(s);
@@ -271,9 +293,7 @@ public class MoTabSearchBar extends MoConstraint {
 
         searchText.setOnTouchListener((v, event) -> {
             if(MotionEvent.ACTION_UP == event.getAction()) {
-                // dim the background when user starts
-                dimBackgroundWorker.perform();
-                isInSearch = true;
+                activateSearch();
             }
             return searchText.performClick();
         });
@@ -282,11 +302,7 @@ public class MoTabSearchBar extends MoConstraint {
 
         searchText.setOnFocusChangeListener((view, b) -> {
             if(!b) {
-                // hide the suggestions when user is not editing
-                hideSuggestions();
-                // removing dim effect
-                dimBackgroundWorker.undo();
-                isInSearch = false;
+                deactivateSearch();
             }
         });
 
@@ -318,13 +334,13 @@ public class MoTabSearchBar extends MoConstraint {
      * @return this
      */
     public MoTabSearchBar hideSuggestions() {
-        TransitionManager.beginDelayedTransition(bottomParentLayout);
+        //TransitionManager.beginDelayedTransition(bottomParentLayout);
         this.suggestion.hide();
         return this;
     }
 
     private void showSuggestions(MoSuggestions s) {
-        TransitionManager.beginDelayedTransition(bottomParentLayout, new Slide());
+        TransitionManager.beginDelayedTransition(bottomParentLayout, new Slide(Gravity.TOP));
         suggestion.show(s);
     }
 

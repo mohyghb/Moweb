@@ -1,7 +1,6 @@
 package com.moofficial.moweb.Moweb.MoWebview.MoHistory;
 
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,7 +16,6 @@ public class MoHistoryHolder extends RecyclerView.ViewHolder {
     TextView urlTextView,dateTimeTextView,titleTextView;
     MoLogo moImageTextLogo;
     CardView cardView;
-    LinearLayout cover;
 
     // date tile
     TextView date;
@@ -47,7 +45,6 @@ public class MoHistoryHolder extends RecyclerView.ViewHolder {
         titleTextView = itemView.findViewById(R.id.history_title);
         moImageTextLogo = itemView.findViewById(R.id.image_text_logo);
         cardView = itemView.findViewById(R.id.history_tile_card_view);
-        cover = itemView.findViewById(R.id.history_tile_cover_view);
     }
 
 

@@ -1,7 +1,6 @@
 package com.moofficial.moweb.Moweb.MoTab;
 
 import android.content.Context;
-import android.transition.TransitionManager;
 import android.view.View;
 
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoRunnable;
@@ -30,7 +29,7 @@ public class MoTabSuggestion {
     }
 
     public MoTabSuggestion init(){
-        moCardRecyclerView.getCardView().makeCardRectangular();
+        moCardRecyclerView.getCardView().makeCardRectangular().makeTransparent();
         adapter = new MoSuggestionsAdapter(new ArrayList<>(),context,this.onSuggestionClicked);
         recyclerView = MoRecyclerUtils.get(moCardRecyclerView.getRecyclerView(),adapter)
                             .setOrientation(MoRecyclerView.HORIZONTAL)
@@ -56,7 +55,6 @@ public class MoTabSuggestion {
         }
         this.suggestions = suggestions;
         adapter.setDataSet(suggestions.getSuggestions());
-        TransitionManager.beginDelayedTransition(recyclerView);
         adapter.notifyDataSetChanged();
         moCardRecyclerView.setVisibility(View.VISIBLE);
     }

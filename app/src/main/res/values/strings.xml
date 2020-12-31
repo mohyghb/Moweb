@@ -35,7 +35,7 @@
     <string name="share_image">Share image</string>
 
     <!--tabs-->
-    <string name="tab_search_hint">Search url…</string>
+    <string name="tab_search_hint">Search or enter URL</string>
 
     <!--tab more button options-->
     <!--we also need to add (new tab) and (new incognito tab)-->

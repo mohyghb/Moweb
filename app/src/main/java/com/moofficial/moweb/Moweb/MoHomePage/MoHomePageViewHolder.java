@@ -1,7 +1,6 @@
 package com.moofficial.moweb.Moweb.MoHomePage;
 
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,7 +15,6 @@ public class MoHomePageViewHolder extends RecyclerView.ViewHolder {
 
     TextView urlTextView;
     CardView cardView;
-    LinearLayout coverLayout;
     MoLogo moLogo;
 
     public MoHomePageViewHolder(@NonNull View v) {
@@ -24,6 +22,5 @@ public class MoHomePageViewHolder extends RecyclerView.ViewHolder {
         moLogo = v.findViewById(R.id.home_page_holder_logo);
         urlTextView = v.findViewById(R.id.url_home_page);
         cardView = v.findViewById(R.id.home_page_card_view);
-        coverLayout = v.findViewById(R.id.cover_home_page_layout);
     }
 }
