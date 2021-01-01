@@ -4,10 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.TransitionManager;
+import android.transition.TransitionSet;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,10 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.textfield.TextInputEditText;
+import com.moofficial.moessentials.MoEssentials.MoClipboard.MoClipboardUtils;
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoRunnable;
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoWorker.MoWorker;
+import com.moofficial.moessentials.MoEssentials.MoShare.MoShareUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoBottomSheet.MoBottomSheet;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMenuBuilder.MoMenuBuilder;
@@ -46,7 +49,7 @@ public class MoTabSearchBar extends MoConstraint {
 
     private MoTabsButton tabsButton;
     private ProgressBar progressBar;
-    private ImageButton moreTabButton;
+    private ImageButton moreTabButton,copyButton,shareButton;
     private EditText searchText;
     private MoFindBar moFindBar;
     //private MoPopupWindow moPopupWindow;
@@ -109,6 +112,8 @@ public class MoTabSearchBar extends MoConstraint {
         initTabSearchBarCard();
         initProgressBar();
         initMoreButton();
+        initShareButton();
+        initCopyButton();
         initSearchText();
         initTabsButton();
         initMoSearchable();
@@ -132,21 +137,44 @@ public class MoTabSearchBar extends MoConstraint {
 
     /**
      * activates the search bar for searching
+     * brings up suggestions
+     * shows the search bar helper
      */
     public void activateSearch() {
+       // TransitionManager.beginDelayedTransition(this);
         this.isInSearch = true;
+
+        this.tabsButton.gone();
+        this.moreTabButton.setVisibility(View.GONE);
+        this.shareButton.setVisibility(View.VISIBLE);
+        this.copyButton.setVisibility(View.VISIBLE);
+
         showSuggestions(this.searchText.getText().toString());
         // todo
     }
 
     /**
      * deactivates the search bar for searching
+     * removes the suggestions
+     * removes the helper
      */
     public void deactivateSearch() {
+        //TransitionManager.beginDelayedTransition(this);
+
         this.isInSearch = false;
         hideSuggestions();
+
+        this.tabsButton.visible();
+        this.moreTabButton.setVisibility(View.VISIBLE);
+        this.shareButton.setVisibility(View.GONE);
+        this.copyButton.setVisibility(View.GONE);
+
+        //todo remove the focus from search bar
+        // make sure if the search text is empty , put the current url into it
+
         // todo
     }
+
 
 
 
@@ -154,6 +182,7 @@ public class MoTabSearchBar extends MoConstraint {
         this.searchText.setText(s);
         return this;
     }
+
 
     public MoTabSearchBar setNumberOfTabs(int s){
         tabsButton.setNumberOfTabs(s);
@@ -340,7 +369,10 @@ public class MoTabSearchBar extends MoConstraint {
     }
 
     private void showSuggestions(MoSuggestions s) {
-        TransitionManager.beginDelayedTransition(bottomParentLayout, new Slide(Gravity.TOP));
+        TransitionManager.beginDelayedTransition(bottomParentLayout,
+                new TransitionSet()
+                .addTransition(new Slide())
+                .addTransition(new Fade()));
         suggestion.show(s);
     }
 
@@ -400,6 +432,19 @@ public class MoTabSearchBar extends MoConstraint {
             showPopupMenu();
             //moPopupWindow.show(view);
         });
+    }
+
+
+    public void initShareButton() {
+        this.shareButton = findViewById(R.id.tab_search_share);
+        this.shareButton.setOnClickListener((v)-> MoShareUtils.share(getContext(),
+                this.searchText.getText().toString()));
+    }
+
+    public void initCopyButton() {
+        this.copyButton = findViewById(R.id.tab_search_copy);
+        this.copyButton.setOnClickListener((v)-> MoClipboardUtils.add(getContext(),
+                this.searchText.getText().toString()));
     }
 
     /**

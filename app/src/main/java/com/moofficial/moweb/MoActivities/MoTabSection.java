@@ -217,7 +217,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
                 .setBottomParentLayout(linearBottom.getLinearLayout())
                 .setMoFindBar(findBar);
         this.moTabSearchBar.init();
-        linearBottom.setupMultipleBars(moTabSearchBar,suggestionCard,moTabSearchBar,findBar);
+        linearBottom.setupMultipleBars(moTabSearchBar, suggestionCard, moTabSearchBar, findBar);
     }
 
     /**
