@@ -183,7 +183,9 @@ public class EditBookmarkActivity extends MoSmartActivity {
 
 
     private void initToolbar(){
-        this.moToolBar = new MoToolBar(this).onlyTitleAndLeftButtonVisible();
+        this.moToolBar = new MoToolBar(this)
+                .setLeftOnClickListener((v)-> onBackPressed())
+                .onlyTitleAndLeftButtonVisible();
         moToolBar.getCardView().makeTransparent();
         l.toolbar.addToolbar(moToolBar);
     }
