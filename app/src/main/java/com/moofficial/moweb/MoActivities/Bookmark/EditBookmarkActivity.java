@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -13,9 +14,9 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoWindow.MoSoftInputBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMarginBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoAcceptDenyLayout;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoInputBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoButton;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoEditText.MoEditText;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkUtils;
@@ -35,7 +36,7 @@ public class EditBookmarkActivity extends MoSmartActivity {
 
     private MoToolBar moToolBar;
     private MoBookmark editBookmark;
-    private MoInputBar titleInput,urlInput;
+    private MoEditText titleInput,urlInput;
     private MoButton folderButton;
     private MoAcceptDenyLayout acceptDenyLayout;
     private String originalKey;
@@ -82,20 +83,26 @@ public class EditBookmarkActivity extends MoSmartActivity {
     }
 
     private void initEditName() {
-        titleInput = new MoInputBar(this)
+        titleInput = new MoEditText(this)
                 .setHint(R.string.name_hint)
-                .setTitle(R.string.name)
                 .setText(editBookmark.getName())
-                .addTextWatcher(new TextWatcher() {
+                .addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
                     }
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        MoBookmarkManager.validateEditInputs(EditBookmarkActivity.this,editBookmark,
-                                titleInput.getEditText(),
-                                urlInput.getEditText(),originalKey);
+                        //todo the fucntion below does not work when the values are null
+                        try {
+                            MoBookmarkManager.validateEditInputs(EditBookmarkActivity.this,
+                                    editBookmark,
+                                    titleInput,
+                                    urlInput,
+                                    originalKey);
+                        }catch(NullPointerException e) {
+                            // ignore
+                        }
                     }
 
                     @Override
@@ -103,17 +110,21 @@ public class EditBookmarkActivity extends MoSmartActivity {
 
                     }
                 });
-        titleInput.getCardView().makeCardRecRound();
-
+        titleInput.actionDone().getTextInputEditText()
+                .setOnEditorActionListener((textView, i, keyEvent) -> {
+                    if(i == EditorInfo.IME_ACTION_DONE) {
+                       onSavePressed();
+                    }
+                    return false;
+                });
     }
 
     private void initEditUrl() {
-        urlInput = new MoInputBar(this);
+        urlInput = new MoEditText(this);
         if(!editBookmark.isFolder()){
-            urlInput.setTitle(getString(R.string.url))
-                    .setHint(R.string.url_hint)
+            urlInput.setHint(R.string.url_hint)
                     .setText(editBookmark.getUrl())
-                    .addTextWatcher(new TextWatcher() {
+                    .addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -121,16 +132,17 @@ public class EditBookmarkActivity extends MoSmartActivity {
 
                         @Override
                         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                            MoBookmarkManager.validateEditInputs(EditBookmarkActivity.this,editBookmark,titleInput.getEditText(),
-                                    urlInput.getEditText(),originalKey);
+                            MoBookmarkManager.validateEditInputs(EditBookmarkActivity.this,
+                                    editBookmark,
+                                    titleInput,
+                                    urlInput,originalKey);
                         }
 
                         @Override
                         public void afterTextChanged(Editable editable) {
 
                         }
-                    })
-                    .getCardView().makeCardRecRound();
+                    });
             l.linearNested.addView(urlInput, MoMarginBuilder.getLinearParams(8));
         }
     }
@@ -168,8 +180,8 @@ public class EditBookmarkActivity extends MoSmartActivity {
      * otherwise we show them the error
      */
     private void onSavePressed() {
-        if(MoBookmarkManager.validateEditInputs(this,editBookmark,titleInput.getEditText(),
-                urlInput.getEditText(),originalKey)){
+        if(MoBookmarkManager.validateEditInputs(this,editBookmark,titleInput,
+                urlInput,originalKey)){
             MoBookmarkManager.editBookmarkAndSave(this,
                     editBookmark,
                     originalKey,

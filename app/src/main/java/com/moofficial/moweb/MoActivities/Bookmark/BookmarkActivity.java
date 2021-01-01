@@ -200,8 +200,13 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
                     MoBookmarkManager.deleteSelectedBookmarks(this,new ArrayList<>(recyclerAdapter.getDataSet()));
                     recyclerAdapter.setDataSet(new ArrayList<>());
                     TransitionManager.beginDelayedTransition(getGroupRootView());
-                    recyclerAdapter.notifyDataSetChanged();
+                    updateRecyclerView();
                 });
+    }
+
+    private void updateRecyclerView() {
+//        recyclerView.getRecycledViewPool().clear();
+        recyclerAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -236,9 +241,9 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
      * when we want to open or close a folder
      * we perform this method
      */
-    private void openCloseFolder(){
+    private void openCloseFolder() {
         recyclerAdapter.setDataSet(getCurrentFolderBookmarks());
-        recyclerAdapter.notifyDataSetChanged();
+        updateRecyclerView();
         setTitle(getCurrentTitle());
     }
 
@@ -328,10 +333,13 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
 
     private void updateRecyclerAdapter(ArrayList<MoBookmark> list) {
         recyclerAdapter.setDataSet(list);
-        recyclerView.post(() -> {
-            TransitionManager.beginDelayedTransition(getGroupRootView());
-            recyclerAdapter.notifyDataSetChanged();
-        });
+        TransitionManager.beginDelayedTransition(getGroupRootView());
+        updateRecyclerView();
+//        recyclerView.setAdapter(this.recyclerAdapter);
+//        recyclerView.post(() -> {
+//            TransitionManager.beginDelayedTransition(getGroupRootView());
+//            updateRecyclerView();
+//        });
     }
 
 
@@ -458,7 +466,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
                 case ADD_FOLDER_REQUEST:
                     // show the new folder
                     TransitionManager.beginDelayedTransition(getGroupRootView());
-                    recyclerAdapter.notifyDataSetChanged();
+                    updateRecyclerView();
                     MoLog.print("folder was created");
                     break;
             }

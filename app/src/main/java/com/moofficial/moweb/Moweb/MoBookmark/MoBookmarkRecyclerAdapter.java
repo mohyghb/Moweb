@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
-import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
@@ -40,8 +39,9 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
 
     public MoBookmarkRecyclerAdapter(Context context, List<MoBookmark> dataSet) {
         super(context,dataSet);
-        setHasStableIds(true);
     }
+
+
 
 
 
@@ -113,10 +113,8 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
     @Override
     public void onBindViewHolder(@NonNull MoBookmarkViewHolder holder, int position, @NonNull List<Object> payloads) {
         if(payloads.isEmpty()) {
-            MoLog.print("bookmark normal");
             super.onBindViewHolder(holder, position, payloads);
         } else {
-            MoLog.print("bookmark selected");
             // 100 percent this is the select payload
             addSelectColorToHolder(holder,dataSet.get(position));
         }
