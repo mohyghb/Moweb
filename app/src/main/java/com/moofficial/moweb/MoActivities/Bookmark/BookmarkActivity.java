@@ -334,12 +334,8 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     private void updateRecyclerAdapter(ArrayList<MoBookmark> list) {
         recyclerAdapter.setDataSet(list);
         TransitionManager.beginDelayedTransition(getGroupRootView());
-        updateRecyclerView();
-//        recyclerView.setAdapter(this.recyclerAdapter);
-//        recyclerView.post(() -> {
-//            TransitionManager.beginDelayedTransition(getGroupRootView());
-//            updateRecyclerView();
-//        });
+        runOnUiThread(this::updateRecyclerView);
+
     }
 
 
