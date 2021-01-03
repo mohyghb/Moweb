@@ -74,7 +74,10 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
     private void initMoToolbar() {
         moToolBar = new MoToolBar(this)
                 .setMiddleIcon(R.drawable.ic_add_black_24dp)
-                .setMiddleOnClickListener(view -> AddFolderBookmarkActivity.launch(this,ADD_FOLDER_REQUEST))
+                .setMiddleOnClickListener(view ->
+                        AddFolderBookmarkActivity.launch(this,
+                                MoBookmarkManager.getMainFolder().getName(),
+                                ADD_FOLDER_REQUEST))
                 .setLeftOnClickListener(view -> onBackPressed())
                 .setRightIcon(R.drawable.ic_baseline_search_24);
         moToolBar.getCardView().makeTransparent();

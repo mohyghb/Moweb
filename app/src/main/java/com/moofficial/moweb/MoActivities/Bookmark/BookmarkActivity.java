@@ -80,12 +80,12 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
 
     }
 
-    private void initSearchBar(){
+    private void initSearchBar() {
         this.searchBar = new MoSearchBar(this);
         this.searchBar.getCardView().makeTransparent();
     }
 
-    private void initToolBar(){
+    private void initToolBar() {
         this.moToolBar = new MoToolBar(this)
                 .setRightIcon(R.drawable.ic_baseline_delete_outline_24)
                 .setRightOnClickListener(view -> performClearAll())
@@ -285,7 +285,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
         l.floatingActionButton.setIcon(R.drawable.ic_baseline_create_new_folder_24)
         .setBackgroundColor(R.color.colorAccent)
         .setOnClickListener(view -> {
-            AddFolderBookmarkActivity.launch(this,ADD_FOLDER_REQUEST);
+            AddFolderBookmarkActivity.launch(this, this.getCurrentTitle() ,ADD_FOLDER_REQUEST);
         }).show();
     }
 

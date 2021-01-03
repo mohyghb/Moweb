@@ -22,6 +22,7 @@ public class AddFolderBookmarkActivity extends MoSmartActivity {
 
     private static final int CHOOSE_FOLDER_REQUEST_CODE = 1;
     public static final String EXTRA_FOLDER_NAME = "exfolname";
+    public static final String EXTRA_PARENT_FOLDER = "parentfolder";
 
     private MoButton folderButton;
     private MoEditText editText;
@@ -41,7 +42,7 @@ public class AddFolderBookmarkActivity extends MoSmartActivity {
     }
 
     private void initFolderButton() {
-        folderParent = MoBookmarkManager.getMainFolder().getName();
+        folderParent = getExtraParentFolder(getIntent());
         folderButton = new MoButton(this);
         this.folderButton.setTitle("Parent folder")
                 .setIcon(R.drawable.ic_baseline_folder_open_24)
@@ -115,12 +116,18 @@ public class AddFolderBookmarkActivity extends MoSmartActivity {
     }
 
 
-    public static void launch(Activity a, int requestCode) {
-        a.startActivityForResult(new Intent(a,AddFolderBookmarkActivity.class),requestCode);
+    public static void launch(Activity a, String parent,int requestCode) {
+        Intent intent = new Intent(a,AddFolderBookmarkActivity.class);
+        intent.putExtra(EXTRA_PARENT_FOLDER, parent);
+        a.startActivityForResult(intent, requestCode);
     }
 
     public static String getExtraFolderName(Intent data){
         return Objects.requireNonNull(data.getExtras()).getString(EXTRA_FOLDER_NAME);
+    }
+
+    public static String getExtraParentFolder(Intent data) {
+        return Objects.requireNonNull(data.getExtras()).getString(EXTRA_PARENT_FOLDER);
     }
 
 }

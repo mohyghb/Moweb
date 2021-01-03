@@ -37,7 +37,7 @@ public class MoBookmarkManager {
      * if we already don't have it saved
      * @param url
      */
-    public static boolean add(Context context, String url,String title){
+    public static boolean add(Context context, String url,String title) {
         return add(context, buildBookmark(processUrl(url),title));
     }
 
@@ -586,7 +586,7 @@ public class MoBookmarkManager {
         }
     }
 
-    private static void remove(MoBookmark b) {fi
+    private static void remove(MoBookmark b) {
         // removes from main folder
         b.removeFromParent();
         // removes from maps

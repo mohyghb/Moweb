@@ -52,10 +52,10 @@ public class EditBookmarkActivity extends MoSmartActivity {
     private void initOriginalKey() {
         Bundle b = getIntent().getExtras();
         this.originalKey = Objects.requireNonNull(b).getString(EXTRA_URL);
-        if(originalKey == null){
+        if (originalKey == null) {
             this.originalKey  = b.getString(EXTRA_NAME);
             editBookmark = MoBookmarkManager.getFolder(this.originalKey);
-        }else{
+        } else {
             editBookmark = MoBookmarkManager.getBookmark(this.originalKey);
         }
     }
@@ -124,6 +124,7 @@ public class EditBookmarkActivity extends MoSmartActivity {
         if(!editBookmark.isFolder()){
             urlInput.setHint(R.string.url_hint)
                     .setText(editBookmark.getUrl())
+                    .singleLine()
                     .addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -142,6 +143,15 @@ public class EditBookmarkActivity extends MoSmartActivity {
                         public void afterTextChanged(Editable editable) {
 
                         }
+                    });
+                    // todo test this to make sure aht it works
+            urlInput.inputTypeText().actionNext().getTextInputEditText()
+                    .setOnEditorActionListener((textView, i, keyEvent) -> {
+                        if(i == EditorInfo.IME_ACTION_NEXT) {
+                            titleInput.requestFocus();
+                            l.appBarLayout.setExpanded(false,true);
+                        }
+                        return false;
                     });
             l.linearNested.addView(urlInput, MoMarginBuilder.getLinearParams(8));
         }
