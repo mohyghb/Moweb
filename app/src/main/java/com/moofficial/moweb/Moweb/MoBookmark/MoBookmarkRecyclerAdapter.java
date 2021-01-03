@@ -7,9 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
-import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoDrawable.MoDrawableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableList;
@@ -82,8 +80,7 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
     @Override
     public void onBindViewHolder(@NonNull MoBookmarkViewHolder h, int i) {
         MoBookmark bookmark = dataSet.get(i);
-        MoLog.print("bookmark: normal " + bookmark.getType());
-        h.imageTextLogo.setOuter(MoDrawableUtils.outlineCircle(this.context));
+        h.imageTextLogo.setOuter();
         switch (bookmark.getType()) {
             case MoBookmark.BOOKMARK:
                 h.url.setText(bookmark.getUrl());
@@ -101,12 +98,13 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
 
         onClickListener(h, bookmark,i);
         onLongClickListener(h, bookmark,i);
+        addSelectColorToHolder(h, bookmark);
 
     }
 
     private void addSelectColorToHolder(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark) {
         if(!disableSelectColor) {
-            h.imageTextLogo.onSelectFill(bookmark);
+            h.imageTextLogo.onSelectFill(bookmark, bookmark.isFolder());
         }
     }
 
@@ -115,7 +113,6 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
         if(payloads.isEmpty()) {
             super.onBindViewHolder(holder, position, payloads);
         } else {
-            MoLog.print("bookmark: payload");
             // 100 percent this is the select payload
             addSelectColorToHolder(holder,dataSet.get(position));
         }

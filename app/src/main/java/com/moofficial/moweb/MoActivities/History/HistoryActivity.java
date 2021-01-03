@@ -208,11 +208,13 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
                 .setCounterView(l.title)
                 .setSelectAllCheckBox(selectBar.getCheckBox())
                 .addUnNormalViews(selectBar)
-                .setAllItemsAreSelectable(false);
+                .setAllItemsAreSelectable(false)
+                .setOnEmptySelectionListener(()-> sync.removeAction())
+                .setOnCanceledListener(() -> historyRecyclerAdapter.getSelectedItems().clear());
     }
 
 
-    private void initSearchable(){
+    private void initSearchable() {
         this.searchable = new MoSearchable(this, getGroupRootView(), () -> allHistories)
                 .setOnSearchFinished(list -> updateAdapter((List<MoHistory>) list))
                 .setOnSearchCanceled(() -> updateAdapter(allHistories))
@@ -226,8 +228,9 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
                 .addUnNormalViews(searchBar);
     }
 
-    private void updateAdapter(List<MoHistory> histories){
+    private void updateAdapter(List<MoHistory> histories) {
         historyRecyclerAdapter.setDataSet(histories);
+        TransitionManager.beginDelayedTransition(getGroupRootView());
         runOnUiThread( ()-> historyRecyclerAdapter.notifyDataSetChanged());
     }
 
@@ -235,8 +238,14 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
     private void initSync(){
         this.sync = new MoListViewSync(getGroupRootView(),this.selectable,this.searchable)
                 .setPutOnHold(true)
-                .setSharedElements(moToolBar);
+                .setSharedElements(moToolBar)
+                .setOnEmptyOnHoldsListener(() -> {
+                    allHistories = MoHistoryManager.getAllHistories();
+                    this.updateAdapter(allHistories);
+                });
     }
+
+
 
     @Override
     public void onBackPressed() {

@@ -119,7 +119,7 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
     }
 
     private void applySelected(@NonNull MoHomePageViewHolder holder, int position) {
-        holder.moLogo.onSelectFill(dataSet.get(position));
+        holder.moLogo.onSelectFill(dataSet.get(position), false);
     }
 
 

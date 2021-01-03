@@ -33,11 +33,12 @@
 
             <TextView
                 android:id="@+id/history_title"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fadingEdgeLength="@dimen/mo_fade_edge_text_view"
                 android:requiresFadingEdge="horizontal"
                 android:singleLine="true"
+                android:ellipsize="none"
                 android:text="TextView"
                 android:textAlignment="textStart" />
 
@@ -56,6 +57,7 @@
                     android:fontFamily="sans-serif-thin"
                     android:requiresFadingEdge="horizontal"
                     android:singleLine="true"
+                    android:ellipsize="none"
                     android:text="TextView"
                     android:textAlignment="textStart" />
 

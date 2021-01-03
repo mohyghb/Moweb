@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
+import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
@@ -23,7 +24,6 @@ public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolde
 
     public MoHistoryRecyclerAdapter(ArrayList<MoHistory> dataSet,Context c) {
         super(c,dataSet);
-        setHasStableIds(true);
     }
 
     public MoOnHistoryClicked getOnHistoryClicked() {
@@ -59,17 +59,21 @@ public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolde
                 holder.urlTextView.setText(history.getUrl());
                 holder.dateTimeTextView.setText(history.getDate());
                 holder.titleTextView.setText(history.getTitle());
-                holder.moImageTextLogo.setText(history.getSignatureLetter());
+                holder.moImageTextLogo
+                        .setOuter()
+                        .setText(MoString.getSignature(history.getTitle()))
+                        .hideLogo()
+                        .showText();
                 makeHistoryClickable(holder, history,position);
                 makeHistoryLongClickable(holder, position);
-                addSelectedColor(holder, history);
+                addSelectedColor(holder,history);
                 break;
         }
     }
 
     private void addSelectedColor(@NonNull MoHistoryHolder holder, MoHistory history) {
         if (history.isTypeHistory()) {
-            holder.moImageTextLogo.onSelectFill(history);
+            holder.moImageTextLogo.onSelectFill(history, false);
         }
     }
 

@@ -355,13 +355,8 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
                             selectedFolderCount--;
                         }
                     }
-                }).setOnEmptySelectionListener(() -> {
-                    listViewSync.removeAction();
-                })
-                .setOnCanceledListener(() -> recyclerAdapter.getSelectedItems().clear())
-                .setOnSelectFinishedListener(list -> {
-                    Toast.makeText(this,list.size()+"",Toast.LENGTH_SHORT).show();
-                });
+                }).setOnEmptySelectionListener(() -> listViewSync.removeAction())
+                .setOnCanceledListener(() -> recyclerAdapter.getSelectedItems().clear());
     }
 
     /**

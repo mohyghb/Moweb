@@ -134,12 +134,7 @@ public class MoHistory implements MoSwitchSavable, MoLoadable,
         return MoString.getLimitedCount(title,TEXT_COUNT);
     }
 
-    public String getSignatureLetter(){
-        if(title==null || title.isEmpty()){
-            return "";
-        }
-        return this.title.charAt(0)+"";
-    }
+
 
     public long getTimeInMillis(){
         return this.dateTime.getTimeInMillis();
