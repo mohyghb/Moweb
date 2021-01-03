@@ -18,7 +18,7 @@ import java.util.List;
 import static com.moofficial.moweb.Moweb.MoBookmark.MoBookmark.BOOKMARK;
 import static com.moofficial.moweb.Moweb.MoBookmark.MoBookmark.FOLDER;
 
-// TODO test the new version of the bookmark implementation
+
 public class MoBookmarkManager {
 
     private static final String FILE_NAME = "bookmarkfile";
@@ -535,7 +535,7 @@ public class MoBookmarkManager {
      * @param b
      */
     private static void moveTo(MoBookmark folder, MoBookmark b) {
-        if(folder!=null && b!=null){
+        if(folder!=null && b!=null && !b.getParent().equals(folder)){
             removeFromParent(b);
             // then add this b to the new folder
             folder.add(b);

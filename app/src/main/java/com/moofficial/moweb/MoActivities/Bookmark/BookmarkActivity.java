@@ -426,7 +426,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     }
 
 
-    public static void startActivity(Context context){
+    public static void startActivity(Context context) {
         Intent i = new Intent(context,BookmarkActivity.class);
         context.startActivity(i);
     }
@@ -438,6 +438,9 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
             switch (requestCode) {
                 case EDIT_BOOKMARK_REQUEST:
                     openCloseFolderWithAnimation();
+                    if(listViewSync.hasAction()) {
+                        listViewSync.removeAllActions();
+                    }
                     Toast.makeText(this, "Successfully updated!", Toast.LENGTH_SHORT).show();
                     break;
                 case CHOOSE_FOLDER_REQUEST:
