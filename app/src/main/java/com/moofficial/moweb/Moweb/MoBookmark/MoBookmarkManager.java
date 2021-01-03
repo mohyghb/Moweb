@@ -562,13 +562,31 @@ public class MoBookmarkManager {
      * @param list items that are selected
      */
     public static void deleteSelectedBookmarks(Context c, List<MoBookmark> list){
-        for(MoBookmark b:list) {
-            remove(b);
-        }
+        remove(list);
         save(c);
     }
 
-    private static void remove(MoBookmark b) {
+    /**
+     * removes all the bookmarks inside the list
+     * also recursively removes all the sub bookmarks
+     * or folders inside it
+     * @param list of bookmarks to be deleted
+     */
+    private static void remove(List<MoBookmark> list) {
+        if (list == null) {
+            return;
+        }
+
+        for (MoBookmark b: list) {
+            if (b.isFolder()) {
+                remove(b.getSubFolders());
+                remove(b.getSubs());
+            }
+            remove(b);
+        }
+    }
+
+    private static void remove(MoBookmark b) {fi
         // removes from main folder
         b.removeFromParent();
         // removes from maps

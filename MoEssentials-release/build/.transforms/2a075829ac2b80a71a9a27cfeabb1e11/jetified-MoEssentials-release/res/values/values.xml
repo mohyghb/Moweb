@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="MaterialDark">#121212</color>
+    <color name="MaterialGrey">#232323</color>
+    <color name="MaterialWhite">#F2E3E3E3</color>
+    <color name="MoBackground">@color/MoWhite</color>
+    <color name="MoBlack">#E9212427</color>
+    <color name="MoGrey">#F28E8E8E</color>
+    <color name="MoInverseColor">@color/MoBlack</color>
+    <color name="MoWhite">#F2FAFAFA</color>
+    <color name="MoWhite_v2">#FCFCFC</color>
+    <color name="MoWhite_v3">#DCDCDC</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="delete_item_low_transparency_color">#88E24444</color>
+    <color name="error_color">#E24444</color>
+    <color name="mo_amber">#FFE082</color>
+    <color name="mo_blue">#90CAF9</color>
+    <color name="mo_bottom_sheet_color">@color/MoWhite</color>
+    <color name="mo_card_color">@color/MoWhite_v2</color>
+    <color name="mo_cyan">#80DEEA</color>
+    <color name="mo_deep_orange">#FFAB91</color>
+    <color name="mo_deep_purple">#B39DDB</color>
+    <color name="mo_green">#A5D6A7</color>
+    <color name="mo_indigo">#9FA8DA</color>
+    <color name="mo_light_blue">#81D4FA</color>
+    <color name="mo_light_green">#C5E1A5</color>
+    <color name="mo_lime">#E6EE9C</color>
+    <color name="mo_orange">#FFCC80</color>
+    <color name="mo_pink">#F48FB1</color>
+    <color name="mo_purple">#CE93D8</color>
+    <color name="mo_red">#ef9a9a</color>
+    <color name="mo_teal">#80CBC4</color>
+    <color name="mo_transparent_black">#E6000000</color>
+    <color name="mo_transparent_white">#E6FFFFFF</color>
+    <color name="mo_yellow">#FFF59D</color>
+    <color name="setting_toolbar_background">@android:color/white</color>
+    <color name="transparent">#00000000</color>
+    <dimen name="card_elevation_search_bar">4dp</dimen>
+    <dimen name="first_letter_radius">50dp</dimen>
+    <dimen name="image_size_logo">25dp</dimen>
+    <dimen name="mo_app_bar_height">300dp</dimen>
+    <dimen name="mo_fade_edge_text_view">100dp</dimen>
+    <dimen name="mo_horizontal_divider_width">20dp</dimen>
+    <dimen name="mo_image_button_padding">8dp</dimen>
+    <dimen name="mo_style_card_corner">24dp</dimen>
+    <dimen name="mo_style_card_corner_medium">16dp</dimen>
+    <dimen name="mo_style_card_corner_small">10dp</dimen>
+    <integer name="fade_duration">400</integer>
+    <integer name="fade_move_duration">500</integer>
+    <integer name="move_duration">400</integer>
+    <integer name="resize_duration">400</integer>
+    <integer name="translation_duration">400</integer>
+    <integer name="vert_translation_duration">400</integer>
+    <string name="app_name">Moweb</string>
+    <string name="cancel">cancel</string>
+    <string name="delete">delete</string>
+    <string name="done">done</string>
+    <string name="find_hint">Find…</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Search…</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="yes">Yes</string>
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+
+    </style>
+    <style name="MoMaterialCardViewStyleBright" parent="Widget.MaterialComponents.CardView">
+        <item name="android:backgroundTint">@color/colorPrimary</item>
+        <item name="cardElevation">3dp</item>
+    </style>
+    <style name="mo_round_bottom_sheet" parent="Widget.MaterialComponents.BottomSheet">
+        <item name="shapeAppearanceOverlay">@style/mo_round_bottom_sheet_style</item>
+    </style>
+    <style name="mo_round_bottom_sheet_dialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/mo_round_bottom_sheet_style</item>
+    </style>
+    <style name="mo_round_bottom_sheet_style" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/mo_bottom_sheet_background</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">@dimen/mo_style_card_corner</item>
+        <item name="cornerSizeTopLeft">@dimen/mo_style_card_corner</item>
+        <item name="cornerSizeBottomRight">@dimen/mo_style_card_corner</item>
+        <item name="cornerSizeBottomLeft">@dimen/mo_style_card_corner</item>
+    </style>
+    <declare-styleable name="MoAppBar">
+        <attr format="string" name="title_text"/>
+        <attr format="string" name="subtitle_text"/>
+        <attr format="enum" name="toolbar">
+            <enum name="mo_tool_bar" value="0"/>
+        </attr>
+    </declare-styleable>
+</resources>

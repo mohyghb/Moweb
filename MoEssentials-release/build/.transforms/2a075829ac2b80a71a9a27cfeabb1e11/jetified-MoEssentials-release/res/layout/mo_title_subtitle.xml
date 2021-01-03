@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="32dp"
+    android:layout_marginEnd="32dp">
+
+    <TextView
+        android:id="@+id/mo_lib_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fadingEdgeLength="@dimen/mo_fade_edge_text_view"
+        android:fontFamily="sans-serif-thin"
+        android:gravity="center"
+        android:requiresFadingEdge="horizontal"
+        android:singleLine="true"
+        android:text="@string/app_name"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/mo_lib_subtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fadingEdgeLength="@dimen/mo_fade_edge_text_view"
+        android:gravity="center"
+        android:maxLines="3"
+        android:requiresFadingEdge="horizontal"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mo_lib_title" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+

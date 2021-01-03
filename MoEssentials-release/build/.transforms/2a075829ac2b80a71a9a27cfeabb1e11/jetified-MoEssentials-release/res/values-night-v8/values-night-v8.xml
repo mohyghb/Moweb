@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="MoBackground">@color/MaterialGrey</color>
+    <color name="MoInverseColor">@color/MoWhite</color>
+    <color name="delete_item_low_transparency_color">#7ECF6679</color>
+    <color name="error_color">#cf6679</color>
+    <color name="mo_amber">#B3FFE082</color>
+    <color name="mo_blue">#B390CAF9</color>
+    <color name="mo_bottom_sheet_color">@color/MoBlack</color>
+    <color name="mo_card_color">@color/MaterialGrey</color>
+    <color name="mo_cyan">#B380DEEA</color>
+    <color name="mo_deep_orange">#B3FFAB91</color>
+    <color name="mo_deep_purple">#B3B39DDB</color>
+    <color name="mo_green">#B3A5D6A7</color>
+    <color name="mo_indigo">#B39FA8DA</color>
+    <color name="mo_light_blue">#B381D4FA</color>
+    <color name="mo_light_green">#B3C5E1A5</color>
+    <color name="mo_lime">#B3E6EE9C</color>
+    <color name="mo_orange">#B3FFCC80</color>
+    <color name="mo_pink">#B3F48FB1</color>
+    <color name="mo_purple">#B3CE93D8</color>
+    <color name="mo_red">#B3EF9A9A</color>
+    <color name="mo_teal">#B380CBC4</color>
+    <color name="mo_yellow">#B3FFF59D</color>
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+    </style>
+    <style name="MoMaterialCardViewStyleBright" parent="Widget.MaterialComponents.CardView">
+        <item name="android:backgroundTint">@color/MaterialGrey</item>
+        <item name="cardElevation">3dp</item>
+    </style>
+</resources>

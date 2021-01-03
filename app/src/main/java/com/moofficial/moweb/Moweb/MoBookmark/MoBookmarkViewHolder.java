@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.moofficial.moessentials.MoEssentials.MoUI.MoDrawable.MoDrawableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoLogo;
 import com.moofficial.moweb.R;
 
@@ -23,6 +22,5 @@ public class MoBookmarkViewHolder extends RecyclerView.ViewHolder {
         this.url = v.findViewById(R.id.url_bookmark);
         this.title = v.findViewById(R.id.title_bookmark);
         this.imageTextLogo = v.findViewById(R.id.include_logo);
-        this.imageTextLogo.setOuter(MoDrawableUtils.outlineCircle(imageTextLogo.getContext()));
     }
 }

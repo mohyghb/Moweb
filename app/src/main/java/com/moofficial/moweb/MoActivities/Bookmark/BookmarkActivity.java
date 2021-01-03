@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Stack;
 
-// TODO when removing, the bookmarks are still there
 public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmarkListener {
 
 
@@ -205,7 +204,6 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     }
 
     private void updateRecyclerView() {
-//        recyclerView.getRecycledViewPool().clear();
         recyclerAdapter.notifyDataSetChanged();
     }
 
@@ -335,7 +333,6 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
         recyclerAdapter.setDataSet(list);
         TransitionManager.beginDelayedTransition(getGroupRootView());
         runOnUiThread(this::updateRecyclerView);
-
     }
 
 

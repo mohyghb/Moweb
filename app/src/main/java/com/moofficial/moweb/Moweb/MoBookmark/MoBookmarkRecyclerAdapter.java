@@ -7,7 +7,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoDrawable.MoDrawableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableList;
@@ -80,27 +82,25 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
     @Override
     public void onBindViewHolder(@NonNull MoBookmarkViewHolder h, int i) {
         MoBookmark bookmark = dataSet.get(i);
+        MoLog.print("bookmark: normal " + bookmark.getType());
+        h.imageTextLogo.setOuter(MoDrawableUtils.outlineCircle(this.context));
         switch (bookmark.getType()) {
             case MoBookmark.BOOKMARK:
                 h.url.setText(bookmark.getUrl());
                 h.title.setText(bookmark.getName());
+                h.imageTextLogo.setText(MoString.getSignature(bookmark.getName())).hideLogo().showText();
                 break;
             case MoBookmark.FOLDER:
                 h.url.setText(bookmark.size() + " items");
                 h.title.setText(bookmark.getName());
+                h.imageTextLogo
+                        .showLogoHideText()
+                        .setInner(ContextCompat.getDrawable(context,R.drawable.ic_baseline_folder_open_24));
                 break;
-        }
-        if (bookmark.isFolder()) {
-            h.imageTextLogo
-                    .showLogoHideText()
-                    .setInner(ContextCompat.getDrawable(context,R.drawable.ic_baseline_folder_open_24));
-        } else {
-            h.imageTextLogo.setText(MoString.getSignature(bookmark.getName())).hideLogo().showText();
         }
 
         onClickListener(h, bookmark,i);
         onLongClickListener(h, bookmark,i);
-        addSelectColorToHolder(h, bookmark);
 
     }
 
@@ -115,15 +115,14 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
         if(payloads.isEmpty()) {
             super.onBindViewHolder(holder, position, payloads);
         } else {
+            MoLog.print("bookmark: payload");
             // 100 percent this is the select payload
             addSelectColorToHolder(holder,dataSet.get(position));
         }
-
-
     }
 
     private void onLongClickListener(@NonNull MoBookmarkViewHolder h, MoBookmark b, int i) {
-        if(!disableLongClick){
+        if (!disableLongClick) {
             h.cardView.setOnLongClickListener(view -> {
                 if(this.selectable.isInActionMode()) {
                     return false;
