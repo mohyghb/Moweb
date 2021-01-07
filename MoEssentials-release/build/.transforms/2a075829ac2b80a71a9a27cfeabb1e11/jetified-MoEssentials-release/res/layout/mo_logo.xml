@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mo_logo_layout"
-    android:layout_width="@dimen/first_letter_radius"
-    android:layout_height="@dimen/first_letter_radius">
+    android:layout_width="@dimen/mo_logo_large"
+    android:layout_height="@dimen/mo_logo_large">
 
     <ImageView
         android:id="@+id/mo_logo_outer_drawable"
@@ -24,7 +24,7 @@
         android:gravity="center"
         android:text="M"
         android:textAlignment="center"
-        android:textSize="32sp"
+        android:textSize="@dimen/mo_logo_large_font"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,8 +32,8 @@
 
     <ImageView
         android:id="@+id/mo_logo_image"
-        android:layout_width="@dimen/image_size_logo"
-        android:layout_height="@dimen/image_size_logo"
+        android:layout_width="@dimen/mo_logo_large_image"
+        android:layout_height="@dimen/mo_logo_large_image"
         android:adjustViewBounds="true"
         android:cropToPadding="true"
         android:scaleType="centerCrop"

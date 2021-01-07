@@ -44,6 +44,17 @@
     <dimen name="mo_fade_edge_text_view">100dp</dimen>
     <dimen name="mo_horizontal_divider_width">20dp</dimen>
     <dimen name="mo_image_button_padding">8dp</dimen>
+    <dimen name="mo_logo_large">48dp</dimen>
+    <dimen name="mo_logo_large_font">32sp</dimen>
+    <dimen name="mo_logo_large_image">24dp</dimen>
+    <dimen name="mo_logo_medium">40dp</dimen>
+    <dimen name="mo_logo_medium_font">26sp</dimen>
+    <dimen name="mo_logo_medium_image">20dp</dimen>
+    <dimen name="mo_logo_small">32dp</dimen>
+    <dimen name="mo_logo_small_font">20sp</dimen>
+    <dimen name="mo_logo_small_image">16dp</dimen>
+    <dimen name="mo_popup_icon_padding">8dp</dimen>
+    <dimen name="mo_popup_item_padding">8dp</dimen>
     <dimen name="mo_style_card_corner">24dp</dimen>
     <dimen name="mo_style_card_corner_medium">16dp</dimen>
     <dimen name="mo_style_card_corner_small">10dp</dimen>

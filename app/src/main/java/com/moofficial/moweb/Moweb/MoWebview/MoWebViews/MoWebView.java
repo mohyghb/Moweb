@@ -18,13 +18,14 @@ import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoWebClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoHitTestResultParser;
-//import com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces.MoJsInput;
 import com.moofficial.moweb.Moweb.MoWebview.MoStackTabHistory.MoStackWebHistory;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnPageFinishedListener;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnReceivedError;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnUpdateUrlListener;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebState;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebUtils;
+
+//import com.moofficial.moweb.Moweb.MoWebview.MoJsInterfaces.MoJsInput;
 
 // a better web view!
 public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable {
@@ -219,6 +220,9 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         webSettings.setDatabaseEnabled(true);
         // cookies
         MoWebUtils.acceptThirdPartyCookies(this);
+
+        
+
     }
 
 

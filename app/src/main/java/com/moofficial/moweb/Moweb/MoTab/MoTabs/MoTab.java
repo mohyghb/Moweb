@@ -17,6 +17,7 @@ import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFileSavable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.moofficial.moessentials.MoEssentials.MoMultiThread.MoThread.MoThread;
 import com.moofficial.moessentials.MoEssentials.MoShare.MoShare;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableUtils;
@@ -423,13 +424,17 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
      *  saves the tab inside its own
      *  unique file
      */
-    public void saveTab(){
-        try {
-            MoLog.print("saving " + tabId.stringify());
-            MoFileManagerUtils.write(context,this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void saveTab() {
+        new MoThread<String>().doBackground(() -> {
+            try {
+                MoLog.print("tab saving " + tabId.stringify());
+                MoFileManagerUtils.write(context,MoTab.this);
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }).begin();
     }
 
     /**

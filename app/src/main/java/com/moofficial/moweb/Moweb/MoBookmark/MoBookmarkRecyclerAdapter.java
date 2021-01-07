@@ -43,8 +43,6 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
 
 
 
-
-
     public MoOnOpenBookmarkListener getOpenBookmarkListener() {
         return openBookmarkListener;
     }
@@ -85,7 +83,9 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
             case MoBookmark.BOOKMARK:
                 h.url.setText(bookmark.getUrl());
                 h.title.setText(bookmark.getName());
-                h.imageTextLogo.setText(MoString.getSignature(bookmark.getName())).hideLogo().showText();
+                h.imageTextLogo.setText(MoString.getSignature(bookmark.getName()))
+                        .hideLogo()
+                        .showText();
                 break;
             case MoBookmark.FOLDER:
                 h.url.setText(bookmark.size() + " items");
@@ -121,7 +121,7 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
     private void onLongClickListener(@NonNull MoBookmarkViewHolder h, MoBookmark b, int i) {
         if (!disableLongClick) {
             h.cardView.setOnLongClickListener(view -> {
-                if(this.selectable.isInActionMode()) {
+                if (this.selectable.isInActionMode()) {
                     return false;
                 }
                 activateSelectMode(i);

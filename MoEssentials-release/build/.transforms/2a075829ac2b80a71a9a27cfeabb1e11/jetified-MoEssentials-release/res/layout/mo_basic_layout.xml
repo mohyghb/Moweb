@@ -8,16 +8,6 @@
     android:animateLayoutChanges="false">
 
 
-    <LinearLayout
-        android:id="@+id/basic_activity_linear_top_layout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout
 
         android:id="@+id/basic_activity_coordinator_layout"
@@ -26,7 +16,7 @@
         app:layout_constraintBottom_toTopOf="@id/basic_activity_linear_bottom_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/basic_activity_linear_top_layout">
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -74,19 +64,19 @@
                     android:animateLayoutChanges="false"
                     android:background="?android:colorBackground"
                     android:clickable="false"
-                    app:elevation="0dp"
                     android:focusable="false"
                     app:contentInsetLeft="0dp"
                     app:contentInsetStart="0dp"
-                    app:contentInsetStartWithNavigation="0dp">
+                    app:contentInsetStartWithNavigation="0dp"
+                    app:elevation="0dp">
 
                     <LinearLayout
                         android:id="@+id/basic_activity_toolbar_linear_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:elevation = "0dp"
                         android:animateLayoutChanges="false"
-                        android:orientation="vertical" />
+                        android:orientation="vertical"
+                        app:elevation="0dp" />
                 </androidx.appcompat.widget.Toolbar>
 
 
@@ -98,18 +88,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:animateLayoutChanges="false"
+            android:background="@color/transparent"
             android:clipToPadding="false"
             android:fillViewport="false"
-            android:background="@color/transparent"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
             <LinearLayout
                 android:id="@+id/basic_activity_linear_nested_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="?attr/actionBarSize"
                 android:animateLayoutChanges="false"
-                android:orientation="vertical" />
+                android:orientation="vertical"
+                android:paddingBottom="?attr/actionBarSize" />
         </androidx.core.widget.NestedScrollView>
 
 

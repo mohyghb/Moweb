@@ -26,8 +26,8 @@ import java.util.List;
 public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapter.TabViewHolder,MoTab>
         implements MoSelectableList<MoTab> {
 
-    private static final int TAB_PADDING = MoDynamicUnit.convertDpToPixels(8f);
-    private static final int TAB_PADDING_GRID_VIEW = MoDynamicUnit.convertDpToPixels(8f);
+    private static final float TAB_PADDING = 8f;
+    private static final float TAB_PADDING_GRID_VIEW = 8f;
     private final float SCREEN_TO_TAB_RATIO = 2.25f;
 
 
@@ -106,7 +106,8 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
 //                .widthPixels/SCREEN_TO_TAB_RATIO);
         LinearLayout.LayoutParams p =new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 height);
-        p.setMargins(TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW,TAB_PADDING_GRID_VIEW);
+        int padding = MoDynamicUnit.convertDpToPixels(this.context, TAB_PADDING_GRID_VIEW);
+        p.setMargins(padding,padding,padding,padding);
         holder.outerCard.setLayoutParams(p);
     }
 

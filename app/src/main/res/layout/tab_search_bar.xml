@@ -89,7 +89,6 @@
                     android:id="@+id/search_bar_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-
                     android:background="@null"
                     android:hint="@string/tab_search_hint"
                     android:imeOptions="actionSearch"

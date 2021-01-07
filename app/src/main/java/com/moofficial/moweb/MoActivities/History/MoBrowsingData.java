@@ -87,8 +87,8 @@ public class MoBrowsingData extends MoSmartActivity {
         CoordinatorLayout.LayoutParams p = new CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         p.gravity = Gravity.BOTTOM | Gravity.END;
-        p.bottomMargin = MoDynamicUnit.convertDpToPixels(8f);
-        p.rightMargin = MoDynamicUnit.convertDpToPixels(8f);
+        p.bottomMargin = MoDynamicUnit.convertDpToPixels(this,8f);
+        p.rightMargin = MoDynamicUnit.convertDpToPixels(this,8f);
         efab.setLayoutParams(p);
         efab.setBackgroundColor(getColor(R.color.colorAccent));
         l.coordinatorLayout.addView(efab);

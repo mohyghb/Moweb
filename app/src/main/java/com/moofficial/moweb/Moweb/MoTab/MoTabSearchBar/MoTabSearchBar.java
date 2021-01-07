@@ -141,7 +141,7 @@ public class MoTabSearchBar extends MoConstraint {
      * shows the search bar helper
      */
     public void activateSearch() {
-       // TransitionManager.beginDelayedTransition(this);
+        //BookmarkActivity.startActivity(getContext());
         this.isInSearch = true;
 
         this.tabsButton.gone();
