@@ -10,7 +10,6 @@ import com.moofficial.moweb.R;
 public abstract class MoSearchEngine {
 
 
-    // different types of search engine
     public static final int GOOGLE = 0;
     public static final int DUCK_DUCK_GO = 1;
 
