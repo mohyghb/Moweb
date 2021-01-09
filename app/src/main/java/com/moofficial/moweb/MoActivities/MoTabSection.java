@@ -241,20 +241,20 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
                 .hideTitle()
                 .setRightIcon(R.drawable.ic_baseline_refresh_24)
                 .setRightOnClickListener(view -> webView.forceReload())
-                .setMiddleIcon(tab.urlIsBookmarked()?
-                        R.drawable.ic_baseline_star_24:
-                        R.drawable.ic_baseline_star_border_24)
                 .setMiddleOnClickListener(view -> {
                     tab.bookmarkTheTab();
                 })
                 .getCardView().makeTransparent();
+        this.updateBookmark();
 
         // on tab change bookmark listener so we know which icon to use
-        tab.setOnTabBookmarkChanged(isBookmarked -> {
-            this.moToolBar.setMiddleIcon(isBookmarked?
-                    R.drawable.ic_baseline_star_24:
-                    R.drawable.ic_baseline_star_border_24);
-        });
+        tab.setOnTabBookmarkChanged(isBookmarked -> updateBookmark());
+    }
+
+    public void updateBookmark() {
+        this.moToolBar.setMiddleIcon(tab.urlIsBookmarked()?
+                R.drawable.ic_baseline_star_24:
+                R.drawable.ic_baseline_star_border_24);
     }
 
 

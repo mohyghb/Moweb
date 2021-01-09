@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
@@ -85,14 +86,17 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
                 h.title.setText(bookmark.getName());
                 h.imageTextLogo.setText(MoString.getSignature(bookmark.getName()))
                         .hideLogo()
-                        .showText();
+                        .showText()
+                .filledCircle();
                 break;
             case MoBookmark.FOLDER:
                 h.url.setText(bookmark.size() + " items");
                 h.title.setText(bookmark.getName());
                 h.imageTextLogo
+                        .filledCircle()
                         .showLogoHideText()
                         .setInner(ContextCompat.getDrawable(context,R.drawable.ic_baseline_folder_open_24));
+                MoLog.print("color value = " + h.imageTextLogo.getColor());
                 break;
         }
 

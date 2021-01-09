@@ -34,13 +34,22 @@ public class MainActivity extends AppCompatActivity {
         init();
     }
 
-    
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (sectionViewManager.getActiveSectionKey() == SECTION_TAB) {
+            this.tabSection.updateBookmark();
+        }
+    }
 
     private void init() {
         initTabSection();
         initMainMenuSection();
         initSectionManager();
     }
+
+
 
 
 
