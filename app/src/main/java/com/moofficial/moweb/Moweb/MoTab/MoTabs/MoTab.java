@@ -426,12 +426,14 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
      */
     public void saveTab() {
         new MoThread<String>().doBackground(() -> {
-            try {
-                MoLog.print("tab saving " + tabId.stringify());
-                MoFileManagerUtils.write(context,MoTab.this);
-            }
-            catch (IOException e) {
-                e.printStackTrace();
+            synchronized (MoTab.this) {
+                try {
+                    MoLog.print("tab saving " + tabId.stringify());
+                    MoFileManagerUtils.write(context,MoTab.this);
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             return null;
         }).begin();
