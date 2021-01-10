@@ -9,13 +9,13 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerVi
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestions;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSuggestionsAdapter;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnReceivedError;
 
 import java.util.ArrayList;
 
 public class MoTabSuggestion {
 
     private MoSuggestionsAdapter adapter;
-    private MoCardRecyclerView moCardRecyclerView;
     private MoRecyclerView recyclerView;
 
     // list of suggestions that get updated
@@ -23,16 +23,15 @@ public class MoTabSuggestion {
     private Context context;
     private MoRunnable onSuggestionClicked;
 
-    public MoTabSuggestion(Context context, MoCardRecyclerView v){
+    public MoTabSuggestion(Context context, MoRecyclerView v){
         this.context = context;
-        this.moCardRecyclerView = v;
+        this.recyclerView = v;
     }
 
-    public MoTabSuggestion init(){
-        moCardRecyclerView.getCardView().makeCardRectangular().makeTransparent();
+    public MoTabSuggestion init() {
         adapter = new MoSuggestionsAdapter(new ArrayList<>(),context,this.onSuggestionClicked);
-        recyclerView = MoRecyclerUtils.get(moCardRecyclerView.getRecyclerView(),adapter)
-                            .setOrientation(MoRecyclerView.HORIZONTAL)
+        recyclerView = MoRecyclerUtils.get(recyclerView,adapter)
+                            .setLayoutManagerType(MoRecyclerView.STAGGERED_GRID_LAYOUT_MANAGER)
                             .show();
         return this;
     }
@@ -56,14 +55,14 @@ public class MoTabSuggestion {
         this.suggestions = suggestions;
         adapter.setDataSet(suggestions.getSuggestions());
         adapter.notifyDataSetChanged();
-        moCardRecyclerView.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 
 
 
 
     public void hide() {
-        this.moCardRecyclerView.setVisibility(View.GONE);
+        this.recyclerView.setVisibility(View.GONE);
     }
 
 

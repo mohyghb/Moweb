@@ -6,9 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoRunnable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoDrawable.MoDrawableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoRecyclerAdapter;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
@@ -27,12 +29,12 @@ public class MoSuggestionsAdapter extends MoRecyclerAdapter<MoSuggestionsAdapter
     public static class SuggestionViewHolder extends RecyclerView.ViewHolder {
 
         private TextView suggestion;
-        private MoCardView cardView;
+        private ConstraintLayout layout;
 
         public SuggestionViewHolder(View v) {
             super(v);
             suggestion = v.findViewById(R.id.suggestion_text_view);
-            cardView = v.findViewById(R.id.suggestion_button);
+            layout = v.findViewById(R.id.suggestion_constraint_layout);
         }
 
 
@@ -41,8 +43,8 @@ public class MoSuggestionsAdapter extends MoRecyclerAdapter<MoSuggestionsAdapter
     // Provide a suitable constructor (depends on the kind of dataset)
     public MoSuggestionsAdapter(List<MoSuggestion> myDataset, Context c, MoRunnable runnable) {
         super(c,myDataset);
-
         this.onSuggestionClicked = runnable;
+        setHasStableIds(true);
     }
 
     // Create new views (invoked by the layout manager)
@@ -50,6 +52,7 @@ public class MoSuggestionsAdapter extends MoRecyclerAdapter<MoSuggestionsAdapter
     public MoSuggestionsAdapter.SuggestionViewHolder onCreateViewHolder(ViewGroup parent,
                                                                  int viewType) {
         View v = MoInflaterView.inflate(R.layout.suggestion_layout,parent.getContext());
+        v.setLayoutParams(getMatchWrapParams());
         return new MoSuggestionsAdapter.SuggestionViewHolder(v);
     }
 
@@ -58,9 +61,7 @@ public class MoSuggestionsAdapter extends MoRecyclerAdapter<MoSuggestionsAdapter
     @Override
     public void onBindViewHolder(MoSuggestionsAdapter.SuggestionViewHolder holder, int position) {
         holder.suggestion.setText(dataSet.get(position).getKey());
-        holder.cardView
-                .makeCardRound()
-                .setOnClickListener(view -> {
+        holder.layout.setOnClickListener(view -> {
             if(onSuggestionClicked!=null)
                 onSuggestionClicked.run(dataSet.get(position).getSearch());
         });

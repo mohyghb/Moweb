@@ -210,14 +210,12 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
      */
     private void initSearchBar() {
         MoFindBar findBar = new MoFindBar(getContext());
-        MoCardRecyclerView suggestionCard = new MoCardRecyclerView(getContext());
         this.moTabSearchBar = new MoTabSearchBar(getContext())
                 .setParentLayout(coordinatorLayout)
-                .setSuggestionCardRecyclerView(suggestionCard)
                 .setBottomParentLayout(linearBottom.getLinearLayout())
                 .setMoFindBar(findBar);
         this.moTabSearchBar.init();
-        linearBottom.setupMultipleBars(moTabSearchBar, suggestionCard, moTabSearchBar, findBar);
+        linearBottom.setupMultipleBars(moTabSearchBar, moTabSearchBar, findBar);
     }
 
     /**
