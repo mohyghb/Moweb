@@ -441,7 +441,9 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
      * deletes the file of the tab completely
      */
     public void deleteTab() {
-        this.moWebView.onDestroy();
+        if (moWebView != null) {
+            this.moWebView.onDestroy();
+        }
         MoFileManagerUtils.delete(context,this);
         deleteWebViewBitmap(context);
     }

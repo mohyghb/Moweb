@@ -525,9 +525,11 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         if(s==null || s.isEmpty())
             return;
         String[] c = MoFile.loadable(s);
-        this.stackTabHistory.load(c[0],context);
-        this.isInDesktopMode = Boolean.parseBoolean(c[1]);
-        this.webState.load(c[2],context);
+        if (c.length != 0) {
+            this.stackTabHistory.load(c[0],context);
+            this.isInDesktopMode = Boolean.parseBoolean(c[1]);
+            this.webState.load(c[2],context);
+        }
     }
 
     @Override
