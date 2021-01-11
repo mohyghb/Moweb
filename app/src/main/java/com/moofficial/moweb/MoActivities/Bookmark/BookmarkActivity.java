@@ -181,7 +181,21 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
                 (dialogInterface, i) -> {
                     recyclerAdapter.deleteSelected();
                     listViewSync.removeAction();
+                    updateIfOtherActionsOnHold();
                 });
+    }
+
+    /**
+     * this method solves the problem  where the user
+     * searches for a bookmark, then deletes it, however,
+     * since the search action is still on hold, the adapter is not
+     * being updated through the onEmptyHold listener of listSyncView
+     * therefore, we manually update it
+     */
+    private void updateIfOtherActionsOnHold() {
+        if (!listViewSync.getOnHolds().isEmpty()) {
+            updateRecyclerView();
+        }
     }
 
     /**
@@ -204,6 +218,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     }
 
     private void updateRecyclerView() {
+        TransitionManager.beginDelayedTransition(getGroupRootView());
         recyclerAdapter.notifyDataSetChanged();
     }
 
@@ -331,7 +346,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
 
     private void updateRecyclerAdapter(ArrayList<MoBookmark> list) {
         recyclerAdapter.setDataSet(list);
-        TransitionManager.beginDelayedTransition(getGroupRootView());
+
         runOnUiThread(this::updateRecyclerView);
     }
 
