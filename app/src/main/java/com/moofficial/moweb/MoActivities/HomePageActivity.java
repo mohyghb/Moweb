@@ -58,7 +58,7 @@ public class HomePageActivity extends MoSmartActivity {
 
     private void initCardRecyclerView() {
         cardRecyclerView = new MoCardRecyclerView(this).makeCardRound();
-        l.linearNested.addView(cardRecyclerView, MoMarginBuilder.getLinearParams(0,8,0,0));
+        l.linearNested.addView(cardRecyclerView, MoMarginBuilder.getLinearParams(this,0,8,0,0));
     }
 
     private void initInputBar() {

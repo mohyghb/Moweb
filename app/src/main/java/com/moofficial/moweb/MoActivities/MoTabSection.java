@@ -13,6 +13,7 @@ import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoActivitySettings.MoActivitySettings;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoFragment.MoOnBackPressed;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoBasicLayout;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoPaddingBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroupUtils.MoAppbar.MoAppbarUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroupUtils.MoCoordinatorUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoFindBar;
@@ -103,7 +104,6 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
             updateTitle();
             updateSubtitle();
             updateToolbar();
-            MoLog.print("update tab");
         }
     }
 
@@ -184,7 +184,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
         this.webView.setOnTouchListener((v, event) -> {
             if (moTabSearchBar.isInSearch()) {
                 // we need to cancel it
-                moTabSearchBar.setToSearchMode(false);
+                moTabSearchBar.deactivateSearch();
                 MoKeyboardUtils.hideSoftKeyboard(v);
                 return true;
             }
@@ -230,7 +230,10 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
 
     private void initWebCardView() {
         webCard = new MoCardView(getContext()).makeCardMediumRound().makeTransparent().removeElevation();
-        coordinatorLayout.addView(webCard,MoCoordinatorUtils.getScrollingParams());
+        coordinatorLayout.addView(webCard,MoCoordinatorUtils.getScrollingParams(
+                new MoPaddingBuilder(getContext())
+                .setBottom(8)
+                .asDp()));
     }
 
     private void updateToolbar() {
@@ -268,10 +271,6 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
                 .clearEditTextFocus()
                 .setTextSearch(tab.getUrl())
                 .setOnTabsButtonClicked(view -> {
-
-//                    getContext().startActivity(new Intent(getContext(), SavedPasswordsActivity.class));
-
-
                     MoKeyboardUtils.hideSoftKeyboard(view);
                     onTabsButtonPressed();
                 })

@@ -70,7 +70,7 @@ public class SavedPasswordsActivity extends MoSmartActivity {
         this.switchButton.setChecked(MoUserPassManager.enabled);
         updateSwitchText();
         this.switchButton.getCardView().makeCardRound().removeElevation();
-        this.l.linearNested.addView(this.switchButton, MoMarginBuilder.getLinearParams(0,8,0,8));
+        this.l.linearNested.addView(this.switchButton, MoMarginBuilder.getLinearParams(this,0,8,0,8));
     }
 
     private void updateSwitchText() {
@@ -124,7 +124,7 @@ public class SavedPasswordsActivity extends MoSmartActivity {
         this.passRecycler = MoRecyclerUtils.get(cardRecyclerView.getRecyclerView(),passAdapter)
                 .setMaxHeight(getHeightPixels())
                 .show();
-        this.l.linearNested.addView(cardRecyclerView, MoMarginBuilder.getLinearParams(0,8,0,0));
+        this.l.linearNested.addView(cardRecyclerView, MoMarginBuilder.getLinearParams(this,0,8,0,0));
     }
 
     private void initMoToolbar() {
