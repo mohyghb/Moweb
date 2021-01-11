@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tab_search_bar_card_view"
     android:layout_width="match_parent"
-    android:layout_height="?android:actionBarSize"
-    app:cardElevation="0dp"
+    android:layout_height="wrap_content"
     android:backgroundTint="@color/transparent"
+    app:cardElevation="0dp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -15,10 +15,21 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="0dp"
         android:background="@android:color/transparent"
         android:backgroundTint="@color/transparent">
+
+        <com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView
+            android:id="@+id/tab_search_bar_suggestion_card_recycler"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@id/tab_search_bar_text_constraint_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <ProgressBar
@@ -41,37 +52,35 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/tab_search_bar_text_constraint_layout"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:background="@color/transparent"
             android:backgroundTint="@color/transparent"
             app:layout_constraintBottom_toTopOf="@id/tab_progress"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintStart_toStartOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/tab_search_bar_background"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/layout_buttons_search_bar"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/tab_search_bar_background"
-                >
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageButton
                     android:id="@+id/tab_search_bar_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/mo_image_button_padding"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    app:srcCompat="@drawable/ic_baseline_info_24"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:padding="@dimen/mo_image_button_padding"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_baseline_info_24" />
 
                 <View
                     android:id="@+id/divider"
@@ -90,15 +99,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@null"
+                    android:ellipsize="none"
+                    android:fadingEdgeLength="@dimen/mo_fading_edge_text"
                     android:hint="@string/tab_search_hint"
                     android:imeOptions="actionSearch"
                     android:inputType="textWebEditText"
                     android:padding="8dp"
-                    android:selectAllOnFocus="true"
                     android:requiresFadingEdge="horizontal"
-                    android:fadingEdgeLength="@dimen/mo_fading_edge_text"
+                    android:selectAllOnFocus="true"
                     android:singleLine="true"
-                    android:ellipsize="none"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/tab_search_bar_info"
@@ -107,15 +116,13 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_buttons_search_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar.MoTabsButton
                     android:id="@+id/include"

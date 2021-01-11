@@ -27,6 +27,7 @@ import com.moofficial.moessentials.MoEssentials.MoRunnable.MoWorker.MoWorker;
 import com.moofficial.moessentials.MoEssentials.MoShare.MoShareUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoBottomSheet.MoBottomSheet;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMenuBuilder.MoMenuBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroups.MoConstraint;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoFindBar;
@@ -57,7 +58,6 @@ public class MoTabSearchBar extends MoConstraint {
     private MoSearchable moSearchable;
     private MoTabSuggestion suggestion;
     private MoCardView searchBarCardView;
-    private MoCardRecyclerView suggestionCardRecyclerView;
 
     private MoWebView moWebView;
     private MoTab tab;
@@ -191,13 +191,6 @@ public class MoTabSearchBar extends MoConstraint {
 
     public MoTabSearchBar setOnTabsButtonClicked(View.OnClickListener l){
         this.tabsButton.setOnTabsButtonClicked(l);
-        return this;
-    }
-
-
-
-    public MoTabSearchBar setSuggestionCardRecyclerView(MoCardRecyclerView suggestionCardRecyclerView) {
-        this.suggestionCardRecyclerView = suggestionCardRecyclerView;
         return this;
     }
 
@@ -345,7 +338,8 @@ public class MoTabSearchBar extends MoConstraint {
     }
 
     private void initSuggestion() {
-        this.suggestion = new MoTabSuggestion(getContext(),suggestionCardRecyclerView)
+        this.suggestion = new MoTabSuggestion(getContext(),
+                findViewById(R.id.tab_search_bar_suggestion_card_recycler))
                 .setOnSuggestionClicked(new MoRunnable() {
                     @Override
                     public <T> void run(T... args) {
@@ -394,18 +388,20 @@ public class MoTabSearchBar extends MoConstraint {
                 @SafeVarargs
                 @Override
                 public final <T> void run(T... args) {
-                    // getting suggestion from search engine
-                    MoSuggestions s = new MoSuggestions(search);
-                    // getting suggestions from search engine
-                    MoSearchEngine.instance.getSuggestions((String)args[0],s);
-                    // getting suggestions from history
-                    MoHistoryManager.addSuggestionsFromHistory(charSequence.toString().toLowerCase(),s);
-                    // sort the suggestions
-                    s.sortBySimilarityToSearch();
-                    // show suggestions
-                    MoTabSearchBar.this.showSuggestions(s);
-                    // canceling the async task
-                    htmlAsyncTask.cancel(true);
+                    synchronized (MoTabSearchBar.this) {
+                        // getting suggestion from search engine
+                        MoSuggestions s = new MoSuggestions(search);
+                        // getting suggestions from search engine
+                        MoSearchEngine.instance.getSuggestions((String)args[0],s);
+                        // getting suggestions from history
+                        MoHistoryManager.addSuggestionsFromHistory(charSequence.toString().toLowerCase(),s);
+                        // sort the suggestions
+                        s.sortBySimilarityToSearch();
+                        // show suggestions
+                        MoTabSearchBar.this.showSuggestions(s);
+                        // canceling the async task
+                        htmlAsyncTask.cancel(true);
+                    }
                 }
             });
             htmlAsyncTask.execute();
@@ -521,7 +517,7 @@ public class MoTabSearchBar extends MoConstraint {
                 .setUpFind(moFindBar.getMiddleButton())
                 .setDownFind(moFindBar.getRightButton())
                 .setCancelButton(moFindBar.getLeftButton())
-                .addNormalViews(this,suggestionCardRecyclerView)
+                .addNormalViews(this)
                 .addUnNormalViews(moFindBar);
     }
 
