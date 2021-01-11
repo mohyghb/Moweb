@@ -50,7 +50,7 @@ public class AddFolderBookmarkActivity extends MoSmartActivity {
                 .setOnButtonClickListener(view -> BookmarkFolderChooserActivity.startActivityForResult(this,
                         CHOOSE_FOLDER_REQUEST_CODE))
                 .getCardView().makeCardRecRound();
-        l.linearNested.addView(folderButton, MoMarginBuilder.getLinearParams(8));
+        l.linearNested.addView(folderButton, MoMarginBuilder.getLinearParams(this,8));
     }
 
     private void initEditText() {
@@ -61,7 +61,7 @@ public class AddFolderBookmarkActivity extends MoSmartActivity {
                     }
                     return false;
                 });
-        l.linearNested.addView(this.editText,MoMarginBuilder.getLinearParams(8));
+        l.linearNested.addView(this.editText,MoMarginBuilder.getLinearParams(this,8));
     }
 
     private void initMoToolBar() {

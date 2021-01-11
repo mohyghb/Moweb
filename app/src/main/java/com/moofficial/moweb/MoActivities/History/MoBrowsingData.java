@@ -76,7 +76,7 @@ public class MoBrowsingData extends MoSmartActivity {
                 .setTitle(p2)
                 .setDescription(p3);
         c.getCardView().setContentPadding(8f).makeCardRecRound();
-        c.setLayoutParams(MoMarginBuilder.getLinearParams(8));
+        c.setLayoutParams(MoMarginBuilder.getLinearParams(this,8));
         return c;
     }
 

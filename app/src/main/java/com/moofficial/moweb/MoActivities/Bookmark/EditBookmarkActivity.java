@@ -77,8 +77,8 @@ public class EditBookmarkActivity extends MoSmartActivity {
         initFolder();
 
         // adding the content to nested linear layout
-        l.linearNested.addView(titleInput, MoMarginBuilder.getLinearParams(8));
-        l.linearNested.addView(folderButton, MoMarginBuilder.getLinearParams(0,8,0,0));
+        l.linearNested.addView(titleInput, MoMarginBuilder.getLinearParams(this,8));
+        l.linearNested.addView(folderButton, MoMarginBuilder.getLinearParams(this,0,8,0,0));
 
     }
 
@@ -153,7 +153,7 @@ public class EditBookmarkActivity extends MoSmartActivity {
                         }
                         return false;
                     });
-            l.linearNested.addView(urlInput, MoMarginBuilder.getLinearParams(8));
+            l.linearNested.addView(urlInput, MoMarginBuilder.getLinearParams(this,8));
         }
     }
 

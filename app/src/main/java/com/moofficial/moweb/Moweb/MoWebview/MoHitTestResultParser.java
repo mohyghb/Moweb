@@ -123,7 +123,7 @@ public class MoHitTestResultParser {
 
         this.bottomSheet = new MoBottomSheet(context)
                 .addTitle(v)
-                .add(MoMarginBuilder.getLinearParams(0),builder.asArray())
+                .add(MoMarginBuilder.getLinearParams(context,0),builder.asArray())
                 .setState(BottomSheetBehavior.STATE_EXPANDED)
                 .build()
                 .show();
