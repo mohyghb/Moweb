@@ -135,12 +135,10 @@
 
                 </com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar.MoTabsButton>
 
-                <ImageButton
+                <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoImageButton
                     android:id="@+id/more_bar_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="@dimen/mo_image_button_padding"
                     android:src="@drawable/ic_more_vert_black_24dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

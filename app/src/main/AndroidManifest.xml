@@ -20,6 +20,7 @@
         <activity android:name=".MoActivities.History.MoBrowsingData" />
         <activity android:name=".MoActivities.Bookmark.AddFolderBookmarkActivity" />
         <activity android:name=".MoActivities.MoSplashScreen" />
+        <activity android:name=".MoActivities.MoDownloadActivity"/>
         <activity
             android:name=".MoActivities.MainActivity"
             android:alwaysRetainTaskState="true"
