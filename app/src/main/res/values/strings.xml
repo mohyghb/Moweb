@@ -19,6 +19,9 @@
     <string name="a_lot_of_tabs">99+</string>
     <string name="changes_saved">Changes were saved!</string>
 
+    <string name="download_notification_cancel">Cancel</string>
+    <string name="download_notification_pause">Pause</string>
+
 
     <string name="copy_password">Copy Password</string>
     <string name="copy_username">Copy Username</string>
