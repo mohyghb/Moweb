@@ -23,11 +23,15 @@ import com.moofficial.moessentials.MoEssentials.MoShare.MoShareUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoBottomSheet.MoBottomSheet;
 import com.moofficial.moweb.R;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import static android.content.Context.DOWNLOAD_SERVICE;
 
 public class MoDownloadListener extends MoContext implements DownloadListener {
 
 
+    private final static long UPDATE_NOTIFICATION_RATE = 1000;
 
     public MoDownloadListener(Context c) {
         super(c);
@@ -54,6 +58,7 @@ public class MoDownloadListener extends MoContext implements DownloadListener {
     public void onDownloadStart(String url, String userAgent,
                                 String contentDisposition, String mimeType,
                                 long contentLength) {
+
 //        if(!isSafe(url)){
 //            return;
 //        }
@@ -61,6 +66,8 @@ public class MoDownloadListener extends MoContext implements DownloadListener {
             // it is downloading an application ask the user
             return;
         }
+
+        MoDownloadManager.createNotificationChannel(context);
 
 
         // how you get mime type from a url
@@ -95,36 +102,44 @@ public class MoDownloadListener extends MoContext implements DownloadListener {
         new Thread() {
             @Override
             public void run() {
-                boolean isDownloading = true;
-
-                // todo do the actions for notification cancel and pause
-
-                MoDownloadManager.createNotificationChannel(context);
-
-
-                while(isDownloading) {
-                    DownloadManager.Query q = new DownloadManager.Query();
-                    q.setFilterById(id);
-                    Cursor c = dm.query(q);
-                    c.moveToFirst();
-                    int downloaded = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
-                    int fileSize = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
-                    //int dl_progress = (int) ((downloaded * 100l) / fileSize);
-
-                    int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
-                    if ( status == DownloadManager.STATUS_SUCCESSFUL ||
-                            status == DownloadManager.STATUS_FAILED) {
-                        isDownloading = false;
+                Timer t = new Timer();
+                t.scheduleAtFixedRate(new TimerTask() {
+                    @Override
+                    public void run() {
+                        updateNotification(id, dm, t, name);
+                        MoLog.print("Downloading " + id);
                     }
-
-                    updateNotification((int)id, fileSize, downloaded, name);
-                    c.close();
-                }
-
-
-
+                },0, UPDATE_NOTIFICATION_RATE);
             }
         }.start();
+    }
+
+    /**
+     * updates the notification based on the id of the notification
+     * that is passed as param
+     * @param id
+     * @param dm
+     * @param t
+     * @param name
+     */
+    private void updateNotification(long id, DownloadManager dm, Timer t, String name) {
+        DownloadManager.Query q = new DownloadManager.Query();
+        q.setFilterById(id);
+        Cursor c = dm.query(q);
+        c.moveToFirst();
+        int downloaded = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+        int fileSize = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+        //int dl_progress = (int) ((downloaded * 100l) / fileSize);
+
+        int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
+        // todo better status handling
+        if ( status == DownloadManager.STATUS_SUCCESSFUL ||
+                status == DownloadManager.STATUS_FAILED) {
+            t.cancel();
+        }
+
+        updateNotification((int)id, fileSize, downloaded, name);
+        c.close();
     }
 
 
@@ -140,11 +155,10 @@ public class MoDownloadListener extends MoContext implements DownloadListener {
                 .setColorized(true)
                 .setCategory(Notification.CATEGORY_PROGRESS)
                 .setContentTitle(name)
+                .setColor(getColor(R.color.colorAccent))
                 .setSmallIcon(R.drawable.ic_baseline_arrow_downward_24)
-                .addAction(new NotificationCompat.Action(null,
-                        getString(R.string.download_notification_pause), null))
-                .addAction(new NotificationCompat.Action(null,
-                        getString(R.string.download_notification_cancel),null))
+                .addAction(R.drawable.ic_baseline_pause_24, getString(R.string.download_notification_pause), null)
+                .addAction(R.drawable.ic_baseline_cancel_24,getString(R.string.download_notification_cancel),null)
                 .build();
         NotificationManager m = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         m.notify(id, n);
