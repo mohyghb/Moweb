@@ -12,15 +12,21 @@ import androidx.core.app.NotificationCompat;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManagerUtils;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moweb.R;
+import com.tonyodev.fetch2.Download;
 import com.tonyodev.fetch2.Fetch;
 import com.tonyodev.fetch2.FetchConfiguration;
 import com.tonyodev.fetch2.NetworkType;
 import com.tonyodev.fetch2.Priority;
 import com.tonyodev.fetch2.Request;
+import com.tonyodev.fetch2core.Func;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 
 public class MoDownloadManager {
@@ -112,14 +118,20 @@ public class MoDownloadManager {
     }
 
 
-
-    // todo you need storage access to show them all
-    public static void fin() {
-//        File f = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-//        for (File files : Objects.requireNonNull(f.listFiles())) {
-//            MoLog.print(files.getName());
-//        }
-//        int i = 0;
+    /**
+     * returns the downloads inside the
+     * specified download dir of the user
+     * @return list of files
+     */
+    public static List<File> getDownloads() {
+        ArrayList<File> downloads = new ArrayList<>();
+        File dir = getDir();
+        for (File file : Objects.requireNonNull(dir.listFiles())) {
+            if (file != null && file.isFile()) {
+                downloads.add(file);
+            }
+        }
+        return downloads;
     }
 
     /**
@@ -164,9 +176,7 @@ public class MoDownloadManager {
      * @param userAgent
      */
     public static void enqueueDownload(String url, String contentDisposition, String finalMimeType, String userAgent) {
-        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-
-        String path = dir.getPath() + "/" + URLUtil.guessFileName(url,
+        String path = getDir().getPath() + "/" + URLUtil.guessFileName(url,
                 contentDisposition, finalMimeType).replace(" ","");
 
         Request request = new Request(url, path);
@@ -182,6 +192,14 @@ public class MoDownloadManager {
             //Error while enqueuing download
             MoLog.print("error while enquing download "+ error.toString());
         });
+    }
+
+    /**
+     * todo add option so that user can change this
+     * @return the download directory
+     */
+    public static File getDir() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
     }
 
     /**

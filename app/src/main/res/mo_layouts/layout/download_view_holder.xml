@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardCornerRadius="@dimen/mo_style_card_corner"
+    app:cardElevation="0dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp">
+
+        <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoLogo
+            android:id="@+id/download_holder_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/download_holder_logo"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="8dp">
+
+            <TextView
+                android:id="@+id/download_holder_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Download title"
+                style="@style/mo_view_holder_title_text"/>
+
+            <TextView
+                android:id="@+id/download_holder_description"
+                style="@style/mo_view_holder_title_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-thin"
+                android:text="download url goes here for example..." />
+
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView>
