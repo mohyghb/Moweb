@@ -16,12 +16,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
-        <activity android:name=".MoActivities.History.SavedPasswordsActivity"></activity>
+        android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true">
+        <receiver
+            android:name=".Moweb.MoDownload.MoDownloadReceiver"
+            android:enabled="true"
+            android:exported="false"/>
+
+        <activity android:name=".MoActivities.History.SavedPasswordsActivity" />
         <activity android:name=".MoActivities.History.MoBrowsingData" />
         <activity android:name=".MoActivities.Bookmark.AddFolderBookmarkActivity" />
         <activity android:name=".MoActivities.MoSplashScreen" />
-        <activity android:name=".MoActivities.MoDownloadActivity"/>
+        <activity android:name=".MoActivities.MoDownloadActivity" />
         <activity
             android:name=".MoActivities.MainActivity"
             android:alwaysRetainTaskState="true"

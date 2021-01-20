@@ -7,6 +7,7 @@ import android.transition.Slide;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoSwitchers.MoSectionViewManager;
 import com.moofficial.moweb.MoActivities.MainMenu.MainMenuSection;
 import com.moofficial.moweb.Moweb.MoWebAppLoader.MoWebAppLoader;
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         MoSettingsSection.init(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        MoWebAppLoader.loadApp(this);
+        MoLog.printRunTime("App loader",() -> MoWebAppLoader.loadApp(this));
         init();
     }
 
