@@ -5,12 +5,18 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
+import android.webkit.URLUtil;
 
 import androidx.core.app.NotificationCompat;
 
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManagerUtils;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moweb.R;
+import com.tonyodev.fetch2.Fetch;
+import com.tonyodev.fetch2.FetchConfiguration;
+import com.tonyodev.fetch2.NetworkType;
+import com.tonyodev.fetch2.Priority;
+import com.tonyodev.fetch2.Request;
 
 import java.io.File;
 import java.util.HashMap;
@@ -26,11 +32,15 @@ public class MoDownloadManager {
     public static final int DOWNLOAD_SMALL_ICON = R.drawable.ic_baseline_arrow_downward_24;
     public static final String ACTION_DELETE_NOTIFICATION = "action_delete_notification";
     public static final String ACTION_OPEN_NOTIFICATION = "action_open_notification";
+    public static final String ACTION_PAUSE_DOWNLOAD = "action_pause_notification";
+    public static final String ACTION_RESUME_DOWNLOAD = "action_resume_notification";
+    public static final String ACTION_CANCEL_DOWNLOAD = "action_cancel_notification";
 
     public final static String GROUP_KEY_DOWNLOAD = "com.android.moweb.DOWNLOAD_ITEM";
     public final static int GROUP_ID = -1;
 
     public static final HashSet<Integer> DOWNLOADING_SET = new HashSet<>();
+    public static Fetch fetch;
 
 
     /**
@@ -60,6 +70,41 @@ public class MoDownloadManager {
             getNotificationManager(context).cancel(GROUP_ID);
         }
         MoLog.print("removing notification "+ id);
+    }
+
+    /**
+     * pauses the download with the id passed in
+     * @param id to pause download for
+     */
+    public static void pause(int id) {
+        if (fetch != null) {
+            fetch.pause(id);
+        }
+    }
+
+    /**
+     * resumes the download for the id passed in
+     * @param id to resume download for
+     */
+    public static void resume(int id) {
+        if (fetch != null) {
+            fetch.resume(id);
+        }
+    }
+
+    /**
+     * cancels the download for the id passed in
+     * @param id to cancel download for
+     */
+    public static void cancel(Context c, int id) {
+        if (fetch != null) {
+            fetch.cancel(id);
+            // todo we can give them the option to either delete on cancel or not
+            //  normally we automatically delete if they cancel
+            fetch.delete(id);
+            getNotificationManager(c).cancel(id);
+            remove(c,id);
+        }
     }
 
     public static NotificationManager getNotificationManager(Context context) {
@@ -111,4 +156,44 @@ public class MoDownloadManager {
         }
     }
 
+    /**
+     * creates a download request based on the information passed in
+     * @param url
+     * @param contentDisposition
+     * @param finalMimeType
+     * @param userAgent
+     */
+    public static void enqueueDownload(String url, String contentDisposition, String finalMimeType, String userAgent) {
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+
+        String path = dir.getPath() + "/" + URLUtil.guessFileName(url,
+                contentDisposition, finalMimeType).replace(" ","");
+
+        Request request = new Request(url, path);
+        request.setPriority(Priority.HIGH);
+        request.setNetworkType(NetworkType.ALL);
+        request.addHeader("User-Agent", userAgent);
+
+
+        fetch.enqueue(request, request1 -> {
+            //Request enqueued for download
+            MoLog.print("enqeue for download " + request1.toString());
+        }, error -> {
+            //Error while enqueuing download
+            MoLog.print("error while enquing download "+ error.toString());
+        });
+    }
+
+    /**
+     * sets up the listener for downloads
+     * @param context
+     */
+    public static void setUp(Context context) {
+        FetchConfiguration fetchConfiguration = new FetchConfiguration.Builder(context)
+                .setDownloadConcurrentLimit(10)
+                .setProgressReportingInterval(MoRequestListener.UPDATE_NOTIFICATION_RATE)
+                .build();
+        fetch = Fetch.Impl.getInstance(fetchConfiguration);
+        fetch.addListener(new MoRequestListener(context));
+    }
 }

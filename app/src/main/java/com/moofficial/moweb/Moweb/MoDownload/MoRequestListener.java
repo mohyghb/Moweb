@@ -1,20 +1,15 @@
 package com.moofficial.moweb.Moweb.MoDownload;
 
-import android.app.DownloadManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.util.Log;
-import android.webkit.URLUtil;
 
 import androidx.core.app.NotificationCompat;
 
 import com.moofficial.moessentials.MoEssentials.MoContext.MoContext;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
-import com.moofficial.moweb.Moweb.MoWebview.MoHitTestResult.MoOnHandleMessage;
 import com.moofficial.moweb.R;
 import com.tonyodev.fetch2.Download;
 import com.tonyodev.fetch2.Error;
@@ -26,21 +21,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import static com.tonyodev.fetch2.Status.COMPLETED;
-import static com.tonyodev.fetch2.Status.DOWNLOADING;
-
-public class MoDownloadItem extends MoContext implements FetchListener {
+public class MoRequestListener extends MoContext implements FetchListener {
 
     public final static long UPDATE_NOTIFICATION_RATE = 1000;
     public final static String EXTRA_ID = "download_extra_id";
-    public final static String TAG = MoDownloadItem.class.getSimpleName();
+    public final static String TAG = MoRequestListener.class.getSimpleName();
 
 
 
-    public MoDownloadItem(Context c) {
+    public MoRequestListener(Context c) {
         super(c);
     }
 
@@ -78,22 +68,28 @@ public class MoDownloadItem extends MoContext implements FetchListener {
                 .setSmallIcon(MoDownloadManager.DOWNLOAD_SMALL_ICON)
                 .setGroup(MoDownloadManager.GROUP_KEY_DOWNLOAD)
                 .setAutoCancel(false)
-                .setDeleteIntent(getDeletePendingIntent(id));
+                .setDeleteIntent(getPendingIntent(MoDownloadManager.ACTION_DELETE_NOTIFICATION, id));
 
         switch (status) {
             case ADDED:
-                n.setProgress(0,0,true)
+                n.setProgress(100,progress,true)
                         .setOngoing(true)
                         .setCategory(Notification.CATEGORY_PROGRESS);
                 break;
+            case QUEUED:
             case DOWNLOADING:
-               n.setProgress(max, progress,false)
+            case PAUSED:
+                boolean paused = status == Status.PAUSED;
+                n.setProgress(max, progress,false)
                        .setCategory(Notification.CATEGORY_PROGRESS)
                        .setOngoing(true)
                        .addAction(R.drawable.ic_baseline_pause_24,
-                        getString(R.string.download_notification_pause), null)
+                        paused? getString(R.string.download_notification_resume):getString(R.string.download_notification_pause),
+                               getPendingIntent(paused? MoDownloadManager.ACTION_RESUME_DOWNLOAD:
+                                               MoDownloadManager.ACTION_PAUSE_DOWNLOAD,
+                                       id))
                        .addAction(R.drawable.ic_baseline_cancel_24,
-                        getString(R.string.download_notification_cancel),null)
+                        getString(R.string.download_notification_cancel),getPendingIntent(MoDownloadManager.ACTION_CANCEL_DOWNLOAD, id))
                        .setContentText(progress + "%")
                         .setSubText(kBps + "KB/s");
                 break;
@@ -110,9 +106,9 @@ public class MoDownloadItem extends MoContext implements FetchListener {
      * this is called
      * @return pending intent for broadcasting
      */
-    private PendingIntent getDeletePendingIntent(int id) {
+    private PendingIntent getPendingIntent(String action, int id) {
         Intent deleteIntent = new Intent(this.context, MoDownloadReceiver.class);
-        deleteIntent.setAction(MoDownloadManager.ACTION_DELETE_NOTIFICATION);
+        deleteIntent.setAction(action);
         deleteIntent.putExtra(EXTRA_ID, id);
         return PendingIntent.getBroadcast(context,
                 id,
@@ -159,6 +155,7 @@ public class MoDownloadItem extends MoContext implements FetchListener {
 
     @Override
     public void onPaused(@NotNull Download download) {
+        updateNotification(download);
         MoLog.print("on paused " + download.getId() );
     }
 
@@ -181,7 +178,7 @@ public class MoDownloadItem extends MoContext implements FetchListener {
 
     @Override
     public void onResumed(@NotNull Download download) {
-
+        updateNotification(download);
     }
 
     @Override

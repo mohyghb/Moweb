@@ -5,7 +5,6 @@ import android.content.Context;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoAnimation.MoAnimation;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
-import com.moofficial.moweb.Moweb.MoDownload.MoDownloadListener;
 import com.moofficial.moweb.Moweb.MoDownload.MoDownloadManager;
 import com.moofficial.moweb.Moweb.MoHomePage.MoHomePageManager;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
@@ -59,7 +58,7 @@ public class MoWebAppLoader {
 
 
 //        loadJsScripts(context);
-        MoDownloadListener.setUp(context);
+        MoDownloadManager.setUp(context);
 
     }
 

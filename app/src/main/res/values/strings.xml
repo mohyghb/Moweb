@@ -21,6 +21,7 @@
 
     <string name="download_notification_cancel">Cancel</string>
     <string name="download_notification_pause">Pause</string>
+    <string name="download_notification_resume">Resume</string>
 
 
     <string name="copy_password">Copy Password</string>
