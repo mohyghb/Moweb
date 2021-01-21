@@ -35,6 +35,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoC
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
 import com.moofficial.moweb.MoActivities.Bookmark.BookmarkActivity;
 import com.moofficial.moweb.MoActivities.History.HistoryActivity;
+import com.moofficial.moweb.MoActivities.MoDownloadActivity;
 import com.moofficial.moweb.MoActivities.SettingsActivity;
 import com.moofficial.moweb.MoHTML.MoHTMLAsyncTask;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
@@ -463,6 +464,7 @@ public class MoTabSearchBar extends MoConstraint {
                 .text(R.string.home_page_title,R.drawable.ic_baseline_home_24,view -> tab.goToHomepage())
                 .text(R.string.history,R.drawable.ic_baseline_history_24,view-> HistoryActivity.launch(getContext()))
                 .text(R.string.share, R.drawable.ic_baseline_share_24, view -> tab.shareTheTab())
+                .text(R.string.downloads, R.drawable.ic_baseline_arrow_downward_24, view -> MoDownloadActivity.startActivity(getContext()))
                 .text(R.string.settings, R.drawable.ic_baseline_settings_24, view -> SettingsActivity.launch(getContext()))
                 .text(R.string.desktop_mode,moWebView.isInDesktopMode()?
                         R.drawable.ic_baseline_check_box_24:R.drawable.ic_baseline_check_box_outline_blank_24 ,

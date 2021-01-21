@@ -123,12 +123,12 @@ public class MoDownloadManager {
      * specified download dir of the user
      * @return list of files
      */
-    public static List<File> getDownloads() {
-        ArrayList<File> downloads = new ArrayList<>();
+    public static List<MoDownload> getDownloads() {
+        ArrayList<MoDownload> downloads = new ArrayList<>();
         File dir = getDir();
         for (File file : Objects.requireNonNull(dir.listFiles())) {
             if (file != null && file.isFile()) {
-                downloads.add(file);
+                downloads.add(new MoDownload(file));
             }
         }
         return downloads;
