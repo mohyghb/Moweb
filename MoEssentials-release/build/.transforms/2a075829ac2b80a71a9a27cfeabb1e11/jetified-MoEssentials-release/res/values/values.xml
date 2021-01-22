@@ -86,6 +86,12 @@
         <item name="android:backgroundTint">@color/colorPrimary</item>
         <item name="cardElevation">3dp</item>
     </style>
+    <style name="mo_fading_edge_text_view" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:requiresFadingEdge">horizontal</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:fadingEdgeLength">@dimen/mo_fade_edge_text_view</item>
+        <item name="android:ellipsize">none</item>
+    </style>
     <style name="mo_round_bottom_sheet" parent="Widget.MaterialComponents.BottomSheet">
         <item name="shapeAppearanceOverlay">@style/mo_round_bottom_sheet_style</item>
     </style>

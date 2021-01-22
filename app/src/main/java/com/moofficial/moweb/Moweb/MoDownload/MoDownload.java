@@ -40,6 +40,17 @@ public class MoDownload implements MoSelectableItem, MoSearchableItem {
         return type;
     }
 
+    public boolean delete() {
+        if (this.file.exists()) {
+            return this.file.delete();
+        }
+        return false;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
     @Override
     public void setSelected(boolean b) {
         this.selected = b;

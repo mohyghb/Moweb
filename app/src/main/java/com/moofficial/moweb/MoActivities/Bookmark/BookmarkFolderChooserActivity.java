@@ -67,7 +67,6 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
 
     private void initMoSearchbar() {
         searchBar = new MoSearchBar(this);
-        searchBar.getCardView().makeTransparent();
         searchBar.setVisibility(View.GONE);
     }
 
@@ -80,8 +79,6 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
                                 ADD_FOLDER_REQUEST))
                 .setLeftOnClickListener(view -> onBackPressed())
                 .setRightIcon(R.drawable.ic_baseline_search_24);
-        moToolBar.getCardView().makeTransparent();
-
     }
 
 

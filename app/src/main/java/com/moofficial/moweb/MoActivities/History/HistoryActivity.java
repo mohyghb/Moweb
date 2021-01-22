@@ -85,9 +85,7 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
 
     private void initSearchBar(){
         this.searchBar = new MoSearchBar(this);
-        this.searchBar.setSearchHint(R.string.history_search_hint)
-                .getCardView()
-                .makeTransparent();
+        this.searchBar.setSearchHint(R.string.history_search_hint);
     }
 
     private void initSelectBar() {
@@ -104,7 +102,7 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
                     if(nothingHasBeenSelected()) return;
                     selectedPopup.show(view);
                 });
-        selectBar.getCardView().makeTransparent();
+
     }
 
     /**
@@ -154,7 +152,6 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
                 .setRightIcon(R.drawable.ic_baseline_delete_outline_24)
                 .setRightOnClickListener(view -> startActivity(new Intent(this,MoBrowsingData.class)))
                 .setLeftOnClickListener(view -> onBackPressed());
-        moToolBar.getCardView().makeTransparent();
     }
 
     private void initClass(){

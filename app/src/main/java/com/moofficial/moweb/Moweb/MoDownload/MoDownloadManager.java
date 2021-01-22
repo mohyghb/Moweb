@@ -11,6 +11,8 @@ import androidx.core.app.NotificationCompat;
 
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManagerUtils;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.moofficial.moessentials.MoEssentials.MoMultiThread.MoThread.MoOnThreadRun;
+import com.moofficial.moessentials.MoEssentials.MoMultiThread.MoThread.MoThread;
 import com.moofficial.moweb.R;
 import com.tonyodev.fetch2.Download;
 import com.tonyodev.fetch2.Fetch;
@@ -132,6 +134,21 @@ public class MoDownloadManager {
             }
         }
         return downloads;
+    }
+
+    /**
+     * deletes the files that are
+     * @param downloadsToDelete
+     */
+    public static void delete(Iterable<MoDownload> downloadsToDelete, Runnable onDone) {
+        new MoThread<Void>().doBackground(() -> {
+            for (MoDownload download: downloadsToDelete) {
+                download.delete();
+            }
+            onDone.run();
+            return null;
+        }).start();
+
     }
 
     /**

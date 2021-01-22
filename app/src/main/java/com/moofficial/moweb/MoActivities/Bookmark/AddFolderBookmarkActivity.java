@@ -67,8 +67,7 @@ public class AddFolderBookmarkActivity extends MoSmartActivity {
     private void initMoToolBar() {
         this.moToolBar = new MoToolBar(this);
         this.moToolBar.onlyTitleAndLeftButtonVisible()
-                .setLeftOnClickListener(view -> onBackPressed())
-                .getCardView().makeTransparent();
+                .setLeftOnClickListener(view -> onBackPressed());
         l.toolbar.addToolbar(this.moToolBar);
         syncTitle(moToolBar.getTitle());
     }

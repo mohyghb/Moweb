@@ -13,21 +13,23 @@
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true"
-        android:requestLegacyExternalStorage="true">
+        android:usesCleartextTraffic="true">
+        <activity android:name=".MoActivities.Download.MoDownloadSettingsActivity"></activity>
+
         <receiver
             android:name=".Moweb.MoDownload.MoDownloadReceiver"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
 
         <activity android:name=".MoActivities.History.SavedPasswordsActivity" />
         <activity android:name=".MoActivities.History.MoBrowsingData" />
         <activity android:name=".MoActivities.Bookmark.AddFolderBookmarkActivity" />
         <activity android:name=".MoActivities.MoSplashScreen" />
-        <activity android:name=".MoActivities.MoDownloadActivity" />
+        <activity android:name=".MoActivities.Download.MoDownloadActivity" />
         <activity
             android:name=".MoActivities.MainActivity"
             android:alwaysRetainTaskState="true"

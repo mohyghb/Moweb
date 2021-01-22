@@ -149,7 +149,6 @@ public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed ,M
                 .setMiddleIcon(R.drawable.ic_baseline_delete_24)
                 .setMiddleOnClickListener(view -> performDelete())
                 .setRightIcon(R.drawable.ic_baseline_share_24);
-        this.tabSelectableToolbar.getCardView().makeTransparent();
     }
 
     //monote delete private tabs as well

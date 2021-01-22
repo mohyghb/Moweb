@@ -108,9 +108,7 @@ public class SavedPasswordsActivity extends MoSmartActivity {
                     passAdapter.performDelete();
                     passRecycler.post(()->passAdapter.notifyDataSetChanged());
                     sync.removeAction();
-                })
-                .getCardView()
-                .makeTransparent();
+                });
     }
 
 
@@ -130,9 +128,7 @@ public class SavedPasswordsActivity extends MoSmartActivity {
     private void initMoToolbar() {
         this.moToolBar = new MoToolBar(this);
         this.moToolBar.setLeftOnClickListener((v)->onBackPressed())
-                .setMiddleOnClickListener((v) -> searchable.activateSearch())
-                .getCardView()
-                .makeTransparent();
+                .setMiddleOnClickListener((v) -> searchable.activateSearch());
 
         setupMultipleToolbars(moToolBar,moToolBar,selectToolbar,searchToolbar);
         syncTitle(moToolBar.getTitle(),selectToolbar.getTitle());
@@ -151,7 +147,6 @@ public class SavedPasswordsActivity extends MoSmartActivity {
 
     private void initSearchToolbar() {
         this.searchToolbar = new MoSearchBar(this).setSearchHint(R.string.search_username_host);
-        this.searchToolbar.getCardView().makeTransparent();
     }
 
     private void initSearchable() {

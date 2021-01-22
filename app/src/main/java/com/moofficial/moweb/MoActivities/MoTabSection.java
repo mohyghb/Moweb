@@ -244,8 +244,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
                 .setRightOnClickListener(view -> webView.forceReload())
                 .setMiddleOnClickListener(view -> {
                     tab.bookmarkTheTab();
-                })
-                .getCardView().makeTransparent();
+                });
         this.updateBookmark();
 
         // on tab change bookmark listener so we know which icon to use
