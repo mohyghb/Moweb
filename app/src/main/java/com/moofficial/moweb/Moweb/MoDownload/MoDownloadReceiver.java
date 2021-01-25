@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.tonyodev.fetch2.Download;
 
 public class MoDownloadReceiver extends BroadcastReceiver {
 
@@ -17,23 +18,23 @@ public class MoDownloadReceiver extends BroadcastReceiver {
             return;
         }
 
-        int id = intent.getIntExtra(MoRequestListener.EXTRA_ID,0);
+        Download download = intent.getParcelableExtra(MoRequestListener.EXTRA_DOWNLOAD);
 
         switch (action) {
             case MoDownloadManager.ACTION_DELETE_NOTIFICATION:
-                MoDownloadManager.remove(context, id);
+                MoDownloadManager.remove(context, download);
                 break;
             case MoDownloadManager.ACTION_OPEN_NOTIFICATION:
 
                 break;
             case MoDownloadManager.ACTION_PAUSE_DOWNLOAD:
-                MoDownloadManager.pause(id);
+                MoDownloadManager.pause(download.getId());
                 break;
             case MoDownloadManager.ACTION_CANCEL_DOWNLOAD:
-                MoDownloadManager.cancel(context, id);
+                MoDownloadManager.cancel(context, download);
                 break;
             case MoDownloadManager.ACTION_RESUME_DOWNLOAD:
-                MoDownloadManager.resume(id);
+                MoDownloadManager.resume(download.getId());
                 break;
         }
 

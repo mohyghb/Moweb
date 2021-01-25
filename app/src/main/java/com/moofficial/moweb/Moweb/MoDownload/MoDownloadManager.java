@@ -17,6 +17,7 @@ import com.moofficial.moweb.R;
 import com.tonyodev.fetch2.Download;
 import com.tonyodev.fetch2.Fetch;
 import com.tonyodev.fetch2.FetchConfiguration;
+import com.tonyodev.fetch2.FetchListener;
 import com.tonyodev.fetch2.NetworkType;
 import com.tonyodev.fetch2.Priority;
 import com.tonyodev.fetch2.Request;
@@ -47,37 +48,47 @@ public class MoDownloadManager {
     public final static String GROUP_KEY_DOWNLOAD = "com.android.moweb.DOWNLOAD_ITEM";
     public final static int GROUP_ID = -1;
 
-    public static final HashSet<Integer> DOWNLOADING_SET = new HashSet<>();
+    public static final HashMap<String, Download> DOWNLOADING_MAP = new HashMap<>();
     public static Fetch fetch;
+
+    /**
+     * updates the progress for download
+     * @param d
+     */
+    public static void update(Download d) {
+        if (d == null)
+            return;
+        DOWNLOADING_MAP.put(d.getFile(), d);
+    }
 
 
     /**
      * adds the item to the set of
      * currently items being downloaded
-     * @param id item currently being downloaded
+     * @param d item currently being downloaded
      */
-    public static void add(Context c, int id) {
-        if (DOWNLOADING_SET.isEmpty()) {
+    public static void add(Context c, Download d) {
+        if (DOWNLOADING_MAP.isEmpty()) {
             // create grouping for download notifications
             createNotificationGroup(c);
         }
-        DOWNLOADING_SET.add(id);
-        MoLog.print("adding notification "+ id);
+        DOWNLOADING_MAP.put(d.getFile(), d);
+        MoLog.print("adding notification "+ d.getId());
     }
 
     /**
      * removes the item to the set of
      * currently items being downloaded
-     * @param id item currently being
+     * @param d item currently being
      *         downloaded or finished downloading
      */
-    public static void remove(Context context, int id) {
-        DOWNLOADING_SET.remove(id);
-        if (DOWNLOADING_SET.isEmpty()) {
+    public static void remove(Context context, Download d) {
+        DOWNLOADING_MAP.remove(d.getFile());
+        if (DOWNLOADING_MAP.isEmpty()) {
             // remove the grouping notification
             getNotificationManager(context).cancel(GROUP_ID);
         }
-        MoLog.print("removing notification "+ id);
+        MoLog.print("removing notification "+ d.getId());
     }
 
     /**
@@ -102,17 +113,38 @@ public class MoDownloadManager {
 
     /**
      * cancels the download for the id passed in
-     * @param id to cancel download for
+     * @param d to cancel download for
      */
-    public static void cancel(Context c, int id) {
-        if (fetch != null) {
+    public static void cancel(Context c, Download d) {
+        if (fetch != null && d != null) {
+            int id = d.getId();
             fetch.cancel(id);
             // todo we can give them the option to either delete on cancel or not
             //  normally we automatically delete if they cancel
             fetch.delete(id);
             getNotificationManager(c).cancel(id);
-            remove(c,id);
+            remove(c, d);
         }
+    }
+
+    /**
+     * registers a listener for the download manager so you
+     * can observe incoming updates for download
+     * @param listener to be added
+     */
+    public static void registerListener(FetchListener listener) {
+        if (fetch.getListenerSet().contains(listener)) {
+            return;
+        }
+        fetch.addListener(listener);
+    }
+
+    /**
+     * removes the listener
+     * @param listener to be removed
+     */
+    public static void unregisterListener(FetchListener listener) {
+        fetch.removeListener(listener);
     }
 
     public static NotificationManager getNotificationManager(Context context) {
@@ -130,7 +162,12 @@ public class MoDownloadManager {
         File dir = getDir();
         for (File file : Objects.requireNonNull(dir.listFiles())) {
             if (file != null && file.isFile()) {
-                downloads.add(new MoDownload(file));
+                MoDownload d = new MoDownload(file);
+                // to know whether this is currently being downloaded
+                if (DOWNLOADING_MAP.containsKey(file.getPath())) {
+                    d.link(DOWNLOADING_MAP.get(file.getPath()));
+                }
+                downloads.add(d);
             }
         }
         return downloads;
@@ -230,5 +267,13 @@ public class MoDownloadManager {
                 .build();
         fetch = Fetch.Impl.getInstance(fetchConfiguration);
         fetch.addListener(new MoRequestListener(context));
+    }
+
+    /**
+     * when the app is going to be destroyed we
+     * need to run this function
+     */
+    public static void onDestroy() {
+        fetch.close();
     }
 }

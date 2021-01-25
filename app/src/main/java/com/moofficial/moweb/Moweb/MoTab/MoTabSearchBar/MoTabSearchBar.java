@@ -31,6 +31,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMenu
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroups.MoConstraint;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoFindBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoViewUtils;
 import com.moofficial.moweb.MoActivities.Bookmark.BookmarkActivity;
 import com.moofficial.moweb.MoActivities.History.HistoryActivity;
 import com.moofficial.moweb.MoActivities.Download.MoDownloadActivity;
@@ -147,8 +148,7 @@ public class MoTabSearchBar extends MoConstraint {
         this.moreTabButton.setVisibility(View.GONE);
         this.shareButton.setVisibility(View.VISIBLE);
         this.copyButton.setVisibility(View.VISIBLE);
-
-        showSuggestions(this.searchText.getText().toString());
+        MoViewUtils.dim(this.moWebView);
         // todo
     }
 
@@ -167,6 +167,8 @@ public class MoTabSearchBar extends MoConstraint {
         this.moreTabButton.setVisibility(View.VISIBLE);
         this.shareButton.setVisibility(View.GONE);
         this.copyButton.setVisibility(View.GONE);
+
+        MoViewUtils.clearDim(this.moWebView);
 
         //todo remove the focus from search bar
         // make sure if the search text is empty , put the current url into it

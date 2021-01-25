@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoSwitchers.MoSectionViewManager;
 import com.moofficial.moweb.MoActivities.MainMenu.MainMenuSection;
+import com.moofficial.moweb.Moweb.MoDownload.MoDownloadManager;
 import com.moofficial.moweb.Moweb.MoWebAppLoader.MoWebAppLoader;
 import com.moofficial.moweb.R;
 
@@ -35,6 +36,11 @@ public class MainActivity extends AppCompatActivity {
         init();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MoDownloadManager.onDestroy();
+    }
 
     @Override
     protected void onResume() {

@@ -8,6 +8,7 @@ import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileExtension;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableItem;
+import com.tonyodev.fetch2.Download;
 
 import java.io.File;
 
@@ -21,6 +22,7 @@ public class MoDownload implements MoSelectableItem, MoSearchableItem {
     private boolean selected, searched;
     private File file;
     private FileType type;
+    private Download download;
 
 
     public MoDownload(@NonNull File f) {
@@ -45,6 +47,14 @@ public class MoDownload implements MoSelectableItem, MoSearchableItem {
             return this.file.delete();
         }
         return false;
+    }
+
+    public void link(Download d) {
+        this.download = d;
+    }
+
+    public Download getDownload () {
+        return this.download;
     }
 
     public File getFile() {

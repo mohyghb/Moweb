@@ -37,7 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MoDownloadActivity extends MoSmartActivity implements
-        MoDownloadAdapter.OnDownloadClickedListener {
+        MoDownloadAdapter.OnDownloadClickedListener,
+        MoDownloadAdapter.OnDownloadCancelled {
 
 
     private MoCardRecyclerView cardRecyclerView;
@@ -66,11 +67,18 @@ public class MoDownloadActivity extends MoSmartActivity implements
     protected void onResume() {
         super.onResume();
         if (!sync.hasAction()) {
-            MoLog.print("onResume download activity");
             this.adapter.update(this, MoDownloadManager.getDownloads(), getGroupRootView());
         }
+        MoDownloadManager.registerListener(this.adapter);
+        MoLog.print("(listener was ADDED HERE)");
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MoDownloadManager.unregisterListener(this.adapter);
+        MoLog.print("(listener was REMOVED here)");
+    }
 
     private void initToolbars() {
         this.mainToolbar = new MoToolBar(this)
@@ -100,7 +108,8 @@ public class MoDownloadActivity extends MoSmartActivity implements
 
     private void initRecycler() {
         adapter = new MoDownloadAdapter(this, new ArrayList<>())
-                .setOnDownloadClickedListener(this);
+                .setOnDownloadClickedListener(this)
+                .setOnDownloadCancelled(this);
         this.cardRecyclerView = new MoCardRecyclerView(this);
         recyclerView = MoRecyclerUtils.get(this.cardRecyclerView.getRecyclerView(), this.adapter);
 
@@ -160,13 +169,25 @@ public class MoDownloadActivity extends MoSmartActivity implements
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
             startActivity(intent);
-        } catch (ActivityNotFoundException e) {
+        } catch (Exception e) {
             // no Activity to handle this kind of files
         }
+    }
+
+    @Override
+    public void onDownloadCancelled(int position) {
+        recyclerView.post(()-> {
+            adapter.getDataSet().remove(position);
+            adapter.notifyItemRemoved(position);
+            adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+        });
+        MoLog.print("on cancelled called on " + position);
     }
 
 
     public static void startActivity(Context context) {
         context.startActivity(new Intent(context, MoDownloadActivity.class));
     }
+
+
 }

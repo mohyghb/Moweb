@@ -9,7 +9,6 @@
     <color name="mo_bottom_sheet_color">@color/MoBlack</color>
     <color name="mo_card_color">@color/MaterialGrey</color>
     <color name="mo_cyan">#CC006064</color>
-    <color name="mo_deep_orange">#CCBF360C</color>
     <color name="mo_deep_purple">#CC311B92</color>
     <color name="mo_green">#CC1B5E20</color>
     <color name="mo_indigo">#CC1A237E</color>
