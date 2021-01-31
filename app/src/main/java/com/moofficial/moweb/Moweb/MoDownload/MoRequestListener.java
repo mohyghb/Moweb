@@ -56,8 +56,6 @@ public class MoRequestListener extends MoContext implements FetchListener {
         Status status = download.getStatus();
         int progress = download.getProgress();
         int max = 100;
-        // todo better download speed handling, changing it to MB if it goes beyond some value
-        int kBps = (int) (download.getDownloadedBytesPerSecond()/1024);
         String name = download.getFileUri().getLastPathSegment();
         int id = download.getId();
 
@@ -95,7 +93,7 @@ public class MoRequestListener extends MoContext implements FetchListener {
                         getString(R.string.download_notification_cancel),getPendingIntent(MoDownloadManager.ACTION_CANCEL_DOWNLOAD,
                                        download))
                        .setContentText(progress + "%")
-                        .setSubText(kBps + "KB/s");
+                        .setSubText(MoDownloadUtils.readableSpeed(download.getDownloadedBytesPerSecond()));
                 break;
             case COMPLETED:
                 n.setOngoing(false).setContentText("File was successfully downloaded!");

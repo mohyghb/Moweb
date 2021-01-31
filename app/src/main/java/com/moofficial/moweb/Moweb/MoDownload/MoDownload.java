@@ -4,6 +4,7 @@ package com.moofficial.moweb.Moweb.MoDownload;
 
 import androidx.annotation.NonNull;
 
+import com.moofficial.moessentials.MoEssentials.MoDate.MoDate;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileExtension;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableUtils;
@@ -32,6 +33,10 @@ public class MoDownload implements MoSelectableItem, MoSearchableItem {
 
     public String getName() {
         return this.file.getName();
+    }
+
+    public String getSize() {
+        return MoDownloadUtils.formatSize(this.file.length());
     }
 
     public String getDescription() {

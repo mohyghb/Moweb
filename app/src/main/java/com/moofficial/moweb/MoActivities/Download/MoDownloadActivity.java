@@ -1,15 +1,21 @@
 package com.moofficial.moweb.MoActivities.Download;
 
+import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.webkit.MimeTypeMap;
+import android.webkit.PermissionRequest;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileExtension;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.moofficial.moessentials.MoEssentials.MoPermissions.MoPermission;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoListViewSync;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
@@ -51,6 +57,7 @@ public class MoDownloadActivity extends MoSmartActivity implements
     private MoSearchBar searchableToolbar;
     private MoSearchable searchable;
     private MoListViewSync sync;
+    private MoPermission permission;
 
     @Override
     protected void init() {
@@ -66,12 +73,16 @@ public class MoDownloadActivity extends MoSmartActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        if (!sync.hasAction()) {
-            this.adapter.update(this, MoDownloadManager.getDownloads(), getGroupRootView());
+        setupPermission();
+        if (permission.checkAndRequestPermissions()) {
+            if (!sync.hasAction()) {
+                this.adapter.update(this, MoDownloadManager.getDownloads(), getGroupRootView());
+            }
+            MoDownloadManager.registerListener(this.adapter);
+            MoLog.print("(listener was ADDED HERE)");
         }
-        MoDownloadManager.registerListener(this.adapter);
-        MoLog.print("(listener was ADDED HERE)");
     }
+
 
     @Override
     protected void onDestroy() {
@@ -79,6 +90,34 @@ public class MoDownloadActivity extends MoSmartActivity implements
         MoDownloadManager.unregisterListener(this.adapter);
         MoLog.print("(listener was REMOVED here)");
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MoPermission.MULTIPLE_PERMISSIONS_REQUEST_ID) {
+            for (int permission : grantResults) {
+                if (permission == PackageManager.PERMISSION_DENIED) {
+                    failedPermission();
+                }
+            }
+        }
+    }
+
+    /**
+     * when we fail to get access for
+     * write or read memory access
+     */
+    private void failedPermission() {
+        Toast.makeText(this, "We need access to show your downloads", Toast.LENGTH_LONG).show();
+        finish();
+    }
+
+    private void setupPermission() {
+        this.permission = new MoPermission(this)
+                .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    }
+
 
     private void initToolbars() {
         this.mainToolbar = new MoToolBar(this)

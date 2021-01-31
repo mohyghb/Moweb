@@ -64,12 +64,12 @@ public class MoDownloadAdapter extends MoSelectableAdapter<MoDownloadViewHolder,
     @Override
     public void onBindViewHolder(@NonNull MoDownloadViewHolder holder, int position) {
         MoDownload download = dataSet.get(position);
-        handleLogo(holder, download);
         holder.name.setText(download.getName());
-        holder.description.setText(download.getDescription());
+        holder.description.setText(download.getSize());
         onClickListener(holder, position, download);
         onLongClickListener(holder, position);
         addSelectColorToHolder(holder,download);
+        handleLogo(holder, download);
         holder.hideDownloadLayout();
         updateDownloadingHolder(holder,position, download.getDownload());
     }
@@ -126,7 +126,7 @@ public class MoDownloadAdapter extends MoSelectableAdapter<MoDownloadViewHolder,
                 } else {
                     holder.progressBar.setProgress(download.getProgress());
                 }
-                holder.description.setText(download.getDownloadedBytesPerSecond()/1024 + "KB/s");
+                holder.speed.setText(MoDownloadUtils.readableSpeed(download.getDownloadedBytesPerSecond()));
                 if (status == Status.PAUSED) {
                     holder.pause.setIcon(R.drawable.ic_baseline_play_arrow_24);
                     holder.pause.setOnClickListener((v)-> MoDownloadManager.resume(download.getId()));
@@ -190,6 +190,7 @@ public class MoDownloadAdapter extends MoSelectableAdapter<MoDownloadViewHolder,
             holder.logo.hideLogo().showText();
         }
         holder.logo.setText(MoString.getSignature(download.getName()));
+        MoLog.print("logo updated " + download.getName());
     }
 
     public int getCorrespondingPosition(Download download) {

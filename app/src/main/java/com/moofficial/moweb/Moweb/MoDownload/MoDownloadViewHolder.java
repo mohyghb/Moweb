@@ -15,7 +15,7 @@ import com.moofficial.moweb.R;
 
 public class MoDownloadViewHolder extends RecyclerView.ViewHolder {
     public MoLogo logo;
-    public TextView name,description;
+    public TextView name,description, speed;
     public MoCardView card;
     public ConstraintLayout downloadLayout;
     public ProgressBar progressBar;
@@ -33,12 +33,15 @@ public class MoDownloadViewHolder extends RecyclerView.ViewHolder {
         this.progressBar.setMax(100);
         this.pause = itemView.findViewById(R.id.download_holder_pause);
         this.cancel = itemView.findViewById(R.id.download_holder_cancel);
+        this.speed = itemView.findViewById(R.id.download_holder_speed);
     }
 
     public void showDownloadLayout() {
         this.downloadLayout.setVisibility(View.VISIBLE);
+        this.description.setVisibility(View.GONE);
     }
     public void hideDownloadLayout() {
         this.downloadLayout.setVisibility(View.GONE);
+        this.description.setVisibility(View.VISIBLE);
     }
 }
