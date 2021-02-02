@@ -7,8 +7,11 @@ import android.content.Intent;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.tonyodev.fetch2.Download;
 
+import java.io.File;
+
 public class MoDownloadReceiver extends BroadcastReceiver {
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
@@ -25,7 +28,8 @@ public class MoDownloadReceiver extends BroadcastReceiver {
                 MoDownloadManager.remove(context, download);
                 break;
             case MoDownloadManager.ACTION_OPEN_NOTIFICATION:
-
+                MoDownloadUtils.openDownloadFromNotification(context, download);
+                MoDownloadManager.remove(context, download);
                 break;
             case MoDownloadManager.ACTION_PAUSE_DOWNLOAD:
                 MoDownloadManager.pause(download.getId());

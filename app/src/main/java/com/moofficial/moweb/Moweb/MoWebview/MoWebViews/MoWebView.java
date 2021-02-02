@@ -16,7 +16,6 @@ import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
 import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoWebClient;
-import com.moofficial.moweb.Moweb.MoDownload.MoDownloadListener;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoHitTestResultParser;
 import com.moofficial.moweb.Moweb.MoWebview.MoStackTabHistory.MoStackWebHistory;
@@ -80,7 +79,6 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
     private MoOnReceivedError onErrorReceived = (view, request, error) -> {};
     private MoOnPageFinishedListener onPageFinishedListener = (view, url) -> {};
     private MoWebState webState = new MoWebState();
-    private MoDownloadListener downloadListener;
 //    private MoJsInput moJsInput;
     private boolean captureBitmap = true;
     private boolean saveHistory = true;
@@ -222,20 +220,8 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         webSettings.setDatabaseEnabled(true);
         // cookies
         MoWebUtils.acceptThirdPartyCookies(this);
-        // download listener
-        setupDownloadListener();
 
 
-    }
-
-    /**
-     * sets up the download listener
-     * so user can download files through the
-     * web view
-     */
-    private void setupDownloadListener() {
-        this.downloadListener = new MoDownloadListener(getContext());
-        setDownloadListener(this.downloadListener);
     }
 
 

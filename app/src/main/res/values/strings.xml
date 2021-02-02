@@ -167,9 +167,14 @@
     <string name="clear_all_bookmarks_message">Do you want to clear all bookmarks/folders?</string>
 
 
-<!--    save password values-->
+    <!-- save password values-->
     <string name="save_password_title">Save Password</string>
     <string name="save_password_description">Do you want to save this information about your account?</string>
     <string name="passwords">Passwords</string>
+
+    <!-- Download Settings-->
+    <string name="download_location_key">download_location_key</string>
+    <string name="download_activity_failed_permission">We need access to your external storage in order to show or download links for you</string>
+    <string name="download_activity_success_permission">Please click the download link again to start the download</string>
 
 </resources>

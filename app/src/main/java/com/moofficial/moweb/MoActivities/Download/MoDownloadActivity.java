@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.transition.TransitionManager;
 import android.webkit.MimeTypeMap;
 import android.webkit.PermissionRequest;
 import android.widget.Toast;
@@ -29,6 +30,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoP
 import com.moofficial.moweb.Moweb.MoDownload.MoDownload;
 import com.moofficial.moweb.Moweb.MoDownload.MoDownloadAdapter;
 import com.moofficial.moweb.Moweb.MoDownload.MoDownloadManager;
+import com.moofficial.moweb.Moweb.MoDownload.MoDownloadUtils;
 import com.moofficial.moweb.Moweb.MoWebManifest;
 import com.moofficial.moweb.R;
 import com.tonyodev.fetch2.Download;
@@ -95,10 +97,8 @@ public class MoDownloadActivity extends MoSmartActivity implements
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == MoPermission.MULTIPLE_PERMISSIONS_REQUEST_ID) {
-            for (int permission : grantResults) {
-                if (permission == PackageManager.PERMISSION_DENIED) {
-                    failedPermission();
-                }
+            if (!MoPermission.allGranted(grantResults)) {
+                failedPermission();
             }
         }
     }
@@ -108,7 +108,7 @@ public class MoDownloadActivity extends MoSmartActivity implements
      * write or read memory access
      */
     private void failedPermission() {
-        Toast.makeText(this, "We need access to show your downloads", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.download_activity_failed_permission, Toast.LENGTH_LONG).show();
         finish();
     }
 
@@ -121,10 +121,8 @@ public class MoDownloadActivity extends MoSmartActivity implements
 
     private void initToolbars() {
         this.mainToolbar = new MoToolBar(this)
-                .setRightIcon(R.drawable.ic_baseline_settings_24)
-                .setRightOnClickListener((v)-> {
-                    // todo start download settings activity
-                })
+                .hideMiddle()
+                .setRightIcon(R.drawable.ic_baseline_search_24)
                 .setLeftOnClickListener((v)->onBackPressed());
         this.selectableToolbar = new MoToolBar(this)
                 .showCheckBox()
@@ -135,8 +133,12 @@ public class MoDownloadActivity extends MoSmartActivity implements
                 .setRightOnClickListener((v)-> {
                     MoDownloadManager.delete(this.adapter.getSelectedItems(),
                             () -> {
-                                this.adapter.update(this, MoDownloadManager.getDownloads(), getGroupRootView());
-                                runOnUiThread(()->this.sync.removeAction());
+                                this.adapter.getDataSet().removeAll(this.adapter.getSelectedItems());
+                                runOnUiThread(()-> {
+                                    TransitionManager.beginDelayedTransition(getGroupRootView());
+                                    this.adapter.notifyDataSetChanged();
+                                    this.sync.removeAction();
+                                });
                             });
                 });
         this.searchableToolbar = new MoSearchBar(this);
@@ -169,7 +171,7 @@ public class MoDownloadActivity extends MoSmartActivity implements
     private void initSearchable() {
         this.searchable = new MoSearchable(this, getGroupRootView(), MoDownloadManager::getDownloads);
         this.searchable.syncWith(this.searchableToolbar)
-                .setSearchButton(this.mainToolbar.getMiddleButton())
+                .setSearchButton(this.mainToolbar.getRightButton())
                 .setActivity(this)
                 .setAppBarLayout(this.l.appBarLayout)
                 .setSearchOnTextChanged(true)
@@ -197,20 +199,8 @@ public class MoDownloadActivity extends MoSmartActivity implements
 
     @Override
     public void onDownloadClicked(MoDownload download) {
-        // todo open the download item
         MoLog.print(download.getName() + " was clicked");
-        try {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            String mime = MoFileExtension.getMimeType(download.getFile());
-            Uri uri = FileProvider.getUriForFile(this, MoWebManifest.FILE_PROVIDER_AUTHORITY, download.getFile());
-            intent.setDataAndType(uri, mime);
-
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-            startActivity(intent);
-        } catch (Exception e) {
-            // no Activity to handle this kind of files
-        }
+        MoDownloadUtils.openDownload(this, download.getFile());
     }
 
     @Override

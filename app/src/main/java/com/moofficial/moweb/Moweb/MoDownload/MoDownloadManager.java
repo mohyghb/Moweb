@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.webkit.URLUtil;
 
 import androidx.core.app.NotificationCompat;
@@ -88,6 +89,7 @@ public class MoDownloadManager {
             // remove the grouping notification
             getNotificationManager(context).cancel(GROUP_ID);
         }
+        getNotificationManager(context).cancel(d.getId());
         MoLog.print("removing notification "+ d.getId());
     }
 
@@ -222,6 +224,10 @@ public class MoDownloadManager {
         }
     }
 
+    public static void enqueueDownload(String url) {
+        enqueueDownload(url, "","","");
+    }
+
     /**
      * creates a download request based on the information passed in
      * @param url
@@ -232,7 +238,10 @@ public class MoDownloadManager {
     public static void enqueueDownload(String url, String contentDisposition, String finalMimeType, String userAgent) {
         String path = getDir().getPath() + "/" + URLUtil.guessFileName(url,
                 contentDisposition, finalMimeType).replace(" ","");
-
+        File f = new File(path);
+        if (f.exists()) {
+            return;
+        }
         Request request = new Request(url, path);
         request.setPriority(Priority.HIGH);
         request.setNetworkType(NetworkType.ALL);
@@ -275,5 +284,9 @@ public class MoDownloadManager {
      */
     public static void onDestroy() {
         fetch.close();
+    }
+
+    public static boolean isSafe(String url) {
+        return !url.contains("apk");
     }
 }

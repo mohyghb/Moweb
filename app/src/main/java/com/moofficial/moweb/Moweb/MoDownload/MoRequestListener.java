@@ -96,7 +96,9 @@ public class MoRequestListener extends MoContext implements FetchListener {
                         .setSubText(MoDownloadUtils.readableSpeed(download.getDownloadedBytesPerSecond()));
                 break;
             case COMPLETED:
-                n.setOngoing(false).setContentText("File was successfully downloaded!");
+                n.setOngoing(false)
+                        .setContentText("File was successfully downloaded!")
+                        .setContentIntent(getPendingIntent(MoDownloadManager.ACTION_OPEN_NOTIFICATION, download));
                 break;
         }
 

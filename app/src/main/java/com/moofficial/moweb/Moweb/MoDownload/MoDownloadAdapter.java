@@ -137,6 +137,7 @@ public class MoDownloadAdapter extends MoSelectableAdapter<MoDownloadViewHolder,
                 break;
             case COMPLETED:
                 holder.hideDownloadLayout();
+                holder.description.setText(MoDownloadUtils.formatSize(download.getTotal()));
                 break;
             case CANCELLED:
                 onDownloadCancelled.onDownloadCancelled(position);

@@ -27,7 +27,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoBottomSheet.MoBottomSheet
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMarginBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMenuBuilder.MoMenuBuilder;
-import com.moofficial.moweb.Moweb.MoDownload.MoDownloadListener;
+import com.moofficial.moweb.Moweb.MoDownload.MoDownloadManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoWebManifest;
@@ -223,8 +223,8 @@ public class MoHitTestResultParser {
         MoTabsManager.addPrivateTab((Activity) context, url, true);
     }
 
-    private void downloadLink(){
-        MoDownloadListener.download(context, url);
+    private void downloadLink() {
+        MoDownloadManager.enqueueDownload(url);
     }
 
     private void shareLink() {

@@ -1,15 +1,21 @@
 package com.moofficial.moweb.MoActivities;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
+import android.webkit.DownloadListener;
+import android.webkit.MimeTypeMap;
+import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GestureDetectorCompat;
 
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.moofficial.moessentials.MoEssentials.MoPermissions.MoPermission;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoActivitySettings.MoActivitySettings;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoFragment.MoOnBackPressed;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoBasicLayout;
@@ -21,6 +27,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToo
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
 import com.moofficial.moessentials.MoEssentials.MoUtils.MoKeyboardUtils.MoKeyboardUtils;
+import com.moofficial.moweb.Moweb.MoDownload.MoDownloadManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoUpdateTabActivity;
@@ -32,7 +39,7 @@ import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 import com.moofficial.moweb.R;
 
 @SuppressWarnings("ConstantConditions")
-public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, MoOnBackPressed {
+public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, MoOnBackPressed, DownloadListener {
 
     private static final int MAIN_MENU_REQUEST_CODE = 0;
     public static final int GO_TO_TAB_ACTIVITY_REQUEST = 1;
@@ -45,7 +52,9 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
     private MoToolBar moToolBar;
     private MainTransitionTo moveToMainMenu;
     private MoCardView webCard;
+    private MoPermission permission;
     private GestureDetectorCompat gestureDetector;
+    private Activity activity;
 
     public MoTabSection(Context context) {
         super(context);
@@ -65,7 +74,10 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
         return this;
     }
 
-
+    public MoTabSection setActivity(Activity activity) {
+        this.activity = activity;
+        return this;
+    }
 
     @Override
     protected void onConfigurationChanged(Configuration newConfig) {
@@ -82,7 +94,14 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
         initWebCardView();
         initGesture();
         MoTabController.instance.setUpdateTabActivity(this);
+        initPermission();
         update();
+    }
+
+    private void initPermission() {
+        this.permission = new MoPermission(this.activity)
+                .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
     /**
@@ -180,7 +199,6 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
             webView.getHitTestResultParser().createDialogOrSmartText(getContext());
             return false;
         });
-        // todo test this
         this.webView.setOnTouchListener((v, event) -> {
             if (moTabSearchBar.isInSearch()) {
                 // we need to cancel it
@@ -190,6 +208,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
             }
             return false;
         });
+        this.webView.setDownloadListener(this);
     }
 
     private void updateTab() {
@@ -287,8 +306,25 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
 
     @Override
     public boolean onBackPressed() {
-
         return tab.onBackPressed();
     }
 
+    @Override
+    public void onDownloadStart(String url, String userAgent, String contentDisposition,
+                                String mimetype, long contentLength) {
+        if (!MoDownloadManager.isSafe(url)) {
+            Toast.makeText(getContext(), "The url is not safe to download", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String s = MimeTypeMap.getFileExtensionFromUrl(url);
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(s);
+        if(permission.checkAndRequestPermissions()) {
+            new Thread() {
+                @Override
+                public void run() {
+                    MoDownloadManager.enqueueDownload(url, contentDisposition, mimeType, userAgent);
+                }
+            }.start();
+        }
+    }
 }

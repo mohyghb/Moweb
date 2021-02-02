@@ -1,18 +1,24 @@
 package com.moofficial.moweb.MoActivities;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.transition.Slide;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.moofficial.moessentials.MoEssentials.MoPermissions.MoPermission;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoSwitchers.MoSectionViewManager;
 import com.moofficial.moweb.MoActivities.MainMenu.MainMenuSection;
 import com.moofficial.moweb.Moweb.MoDownload.MoDownloadManager;
 import com.moofficial.moweb.Moweb.MoWebAppLoader.MoWebAppLoader;
 import com.moofficial.moweb.R;
+
+import java.security.Permission;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         if (sectionViewManager.getActiveSectionKey() == SECTION_TAB) {
             this.tabSection.updateBookmark();
         }
+        this.tabSection.setActivity(this);
     }
 
     private void init() {
@@ -80,7 +87,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void initTabSection() {
         this.tabSection = findViewById(R.id.main_tab_section);
-        this.tabSection.setMoveToMainMenu(this::moveToMainMenuFragment).init();
+        this.tabSection.setMoveToMainMenu(this::moveToMainMenuFragment)
+                .setActivity(this)
+                .init();
     }
 
 
@@ -92,6 +101,23 @@ public class MainActivity extends AppCompatActivity {
         mainMenuFragment.onResume();
         sectionViewManager.setActiveSection(SECTION_MAIN_MENU);
     }
+
+    void failedDownloadPermission() {
+        Toast.makeText(this, R.string.download_activity_failed_permission, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (MoPermission.MULTIPLE_PERMISSIONS_REQUEST_ID == requestCode) {
+            if (MoPermission.allGranted(grantResults)) {
+                Toast.makeText(this, R.string.download_activity_success_permission, Toast.LENGTH_LONG).show();
+            } else {
+                failedDownloadPermission();
+            }
+        }
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
