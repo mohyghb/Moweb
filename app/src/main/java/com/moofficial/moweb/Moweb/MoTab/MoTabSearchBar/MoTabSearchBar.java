@@ -158,6 +158,7 @@ public class MoTabSearchBar extends MoConstraint {
      * removes the helper
      */
     public void deactivateSearch() {
+        // todo put the url inside the text view again
         //TransitionManager.beginDelayedTransition(this);
 
         this.isInSearch = false;

@@ -110,8 +110,6 @@ public class MoDownloadAdapter extends MoSelectableAdapter<MoDownloadViewHolder,
         if (download.getProgress() == 100) {
             status = Status.COMPLETED;
         }
-        MoLog.print("on update download: " + download.getStatus().toString()
-                + "normal status = " + status.toString());
         switch (status) {
             case ADDED:
                 holder.progressBar.setIndeterminate(true);
@@ -191,7 +189,6 @@ public class MoDownloadAdapter extends MoSelectableAdapter<MoDownloadViewHolder,
             holder.logo.hideLogo().showText();
         }
         holder.logo.setText(MoString.getSignature(download.getName()));
-        MoLog.print("logo updated " + download.getName());
     }
 
     public int getCorrespondingPosition(Download download) {

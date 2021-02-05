@@ -236,8 +236,7 @@ public class MoDownloadManager {
      * @param userAgent
      */
     public static void enqueueDownload(String url, String contentDisposition, String finalMimeType, String userAgent) {
-        String path = getDir().getPath() + "/" + URLUtil.guessFileName(url,
-                contentDisposition, finalMimeType).replace(" ","");
+        String path = getPath(url, contentDisposition, finalMimeType);
         File f = new File(path);
         if (f.exists()) {
             return;
@@ -255,6 +254,17 @@ public class MoDownloadManager {
             //Error while enqueuing download
             MoLog.print("error while enquing download "+ error.toString());
         });
+    }
+
+    public static boolean alreadyHasFile(String url, String contentDisposition, String finalMimeType) {
+        File f = new File(getPath(url, contentDisposition, finalMimeType));
+        return f.exists();
+    }
+
+    @NotNull
+    private static String getPath(String url, String contentDisposition, String finalMimeType) {
+        return getDir().getPath() + "/" + URLUtil.guessFileName(url,
+                    contentDisposition, finalMimeType).replace(" ","");
     }
 
     /**

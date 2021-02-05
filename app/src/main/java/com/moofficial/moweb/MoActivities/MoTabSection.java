@@ -6,19 +6,28 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.ViewGroup;
 import android.webkit.DownloadListener;
 import android.webkit.MimeTypeMap;
+import android.webkit.URLUtil;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GestureDetectorCompat;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoPermissions.MoPermission;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoActivitySettings.MoActivitySettings;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoBottomSheet.MoBottomSheet;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoDynamicUnit.MoDynamicUnit;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoFragment.MoOnBackPressed;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoBasicLayout;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoPopupWindow.MoPopupWindow;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMarginBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoPaddingBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroupUtils.MoAppbar.MoAppbarUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroupUtils.MoCoordinatorUtils;
@@ -27,6 +36,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToo
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
 import com.moofficial.moessentials.MoEssentials.MoUtils.MoKeyboardUtils.MoKeyboardUtils;
+import com.moofficial.moweb.Moweb.MoDownload.MoDownloadConfirmation;
 import com.moofficial.moweb.Moweb.MoDownload.MoDownloadManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
@@ -312,19 +322,42 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity, 
     @Override
     public void onDownloadStart(String url, String userAgent, String contentDisposition,
                                 String mimetype, long contentLength) {
-        if (!MoDownloadManager.isSafe(url)) {
-            Toast.makeText(getContext(), "The url is not safe to download", Toast.LENGTH_SHORT).show();
-            return;
-        }
         String s = MimeTypeMap.getFileExtensionFromUrl(url);
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(s);
+        String name = URLUtil.guessFileName(url,
+                contentDisposition, mimeType).replace(" ","");
         if(permission.checkAndRequestPermissions()) {
-            new Thread() {
-                @Override
-                public void run() {
-                    MoDownloadManager.enqueueDownload(url, contentDisposition, mimeType, userAgent);
-                }
-            }.start();
+            if (MoDownloadManager.alreadyHasFile(url, contentDisposition, mimeType)) {
+                Toast.makeText(getContext(), "File has already been downloaded!", Toast.LENGTH_SHORT).show();
+            } else {
+                Thread downloadThread = new Thread() {
+                    @Override
+                    public void run() {
+                        MoDownloadManager.enqueueDownload(url, contentDisposition, mimeType, userAgent);
+                    }
+                };
+                downloadConfirmationBottomSheet(name, contentLength, downloadThread);
+            }
         }
+    }
+
+    /**
+     * asks the user whether they want to download the file or not
+     * @param name of the download
+     * @param thread that runs the download when started
+     */
+    private void downloadConfirmationBottomSheet(String name, long contentLength,Thread thread) {
+        MoDownloadConfirmation confirmation = new MoDownloadConfirmation(getContext());
+        MoBottomSheet popupWindow = new MoBottomSheet(getContext());
+        confirmation.onCancel(popupWindow::dismiss).onSave(()-> {
+            // start download and dismiss dialog
+            thread.start();
+            popupWindow.dismiss();
+        }).withName(name).setSize(contentLength);
+        popupWindow.add(confirmation)
+                .setCanceledOnTouchOutside(false)
+                .setState(BottomSheetBehavior.STATE_EXPANDED)
+                .build()
+                .show();
     }
 }
