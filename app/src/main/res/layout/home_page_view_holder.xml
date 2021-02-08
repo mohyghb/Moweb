@@ -32,19 +32,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/url_home_page"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:fadingEdgeLength="@dimen/mo_fade_edge_text_view"
-                android:requiresFadingEdge="horizontal"
-                android:singleLine="true"
-                android:text="TextView"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/home_page_holder_logo"
-                app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/url_home_page"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:fadingEdgeLength="@dimen/mo_fade_edge_text_view"
+            android:requiresFadingEdge="horizontal"
+            android:singleLine="true"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/home_page_holder_logo"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
 

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.transition.ChangeBounds;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.TransitionManager;
@@ -16,12 +17,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.textfield.TextInputEditText;
 import com.moofficial.moessentials.MoEssentials.MoClipboard.MoClipboardUtils;
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoRunnable;
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoWorker.MoWorker;
 import com.moofficial.moessentials.MoEssentials.MoShare.MoShareUtils;
@@ -57,7 +60,6 @@ public class MoTabSearchBar extends MoConstraint {
     private MoBottomSheet bottomSheet;
     private MoSearchable moSearchable;
     private MoTabSuggestion suggestion;
-    private MoCardView searchBarCardView;
 
     private MoWebView moWebView;
     private MoTab tab;
@@ -109,7 +111,6 @@ public class MoTabSearchBar extends MoConstraint {
     }
 
     public void init() {
-        initTabSearchBarCard();
         initProgressBar();
         initMoreButton();
         initShareButton();
@@ -125,9 +126,7 @@ public class MoTabSearchBar extends MoConstraint {
         return this;
     }
 
-    private void initTabSearchBarCard() {
-        searchBarCardView = findViewById(R.id.tab_search_bar_card_view);
-    }
+
 
     @Override
     public int[] getAttrs() {
@@ -141,15 +140,15 @@ public class MoTabSearchBar extends MoConstraint {
      * shows the search bar helper
      */
     public void activateSearch() {
-        //BookmarkActivity.startActivity(getContext());
+        if (this.isInSearch)
+            return;
+        TransitionManager.beginDelayedTransition(this.parentLayout);
         this.isInSearch = true;
-
-        this.tabsButton.gone();
-        this.moreTabButton.setVisibility(View.GONE);
+        this.tabsButton.invisible();
+        this.moreTabButton.setVisibility(View.INVISIBLE);
         this.shareButton.setVisibility(View.VISIBLE);
         this.copyButton.setVisibility(View.VISIBLE);
         MoViewUtils.dim(this.moWebView);
-        // todo
     }
 
     /**
@@ -158,9 +157,10 @@ public class MoTabSearchBar extends MoConstraint {
      * removes the helper
      */
     public void deactivateSearch() {
-        // todo put the url inside the text view again
-        //TransitionManager.beginDelayedTransition(this);
+        if (!this.isInSearch)
+            return;
 
+        TransitionManager.beginDelayedTransition(this.parentLayout);
         this.isInSearch = false;
         hideSuggestions();
 
@@ -170,11 +170,8 @@ public class MoTabSearchBar extends MoConstraint {
         this.copyButton.setVisibility(View.GONE);
 
         MoViewUtils.clearDim(this.moWebView);
-
-        //todo remove the focus from search bar
-        // make sure if the search text is empty , put the current url into it
-
-        // todo
+        this.searchText.clearFocus();
+        this.searchText.setText(this.moWebView.getUrl());
     }
 
 
@@ -316,11 +313,26 @@ public class MoTabSearchBar extends MoConstraint {
 
 
         searchText.setOnTouchListener((v, event) -> {
-            if(MotionEvent.ACTION_UP == event.getAction()) {
+            final int DRAWABLE_LEFT = 0;
+
+
+            if (MotionEvent.ACTION_DOWN == event.getAction()) {
+                if(event.getRawX() <= (searchText.getLeft() +
+                        searchText.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width())) {
+                    // todo show the security info to the user
+                    MoLog.print("clicked!!!");
+                    return true;
+                }
+            }
+
+
+            if(MotionEvent.ACTION_DOWN == event.getAction()) {
                 activateSearch();
             }
             return searchText.performClick();
         });
+
+
 
 
 
@@ -337,6 +349,7 @@ public class MoTabSearchBar extends MoConstraint {
             searchText.clearFocus();
             return false;
         });
+
     }
 
     private void initSuggestion() {
@@ -359,16 +372,13 @@ public class MoTabSearchBar extends MoConstraint {
      * @return this
      */
     public MoTabSearchBar hideSuggestions() {
-        //TransitionManager.beginDelayedTransition(bottomParentLayout);
+//        TransitionManager.beginDelayedTransition(bottomParentLayout);
         this.suggestion.hide();
         return this;
     }
 
     private void showSuggestions(MoSuggestions s) {
-        TransitionManager.beginDelayedTransition(bottomParentLayout,
-                new TransitionSet()
-                .addTransition(new Slide())
-                .addTransition(new Fade()));
+        // TransitionManager.beginDelayedTransition(bottomParentLayout, new ChangeBounds());
         suggestion.show(s);
     }
 

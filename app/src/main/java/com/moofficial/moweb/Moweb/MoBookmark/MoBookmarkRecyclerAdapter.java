@@ -86,14 +86,12 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
                 h.title.setText(bookmark.getName());
                 h.imageTextLogo.setText(MoString.getSignature(bookmark.getName()))
                         .hideLogo()
-                        .showText()
-                .filledCircle();
+                        .showText();
                 break;
             case MoBookmark.FOLDER:
                 h.url.setText(bookmark.size() + " items");
                 h.title.setText(bookmark.getName());
                 h.imageTextLogo
-                        .filledCircle()
                         .showLogoHideText()
                         .setInner(ContextCompat.getDrawable(context,R.drawable.ic_baseline_folder_open_24));
                 MoLog.print("color value = " + h.imageTextLogo.getColor());
@@ -108,7 +106,7 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
 
     private void addSelectColorToHolder(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark) {
         if(!disableSelectColor) {
-            h.imageTextLogo.onSelectFill(bookmark, bookmark.isFolder());
+            h.imageTextLogo.onSelect(bookmark, bookmark.isFolder());
         }
     }
 

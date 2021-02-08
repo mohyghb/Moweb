@@ -24,7 +24,6 @@ public class MoDownloadViewHolder extends RecyclerView.ViewHolder {
     public MoDownloadViewHolder(@NonNull View itemView) {
         super(itemView);
         this.logo = itemView.findViewById(R.id.download_holder_logo);
-        this.logo.filledCircle();
         this.name = itemView.findViewById(R.id.download_holder_title);
         this.description = itemView.findViewById(R.id.download_holder_description);
         this.card = itemView.findViewById(R.id.download_holder_card);

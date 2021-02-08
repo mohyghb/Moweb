@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
@@ -59,6 +60,8 @@ public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolde
                 holder.urlTextView.setText(history.getUrl());
                 holder.dateTimeTextView.setText(history.getDate());
                 holder.titleTextView.setText(history.getTitle());
+                String s = MoString.getSignature(history.getTitle());
+                MoLog.print(s + ", isempty = " + s.isEmpty() + ", charval = " + ((int)s.charAt(0)));
                 holder.moImageTextLogo
                         .setOuter()
                         .setText(MoString.getSignature(history.getTitle()))
