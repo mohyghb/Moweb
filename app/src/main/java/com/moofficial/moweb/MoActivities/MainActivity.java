@@ -2,6 +2,7 @@ package com.moofficial.moweb.MoActivities;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.transition.Slide;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import com.moofficial.moessentials.MoEssentials.MoPermissions.MoPermission;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoSwitchers.MoSectionViewManager;
 import com.moofficial.moweb.MoActivities.MainMenu.MainMenuSection;
 import com.moofficial.moweb.Moweb.MoDownload.MoDownloadManager;
+import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoWebAppLoader.MoWebAppLoader;
 import com.moofficial.moweb.R;
 
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         MoLog.printRunTime("App loader",() -> MoWebAppLoader.loadApp(this));
         init();
+        handleLinkFromOthers(getIntent());
     }
 
     @Override
@@ -57,14 +60,33 @@ public class MainActivity extends AppCompatActivity {
         this.tabSection.setActivity(this);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleLinkFromOthers(intent);
+    }
+
+    /**
+     * this method handles links that are opened
+     * with our app from other sources
+     * @param intent that is sent to open this app
+     */
+    private void handleLinkFromOthers(Intent intent) {
+        Uri startIntentData = intent.getData();
+        if(startIntentData!=null) {
+            String intentUrl = startIntentData.toString();
+            if (intentUrl.contains("http://")||intentUrl.contains("https://")) {
+                MoTabsManager.addTab(this, intentUrl, false);
+                moveToTabFragment();
+            }
+        }
+    }
+
     private void init() {
         initTabSection();
         initMainMenuSection();
         initSectionManager();
     }
-
-
-
 
 
     private void initSectionManager() {
@@ -136,9 +158,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         boolean consumed = false;
+//        boolean isTab = false;
         switch (sectionViewManager.getActiveSectionKey()){
             case SECTION_TAB:
                 consumed = tabSection.onBackPressed();
+//                isTab = true;
                 break;
             case SECTION_MAIN_MENU:
                 consumed = mainMenuFragment.onBackPressed();
@@ -146,6 +170,9 @@ public class MainActivity extends AppCompatActivity {
         }
         if(!consumed){
             super.onBackPressed();
+//            if (isTab) {
+//                finish();
+//            }
         }
     }
 }

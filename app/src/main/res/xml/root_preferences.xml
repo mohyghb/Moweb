@@ -30,6 +30,12 @@
             android:summary="@string/home_page_summary"
             app:iconSpaceReserved="false"/>
 
+
+        <Preference android:key="@string/set_as_default_key"
+        android:title="@string/set_as_default_title"
+        android:summary="@string/set_as_default_description"
+        app:iconSpaceReserved="false"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory app:title="Security" app:iconSpaceReserved="false">
