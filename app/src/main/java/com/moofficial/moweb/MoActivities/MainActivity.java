@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         MoDownloadManager.onDestroy();
+        // todo on destroy tab
     }
 
     @Override
@@ -131,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (MoPermission.MULTIPLE_PERMISSIONS_REQUEST_ID == requestCode) {
+        if (MoTabSection.DOWNLOAD_PERMISSION_REQUEST == requestCode) {
             if (MoPermission.allGranted(grantResults)) {
                 Toast.makeText(this, R.string.download_activity_success_permission, Toast.LENGTH_LONG).show();
             } else {
@@ -158,11 +159,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         boolean consumed = false;
-//        boolean isTab = false;
         switch (sectionViewManager.getActiveSectionKey()){
             case SECTION_TAB:
                 consumed = tabSection.onBackPressed();
-//                isTab = true;
                 break;
             case SECTION_MAIN_MENU:
                 consumed = mainMenuFragment.onBackPressed();
@@ -170,9 +169,6 @@ public class MainActivity extends AppCompatActivity {
         }
         if(!consumed){
             super.onBackPressed();
-//            if (isTab) {
-//                finish();
-//            }
         }
     }
 }

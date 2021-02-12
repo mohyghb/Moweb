@@ -20,6 +20,9 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".MoActivities.Download.MoDownloadSettingsActivity"></activity>
 
+        <meta-data android:name="android.webkit.WebView.EnableSafeBrowsing"
+            android:value="true" />
+
         <receiver
             android:name=".Moweb.MoDownload.MoDownloadReceiver"
             android:enabled="true"
@@ -34,7 +37,7 @@
             android:name=".MoActivities.MainActivity"
             android:alwaysRetainTaskState="true"
             android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="adjustResize"
+            android:windowSoftInputMode="adjustPan"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -268,6 +268,8 @@ public class MoTabSearchBar extends MoConstraint {
         this.tab.setSearchText(this.searchText);
         // sync the progress bar with the tab
         this.tab.setProgressBar(this.progressBar);
+        // make the progress bar progress equal to zero
+        this.progressBar.setProgress(0);
         return this;
     }
 
@@ -281,7 +283,7 @@ public class MoTabSearchBar extends MoConstraint {
         this.progressBar = this.findViewById(R.id.tab_progress);
         this.progressBar.setMax(100);
         this.progressBar.setIndeterminate(false);
-        this.progressBar.setProgress(0);
+
     }
 
 
@@ -464,8 +466,8 @@ public class MoTabSearchBar extends MoConstraint {
                 .rowFill(b -> {
                     b.icon(R.drawable.ic_baseline_refresh_24,(v)-> moWebView.forceReload())
                             .icon(tab.urlIsBookmarked()?
-                                            R.drawable.ic_baseline_star_24:
-                                            R.drawable.ic_baseline_star_border_24,
+                                            R.drawable.ic_baseline_bookmark_24:
+                                            R.drawable.ic_baseline_bookmark_border_24,
                                     (v)-> tab.bookmarkTheTab())
                             .icon(R.drawable.ic_baseline_chevron_left_24, (v) -> moWebView.goBackIfYouCan())
                             .icon(R.drawable.ic_baseline_chevron_right_24, (v)-> moWebView.goForwardIfYouCan());
@@ -539,11 +541,8 @@ public class MoTabSearchBar extends MoConstraint {
      * object
      */
     public void onDestroy(){
-        if(tab!=null) {
-            tab.setSearchText(null);
-            tab.setProgressBar(null);
-            tab.setOnUpdateUrlListener(s -> {});
-            tab.setOnTabBookmarkChanged(isBookmarked -> {});
+        if (tab!=null) {
+            tab.removeListeners();
         }
         tab = null;
         moWebView = null;

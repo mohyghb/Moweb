@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/mo_ssl_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:textColor="@color/MoInverseColor"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0"
+        tool:text="Some sort of description goes here" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/mo_ssl_proceed"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:text="@string/ssl_proceed"
+        android:textColor="@color/MoBackground"
+        android:backgroundTint="@color/error_color"
+        app:layout_constraintEnd_toEndOf="@id/mo_ssl_description"
+        app:layout_constraintStart_toStartOf="@id/mo_ssl_description"
+        app:layout_constraintTop_toBottomOf="@id/mo_ssl_description"
+         />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/mo_ssl_decline"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/ssl_decline"
+        android:textColor="@color/MoInverseColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/mo_ssl_description"
+        app:layout_constraintStart_toStartOf="@id/mo_ssl_description"
+        app:layout_constraintTop_toBottomOf="@id/mo_ssl_proceed"
+        app:strokeColor="@color/MoInverseColor" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

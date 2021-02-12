@@ -115,7 +115,6 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
         return this;
     }
 
-
     public MoOnTabBookmarkChanged getOnTabBookmarkChanged() {
         return onTabBookmarkChanged;
     }
@@ -208,8 +207,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
         moWebView.load(webViewData,context);
         moWebView.setChromeClient(new MoChromeClient(this.context))
                  .setOnUpdateUrlListener((url, isReload) -> updateUrl(url))
-                 .neverOverScroll()
-                 .setOnErrorReceived((view, request, error) -> onErrorReceived(request, error));
+                 .neverOverScroll();
         moWebView.init();
         // todo we need to set the web view for tab type
     }
@@ -520,13 +518,12 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
         this.moWebView.onDestroy();
     }
 
-
-
-    public void onErrorReceived(WebResourceRequest request, WebResourceError error){
-//        moWebView.setVisibility(View.INVISIBLE);
-//        errorLayout.setVisibility(View.VISIBLE);
+    public void removeListeners() {
+        this.setSearchText(null);
+        this.setProgressBar(null);
+        this.setOnUpdateUrlListener(s -> {});
+        this.setOnTabBookmarkChanged(isBookmarked -> {});
     }
-
 
 
     // mo selectable
