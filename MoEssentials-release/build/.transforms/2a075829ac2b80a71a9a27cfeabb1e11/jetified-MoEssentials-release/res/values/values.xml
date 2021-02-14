@@ -15,26 +15,25 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="delete_item_low_transparency_color">#88E24444</color>
     <color name="error_color">#E24444</color>
-    <color name="mo_amber">#FFE082</color>
-    <color name="mo_blue">#90CAF9</color>
+    <color name="mo_amber">#FFA726</color>
+    <color name="mo_blue">#42A5F5</color>
     <color name="mo_bottom_sheet_color">@color/MoWhite</color>
     <color name="mo_card_color">@color/MoWhite_v2</color>
-    <color name="mo_cyan">#80DEEA</color>
-    <color name="mo_deep_orange">#FFAB91</color>
-    <color name="mo_deep_purple">#B39DDB</color>
-    <color name="mo_green">#A5D6A7</color>
-    <color name="mo_indigo">#9FA8DA</color>
-    <color name="mo_light_blue">#81D4FA</color>
-    <color name="mo_light_green">#C5E1A5</color>
-    <color name="mo_lime">#E6EE9C</color>
-    <color name="mo_orange">#FFCC80</color>
-    <color name="mo_pink">#F48FB1</color>
-    <color name="mo_purple">#CE93D8</color>
-    <color name="mo_red">#ef9a9a</color>
-    <color name="mo_teal">#80CBC4</color>
+    <color name="mo_cyan">#26C6DA</color>
+    <color name="mo_deep_purple">#5C6BC0</color>
+    <color name="mo_green">#66BB6A</color>
+    <color name="mo_indigo">#5C6BC0</color>
+    <color name="mo_light_blue">#29B6F6</color>
+    <color name="mo_light_green">#9CCC65</color>
+    <color name="mo_lime">#9E9D24</color>
+    <color name="mo_orange">#FF7043</color>
+    <color name="mo_pink">#EC407A</color>
+    <color name="mo_purple">#AB47BC</color>
+    <color name="mo_red">#EF5350</color>
+    <color name="mo_teal">#26A69A</color>
     <color name="mo_transparent_black">#E6000000</color>
     <color name="mo_transparent_white">#E6FFFFFF</color>
-    <color name="mo_yellow">#FFF59D</color>
+    <color name="mo_yellow">#FFCA28</color>
     <color name="setting_toolbar_background">@android:color/white</color>
     <color name="transparent">#00000000</color>
     <dimen name="card_elevation_search_bar">4dp</dimen>
@@ -85,6 +84,12 @@
     <style name="MoMaterialCardViewStyleBright" parent="Widget.MaterialComponents.CardView">
         <item name="android:backgroundTint">@color/colorPrimary</item>
         <item name="cardElevation">3dp</item>
+    </style>
+    <style name="mo_fading_edge_text_view" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:requiresFadingEdge">horizontal</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:fadingEdgeLength">@dimen/mo_fade_edge_text_view</item>
+        <item name="android:ellipsize">none</item>
     </style>
     <style name="mo_round_bottom_sheet" parent="Widget.MaterialComponents.BottomSheet">
         <item name="shapeAppearanceOverlay">@style/mo_round_bottom_sheet_style</item>

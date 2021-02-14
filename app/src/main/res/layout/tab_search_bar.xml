@@ -1,183 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/tab_search_bar_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:backgroundTint="@color/transparent"
-    app:cardElevation="0dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
+    android:layout_margin="0dp">
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    <com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView
+        android:id="@+id/tab_search_bar_suggestion_card_recycler"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@id/search_bar_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ProgressBar
+        android:id="@+id/tab_progress"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="4dp"
         android:layout_margin="0dp"
-        android:background="@android:color/transparent"
-        android:backgroundTint="@color/transparent">
-
-        <com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView
-            android:id="@+id/tab_search_bar_suggestion_card_recycler"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:overScrollMode="never"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@id/tab_search_bar_text_constraint_layout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginBottom="8dp"
+        android:indeterminate="false"
+        android:padding="0dp"
+        android:progress="20"
+        android:progressDrawable="@drawable/custom_loading_progressbar"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
-        <ProgressBar
-            android:id="@+id/tab_progress"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="0dp"
-            android:layout_height="4dp"
-            android:layout_margin="0dp"
-            android:layout_marginBottom="8dp"
-            android:indeterminate="false"
-            android:padding="0dp"
-            android:progress="20"
-            android:progressDrawable="@drawable/custom_loading_progressbar"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/tab_search_bar_info"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--        android:padding="@dimen/mo_image_button_padding"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/search_bar_text"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="@id/search_bar_text"-->
+<!--        app:layout_constraintVertical_bias="1"-->
+<!--        app:srcCompat="@drawable/ic_baseline_info_24" />-->
+
+    <!--        <View-->
+    <!--            android:id="@+id/divider"-->
+    <!--            android:layout_width="1dp"-->
+    <!--            android:layout_height="0dp"-->
+    <!--            android:layout_marginTop="12dp"-->
+    <!--            android:layout_marginBottom="12dp"-->
+    <!--            android:background="?android:attr/listDivider"-->
+    <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--            app:layout_constraintEnd_toStartOf="@id/search_bar_text"-->
+    <!--            app:layout_constraintStart_toEndOf="@id/tab_search_bar_info"-->
+    <!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/search_bar_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/tab_search_bar_background"
+        android:drawableStart="@drawable/ic_baseline_lock_24"
+        android:drawablePadding="8dp"
+        android:ellipsize="none"
+        android:fadingEdgeLength="@dimen/mo_fading_edge_text"
+        android:hint="@string/tab_search_hint"
+        android:imeOptions="actionSearch"
+        android:inputType="textWebEditText"
+        android:padding="8dp"
+        android:requiresFadingEdge="horizontal"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        app:layout_constraintBottom_toTopOf="@id/tab_progress"
+        app:layout_constraintEnd_toStartOf="@id/include"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/tab_search_bar_text_constraint_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="@color/transparent"
-            android:backgroundTint="@color/transparent"
-            app:layout_constraintBottom_toTopOf="@id/tab_progress"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+    <com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar.MoTabsButton
+        android:id="@+id/include"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/mo_image_button_padding"
+        app:layout_constraintBottom_toBottomOf="@id/search_bar_text"
+        app:layout_constraintEnd_toStartOf="@id/more_bar_button"
+        app:layout_constraintTop_toTopOf="@id/search_bar_text"
+        app:layout_constraintVertical_bias="1.0">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/tab_search_bar_background"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/layout_buttons_search_bar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+    </com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar.MoTabsButton>
 
-                <ImageButton
-                    android:id="@+id/tab_search_bar_info"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="@dimen/mo_image_button_padding"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_baseline_info_24" />
+    <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoImageButton
+        android:id="@+id/more_bar_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_more_vert_black_24dp"
+        app:layout_constraintBottom_toBottomOf="@id/search_bar_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/search_bar_text"
+        app:layout_constraintVertical_bias="1.0" />
 
-                <View
-                    android:id="@+id/divider"
-                    android:layout_width="1dp"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp"
-                    android:background="?android:attr/listDivider"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/search_bar_text"
-                    app:layout_constraintStart_toEndOf="@id/tab_search_bar_info"
-                    app:layout_constraintTop_toTopOf="parent" />
+    <ImageButton
+        android:id="@+id/tab_search_copy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="@dimen/mo_image_button_padding"
+        android:src="@drawable/ic_baseline_content_copy_24"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/search_bar_text"
+        app:layout_constraintStart_toEndOf="@id/search_bar_text"
+        app:layout_constraintTop_toTopOf="@id/search_bar_text"
+        app:layout_constraintVertical_bias="1.0" />
 
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/search_bar_text"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:ellipsize="none"
-                    android:fadingEdgeLength="@dimen/mo_fading_edge_text"
-                    android:hint="@string/tab_search_hint"
-                    android:imeOptions="actionSearch"
-                    android:inputType="textWebEditText"
-                    android:padding="8dp"
-                    android:requiresFadingEdge="horizontal"
-                    android:selectAllOnFocus="true"
-                    android:singleLine="true"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/tab_search_bar_info"
-                    app:layout_constraintTop_toTopOf="parent" />
+    <ImageButton
+        android:id="@+id/tab_search_share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="@dimen/mo_image_button_padding"
+        android:src="@drawable/ic_baseline_share_24"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/search_bar_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/search_bar_text"
+        app:layout_constraintVertical_bias="1.0" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layout_buttons_search_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar.MoTabsButton
-                    android:id="@+id/include"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/mo_image_button_padding"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/more_bar_button"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                </com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar.MoTabsButton>
-
-                <ImageButton
-                    android:id="@+id/more_bar_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="@dimen/mo_image_button_padding"
-                    android:src="@drawable/ic_more_vert_black_24dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageButton
-                    android:id="@+id/tab_search_copy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="@dimen/mo_image_button_padding"
-                    android:src="@drawable/ic_baseline_content_copy_24"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/tab_search_share"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageButton
-                    android:id="@+id/tab_search_share"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="@dimen/mo_image_button_padding"
-                    android:src="@drawable/ic_baseline_share_24"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView>
 
 
 

@@ -120,13 +120,11 @@ public class HomePageActivity extends MoSmartActivity {
         moToolBar = new MoToolBar(this)
                 .setLeftOnClickListener(view -> onBackPressed())
                 .onlyTitleAndLeftButtonVisible();
-        moToolBar.getCardView().makeTransparent();
         moDeleteToolbar = new MoToolBar(this)
                 .hideLeft()
                 .showCheckBox()
                 .hideMiddle()
                 .hideRight();
-        moDeleteToolbar.getCardView().makeTransparent();
         setupMultipleToolbars(moToolBar,moToolBar,moDeleteToolbar);
     }
 

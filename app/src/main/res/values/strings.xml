@@ -13,11 +13,16 @@
     <string name="never">Never</string>
     <string name="create">Create</string>
     <string name="select">Select</string>
+    <string name="advanced">Advanced</string>
     <string name="empty_selection_message">You need to select items first</string>
     <string name="yes">Yes</string>
     <string name="add">Add</string>
     <string name="a_lot_of_tabs">99+</string>
     <string name="changes_saved">Changes were saved!</string>
+
+    <string name="download_notification_cancel">Cancel</string>
+    <string name="download_notification_pause">Pause</string>
+    <string name="download_notification_resume">Resume</string>
 
 
     <string name="copy_password">Copy Password</string>
@@ -163,9 +168,24 @@
     <string name="clear_all_bookmarks_message">Do you want to clear all bookmarks/folders?</string>
 
 
-<!--    save password values-->
+    <!-- save password values-->
     <string name="save_password_title">Save Password</string>
     <string name="save_password_description">Do you want to save this information about your account?</string>
     <string name="passwords">Passwords</string>
 
+    <!-- Download Settings-->
+    <string name="download">download</string>
+    <string name="download_location_key">download_location_key</string>
+    <string name="download_activity_failed_permission">We need access to your external storage in order to show or download links for you</string>
+    <string name="download_activity_success_permission">Please click the download link again to start the download</string>
+
+
+    <string name="set_as_default_key">set_as_default_key</string>
+    <string name="set_as_default_title">Set as default</string>
+    <string name="set_as_default_description">Set this application as your default browser app</string>
+
+
+    <!--ssl advanced-->
+    <string name="ssl_proceed">Take the risk and continue</string>
+    <string name="ssl_decline">Go Back to safety (Recommended)</string>
 </resources>

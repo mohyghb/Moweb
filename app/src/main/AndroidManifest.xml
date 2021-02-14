@@ -6,29 +6,49 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
 
     <application
         android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MoActivities.History.SavedPasswordsActivity"></activity>
+        <activity android:name=".MoActivities.Download.MoDownloadSettingsActivity"></activity>
+
+        <meta-data android:name="android.webkit.WebView.EnableSafeBrowsing"
+            android:value="true" />
+
+        <receiver
+            android:name=".Moweb.MoDownload.MoDownloadReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity android:name=".MoActivities.History.SavedPasswordsActivity" />
         <activity android:name=".MoActivities.History.MoBrowsingData" />
         <activity android:name=".MoActivities.Bookmark.AddFolderBookmarkActivity" />
         <activity android:name=".MoActivities.MoSplashScreen" />
+        <activity android:name=".MoActivities.Download.MoDownloadActivity" />
         <activity
             android:name=".MoActivities.MainActivity"
             android:alwaysRetainTaskState="true"
             android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"/>
+                <data android:scheme="https"/>
             </intent-filter>
         </activity> <!-- <activity android:name=".MoActivities.MainMenu.MainMenuActivity"> -->
         <!-- </activity> &lt;!&ndash; <activity &ndash;&gt; -->

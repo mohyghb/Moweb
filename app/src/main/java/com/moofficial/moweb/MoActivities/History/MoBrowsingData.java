@@ -65,7 +65,6 @@ public class MoBrowsingData extends MoSmartActivity {
     private void initToolbar() {
         moToolBar = new MoToolBar(this).onlyTitleAndLeftButtonVisible()
                 .setLeftOnClickListener(view -> onBackPressed());
-        moToolBar.getCardView().makeTransparent();
         l.toolbar.addToolbar(moToolBar);
         syncTitle(moToolBar.getTitle());
     }

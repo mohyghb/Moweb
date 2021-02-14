@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.transition.ChangeBounds;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.TransitionManager;
@@ -16,25 +17,27 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.textfield.TextInputEditText;
 import com.moofficial.moessentials.MoEssentials.MoClipboard.MoClipboardUtils;
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoRunnable;
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoWorker.MoWorker;
 import com.moofficial.moessentials.MoEssentials.MoShare.MoShareUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoBottomSheet.MoBottomSheet;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMenuBuilder.MoMenuBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroups.MoConstraint;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoFindBar;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoViewUtils;
 import com.moofficial.moweb.MoActivities.Bookmark.BookmarkActivity;
 import com.moofficial.moweb.MoActivities.History.HistoryActivity;
+import com.moofficial.moweb.MoActivities.Download.MoDownloadActivity;
 import com.moofficial.moweb.MoActivities.SettingsActivity;
 import com.moofficial.moweb.MoHTML.MoHTMLAsyncTask;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
@@ -57,7 +60,6 @@ public class MoTabSearchBar extends MoConstraint {
     private MoBottomSheet bottomSheet;
     private MoSearchable moSearchable;
     private MoTabSuggestion suggestion;
-    private MoCardView searchBarCardView;
 
     private MoWebView moWebView;
     private MoTab tab;
@@ -109,7 +111,6 @@ public class MoTabSearchBar extends MoConstraint {
     }
 
     public void init() {
-        initTabSearchBarCard();
         initProgressBar();
         initMoreButton();
         initShareButton();
@@ -125,9 +126,7 @@ public class MoTabSearchBar extends MoConstraint {
         return this;
     }
 
-    private void initTabSearchBarCard() {
-        searchBarCardView = findViewById(R.id.tab_search_bar_card_view);
-    }
+
 
     @Override
     public int[] getAttrs() {
@@ -141,16 +140,14 @@ public class MoTabSearchBar extends MoConstraint {
      * shows the search bar helper
      */
     public void activateSearch() {
-        //BookmarkActivity.startActivity(getContext());
+        if (this.isInSearch)
+            return;
+        TransitionManager.beginDelayedTransition(this.parentLayout);
         this.isInSearch = true;
-
-        this.tabsButton.gone();
-        this.moreTabButton.setVisibility(View.GONE);
+        this.tabsButton.invisible();
+        this.moreTabButton.setVisibility(View.INVISIBLE);
         this.shareButton.setVisibility(View.VISIBLE);
         this.copyButton.setVisibility(View.VISIBLE);
-
-        showSuggestions(this.searchText.getText().toString());
-        // todo
     }
 
     /**
@@ -159,8 +156,10 @@ public class MoTabSearchBar extends MoConstraint {
      * removes the helper
      */
     public void deactivateSearch() {
-        //TransitionManager.beginDelayedTransition(this);
+        if (!this.isInSearch)
+            return;
 
+        TransitionManager.beginDelayedTransition(this.parentLayout);
         this.isInSearch = false;
         hideSuggestions();
 
@@ -168,11 +167,8 @@ public class MoTabSearchBar extends MoConstraint {
         this.moreTabButton.setVisibility(View.VISIBLE);
         this.shareButton.setVisibility(View.GONE);
         this.copyButton.setVisibility(View.GONE);
-
-        //todo remove the focus from search bar
-        // make sure if the search text is empty , put the current url into it
-
-        // todo
+        this.searchText.clearFocus();
+        this.searchText.setText(this.moWebView.getUrl());
     }
 
 
@@ -269,6 +265,8 @@ public class MoTabSearchBar extends MoConstraint {
         this.tab.setSearchText(this.searchText);
         // sync the progress bar with the tab
         this.tab.setProgressBar(this.progressBar);
+        // make the progress bar progress equal to zero
+        this.progressBar.setProgress(0);
         return this;
     }
 
@@ -282,7 +280,7 @@ public class MoTabSearchBar extends MoConstraint {
         this.progressBar = this.findViewById(R.id.tab_progress);
         this.progressBar.setMax(100);
         this.progressBar.setIndeterminate(false);
-        this.progressBar.setProgress(0);
+
     }
 
 
@@ -314,11 +312,26 @@ public class MoTabSearchBar extends MoConstraint {
 
 
         searchText.setOnTouchListener((v, event) -> {
-            if(MotionEvent.ACTION_UP == event.getAction()) {
+            final int DRAWABLE_LEFT = 0;
+
+
+            if (MotionEvent.ACTION_DOWN == event.getAction()) {
+                if(event.getRawX() <= (searchText.getLeft() +
+                        searchText.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width())) {
+                    // todo show the security info to the user
+                    MoLog.print("clicked!!!");
+                    return true;
+                }
+            }
+
+
+            if(MotionEvent.ACTION_DOWN == event.getAction()) {
                 activateSearch();
             }
             return searchText.performClick();
         });
+
+
 
 
 
@@ -335,6 +348,7 @@ public class MoTabSearchBar extends MoConstraint {
             searchText.clearFocus();
             return false;
         });
+
     }
 
     private void initSuggestion() {
@@ -357,16 +371,13 @@ public class MoTabSearchBar extends MoConstraint {
      * @return this
      */
     public MoTabSearchBar hideSuggestions() {
-        //TransitionManager.beginDelayedTransition(bottomParentLayout);
+//        TransitionManager.beginDelayedTransition(bottomParentLayout);
         this.suggestion.hide();
         return this;
     }
 
     private void showSuggestions(MoSuggestions s) {
-        TransitionManager.beginDelayedTransition(bottomParentLayout,
-                new TransitionSet()
-                .addTransition(new Slide())
-                .addTransition(new Fade()));
+        // TransitionManager.beginDelayedTransition(bottomParentLayout, new ChangeBounds());
         suggestion.show(s);
     }
 
@@ -452,8 +463,8 @@ public class MoTabSearchBar extends MoConstraint {
                 .rowFill(b -> {
                     b.icon(R.drawable.ic_baseline_refresh_24,(v)-> moWebView.forceReload())
                             .icon(tab.urlIsBookmarked()?
-                                            R.drawable.ic_baseline_star_24:
-                                            R.drawable.ic_baseline_star_border_24,
+                                            R.drawable.ic_baseline_bookmark_24:
+                                            R.drawable.ic_baseline_bookmark_border_24,
                                     (v)-> tab.bookmarkTheTab())
                             .icon(R.drawable.ic_baseline_chevron_left_24, (v) -> moWebView.goBackIfYouCan())
                             .icon(R.drawable.ic_baseline_chevron_right_24, (v)-> moWebView.goForwardIfYouCan());
@@ -463,6 +474,7 @@ public class MoTabSearchBar extends MoConstraint {
                 .text(R.string.home_page_title,R.drawable.ic_baseline_home_24,view -> tab.goToHomepage())
                 .text(R.string.history,R.drawable.ic_baseline_history_24,view-> HistoryActivity.launch(getContext()))
                 .text(R.string.share, R.drawable.ic_baseline_share_24, view -> tab.shareTheTab())
+                .text(R.string.downloads, R.drawable.ic_baseline_arrow_downward_24, view -> MoDownloadActivity.startActivity(getContext()))
                 .text(R.string.settings, R.drawable.ic_baseline_settings_24, view -> SettingsActivity.launch(getContext()))
                 .text(R.string.desktop_mode,moWebView.isInDesktopMode()?
                         R.drawable.ic_baseline_check_box_24:R.drawable.ic_baseline_check_box_outline_blank_24 ,
@@ -526,11 +538,8 @@ public class MoTabSearchBar extends MoConstraint {
      * object
      */
     public void onDestroy(){
-        if(tab!=null) {
-            tab.setSearchText(null);
-            tab.setProgressBar(null);
-            tab.setOnUpdateUrlListener(s -> {});
-            tab.setOnTabBookmarkChanged(isBookmarked -> {});
+        if (tab!=null) {
+            tab.removeListeners();
         }
         tab = null;
         moWebView = null;

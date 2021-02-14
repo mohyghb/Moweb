@@ -2,9 +2,11 @@ package com.moofficial.moweb.Moweb.MoWebview.MoWebViews;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.net.http.SslError;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -13,6 +15,7 @@ import android.webkit.WebView;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoWebClient;
@@ -34,6 +37,12 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
 
 
     private MoWebClient client = new MoWebClient() {
+
+        @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            onErrorReceived.onSSLErrorReceived(view, handler, error);
+        }
+
         @Override
         public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
             url = MoUrlUtils.removeUrlUniqueness(url);
@@ -49,13 +58,14 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             MoWebView.this.onPageFinishedListener.onFinished(view,url);
-//            moJsInput.setupListeners();
+            onErrorReceived.hideError();
         }
 
 
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
             onErrorReceived.onReceivedError(view,request,error);
+            MoLog.print("error = " + error.getDescription());
         }
 
 
@@ -76,10 +86,9 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
     private MoHitTestResultParser hitTestResultParser;
     private MoStackWebHistory stackTabHistory = new MoStackWebHistory();
     private MoOnUpdateUrlListener onUpdateUrlListener = (url, isReload) -> {};
-    private MoOnReceivedError onErrorReceived = (view, request, error) -> {};
+    private MoOnReceivedError onErrorReceived = MoOnReceivedError.EMPTY;
     private MoOnPageFinishedListener onPageFinishedListener = (view, url) -> {};
     private MoWebState webState = new MoWebState();
-//    private MoJsInput moJsInput;
     private boolean captureBitmap = true;
     private boolean saveHistory = true;
     private boolean isInDesktopMode = false;
@@ -137,8 +146,6 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         this.onErrorReceived = onErrorReceived;
         return this;
     }
-
-
 
     public MoStackWebHistory getStackTabHistory() {
         return stackTabHistory;
@@ -221,7 +228,6 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         // cookies
         MoWebUtils.acceptThirdPartyCookies(this);
 
-        
 
     }
 
@@ -376,7 +382,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
      *                      from cache or not
      */
     public void loadUrl(String url,boolean loadFromCache){
-        super.loadUrl(loadFromCache?url:MoUrlUtils.makeUrlUnique(url));
+        loadUrl(loadFromCache?url:MoUrlUtils.makeUrlUnique(url));
     }
 
 
@@ -390,7 +396,8 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
      * @param url
      */
     @Override
-    public void loadUrl(String url){
+    public void loadUrl(String url) {
+        onErrorReceived.hideError();
         super.loadUrl(url);
         this.url = url;
     }
@@ -484,6 +491,12 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
                 ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
+
+    public MoWebView removeListeners() {
+        this.setOnErrorReceived(MoOnReceivedError.EMPTY);
+        this.setDownloadListener(null);
+        return this;
+    }
 
 
 

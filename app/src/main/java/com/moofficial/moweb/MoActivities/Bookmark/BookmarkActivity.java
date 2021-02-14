@@ -82,7 +82,6 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
 
     private void initSearchBar() {
         this.searchBar = new MoSearchBar(this);
-        this.searchBar.getCardView().makeTransparent();
     }
 
     private void initToolBar() {
@@ -90,7 +89,6 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
                 .setRightIcon(R.drawable.ic_baseline_delete_outline_24)
                 .setRightOnClickListener(view -> performClearAll())
                 .setLeftOnClickListener(view -> onBackPressed());
-        this.moToolBar.getCardView().makeTransparent();
     }
 
     private void initListSelectableToolbar(){
@@ -106,7 +104,6 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
                 .setExtraOnClickListener(view -> performDelete())
                 .setForthIcon(R.drawable.ic_baseline_edit_24)
                 .setForthOnClickListener(view -> performEdit());
-        this.moListSelectableToolbar.getCardView().makeTransparent();
     }
 
     private void performEdit() {
@@ -394,9 +391,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
         this.listViewSync = new MoListViewSync(getGroupRootView(),this.moSearchable,this.moListSelectable)
                 .setPutOnHold(true)
                 .setSharedElements(this.moToolBar,l.floatingActionButton.getView())
-                .setOnEmptyOnHoldsListener(() -> {
-                    updateRecyclerAdapter(getCurrentFolderBookmarks());
-                });
+                .setOnEmptyOnHoldsListener(() -> updateRecyclerAdapter(getCurrentFolderBookmarks()));
     }
 
 

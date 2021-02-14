@@ -1,16 +1,26 @@
 package com.moofficial.moweb.MoActivities;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.transition.Slide;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.moofficial.moessentials.MoEssentials.MoPermissions.MoPermission;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoSwitchers.MoSectionViewManager;
 import com.moofficial.moweb.MoActivities.MainMenu.MainMenuSection;
+import com.moofficial.moweb.Moweb.MoDownload.MoDownloadManager;
+import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoWebAppLoader.MoWebAppLoader;
 import com.moofficial.moweb.R;
+
+import java.security.Permission;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,16 +40,46 @@ public class MainActivity extends AppCompatActivity {
         MoSettingsSection.init(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        MoWebAppLoader.loadApp(this);
+        MoLog.printRunTime("App loader",() -> MoWebAppLoader.loadApp(this));
         init();
+        handleLinkFromOthers(getIntent());
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MoDownloadManager.onDestroy();
+        // todo on destroy tab
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
         if (sectionViewManager.getActiveSectionKey() == SECTION_TAB) {
             this.tabSection.updateBookmark();
+        }
+        this.tabSection.setActivity(this);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleLinkFromOthers(intent);
+    }
+
+    /**
+     * this method handles links that are opened
+     * with our app from other sources
+     * @param intent that is sent to open this app
+     */
+    private void handleLinkFromOthers(Intent intent) {
+        Uri startIntentData = intent.getData();
+        if(startIntentData!=null) {
+            String intentUrl = startIntentData.toString();
+            if (intentUrl.contains("http://")||intentUrl.contains("https://")) {
+                MoTabsManager.addTab(this, intentUrl, false);
+                moveToTabFragment();
+            }
         }
     }
 
@@ -48,9 +88,6 @@ public class MainActivity extends AppCompatActivity {
         initMainMenuSection();
         initSectionManager();
     }
-
-
-
 
 
     private void initSectionManager() {
@@ -73,7 +110,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void initTabSection() {
         this.tabSection = findViewById(R.id.main_tab_section);
-        this.tabSection.setMoveToMainMenu(this::moveToMainMenuFragment).init();
+        this.tabSection.setMoveToMainMenu(this::moveToMainMenuFragment)
+                .setActivity(this)
+                .init();
     }
 
 
@@ -85,6 +124,23 @@ public class MainActivity extends AppCompatActivity {
         mainMenuFragment.onResume();
         sectionViewManager.setActiveSection(SECTION_MAIN_MENU);
     }
+
+    void failedDownloadPermission() {
+        Toast.makeText(this, R.string.download_activity_failed_permission, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (MoTabSection.DOWNLOAD_PERMISSION_REQUEST == requestCode) {
+            if (MoPermission.allGranted(grantResults)) {
+                Toast.makeText(this, R.string.download_activity_success_permission, Toast.LENGTH_LONG).show();
+            } else {
+                failedDownloadPermission();
+            }
+        }
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

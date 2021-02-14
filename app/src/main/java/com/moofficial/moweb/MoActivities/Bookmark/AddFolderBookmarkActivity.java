@@ -44,6 +44,7 @@ public class AddFolderBookmarkActivity extends MoSmartActivity {
     private void initFolderButton() {
         folderParent = getExtraParentFolder(getIntent());
         folderButton = new MoButton(this);
+        // todo the icon color does not match the theme, it's always black
         this.folderButton.setTitle("Parent folder")
                 .setIcon(R.drawable.ic_baseline_folder_open_24)
                 .setDescription(folderParent)
@@ -67,8 +68,7 @@ public class AddFolderBookmarkActivity extends MoSmartActivity {
     private void initMoToolBar() {
         this.moToolBar = new MoToolBar(this);
         this.moToolBar.onlyTitleAndLeftButtonVisible()
-                .setLeftOnClickListener(view -> onBackPressed())
-                .getCardView().makeTransparent();
+                .setLeftOnClickListener(view -> onBackPressed());
         l.toolbar.addToolbar(this.moToolBar);
         syncTitle(moToolBar.getTitle());
     }

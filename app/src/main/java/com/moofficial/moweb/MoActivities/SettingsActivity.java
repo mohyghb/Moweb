@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
@@ -63,6 +65,7 @@ public class SettingsActivity extends AppCompatActivity {
         private Activity activity;
         private Preference homePagePref;
         private Preference savePasswordsPref;
+        private Preference setAsDefaultPref;
 
         public SettingsFragment(Activity a){
             this.activity = a;
@@ -74,6 +77,17 @@ public class SettingsActivity extends AppCompatActivity {
         private void init() {
             initHomePagePref();
             initSavePasswordPref();
+            this.setAsDefaultPref = findPreference(string(R.string.set_as_default_key));
+            if (this.setAsDefaultPref != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    this.setAsDefaultPref.setOnPreferenceClickListener((p) -> {
+                        startActivity(new Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS));
+                        return false;
+                    });
+                } else {
+                    this.setAsDefaultPref.setEnabled(false);
+                }
+            }
         }
 
         private void initHomePagePref() {
