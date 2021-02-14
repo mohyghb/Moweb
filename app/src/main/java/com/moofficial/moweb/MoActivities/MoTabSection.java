@@ -44,7 +44,9 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabUtils;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebError.MoSSLBottomSheet;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebError.MoSSLUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebError.MoWebErrorView;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebError.MoWebResourceErrorUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnReceivedError;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 import com.moofficial.moweb.R;
@@ -351,7 +353,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
     @Override
     public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
         this.webErrorView.normalError()
-                .setTitle("Error (" + error.getErrorCode() + ")")
+                .setTitle(MoWebResourceErrorUtils.getTitle(error))
                 .setDescription("Unfortunately we are not able to load " + view.getUrl() +
                         ". The error description is as follows: " + error.getDescription().toString());
         this.showErrorView();
@@ -362,7 +364,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
         // todo add advanced method error
         // todo show the description more
         this.webErrorView.sslError();
-        this.webErrorView.setTitle("SSL Error");
+        this.webErrorView.setTitle(MoSSLUtils.getTitle(error));
         this.webErrorView.setDescription(error.toString());
         this.webErrorView.onAdvancedClicked((v) -> {
             // todo better description

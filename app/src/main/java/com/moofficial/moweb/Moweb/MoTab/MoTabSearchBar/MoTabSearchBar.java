@@ -148,7 +148,6 @@ public class MoTabSearchBar extends MoConstraint {
         this.moreTabButton.setVisibility(View.INVISIBLE);
         this.shareButton.setVisibility(View.VISIBLE);
         this.copyButton.setVisibility(View.VISIBLE);
-        MoViewUtils.dim(this.moWebView);
     }
 
     /**
@@ -168,8 +167,6 @@ public class MoTabSearchBar extends MoConstraint {
         this.moreTabButton.setVisibility(View.VISIBLE);
         this.shareButton.setVisibility(View.GONE);
         this.copyButton.setVisibility(View.GONE);
-
-        MoViewUtils.clearDim(this.moWebView);
         this.searchText.clearFocus();
         this.searchText.setText(this.moWebView.getUrl());
     }
