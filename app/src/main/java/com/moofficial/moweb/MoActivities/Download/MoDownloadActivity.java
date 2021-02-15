@@ -152,7 +152,8 @@ public class MoDownloadActivity extends MoSmartActivity implements
                 .setOnDownloadClickedListener(this)
                 .setOnDownloadCancelled(this);
         this.cardRecyclerView = new MoCardRecyclerView(this);
-        recyclerView = MoRecyclerUtils.get(this.cardRecyclerView.getRecyclerView(), this.adapter);
+        recyclerView = MoRecyclerUtils.get(this.cardRecyclerView.getRecyclerView(), this.adapter)
+                .setMaxHeight(getHeightPixels());
 
         l.linearNested.addView(this.cardRecyclerView);
         recyclerView.show();

@@ -72,6 +72,7 @@ public class MoDownloadAdapter extends MoSelectableAdapter<MoDownloadViewHolder,
         handleLogo(holder, download);
         holder.hideDownloadLayout();
         updateDownloadingHolder(holder,position, download.getDownload());
+        MoLog.print("Download " + position);
     }
 
     private void onClickListener(@NonNull MoDownloadViewHolder holder, int position, MoDownload download) {
