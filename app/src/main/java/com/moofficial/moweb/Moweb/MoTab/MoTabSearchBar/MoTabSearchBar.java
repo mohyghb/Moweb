@@ -2,6 +2,7 @@ package com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.transition.ChangeBounds;
@@ -13,6 +14,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -20,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.textfield.TextInputEditText;
@@ -543,6 +546,38 @@ public class MoTabSearchBar extends MoConstraint {
         }
         tab = null;
         moWebView = null;
+    }
+
+    /**
+     * updates whether the current website they are accessing is
+     * secure or not
+     * @param url of the site the web view is currently showing
+     */
+    public void updateSecureWebsite(String url) {
+        if (URLUtil.isHttpUrl(url)) {
+            this.insecureWebsite();
+        } else {
+            this.secureWebsite();
+        }
+    }
+
+    /**
+     * Shows that the website is secure
+     * by showing a green lock inside the search bar text view
+     */
+    public void secureWebsite() {
+        Drawable secureDrawable = getDrawable(R.drawable.ic_baseline_lock_24);
+        this.searchText.setCompoundDrawablesWithIntrinsicBounds(secureDrawable, null,null,null);
+    }
+
+    /**
+     * shows that the website is not secure
+     * by showing a red open lock near the search bar
+     */
+    public void insecureWebsite() {
+        Drawable secureDrawable = getDrawable(R.drawable.ic_baseline_lock_open_24);
+        DrawableCompat.setTint(secureDrawable, getColor(R.color.not_secure_site_color));
+        this.searchText.setCompoundDrawablesWithIntrinsicBounds(secureDrawable, null,null,null);
     }
 
 

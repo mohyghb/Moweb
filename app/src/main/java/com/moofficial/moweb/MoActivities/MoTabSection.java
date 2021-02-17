@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.net.http.SslError;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +71,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
     private MoPermission permission;
     private MoWebErrorView webErrorView;
     private Activity activity;
+    private SslErrorHandler sslErrorHandler;
     private boolean isShowingError = false;
 
     public MoTabSection(Context context) {
@@ -213,6 +215,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
             updateTitle();
             updateSubtitle();
             updateToolbar();
+            this.moTabSearchBar.updateSecureWebsite(s);
         });
     }
 
@@ -283,6 +286,8 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
                 .clearEditTextFocus()
                 .setTextSearch(tab.getUrl())
                 .setOnTabsButtonClicked(view -> {
+                    // remove the ssl handler in case one exist
+                    this.sslErrorHandler = null;
                     MoKeyboardUtils.hideSoftKeyboard(view);
                     onTabsButtonPressed();
                 })
@@ -361,14 +366,11 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
 
     @Override
     public void onSSLErrorReceived(WebView view, SslErrorHandler handler, SslError error) {
-        // todo add advanced method error
-        // todo show the description more
+        this.sslErrorHandler = handler;
         this.webErrorView.sslError();
         this.webErrorView.setTitle(MoSSLUtils.getTitle(error));
         this.webErrorView.setDescription(error.toString());
         this.webErrorView.onAdvancedClicked((v) -> {
-            // todo better description
-            // todo close the bottom sheet when something is pressed
             MoBottomSheet sheet = new MoBottomSheet(getContext());
             MoSSLBottomSheet ssl = new MoSSLBottomSheet(getContext());
             ssl.setDescription("Are you sure you wanna proceed? The site seems to be dangerous")
@@ -381,7 +383,6 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
                         sheet.dismiss();
                         handler.proceed();
                         hideErrorView();
-                        MoLog.print("proceed");
                     });
             sheet.add(ssl)
                     .setState(BottomSheetBehavior.STATE_EXPANDED)
@@ -401,12 +402,18 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
         this.isShowingError = true;
         this.webView.setVisibility(View.GONE);
         this.webErrorView.setVisibility(View.VISIBLE);
+        this.moTabSearchBar.insecureWebsite();
     }
 
     public void hideErrorView() {
         this.isShowingError = false;
         this.webView.setVisibility(View.VISIBLE);
         this.webErrorView.setVisibility(View.GONE);
+        this.moTabSearchBar.updateSecureWebsite(this.webView.getUrl());
+        if (this.sslErrorHandler != null) {
+            this.sslErrorHandler.cancel();
+        }
+        this.sslErrorHandler = null;
     }
 
 

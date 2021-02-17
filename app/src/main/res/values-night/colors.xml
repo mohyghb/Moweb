@@ -13,20 +13,10 @@
 
     <color name="setting_toolbar_background">@color/MaterialDark</color>
 
-
-    <color name="color_text_enabled">@color/colorPrimary</color>
-    <color name="color_text_disabled">@color/MoWhite</color>
-    <color name="color_text">@color/MoWhite</color>
-
     <color name="tabs_icon_color">@color/MoWhite</color>
 
     <color name="snack_bar_text">@color/MoWhite</color>
     <color name="snack_bar_background">@color/MaterialElevatedCard</color>
-
-
-    <color name="notification_text_color">@android:color/black</color>
-
-<!--    <color name="MoBackground">@color/MaterialGrey</color>-->
 
 
     <color name="search_bar_color">@color/transparent</color>
@@ -34,6 +24,9 @@
 
 
     <color name="download_confirmation_background">#043840</color>
+
+    <color name="secure_site_color">#66BB6A</color>
+    <color name="not_secure_site_color">#EF5350</color>
 
 
 </resources>

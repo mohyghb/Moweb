@@ -54,7 +54,7 @@ public class MoTabsButton extends MoConstraint {
     }
 
     public void showDeactivated() {
-        changeColor(R.color.color_text,R.color.color_text);
+        changeColor(R.color.MoInverseColor,R.color.MoInverseColor);
     }
 
     @Override
