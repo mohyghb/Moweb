@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.net.http.SslError;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +71,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
     private MoPermission permission;
     private MoWebErrorView webErrorView;
     private Activity activity;
+    private SslErrorHandler sslErrorHandler;
     private boolean isShowingError = false;
 
     public MoTabSection(Context context) {
@@ -362,6 +364,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
 
     @Override
     public void onSSLErrorReceived(WebView view, SslErrorHandler handler, SslError error) {
+        this.sslErrorHandler = handler;
         this.webErrorView.sslError();
         this.webErrorView.setTitle(MoSSLUtils.getTitle(error));
         this.webErrorView.setDescription(error.toString());
@@ -378,7 +381,6 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
                         sheet.dismiss();
                         handler.proceed();
                         hideErrorView();
-                        MoLog.print("proceed");
                     });
             sheet.add(ssl)
                     .setState(BottomSheetBehavior.STATE_EXPANDED)
@@ -406,6 +408,10 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
         this.webView.setVisibility(View.VISIBLE);
         this.webErrorView.setVisibility(View.GONE);
         this.moTabSearchBar.updateSecureWebsite(this.webView.getUrl());
+        if (this.sslErrorHandler != null) {
+            this.sslErrorHandler.cancel();
+        }
+        this.sslErrorHandler = null;
     }
 
 

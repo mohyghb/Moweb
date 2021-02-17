@@ -567,7 +567,6 @@ public class MoTabSearchBar extends MoConstraint {
      */
     public void secureWebsite() {
         Drawable secureDrawable = getDrawable(R.drawable.ic_baseline_lock_24);
-        DrawableCompat.setTint(secureDrawable, getColor(R.color.secure_site_color));
         this.searchText.setCompoundDrawablesWithIntrinsicBounds(secureDrawable, null,null,null);
     }
 
