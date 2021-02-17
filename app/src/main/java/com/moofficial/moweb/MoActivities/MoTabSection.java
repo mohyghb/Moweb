@@ -286,6 +286,8 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
                 .clearEditTextFocus()
                 .setTextSearch(tab.getUrl())
                 .setOnTabsButtonClicked(view -> {
+                    // remove the ssl handler in case one exist
+                    this.sslErrorHandler = null;
                     MoKeyboardUtils.hideSoftKeyboard(view);
                     onTabsButtonPressed();
                 })
