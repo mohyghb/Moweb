@@ -282,7 +282,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
      * as well as the url itself
      * @param u update this.url to u
      */
-    public void updateUrl(String u){
+    public void updateUrl(String u) {
         // update url
         this.url.setUrlString(u);
         if(searchText!=null){

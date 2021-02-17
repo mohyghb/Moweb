@@ -45,19 +45,6 @@
     <color name="MoWhite_v3">#E6E6E6</color>
     <color name="MoGrey">#F28E8E8E</color>
 
-<!--    <color name="MaterialDark">#121212</color>-->
-<!--    <color name="MaterialGrey">#1A1A1A</color>-->
-
-<!--    <color name="MoBackground">@color/MaterialWhite</color>-->
-
-    <color name="notification_timer_background">#66bb6a</color>
-    <color name="notification_stopwatch_background">#66bb6a</color>
-    <color name="notification_text_color">@android:color/white</color>
-
-    <color name="color_text_enabled">#66bb6a</color>
-    <color name="color_text_disabled">@color/MoBlack</color>
-    <color name="color_text">@color/MoBlack</color>
-
 
 
 
@@ -66,5 +53,8 @@
 
 
     <color name="download_confirmation_background">#DDFBFF</color>
+
+    <color name="secure_site_color">#2E7D32</color>
+    <color name="not_secure_site_color">#C62828</color>
 
 </resources>

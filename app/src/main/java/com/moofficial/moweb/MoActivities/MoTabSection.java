@@ -213,6 +213,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
             updateTitle();
             updateSubtitle();
             updateToolbar();
+            this.moTabSearchBar.updateSecureWebsite(s);
         });
     }
 
@@ -361,14 +362,10 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
 
     @Override
     public void onSSLErrorReceived(WebView view, SslErrorHandler handler, SslError error) {
-        // todo add advanced method error
-        // todo show the description more
         this.webErrorView.sslError();
         this.webErrorView.setTitle(MoSSLUtils.getTitle(error));
         this.webErrorView.setDescription(error.toString());
         this.webErrorView.onAdvancedClicked((v) -> {
-            // todo better description
-            // todo close the bottom sheet when something is pressed
             MoBottomSheet sheet = new MoBottomSheet(getContext());
             MoSSLBottomSheet ssl = new MoSSLBottomSheet(getContext());
             ssl.setDescription("Are you sure you wanna proceed? The site seems to be dangerous")
@@ -401,12 +398,14 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
         this.isShowingError = true;
         this.webView.setVisibility(View.GONE);
         this.webErrorView.setVisibility(View.VISIBLE);
+        this.moTabSearchBar.insecureWebsite();
     }
 
     public void hideErrorView() {
         this.isShowingError = false;
         this.webView.setVisibility(View.VISIBLE);
         this.webErrorView.setVisibility(View.GONE);
+        this.moTabSearchBar.updateSecureWebsite(this.webView.getUrl());
     }
 
 
