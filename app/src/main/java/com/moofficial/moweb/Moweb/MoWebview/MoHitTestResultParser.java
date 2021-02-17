@@ -23,10 +23,12 @@ import com.moofficial.moessentials.MoEssentials.MoClipboard.MoClipboardUtils;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileProvider.MoFileProvider;
 import com.moofficial.moessentials.MoEssentials.MoShare.MoShare;
 import com.moofficial.moessentials.MoEssentials.MoShare.MoShareUtils;
+import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoBottomSheet.MoBottomSheet;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMarginBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMenuBuilder.MoMenuBuilder;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoLogo;
 import com.moofficial.moweb.Moweb.MoDownload.MoDownloadManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
@@ -84,19 +86,20 @@ public class MoHitTestResultParser {
         }
         this.context = c;
 
-        View v = MoInflaterView.inflate(R.layout.popup_menu__webview,c);
-        ((TextView)v.findViewById(R.id.title_dialog)).setText(title);
-        ((TextView)v.findViewById(R.id.description_dialog)).setText(url);
+        View v = MoInflaterView.inflate(R.layout.bottom_sheet_webview_hit_result,c);
+        ((TextView)v.findViewById(R.id.hit_result_title)).setText(title);
+        ((TextView)v.findViewById(R.id.hit_result_description)).setText(url);
 
-        ImageView imageView = v.findViewById(R.id.popup_web_view_image);
+
+        MoLogo logo = v.findViewById(R.id.hit_result_logo);
+        logo.setText(MoString.getSignature(title)).showText().hideLogo();
         if (src!=null && !src.isEmpty()) {
-            imageView.setVisibility(View.VISIBLE);
             Glide.with(context).asBitmap().load(this.src).into(new CustomTarget<Bitmap>() {
                 @Override
                 public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                     bitmap = resource;
                     TransitionManager.beginDelayedTransition((ViewGroup) v);
-                    imageView.setImageBitmap(resource);
+                    logo.setInner(resource).hideText().showLogo();
                 }
 
                 @Override
@@ -104,8 +107,6 @@ public class MoHitTestResultParser {
 
                 }
             });
-        } else {
-            imageView.setVisibility(View.GONE);
         }
 
         MoMenuBuilder builder = new MoMenuBuilder(context)
