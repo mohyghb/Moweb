@@ -18,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoLogo
@@ -33,9 +34,9 @@
 
             <TextView
                 android:id="@+id/history_title"
+                style="@style/mo_view_holder_title_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/mo_view_holder_title_text"
                 android:text="TextView"
                 android:textAlignment="textStart" />
 
@@ -47,10 +48,10 @@
 
                 <TextView
                     android:id="@+id/history_url"
+                    style="@style/mo_view_holder_title_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    style="@style/mo_view_holder_title_text"
                     android:fontFamily="sans-serif-thin"
                     android:text="TextView"
                     android:textAlignment="textStart" />

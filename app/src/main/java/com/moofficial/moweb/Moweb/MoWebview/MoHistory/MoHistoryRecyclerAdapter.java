@@ -1,6 +1,8 @@
 package com.moofficial.moweb.Moweb.MoWebview.MoHistory;
 
 import android.content.Context;
+import android.util.Pair;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -10,17 +12,32 @@ import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
+import com.moofficial.moweb.MoActivities.History.HistoryActivity;
+import com.moofficial.moweb.Moweb.MoTab.MoOpenTab;
 import com.moofficial.moweb.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolder,MoHistory> implements
         MoSelectableList<MoHistory> {
 
+    private MoPopUpMenu selectedPopup;
+    private MoOnHistoryClicked onHistoryClicked  = new MoOnHistoryClicked() {
+        @Override
+        public void onHistoryClicked(MoHistory h, int position) {
 
-    private MoOnHistoryClicked onHistoryClicked = (h, position) -> {};
+        }
+
+        @Override
+        public void goBackToActivity() {
+
+        }
+    };
 
 
     public MoHistoryRecyclerAdapter(ArrayList<MoHistory> dataSet,Context c) {
@@ -102,13 +119,30 @@ public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolde
 
     private void makeHistoryLongClickable(@NonNull MoHistoryHolder holder, int position) {
         holder.cardView.setOnLongClickListener(view -> {
-            if(isNotSelecting()){
-                startSelecting(position);
-                return true;
+            if (isNotSelecting()) {
+                this.selectedPopup = new MoPopUpMenu(context).setEntries(
+                        new Pair<>(context.getString(R.string.open_in_tab), menuItem -> {
+                            MoOpenTab.openInNewTabs(context, Collections.singletonList(dataSet.get(position)));
+                            onHistoryClicked.goBackToActivity();
+                            return false;
+                        }),
+                        new Pair<>(context.getString(R.string.open_in_private_tab), menuItem -> {
+                            MoOpenTab.openInNewPrivateTabs(context,Collections.singletonList(dataSet.get(position)));
+                            onHistoryClicked.goBackToActivity();
+                            return false;
+                        }),
+                        new Pair<>(context.getString(R.string.select), item -> {
+                            startSelecting(position);
+                            return false;
+                        })
+                );
+                this.selectedPopup.show(view);
             }
             return false;
         });
     }
+
+
 
 
 

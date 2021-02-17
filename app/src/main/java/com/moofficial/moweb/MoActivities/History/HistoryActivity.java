@@ -50,7 +50,6 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
 
     // toolbar
     private MoPopUpMenu morePopUp;
-    private MoPopUpMenu selectedPopup;
 
 
 
@@ -95,16 +94,12 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
                 .hideLeft()
                 .showCheckBox()
                 .showExtraButton()
+                .hideRight()
                 .setMiddleIcon(R.drawable.ic_baseline_share_24)
                 .setMiddleOnClickListener(view -> performShareSelected())
                 .setMiddleOnClickListener(view -> performShareSelected())
                 .setExtraIcon(R.drawable.ic_baseline_delete_24)
-                .setExtraOnClickListener(view -> performDeleteHistory())
-                .setRightOnClickListener(view -> {
-                    if(nothingHasBeenSelected()) return;
-                    selectedPopup.show(view);
-                });
-
+                .setExtraOnClickListener(view -> performDeleteHistory());
     }
 
     /**
@@ -162,29 +157,11 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
         initRecyclerView();
         initSelectable();
         initSearchable();
-        initSelectedPopup();
         initSync();
     }
 
 
-    /**
-     * open in new tabs
-     * open in new private tabs
-     */
-    private void initSelectedPopup(){
-        this.selectedPopup = new MoPopUpMenu(this).setEntries(
-                new Pair<>(getString(R.string.open_in_tab), menuItem -> {
-                    MoOpenTab.openInNewTabs(HistoryActivity.this,historyRecyclerAdapter.getSelectedItems());
-                    goBackToTabActivity();
-                    return false;
-                }),
-                new Pair<>(getString(R.string.open_in_private_tab), menuItem -> {
-                    MoOpenTab.openInNewPrivateTabs(HistoryActivity.this,historyRecyclerAdapter.getSelectedItems());
-                    goBackToTabActivity();
-                    return false;
-                })
-        );
-    }
+
 
 
     private void initHistory() {
@@ -208,13 +185,6 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
                 .setSelectAllCheckBox(selectBar.getCheckBox())
                 .addUnNormalViews(selectBar)
                 .setAllItemsAreSelectable(false)
-                .setOnSelectListener(moHistory -> {
-                    if (this.historyRecyclerAdapter.selectedSize() != 1) {
-                        this.selectBar.hideRight();
-                    } else {
-                        this.selectBar.showRight();
-                    }
-                })
                 .setOnEmptySelectionListener(()-> sync.removeAction())
                 .setOnCanceledListener(() -> historyRecyclerAdapter.getSelectedItems().clear());
     }
@@ -286,6 +256,11 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
         // we need to go back to tab activity in case we are inside another activity
         MoTabController.instance.openUrlInCurrentTab(this,h.getUrl(),true);
         goBackToTabActivity();
+    }
+
+    @Override
+    public void goBackToActivity() {
+        this.goBackToTabActivity();
     }
 
     private void goBackToTabActivity() {
