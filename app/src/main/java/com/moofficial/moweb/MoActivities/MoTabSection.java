@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.net.http.SslError;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.DownloadListener;
@@ -195,13 +196,15 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
             return false;
         });
         this.webView.setOnTouchListener((v, event) -> {
-            if (moTabSearchBar.isInSearch()) {
-                // we need to cancel it
-                moTabSearchBar.deactivateSearch();
-                MoKeyboardUtils.hideSoftKeyboard(v);
-                return true;
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (moTabSearchBar.isInSearch()) {
+                    // we need to cancel it
+                    moTabSearchBar.deactivateSearch();
+                    MoKeyboardUtils.hideSoftKeyboard(v);
+                    return true;
+                }
             }
-            return false;
+            return moTabSearchBar.isInSearch();
         });
         this.webView.setOnErrorReceived(this)
                 .setDownloadListener(this);
@@ -305,7 +308,10 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
 
     @Override
     public boolean onBackPressed() {
-        if (isShowingError) {
+        if (this.moTabSearchBar.isInSearch()) {
+            this.moTabSearchBar.deactivateSearch();
+            return true;
+        }else if (isShowingError) {
             hideErrorView();
             return true;
         } else {
