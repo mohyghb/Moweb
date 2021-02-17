@@ -236,23 +236,28 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSe
      * @param sb string builder, keeping all the information inside one object
      * @param includeTitle whether or not we should include the title of bookmark
      */
-    public void addSubBookmarkUrlRecursive(StringBuilder sb,boolean includeTitle){
-        if(subs.isEmpty()){
-            return;
-        }
-        for(MoBookmark b: subs){
-            switch (b.getType()){
-                case FOLDER:
-                    b.addSubBookmarkUrlRecursive(sb,includeTitle);
-                    break;
-                case BOOKMARK:
-                    if(includeTitle){
-                        sb.append(b.getUrl()).append("\n");
-                    }
-                    sb.append(b.getUrl()).append("\n");
-                    break;
+    public void addSubBookmarkUrlRecursive(StringBuilder sb,boolean includeTitle) {
+        if (this.isBookmark()) {
+            addBookmarkUrl(sb, includeTitle, this);
+        } else {
+            for(MoBookmark b: subs) {
+                switch (b.getType()) {
+                    case FOLDER:
+                        b.addSubBookmarkUrlRecursive(sb,includeTitle);
+                        break;
+                    case BOOKMARK:
+                        addBookmarkUrl(sb, includeTitle, b);
+                        break;
+                }
             }
         }
+    }
+
+    private void addBookmarkUrl(StringBuilder sb, boolean includeTitle, MoBookmark b) {
+        if(includeTitle) {
+            sb.append(b.getName()).append("\n");
+        }
+        sb.append(b.getUrl()).append("\n");
     }
 
     /**
