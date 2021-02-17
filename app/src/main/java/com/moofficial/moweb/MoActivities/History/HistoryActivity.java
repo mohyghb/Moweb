@@ -3,6 +3,7 @@ package com.moofficial.moweb.MoActivities.History;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.transition.TransitionManager;
 import android.util.Pair;
 import android.widget.Toast;
@@ -12,6 +13,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoListViewSync;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoOnSelectListener;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
@@ -206,6 +208,13 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
                 .setSelectAllCheckBox(selectBar.getCheckBox())
                 .addUnNormalViews(selectBar)
                 .setAllItemsAreSelectable(false)
+                .setOnSelectListener(moHistory -> {
+                    if (this.historyRecyclerAdapter.selectedSize() != 1) {
+                        this.selectBar.hideRight();
+                    } else {
+                        this.selectBar.showRight();
+                    }
+                })
                 .setOnEmptySelectionListener(()-> sync.removeAction())
                 .setOnCanceledListener(() -> historyRecyclerAdapter.getSelectedItems().clear());
     }
