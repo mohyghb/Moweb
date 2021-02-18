@@ -3,6 +3,7 @@ package com.moofficial.moweb.MoActivities.History;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.transition.TransitionManager;
 import android.util.Pair;
 import android.widget.Toast;
@@ -12,6 +13,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoListViewSync;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoOnSelectListener;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
@@ -48,7 +50,6 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
 
     // toolbar
     private MoPopUpMenu morePopUp;
-    private MoPopUpMenu selectedPopup;
 
 
 
@@ -93,16 +94,12 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
                 .hideLeft()
                 .showCheckBox()
                 .showExtraButton()
+                .hideRight()
                 .setMiddleIcon(R.drawable.ic_baseline_share_24)
                 .setMiddleOnClickListener(view -> performShareSelected())
                 .setMiddleOnClickListener(view -> performShareSelected())
                 .setExtraIcon(R.drawable.ic_baseline_delete_24)
-                .setExtraOnClickListener(view -> performDeleteHistory())
-                .setRightOnClickListener(view -> {
-                    if(nothingHasBeenSelected()) return;
-                    selectedPopup.show(view);
-                });
-
+                .setExtraOnClickListener(view -> performDeleteHistory());
     }
 
     /**
@@ -160,29 +157,11 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
         initRecyclerView();
         initSelectable();
         initSearchable();
-        initSelectedPopup();
         initSync();
     }
 
 
-    /**
-     * open in new tabs
-     * open in new private tabs
-     */
-    private void initSelectedPopup(){
-        this.selectedPopup = new MoPopUpMenu(this).setEntries(
-                new Pair<>(getString(R.string.open_in_tab), menuItem -> {
-                    MoOpenTab.openInNewTabs(HistoryActivity.this,historyRecyclerAdapter.getSelectedItems());
-                    goBackToTabActivity();
-                    return false;
-                }),
-                new Pair<>(getString(R.string.open_in_private_tab), menuItem -> {
-                    MoOpenTab.openInNewPrivateTabs(HistoryActivity.this,historyRecyclerAdapter.getSelectedItems());
-                    goBackToTabActivity();
-                    return false;
-                })
-        );
-    }
+
 
 
     private void initHistory() {
@@ -277,6 +256,11 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
         // we need to go back to tab activity in case we are inside another activity
         MoTabController.instance.openUrlInCurrentTab(this,h.getUrl(),true);
         goBackToTabActivity();
+    }
+
+    @Override
+    public void goBackToActivity() {
+        this.goBackToTabActivity();
     }
 
     private void goBackToTabActivity() {
