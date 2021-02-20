@@ -71,6 +71,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+
 //            if (request.getUrl().toString().equals(view.getUrl())) {
 //                MoLog.print("they are the same");
 //                forceReload();
@@ -221,12 +222,14 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         // showing inside overlay scroll bars
         setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        // dom storage
-        webSettings.setDomStorageEnabled(true);
-        // database
-        webSettings.setDatabaseEnabled(true);
+//        // dom storage
+//        webSettings.setDomStorageEnabled(true);
+//        // database
+//        webSettings.setDatabaseEnabled(true);
         // cookies
         MoWebUtils.acceptThirdPartyCookies(this);
+
+        clearCache(true);
 
 
     }
