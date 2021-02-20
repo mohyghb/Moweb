@@ -38,6 +38,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroups.MoConst
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoFindBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoViewUtils;
+import com.moofficial.moessentials.MoEssentials.MoUtils.MoKeyboardUtils.MoKeyboardUtils;
 import com.moofficial.moweb.MoActivities.Bookmark.BookmarkActivity;
 import com.moofficial.moweb.MoActivities.History.HistoryActivity;
 import com.moofficial.moweb.MoActivities.Download.MoDownloadActivity;
@@ -264,8 +265,6 @@ public class MoTabSearchBar extends MoConstraint {
         this.tab = tab;
         // sync their web view
         this.moWebView = tab.getMoWebView();
-        // sync the search text, so the tab's web view can update it as well
-        this.tab.setSearchText(this.searchText);
         // sync the progress bar with the tab
         this.tab.setProgressBar(this.progressBar);
         // make the progress bar progress equal to zero
@@ -349,6 +348,8 @@ public class MoTabSearchBar extends MoConstraint {
         searchText.setOnEditorActionListener((textView, i, keyEvent) -> {
             tab.search(textView.getText().toString());
             searchText.clearFocus();
+            // hide the keyboard when the search button is clicked
+            MoKeyboardUtils.hideSoftKeyboard(textView);
             return false;
         });
 
@@ -361,8 +362,9 @@ public class MoTabSearchBar extends MoConstraint {
                     @Override
                     public <T> void run(T... args) {
                         String suggestion = (String)args[0];
-                        if(suggestion != null){
+                        if(suggestion != null) {
                             tab.search(suggestion);
+                            MoKeyboardUtils.hideSoftKeyboard(searchText);
                         }
                     }
                 }).init();

@@ -94,7 +94,6 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
                 h.imageTextLogo
                         .showLogoHideText()
                         .setInner(ContextCompat.getDrawable(context,R.drawable.ic_baseline_folder_open_24));
-                MoLog.print("color value = " + h.imageTextLogo.getColor());
                 break;
         }
 

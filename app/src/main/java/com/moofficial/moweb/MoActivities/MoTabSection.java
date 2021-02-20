@@ -50,12 +50,13 @@ import com.moofficial.moweb.Moweb.MoWebview.MoWebError.MoSSLUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebError.MoWebErrorView;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebError.MoWebResourceErrorUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnReceivedError;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnUpdateUrlListener;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 import com.moofficial.moweb.R;
 
 @SuppressWarnings("ConstantConditions")
 public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
-        MoOnBackPressed, DownloadListener, MoOnReceivedError {
+        MoOnBackPressed, DownloadListener, MoOnReceivedError, MoOnUpdateUrlListener {
 
     private static final int MAIN_MENU_REQUEST_CODE = 0;
     public static final int GO_TO_TAB_ACTIVITY_REQUEST = 1;
@@ -207,6 +208,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
             return moTabSearchBar.isInSearch();
         });
         this.webView.setOnErrorReceived(this)
+                .setOnUpdateUrlListener(this)
                 .setDownloadListener(this);
     }
 
@@ -214,12 +216,6 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
         this.tab = MoTabController.instance.getCurrent();
         this.tab.init();
         this.tab.updateWebViewIfNotUpdated();
-        this.tab.setOnUpdateUrlListener(s -> {
-            updateTitle();
-            updateSubtitle();
-            updateToolbar();
-            this.moTabSearchBar.updateSecureWebsite(s);
-        });
     }
 
     /**
@@ -423,5 +419,17 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
     }
 
 
-
+    @Override
+    public void onUrlUpdate(String url, boolean isReload) {
+        if (url.equals(this.tab.getUrl())) {
+            return;
+        }
+        updateTitle();
+        updateSubtitle();
+        updateToolbar();
+        this.tab.updateUrl(url);
+        this.tab.saveTab();
+        this.moTabSearchBar.updateSecureWebsite(url);
+        this.moTabSearchBar.setTextSearch(url);
+    }
 }

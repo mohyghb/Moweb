@@ -50,11 +50,8 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     private MoURL url;
     private MoBitmap moBitmap = new MoTabBitmap().setOptimized(false);
     private MoTabType tabType = new MoTabType(MoTabType.TYPE_NORMAL);
-    private MoOnUpdateUrlListener onUpdateUrlListener = s -> {};
     private MoOnTabBookmarkChanged onTabBookmarkChanged = isBookmarked -> {};
     private Context context;
-    private View errorLayout;
-    private TextView searchText;
     private boolean captureImage = true;
     private boolean isSelected = false;
     private boolean wasInitAlready = false;
@@ -143,25 +140,6 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     }
 
 
-    public MoOnUpdateUrlListener getOnUpdateUrlListener() {
-        return onUpdateUrlListener;
-    }
-
-    public MoTab setOnUpdateUrlListener(MoOnUpdateUrlListener onUpdateUrlListener) {
-        this.onUpdateUrlListener = onUpdateUrlListener;
-        return this;
-    }
-
-    public View getErrorLayout() {
-        return errorLayout;
-    }
-
-    public MoTab setErrorLayout(View errorLayout) {
-        this.errorLayout = errorLayout;
-        return this;
-    }
-
-
 
     public MoTabId getTabId() {
         return tabId;
@@ -202,11 +180,10 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
 
 
     //@SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
-    protected void initWebView(){
+    protected void initWebView() {
         moWebView = new MoWebView(context);
         moWebView.load(webViewData,context);
         moWebView.setChromeClient(new MoChromeClient(this.context))
-                 .setOnUpdateUrlListener((url, isReload) -> updateUrl(url))
                  .neverOverScroll();
         moWebView.init();
         // todo we need to set the web view for tab type
@@ -216,10 +193,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
         this.moWebView.getChromeClient().setProgressBar(p);
     }
 
-    public MoTab setSearchText(TextView searchText) {
-        this.searchText = searchText;
-        return this;
-    }
+
 
     /**
      * bookmarks or un-bookmarks this url
@@ -285,18 +259,6 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     public void updateUrl(String u) {
         // update url
         this.url.setUrlString(u);
-        if(searchText!=null){
-            // remove focus from search
-            this.searchText.clearFocus();
-            // set the text for url
-            this.searchText.setText(url.getUrlString());
-            // hide keyboard
-            MoKeyboardUtils.hideSoftKeyboard(this.searchText);
-        }
-        // save the tab
-        saveTab();
-        // calling the listener
-        this.onUpdateUrlListener.onUpdate(u);
     }
 
 
@@ -308,10 +270,9 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
      *               we handle both cases)
      */
     public void search(String search) {
-        updateUrl(MoSearchEngine.instance.getURL(search));
         // load it inside the web view (do not use cache for loading any url)
         // we only use cache for pressing back or other changes
-        this.moWebView.loadUrl(url.getUrlString(),false);
+        this.moWebView.loadUrl(MoSearchEngine.instance.getURL(search),false);
         this.isUpToDate = true;
     }
 
@@ -519,9 +480,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     }
 
     public void removeListeners() {
-        this.setSearchText(null);
         this.setProgressBar(null);
-        this.setOnUpdateUrlListener(s -> {});
         this.setOnTabBookmarkChanged(isBookmarked -> {});
     }
 
