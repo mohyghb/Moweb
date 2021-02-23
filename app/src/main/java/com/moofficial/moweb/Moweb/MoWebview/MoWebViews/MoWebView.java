@@ -63,13 +63,6 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
 
 
         @Override
-        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-            onErrorReceived.onReceivedError(view,request,error);
-            MoLog.print("error = " + error.getDescription());
-        }
-
-
-        @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
 
 //            if (request.getUrl().toString().equals(view.getUrl())) {
