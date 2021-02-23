@@ -359,11 +359,11 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
 
     @Override
     public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-        this.webErrorView.normalError()
-                .setTitle(MoWebResourceErrorUtils.getTitle(error))
-                .setDescription("Unfortunately we are not able to load " + view.getUrl() +
-                        ". The error description is as follows: " + error.getDescription().toString());
-        this.showErrorView();
+//        this.webErrorView.normalError()
+//                .setTitle(MoWebResourceErrorUtils.getTitle(error))
+//                .setDescription("Unfortunately we are not able to load " + view.getUrl() +
+//                        ". The error description is as follows: " + error.getDescription().toString());
+//        this.showErrorView();
     }
 
     @Override
