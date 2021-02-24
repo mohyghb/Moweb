@@ -31,7 +31,6 @@ public class MoTabSuggestion {
     public MoTabSuggestion init() {
         adapter = new MoSuggestionsAdapter(new ArrayList<>(),context,this.onSuggestionClicked);
         recyclerView = MoRecyclerUtils.get(recyclerView,adapter)
-                            .setLayoutManagerType(MoRecyclerView.STAGGERED_GRID_LAYOUT_MANAGER)
                             .show();
         return this;
     }

@@ -10,8 +10,7 @@ public class MoSuggestions {
 
     // does not prevent the add method from adding
     // suggestions to the list
-    private int limit = 10;
-//    private List<String> suggestions = new ArrayList<>();
+    private int limit = 5;
     private ArrayList<MoSuggestion> suggestions=  new ArrayList<>();
     private HashSet<String> duplicates = new HashSet<>();
     // what they are searching
@@ -42,6 +41,8 @@ public class MoSuggestions {
      * since the suggestion list has reached to the limit
      */
     public boolean add(MoSuggestion s) {
+        if (reachedLimit())
+            return true;
         String key = s.getKey();
         if(!duplicates.contains(key)) {
             this.suggestions.add(s);
@@ -57,7 +58,10 @@ public class MoSuggestions {
      */
     public void addAll(MoSuggestions suggestions){
         for(MoSuggestion s: suggestions.suggestions){
-            add(s);
+            boolean b = add(s);
+            if (b) {
+                break;
+            }
         }
     }
 
