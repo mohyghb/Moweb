@@ -1,25 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/suggestion_constraint_layout"
+    android:id="@+id/suggestion_card_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground">
 
+    <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoLogo
+        android:id="@+id/suggestion_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        android:layout_margin="8dp"/>
+
     <TextView
         android:id="@+id/suggestion_text_view"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
         android:layout_margin="16dp"
-        android:singleLine="true"
-        android:requiresFadingEdge="horizontal"
         android:fadingEdgeLength="@dimen/mo_fading_edge_text"
-        app:layout_constraintTop_toTopOf="parent"
+        android:requiresFadingEdge="horizontal"
+        android:singleLine="true"
+        android:text="TextView"
+        app:layout_constraintTop_toTopOf="@id/suggestion_logo"
+        app:layout_constraintBottom_toBottomOf="@id/suggestion_logo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toEndOf="@id/suggestion_logo"
+        app:layout_constraintHorizontal_bias="0"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
