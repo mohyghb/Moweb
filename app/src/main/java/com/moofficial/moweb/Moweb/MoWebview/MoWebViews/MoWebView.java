@@ -398,6 +398,11 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         this.url = url;
     }
 
+    @Override
+    public String getTitle() {
+        String title = super.getTitle();
+        return title.isEmpty() ? getUrl() : title;
+    }
 
     /**
      * enables the desktop mode for this web view

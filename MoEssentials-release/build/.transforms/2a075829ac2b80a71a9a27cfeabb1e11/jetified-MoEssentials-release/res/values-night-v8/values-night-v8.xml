@@ -6,7 +6,7 @@
     <color name="error_color">#cf6679</color>
     <color name="mo_amber">#FFE082</color>
     <color name="mo_blue">#90CAF9</color>
-    <color name="mo_bottom_sheet_color">@color/MoBlack</color>
+    <color name="mo_bottom_sheet_color">@color/MaterialGrey</color>
     <color name="mo_card_color">@color/MaterialGrey</color>
     <color name="mo_cyan">#80DEEA</color>
     <color name="mo_deep_purple">#B39DDB</color>

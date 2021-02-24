@@ -25,6 +25,7 @@ import androidx.cardview.widget.CardView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoPermissions.MoPermission;
+import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoActivitySettings.MoActivitySettings;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoBottomSheet.MoBottomSheet;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoFragment.MoOnBackPressed;
@@ -177,8 +178,8 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
     }
 
 
-    private void updateTitle(){
-        setTitle(this.webView.getTitle());
+    private void updateTitle() {
+        setTitle(MoString.capFirst(this.webView.getTitle()));
     }
 
     private void updateSubtitle(){

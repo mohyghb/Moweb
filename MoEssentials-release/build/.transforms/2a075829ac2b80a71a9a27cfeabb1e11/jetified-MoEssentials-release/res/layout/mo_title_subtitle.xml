@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:fadingEdgeLength="@dimen/mo_fade_edge_text_view"
+        android:ellipsize="none"
         android:fontFamily="sans-serif-thin"
         android:gravity="center"
         android:requiresFadingEdge="horizontal"
