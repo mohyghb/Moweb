@@ -78,8 +78,6 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
         pressCard(holder, position);
         longPressCard(holder,position);
         applySelected(holder,position);
-        // todo  we can use this to make sure that the selected home page has a outline near it
-       // holder.coverLayout.setBackground(new MoDrawableBuilder(context).oval().primaryColor().build());
     }
 
     private void handleLogo(@NonNull MoHomePageViewHolder holder, MoHomePage homePage) {
@@ -88,14 +86,14 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
                 holder.moLogo.setOuter(new MoDrawableBuilder(this.context)
                         .oval()
                         .withColor(holder.moLogo.getColorRes())
-                        .build());
+                        .build()).setTextColor(R.color.MoBackground);
             } else {
                 holder.moLogo.setOuter(new MoDrawableBuilder(this.context)
                         .oval()
-                        .strokeWidth(2)
+                        .strokeWidth(3)
                         .strokeColor(holder.moLogo.getColorRes())
                         .withColor(R.color.transparent)
-                        .build());
+                        .build()).setTextColor(R.color.MoInverseColor);
             }
         }
     }
