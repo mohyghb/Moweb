@@ -22,14 +22,18 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
 
     private final String PAYLOAD_UPDATE_LOGO = "logo";
 
+    private Runnable onDeleteListener = ()->{};
+
 
     public MoHomePageRecyclerAdapter(Context context, List<MoHomePage> dataSet) {
         super(context,dataSet);
     }
 
 
-
-
+    public MoHomePageRecyclerAdapter setOnDeleteListener(Runnable onDeleteListener) {
+        this.onDeleteListener = onDeleteListener;
+        return this;
+    }
 
     private void activateThisHomePage(int position) {
         MoHomePageManager.activate(context, position);
@@ -55,6 +59,7 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
             // this is to activate the delete mode
             if(isNotSelecting()) {
                startSelecting(position);
+               onDeleteListener.run();
                notifyDataSetChanged();
             }
             return false;
