@@ -39,6 +39,7 @@
             android:layout_marginStart="16dp"
             android:fadingEdgeLength="@dimen/mo_fade_edge_text_view"
             android:requiresFadingEdge="horizontal"
+            android:ellipsize="none"
             android:singleLine="true"
             android:text="TextView"
             app:layout_constraintBottom_toBottomOf="parent"

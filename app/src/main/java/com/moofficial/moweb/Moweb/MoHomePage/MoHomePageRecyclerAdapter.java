@@ -22,14 +22,18 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
 
     private final String PAYLOAD_UPDATE_LOGO = "logo";
 
+    private Runnable onDeleteListener = ()->{};
+
 
     public MoHomePageRecyclerAdapter(Context context, List<MoHomePage> dataSet) {
         super(context,dataSet);
     }
 
 
-
-
+    public MoHomePageRecyclerAdapter setOnDeleteListener(Runnable onDeleteListener) {
+        this.onDeleteListener = onDeleteListener;
+        return this;
+    }
 
     private void activateThisHomePage(int position) {
         MoHomePageManager.activate(context, position);
@@ -55,6 +59,7 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
             // this is to activate the delete mode
             if(isNotSelecting()) {
                startSelecting(position);
+               onDeleteListener.run();
                notifyDataSetChanged();
             }
             return false;
@@ -78,8 +83,6 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
         pressCard(holder, position);
         longPressCard(holder,position);
         applySelected(holder,position);
-        // todo  we can use this to make sure that the selected home page has a outline near it
-       // holder.coverLayout.setBackground(new MoDrawableBuilder(context).oval().primaryColor().build());
     }
 
     private void handleLogo(@NonNull MoHomePageViewHolder holder, MoHomePage homePage) {
@@ -88,14 +91,14 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
                 holder.moLogo.setOuter(new MoDrawableBuilder(this.context)
                         .oval()
                         .withColor(holder.moLogo.getColorRes())
-                        .build());
+                        .build()).setTextColor(R.color.MoBackground);
             } else {
                 holder.moLogo.setOuter(new MoDrawableBuilder(this.context)
                         .oval()
-                        .strokeWidth(2)
+                        .strokeWidth(3)
                         .strokeColor(holder.moLogo.getColorRes())
                         .withColor(R.color.transparent)
-                        .build());
+                        .build()).setTextColor(R.color.MoInverseColor);
             }
         }
     }
