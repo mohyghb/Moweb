@@ -14,6 +14,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerVi
 import com.moofficial.moweb.MoActivities.MainMenu.MainMenuFragments.AbstractMainFragment;
 import com.moofficial.moweb.Moweb.MoTab.MoTabRecyclerAdapter;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoOnTabClickListener;
+import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.R;
 
 import java.util.List;
@@ -49,8 +50,9 @@ public class AbstractStateAdapter extends MoRecyclerAdapter<AbstractViewHolder,A
 
         MoRecyclerUtils.get(holder.recyclerView,item.getTabRecyclerAdapter())
                 .setSpanCount(2)
-                .setLayoutManagerType(MoRecyclerView.STAGGERED_GRID_LAYOUT_MANAGER)
+                .setLayoutManagerType(MoRecyclerView.GRID_LAYOUT_MANAGER)
                 .show();
+        item.setRecyclerView(holder.recyclerView);
     }
 
 
@@ -60,6 +62,14 @@ public class AbstractStateAdapter extends MoRecyclerAdapter<AbstractViewHolder,A
             ab[i] = dataSet.get(i).getTabRecyclerAdapter();
         }
         return ab;
+    }
+
+    /**
+     * scrolls to tab t
+     * @param t
+     */
+    public void scrollTo(MoTab t) {
+        this.dataSet.get(t.isPrivate() ? 1 : 0).scrollTo(t);
     }
 
 

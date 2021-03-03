@@ -230,12 +230,12 @@ public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed ,M
 
 
     public void onResume() {
-        // updating both pages
-        abstractStateAdapter.notifyAllSections();
         // updating the number of tabs
         updateNumberOfTabs();
         // set to current page
         setToCurrentPage();
+        // updating both pages
+        abstractStateAdapter.notifyAllSections();
     }
 
     public void updateNumberOfTabs() {
@@ -246,6 +246,7 @@ public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed ,M
         MoTab t = MoTabController.instance.getCurrent();
         if(t==null) return;
         pager2.setCurrentItem(t.isPrivate()?1:0);
+        this.abstractStateAdapter.scrollTo(t);
     }
 
 
