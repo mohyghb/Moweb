@@ -376,13 +376,14 @@ public class MoTabSearchBar extends MoConstraint {
      * @return this
      */
     public MoTabSearchBar hideSuggestions() {
-//        TransitionManager.beginDelayedTransition(bottomParentLayout);
         this.suggestion.hide();
         return this;
     }
 
     private void showSuggestions(MoSuggestions s) {
-        // TransitionManager.beginDelayedTransition(bottomParentLayout, new ChangeBounds());
+        if (!this.isInSearch) {
+            return;
+        }
         suggestion.show(s);
     }
 

@@ -432,5 +432,6 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
         this.tab.saveTab();
         this.moTabSearchBar.updateSecureWebsite(url);
         this.moTabSearchBar.setTextSearch(url);
+        this.moTabSearchBar.deactivateSearch();
     }
 }
