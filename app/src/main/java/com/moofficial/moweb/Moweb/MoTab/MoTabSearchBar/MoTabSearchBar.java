@@ -406,6 +406,11 @@ public class MoTabSearchBar extends MoConstraint {
                 @Override
                 public final <T> void run(T... args) {
                     synchronized (MoTabSearchBar.this) {
+                        if (!MoTabSearchBar.this.searchText.getText().toString().equals(charSequence.toString())) {
+                            // if the previous text we asked suggestion for is not wanted anymore, skip showing this
+                            // this fixes the problems with low speed internets
+                            return;
+                        }
                         // getting suggestion from search engine
                         MoSuggestions s = new MoSuggestions(search);
                         // getting suggestions from search engine
