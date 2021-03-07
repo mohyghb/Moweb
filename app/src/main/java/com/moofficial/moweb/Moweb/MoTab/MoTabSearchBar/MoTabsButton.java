@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroups.MoConstraint;
 import com.moofficial.moweb.R;
@@ -14,6 +15,7 @@ import com.moofficial.moweb.R;
 public class MoTabsButton extends MoConstraint {
 
     private TextView tabsButton;
+    private ConstraintLayout layout;
 
     public MoTabsButton(Context context) {
         super(context);
@@ -39,7 +41,7 @@ public class MoTabsButton extends MoConstraint {
     }
 
     public MoTabsButton setOnTabsButtonClicked(View.OnClickListener l){
-        this.tabsButton.setOnClickListener(l);
+        this.setOnClickListener(l);
         return this;
     }
 
@@ -65,6 +67,7 @@ public class MoTabsButton extends MoConstraint {
     @Override
     public void initViews() {
         this.tabsButton = findViewById(R.id.tabs_button);
+        this.layout = findViewById(R.id.tabs_button_layout);
         showDeactivated();
     }
 
