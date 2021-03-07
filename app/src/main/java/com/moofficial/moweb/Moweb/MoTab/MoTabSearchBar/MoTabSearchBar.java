@@ -143,7 +143,7 @@ public class MoTabSearchBar extends MoConstraint {
      * brings up suggestions
      * shows the search bar helper
      */
-    public void activateSearch() {
+    public synchronized void activateSearch() {
         if (this.isInSearch)
             return;
         TransitionManager.beginDelayedTransition(this.parentLayout);
@@ -159,7 +159,7 @@ public class MoTabSearchBar extends MoConstraint {
      * removes the suggestions
      * removes the helper
      */
-    public void deactivateSearch() {
+    public synchronized void deactivateSearch() {
         if (!this.isInSearch)
             return;
 
