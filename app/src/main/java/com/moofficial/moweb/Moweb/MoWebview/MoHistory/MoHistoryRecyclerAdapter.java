@@ -12,6 +12,7 @@ import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
 import com.moofficial.moweb.MoActivities.History.HistoryActivity;
@@ -94,6 +95,7 @@ public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolde
     private void addSelectedColor(@NonNull MoHistoryHolder holder, MoHistory history) {
         if (history.isTypeHistory()) {
             holder.moImageTextLogo.onSelectFill(history, false);
+            MoSelectableUtils.applySelectedDrawable(context, R.drawable.selected_item_highlight, holder.linearLayout, history);
         }
     }
 

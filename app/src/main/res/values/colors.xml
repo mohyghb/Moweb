@@ -57,4 +57,6 @@
     <color name="secure_site_color">#2E7D32</color>
     <color name="not_secure_site_color">#C62828</color>
 
+    <color name="selected_item">#8064B5F6</color>
+
 </resources>

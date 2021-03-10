@@ -3,17 +3,22 @@ package com.moofficial.moweb.Moweb.MoBookmark;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOverlay;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoDrawable.MoDrawableBuilder;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoDrawable.MoDrawableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableList;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoSelectableList;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoViewUtils;
 import com.moofficial.moweb.R;
 
 import java.util.List;
@@ -106,6 +111,7 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
     private void addSelectColorToHolder(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark) {
         if(!disableSelectColor) {
             h.imageTextLogo.onSelect(bookmark, bookmark.isFolder());
+            MoSelectableUtils.applySelectedDrawable(context, R.drawable.selected_item_highlight, h.layout, bookmark);
         }
     }
 

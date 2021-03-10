@@ -15,9 +15,11 @@
     app:layout_constraintTop_toTopOf="parent">
 
     <LinearLayout
+        android:id="@+id/history_tile_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        android:padding="8dp"
         android:gravity="center"
         android:orientation="horizontal">
 

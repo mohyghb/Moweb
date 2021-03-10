@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <corners android:radius="@dimen/mo_style_card_corner"/>
+
+    <solid android:color="@color/selected_item"/>
+
+
+</shape>

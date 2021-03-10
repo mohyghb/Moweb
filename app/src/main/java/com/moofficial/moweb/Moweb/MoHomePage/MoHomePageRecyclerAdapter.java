@@ -11,6 +11,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoDrawable.MoDrawableBuilde
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoDelete.MoDeletableInterface.MoListDeletable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
 import com.moofficial.moweb.R;
 
@@ -123,6 +124,7 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
 
     private void applySelected(@NonNull MoHomePageViewHolder holder, int position) {
         holder.moLogo.onSelectFill(dataSet.get(position), false);
+        MoSelectableUtils.applySelectedDrawable(context, R.drawable.selected_item_highlight, holder.constraintLayout, dataSet.get(position));
     }
 
 
