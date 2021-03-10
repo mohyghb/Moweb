@@ -178,6 +178,7 @@
     <string name="download_location_key">download_location_key</string>
     <string name="download_activity_failed_permission">We need access to your external storage in order to show or download links for you</string>
     <string name="download_activity_success_permission">Please click the download link again to start the download</string>
+    <string name="download_could_not_open_file">Could not open the file</string>
 
 
     <string name="set_as_default_key">set_as_default_key</string>

@@ -20,6 +20,7 @@ public class MoDownloadViewHolder extends RecyclerView.ViewHolder {
     public ConstraintLayout downloadLayout;
     public ProgressBar progressBar;
     public MoImageButton pause, cancel;
+    public ConstraintLayout constraintLayout;
 
     public MoDownloadViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -33,6 +34,7 @@ public class MoDownloadViewHolder extends RecyclerView.ViewHolder {
         this.pause = itemView.findViewById(R.id.download_holder_pause);
         this.cancel = itemView.findViewById(R.id.download_holder_cancel);
         this.speed = itemView.findViewById(R.id.download_holder_speed);
+        this.constraintLayout = itemView.findViewById(R.id.download_holder_layout_constraint);
     }
 
     public void showDownloadLayout() {

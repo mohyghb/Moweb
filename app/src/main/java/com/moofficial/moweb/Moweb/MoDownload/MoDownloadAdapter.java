@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkViewHolder;
@@ -166,6 +167,7 @@ public class MoDownloadAdapter extends MoSelectableAdapter<MoDownloadViewHolder,
 
     private void addSelectColorToHolder(@NonNull MoDownloadViewHolder h, MoDownload download) {
         h.logo.onSelectFill(download, true);
+        MoSelectableUtils.applySelectedDrawable(context, R.drawable.selected_item_highlight, h.constraintLayout, download);
     }
 
     private void handleLogo(@NonNull MoDownloadViewHolder holder, MoDownload download) {
