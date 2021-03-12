@@ -30,6 +30,11 @@ public class MoOpenTab {
         MoTabsManager.setCurrentTab(context,MoTabsManager.getLastTab(MoTabType.TYPE_NORMAL));
     }
 
+    public static <T extends MoTabOpenable> void openInNewTab(Context context, T l ) {
+        MoTabsManager.newTab(context,l.getSearchString(),null);
+        MoTabsManager.setCurrentTab(context,MoTabsManager.getLastTab(MoTabType.TYPE_NORMAL));
+    }
+
 
     /**
      *

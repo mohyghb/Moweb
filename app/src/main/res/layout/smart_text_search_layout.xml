@@ -1,27 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_sheet_linear_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/mo_rounded_background"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/bottom_sheet_linear_layout"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/bottom_sheet_title"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="TextView" />
+            android:layout_margin="16dp"
+            android:textSize="24sp"
+            android:layout_gravity="center"
+            style="@style/mo_fading_edge_text_view"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/bottom_sheet_copy"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            tools:text="Title"/>
+
+        <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoImageButton
+            android:id="@+id/bottom_sheet_copy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_content_copy_24"
+            android:layout_gravity="center"
+            app:layout_constraintTop_toTopOf="@id/bottom_sheet_title"
+            app:layout_constraintBottom_toBottomOf="@id/bottom_sheet_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/bottom_sheet_open"
+            app:layout_constraintHorizontal_bias="1.0"/>
+
+        <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoImageButton
+            android:id="@+id/bottom_sheet_open"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_open_in_new_24"
+            android:layout_gravity="center"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/bottom_sheet_title"
+            app:layout_constraintBottom_toBottomOf="@id/bottom_sheet_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@drawable/mo_rounded_background"
+        android:backgroundTint="@color/MoInverseColor"/>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_margin="0dp"
+        android:layout_marginBottom="8dp"
+        android:indeterminate="false"
+        android:padding="0dp"
+        android:progress="20"
+        android:visibility="invisible" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/nested_linear_bottom_sheet"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 
-            <LinearLayout
-                android:id="@+id/nested_linear_bottom_sheet"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical" />
 
-    </LinearLayout>
-</FrameLayout>
+</LinearLayout>
