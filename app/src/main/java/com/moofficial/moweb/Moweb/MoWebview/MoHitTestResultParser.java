@@ -31,13 +31,19 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoMenu
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoLogo;
 import com.moofficial.moweb.Moweb.MoDownload.MoDownloadManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
+import com.moofficial.moweb.Moweb.MoTab.MoOpenTab;
+import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoTabOpenable;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoWebManifest;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoWebClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoHitTestResult.MoHitTestResult;
+import com.moofficial.moweb.Moweb.MoWebview.MoHitTestResult.MoSmartTextSearchView;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 import com.moofficial.moweb.R;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MoHitTestResultParser {
 
@@ -170,19 +176,25 @@ public class MoHitTestResultParser {
             return false;
 
         WebView web = new WebView(context);
-        web.setWebChromeClient(new MoChromeClient(context));
+        MoSmartTextSearchView smartTextSearchView = new MoSmartTextSearchView(context);
+        MoBottomSheet bottomSheet = new MoBottomSheet(context);
+
+        smartTextSearchView.setTitle(MoString.capFirst(selectedText))
+                .add(web)
+                .onOpenNewTab(() -> {
+                    MoOpenTab.openInNewTab(context, () -> MoSearchEngine.instance.getURL(selectedText));
+                    bottomSheet.dismiss();
+                });
+
+        web.setWebChromeClient(new MoChromeClient(context).setProgressBar(smartTextSearchView.getProgressBar()));
         web.setWebViewClient(new MoWebClient());
         web.loadUrl(MoSearchEngine.instance.getURL(selectedText));
 
-        TextView tv = new TextView(context);
-        tv.setText(selectedText);
 
-        new MoBottomSheet(context)
-                .setPeekHeight(BOTTOM_SHEET_PEEK_HEIGHT)
+        bottomSheet.setPeekHeight(BOTTOM_SHEET_PEEK_HEIGHT)
                 .setDraggable(true)
                 .setFitToContents(false)
-                .add(web)
-                .addTitle(tv)
+                .setContentView(smartTextSearchView)
                 .build()
                 .show();
 
