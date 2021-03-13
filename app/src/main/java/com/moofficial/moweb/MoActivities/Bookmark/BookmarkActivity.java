@@ -120,7 +120,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
         MoPopUpMenu p = new MoPopUpMenu(this).setEntries(
                 new Pair<>(getString(R.string.share), menuItem -> performSelectionShare())
         );
-        if(noFolderHasBeenSelected()){
+        if(noFolderHasBeenSelected() && this.recyclerAdapter.onlyOneIsSelected()){
             p.setEntries(
                     new Pair<>(getString(R.string.open_in_tab), menuItem -> {
                         if(nothingIsSelected()) return false;

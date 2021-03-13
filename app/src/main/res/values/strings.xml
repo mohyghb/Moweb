@@ -31,8 +31,8 @@
     <string name="search_username_host">Search username or host …</string>
 
     <!--(dialog) pop up menu options-->
-    <string name="open_in_tab">Open in tab</string>
-    <string name="open_in_private_tab">Open in private tab</string>
+    <string name="open_in_tab">Open in new tab</string>
+    <string name="open_in_private_tab">Open in new private tab</string>
     <string name="copy_link_address">Copy link address</string>
     <string name="copy_link_text">Copy link text</string>
     <string name="download_link">Download link</string>

@@ -82,7 +82,7 @@ public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolde
                 MoLog.print(s + ", isempty = " + s.isEmpty() + ", charval = " + ((int)s.charAt(0)));
                 holder.moImageTextLogo
                         .setOuter()
-                        .setText(MoString.getSignature(history.getTitle()))
+                        .setText(history.getTitle())
                         .hideLogo()
                         .showText();
                 makeHistoryClickable(holder, history,position);
