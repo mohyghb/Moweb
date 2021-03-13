@@ -89,7 +89,7 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
             case MoBookmark.BOOKMARK:
                 h.url.setText(bookmark.getUrl());
                 h.title.setText(bookmark.getName());
-                h.imageTextLogo.setText(MoString.getSignature(bookmark.getName()))
+                h.imageTextLogo.setText(bookmark.getName())
                         .hideLogo()
                         .showText();
                 break;
@@ -98,7 +98,8 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
                 h.title.setText(bookmark.getName());
                 h.imageTextLogo
                         .showLogoHideText()
-                        .setInner(ContextCompat.getDrawable(context,R.drawable.ic_baseline_folder_open_24));
+                        .setInner(ContextCompat.getDrawable(context,R.drawable.ic_baseline_folder_open_24))
+                        .setText(bookmark.getName());
                 break;
         }
 

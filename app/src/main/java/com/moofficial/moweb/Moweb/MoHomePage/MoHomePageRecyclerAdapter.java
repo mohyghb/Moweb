@@ -78,7 +78,7 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
     @Override
     public void onBindViewHolder(@NonNull MoHomePageViewHolder holder, int position) {
         MoHomePage homePage = dataSet.get(position);
-        holder.moLogo.setText(MoString.getSignature(homePage.getUrl()));
+        holder.moLogo.setText(homePage.getUrl());
         holder.urlTextView.setText(homePage.getUrl());
         handleLogo(holder, homePage);
         pressCard(holder, position);
