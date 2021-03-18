@@ -6,6 +6,7 @@ import android.net.http.SslError;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -16,6 +17,7 @@ import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
 import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoWebClient;
@@ -27,7 +29,7 @@ import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnReceivedError;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnUpdateUrlListener;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebState;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebUtils;
-
+import com.moofficial.moweb.R;
 
 
 // a better web view!
@@ -215,15 +217,11 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         // showing inside overlay scroll bars
         setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-//        // dom storage
-//        webSettings.setDomStorageEnabled(true);
-//        // database
-//        webSettings.setDatabaseEnabled(true);
-        // cookies
-        MoWebUtils.acceptThirdPartyCookies(this);
+
+        // setting the cookie based on the setting of the user
+        MoWebUtils.updateThirdPartyCookies(this);
 
         clearCache(true);
-
 
     }
 

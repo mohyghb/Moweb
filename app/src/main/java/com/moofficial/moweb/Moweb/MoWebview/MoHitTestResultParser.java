@@ -34,6 +34,7 @@ import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoOpenTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoTabOpenable;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
+import com.moofficial.moweb.Moweb.MoWebFeatures.MoWebFeatures;
 import com.moofficial.moweb.Moweb.MoWebManifest;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoWebClient;
@@ -168,11 +169,10 @@ public class MoHitTestResultParser {
 
     /**
      * shows a web view for the text that they selected
-     * construction this is not working (the web view is not showing)
      */
     private boolean smartTextSearch(Context context) {
-        // don't show anything if there is no selected text
-        if(selectedText == null || selectedText.isEmpty())
+        // don't show anything if there is no selected text, or user has disabled this feature
+        if(!MoWebFeatures.snapSearchEnabled || selectedText == null || selectedText.isEmpty())
             return false;
 
         WebView web = new WebView(context);

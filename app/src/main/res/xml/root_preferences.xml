@@ -18,13 +18,6 @@
             app:entryValues="@array/theme_version_values"
             app:iconSpaceReserved="false"/>
 
-        <SwitchPreference
-            android:key="@string/auto_complete"
-            app:title="@string/auto_complete_title"
-            app:summary="@string/auto_complete_summary"
-            app:defaultValue="true"
-            app:iconSpaceReserved="false"/>
-
         <Preference android:key="@string/home_page"
             android:title="@string/home_page_title"
             android:summary="@string/home_page_summary"
@@ -47,10 +40,36 @@
             app:defaultValue="true"
             app:iconSpaceReserved="false"/>
 
-<!--        <Preference android:key="@string/passwords"-->
-<!--            android:title="@string/passwords_title"-->
-<!--            android:summary="@string/passwords_summary"-->
-<!--            app:iconSpaceReserved="false"/>-->
+        <SwitchPreference
+            android:key="@string/auto_complete"
+            app:title="@string/auto_complete_title"
+            app:summary="@string/auto_complete_summary"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"/>
+
+        <SwitchPreference
+            android:key="@string/cookies_enabled"
+            app:title="@string/cookies_title"
+            app:summary="@string/cookies_summary"
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Smart features" app:iconSpaceReserved="false">
+
+        <SwitchPreference
+            android:key="@string/snap_search_enabled"
+            app:title="@string/snap_search"
+            app:summary="@string/snap_search_summary"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"/>
+
+        <SwitchPreference
+            android:key="@string/one_hand_web_enabled"
+            app:title="@string/one_hand_web"
+            app:summary="@string/one_hand_web_summary"
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"/>
 
     </PreferenceCategory>
 

@@ -10,7 +10,14 @@ import android.webkit.WebView;
 
 import androidx.core.app.ActivityCompat;
 
+import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.moofficial.moessentials.MoEssentials.MoMultiThread.MoThread.MoOnThreadRun;
+import com.moofficial.moessentials.MoEssentials.MoMultiThread.MoThread.MoThread;
+import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
+import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
+import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
+import com.moofficial.moweb.R;
 
 public class MoWebUtils {
 
@@ -97,18 +104,38 @@ public class MoWebUtils {
         // we need to remove it from both mo_images and the cached images
     }
 
-    /**
-     * enables cookies for the web view
-     * that is passed as parameter
-     * @param v web view
-     */
-    public static void acceptThirdPartyCookies(WebView v) {
-        CookieManager.getInstance().acceptThirdPartyCookies(v);
+    public static void updateCookies(Context context) {
+        boolean accept = MoSharedPref.get(context)
+                .getBoolean(context.getString(R.string.cookies_enabled),false);
+        MoLog.print("general cookie has been set to " + accept);
+        CookieManager.getInstance().setAcceptCookie(accept);
+    }
+
+    public static void updateThirdPartyCookies(Context context) {
+        new MoThread<String>().doBackground(() -> {
+            CookieManager cookieManager = CookieManager.getInstance();
+            boolean accept = MoSharedPref.get(context)
+                    .getBoolean(context.getString(R.string.cookies_enabled),false);
+            MoLog.print("updating all cookies to " + accept);
+            MoTabsManager.getTabs().forEach((MoTab t) -> {
+                if(t!=null && t.getWebView() != null) {
+                    WebView v = t.getWebView();
+                    v.post(()-> cookieManager.setAcceptThirdPartyCookies(v, accept));
+                }
+            });
+            return null;
+        }).start();
+    }
+
+    public static void updateThirdPartyCookies(WebView v) {
+        CookieManager cookieManager = CookieManager.getInstance();
+        boolean accept = MoSharedPref.get(v.getContext())
+                .getBoolean(v.getContext().getString(R.string.cookies_enabled),false);
+        cookieManager.setAcceptThirdPartyCookies(v, accept);
     }
 
 
-
-
-
-
+    private static String run() {
+        return null;
+    }
 }

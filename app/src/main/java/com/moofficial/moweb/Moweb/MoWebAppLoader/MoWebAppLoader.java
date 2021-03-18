@@ -50,23 +50,9 @@ public class MoWebAppLoader {
                 e.printStackTrace();
             }
         });
-
-
-        // init auto-fills
-        MoGeneralAutoFillManager.load(context);
-        MoUserPassManager.load(context);
-
-
-//        loadJsScripts(context);
         MoDownloadManager.setUp(context);
 
     }
-
-
-
-//    private static void loadJsScripts(Context context) {
-//        MoJsInput.loadScript(context);
-//    }
 
 
 }
