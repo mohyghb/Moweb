@@ -102,7 +102,12 @@ public class MoTabSearchBar extends MoConstraint {
 
     @Override
     public void initViews() {
-
+        this.progressBar = findViewById(R.id.tab_progress);
+        this.moreTabButton = findViewById(R.id.more_bar_button);
+        this.shareButton = findViewById(R.id.tab_search_share);
+        this.copyButton = findViewById(R.id.tab_search_copy);
+        this.searchText = findViewById(R.id.search_bar_text);
+        this.tabsButton = findViewById(R.id.include);
     }
 
     public boolean isInSearch() {
@@ -120,7 +125,6 @@ public class MoTabSearchBar extends MoConstraint {
         initShareButton();
         initCopyButton();
         initSearchText();
-        initTabsButton();
         initMoSearchable();
         initSuggestion();
     }
@@ -146,7 +150,6 @@ public class MoTabSearchBar extends MoConstraint {
     public synchronized void activateSearch() {
         if (this.isInSearch)
             return;
-        TransitionManager.beginDelayedTransition(this.parentLayout);
         this.isInSearch = true;
         this.tabsButton.invisible();
         this.moreTabButton.setVisibility(View.INVISIBLE);
@@ -163,7 +166,6 @@ public class MoTabSearchBar extends MoConstraint {
         if (!this.isInSearch)
             return;
 
-        TransitionManager.beginDelayedTransition(this.parentLayout);
         this.isInSearch = false;
         hideSuggestions();
 
@@ -279,7 +281,6 @@ public class MoTabSearchBar extends MoConstraint {
      * chrome web client of the desired web view
      */
     private void initProgressBar(){
-        this.progressBar = this.findViewById(R.id.tab_progress);
         this.progressBar.setMax(100);
         this.progressBar.setIndeterminate(false);
 
@@ -292,7 +293,6 @@ public class MoTabSearchBar extends MoConstraint {
     @SuppressLint("ClickableViewAccessibility")
     private void initSearchText(){
         //search text
-        searchText = findViewById(R.id.search_bar_text);
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
@@ -430,22 +430,8 @@ public class MoTabSearchBar extends MoConstraint {
         }
     }
 
-
-
-    /**
-     * init the tab button
-     * when the user presses the tab button, we expect
-     * the app to take the user to main menu
-     * to show all of the web views
-     */
-    private void initTabsButton() {
-        this.tabsButton = findViewById(R.id.include);
-    }
-
-
     // to show more things to do with the web page
-    private void initMoreButton(){
-        this.moreTabButton = findViewById(R.id.more_bar_button);
+    private void initMoreButton() {
         this.moreTabButton.setOnClickListener(view -> {
             showPopupMenu();
             //moPopupWindow.show(view);
@@ -454,13 +440,11 @@ public class MoTabSearchBar extends MoConstraint {
 
 
     public void initShareButton() {
-        this.shareButton = findViewById(R.id.tab_search_share);
         this.shareButton.setOnClickListener((v)-> MoShareUtils.share(getContext(),
                 this.searchText.getText().toString()));
     }
 
     public void initCopyButton() {
-        this.copyButton = findViewById(R.id.tab_search_copy);
         this.copyButton.setOnClickListener((v)-> MoClipboardUtils.add(getContext(),
                 this.searchText.getText().toString()));
     }

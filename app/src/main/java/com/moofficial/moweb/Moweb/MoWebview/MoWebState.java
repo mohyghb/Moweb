@@ -52,8 +52,8 @@ public class MoWebState implements MoSavable, MoLoadable {
     @Override
     public void load(String s, Context context) {
         String[] com = MoFile.loadable(s);
-        this.scrollX = Integer.parseInt(com[0]);
-        this.scrollY = Integer.parseInt(com[1]);
+//        this.scrollX = Integer.parseInt(com[0]);
+//        this.scrollY = Integer.parseInt(com[1]);
     }
 
     @Override

@@ -469,8 +469,11 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
 
 
     // set of functions for different events of activity
-    public void onPause(){
+    public void onPause() {
+        if (moWebView == null)
+            return;
         this.moWebView.onPause();
+        MoLog.print("tab paused");
     }
     public void onResume(){
         this.moWebView.onResume();
