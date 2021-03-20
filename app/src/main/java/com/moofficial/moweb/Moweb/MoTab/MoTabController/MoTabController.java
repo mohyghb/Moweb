@@ -8,6 +8,9 @@ import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManager;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.moofficial.moessentials.MoEssentials.MoMultiThread.MoThread.MoOnThreadRun;
+import com.moofficial.moessentials.MoEssentials.MoMultiThread.MoThread.MoThread;
+import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
 import com.moofficial.moweb.Moweb.MoTab.MoTabId.MoTabId;
 import com.moofficial.moweb.Moweb.MoTab.MoTabType.MoTabType;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
@@ -48,8 +51,8 @@ public class MoTabController implements MoSavable, MoLoadable {
     public void setNewTab(Context context,MoTab newTab) {
         saveCurrentTabState(newTab);
         updateCurrent(newTab);
-        save(context);
         updateTabActivity.update();
+        save(context);
     }
 
     /**
@@ -207,11 +210,14 @@ public class MoTabController implements MoSavable, MoLoadable {
     }
 
     public void save(Context context) {
-        try {
-            MoFileManager.writeInternalFile(context,FILE_NAME,getData());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        new MoThread<Void>().doBackground(() -> {
+            try {
+                MoFileManager.writeInternalFile(context,FILE_NAME,getData());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }).begin();
     }
 
 }

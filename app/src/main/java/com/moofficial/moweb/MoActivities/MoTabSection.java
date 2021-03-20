@@ -18,10 +18,14 @@ import android.webkit.URLUtil;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoPermissions.MoPermission;
@@ -36,6 +40,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroupUtils.MoC
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoFindBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoWrappers.MoWrapperToolbar;
 import com.moofficial.moessentials.MoEssentials.MoUtils.MoKeyboardUtils.MoKeyboardUtils;
 import com.moofficial.moweb.Moweb.MoDownload.MoDownloadConfirmation;
 import com.moofficial.moweb.Moweb.MoDownload.MoDownloadManager;
@@ -56,7 +61,7 @@ import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 import com.moofficial.moweb.R;
 
 @SuppressWarnings("ConstantConditions")
-public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
+public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivity,
         MoOnBackPressed, DownloadListener, MoOnReceivedError, MoOnUpdateUrlListener {
 
     private static final int MAIN_MENU_REQUEST_CODE = 0;
@@ -77,16 +82,26 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
     private SslErrorHandler sslErrorHandler;
     private boolean isShowingError = false;
 
+    private CoordinatorLayout coordinatorLayout;
+    private AppBarLayout appBarLayout;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
+    private TextView title, subTitle;
+    private MoWrapperToolbar toolbar;
+
+
     public MoTabSection(Context context) {
         super(context);
+        initViews();
     }
 
     public MoTabSection(Context context, AttributeSet attrs) {
         super(context, attrs);
+        initViews();
     }
 
     public MoTabSection(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initViews();
     }
 
 
@@ -103,16 +118,29 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
     @Override
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        onAppbarLayoutHeightChanged(MoActivitySettings.MO_GOLDEN_RATIO);
+        // onAppbarLayoutHeightChanged(MoActivitySettings.MO_GOLDEN_RATIO);
+    }
+
+    private void initViews() {
+        inflate(getContext(), R.layout.tab, this);
+        this.coordinatorLayout = findViewById(R.id.tab_section_coordinator_layout);
+        this.collapsingToolbarLayout = findViewById(R.id.tab_section_collapsing_toolbar);
+        this.appBarLayout = findViewById(R.id.tab_section_appbar);
+        this.toolbar = new MoWrapperToolbar(findViewById(R.id.tab_section_toolbar), findViewById(R.id.tab_section_toolbar_linear_layout));
+        this.title = findViewById(R.id.mo_lib_title);
+        this.subTitle = findViewById(R.id.mo_lib_subtitle);
+        this.webCard = findViewById(R.id.tab_section_web_card);
+
+        MoFindBar findBar = new MoFindBar(getContext());
+        this.moTabSearchBar = findViewById(R.id.tab_section_search_bar);
+        this.moTabSearchBar.setParentLayout(coordinatorLayout).setMoFindBar(findBar);
     }
 
     protected void init() {
         MoAppbarUtils.snapNoToolbar(collapsingToolbarLayout);
-        removeNestedScrollView();
         appBarLayout.setExpanded(false);
         initSearchBar();
         initToolbar();
-        initWebCardView();
         MoTabController.instance.setUpdateTabActivity(this);
         initPermission();
         initWebError();
@@ -121,10 +149,10 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
 
     private void initWebError() {
         this.webErrorView = new MoWebErrorView(getContext());
-        this.coordinatorLayout.addView(this.webErrorView, MoCoordinatorUtils.getScrollingParams(
-                new MoPaddingBuilder(getContext())
-                        .setBottom(8)
-                        .asDp()));
+//        this.coordinatorLayout.addView(this.webErrorView, MoCoordinatorUtils.getScrollingParams(
+//                new MoPaddingBuilder(getContext())
+//                        .setBottom(8)
+//                        .asDp()));
     }
 
     private void initPermission() {
@@ -141,6 +169,7 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
      */
     @Override
     public void update() {
+        MoLog.print("updating tab section");
         if(MoTabController.instance.isOutOfOptions()) {
             // if we are out of options, make a new tab
             MoTabsManager.addTab(getContext(), MoSearchEngine.instance.homePage(),false);
@@ -179,20 +208,20 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
 
 
     private void updateTitle() {
-        setTitle(MoString.capFirst(this.webView.getTitle()));
+        this.title.setText(MoString.capFirst(this.webView.getTitle()));
     }
 
     private void updateSubtitle(){
-        setSubTitle(this.webView.getUrl());
+        this.subTitle.setText(this.webView.getUrl());
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void updateWebView() {
+        webCard.removeAllViews();
         this.webView = tab.getMoWebView();
         MoTabUtils.transitionToInTabMode(webView,webCard,
                 new CardView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        this.webView.onResume();
         this.webView.setOnLongClickListener(view -> {
             webView.getHitTestResultParser().createDialogOrSmartText(getContext());
             return false;
@@ -225,13 +254,8 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
      * of the tab by changing its fields
      */
     private void initSearchBar() {
-        MoFindBar findBar = new MoFindBar(getContext());
-        this.moTabSearchBar = new MoTabSearchBar(getContext())
-                .setParentLayout(coordinatorLayout)
-                .setBottomParentLayout(linearBottom.getLinearLayout())
-                .setMoFindBar(findBar);
+
         this.moTabSearchBar.init();
-        linearBottom.setupMultipleBars(moTabSearchBar, moTabSearchBar, findBar);
     }
 
     /**
@@ -242,14 +266,6 @@ public class MoTabSection extends MoBasicLayout implements MoUpdateTabActivity,
         this.moToolBar = new MoToolBar(getContext());
         // set it as a toolbar
         toolbar.addToolbar(this.moToolBar);
-    }
-
-    private void initWebCardView() {
-        webCard = new MoCardView(getContext()).makeCardMediumRound().makeTransparent().removeElevation();
-        coordinatorLayout.addView(webCard,MoCoordinatorUtils.getScrollingParams(
-                new MoPaddingBuilder(getContext())
-                .setBottom(8)
-                .asDp()));
     }
 
     private void updateToolbar() {

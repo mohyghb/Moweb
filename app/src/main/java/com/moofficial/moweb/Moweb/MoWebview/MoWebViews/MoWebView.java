@@ -205,6 +205,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
     private void initWebView() {
         setWebViewClient(this.client);
         setWebChromeClient(this.chromeClient);
+        setLayerType(View.LAYER_TYPE_HARDWARE, null);
         WebSettings webSettings = getSettings();
         webSettings.setJavaScriptEnabled(true);
         // allowing pinch zoom
@@ -215,10 +216,10 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         // showing inside overlay scroll bars
         setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-//        // dom storage
-//        webSettings.setDomStorageEnabled(true);
-//        // database
-//        webSettings.setDatabaseEnabled(true);
+        // dom storage
+        webSettings.setDomStorageEnabled(true);
+        // database
+        webSettings.setDatabaseEnabled(true);
         // cookies
         MoWebUtils.acceptThirdPartyCookies(this);
 
@@ -377,7 +378,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
      * @param loadFromCache whether we should load this url
      *                      from cache or not
      */
-    public void loadUrl(String url,boolean loadFromCache){
+    public void loadUrl(String url,boolean loadFromCache) {
         loadUrl(loadFromCache?url:MoUrlUtils.makeUrlUnique(url));
     }
 

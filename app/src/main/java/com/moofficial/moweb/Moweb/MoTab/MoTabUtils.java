@@ -12,12 +12,8 @@ public class MoTabUtils {
 
     @SuppressLint("ClickableViewAccessibility")
     public static void transitionToInTabMode(MoWebView m, ViewGroup viewGroup, ViewGroup.LayoutParams lp){
-        // todo, on touch listener needs to be updated
-        m.setOnTouchListener((view, motionEvent) -> false);
-        m.setNestedScrollingEnabled(true);
         m.moveWebViewTo(viewGroup, lp);
-        m.setLayerType(View.LAYER_TYPE_HARDWARE,null);
-        m.resumeTimers();
+        m.onResume();
     }
 
     @SuppressLint("ClickableViewAccessibility")
