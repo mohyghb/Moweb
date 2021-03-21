@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.Group;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -60,7 +61,6 @@ public class MoTabSearchBar extends MoConstraint {
     private ImageButton moreTabButton,copyButton,shareButton;
     private EditText searchText;
     private MoFindBar moFindBar;
-    //private MoPopupWindow moPopupWindow;
     private MoBottomSheet bottomSheet;
     private MoSearchable moSearchable;
     private MoTabSuggestion suggestion;
@@ -69,19 +69,8 @@ public class MoTabSearchBar extends MoConstraint {
     private MoTab tab;
     private boolean isInSearch = false;
 
-    // this is used as the parent layout to be dimmed
-    // when the user is typing something
-    // to make it look less distracting
-    // this should be the layout that contains the web view as well
-    // also we run animations on this layout as well
-    @NonNull private ViewGroup parentLayout;
-    private ViewGroup bottomParentLayout;
+    private Group normalGroup, searchGroup;
 
-    // needed to make sure that the background is dimmed only once
-    // and not multiple times when the user is typing
-    private MoWorker dimBackgroundWorker = new MoWorker();
-          //  .setTask(() -> MoViewUtils.dim(parentLayout))
-           // .setUndoTask(()-> MoViewUtils.clearDim(parentLayout));
 
     public MoTabSearchBar(Context context) {
         super(context);
@@ -108,6 +97,8 @@ public class MoTabSearchBar extends MoConstraint {
         this.copyButton = findViewById(R.id.tab_search_copy);
         this.searchText = findViewById(R.id.search_bar_text);
         this.tabsButton = findViewById(R.id.include);
+        this.normalGroup = findViewById(R.id.normal_search_bar_group);
+        this.searchGroup = findViewById(R.id.searching_search_bar_group);
     }
 
     public boolean isInSearch() {
@@ -129,10 +120,6 @@ public class MoTabSearchBar extends MoConstraint {
         initSuggestion();
     }
 
-    public MoTabSearchBar setParentLayout(ViewGroup parentLayout) {
-        this.parentLayout = parentLayout;
-        return this;
-    }
 
 
 
@@ -151,10 +138,8 @@ public class MoTabSearchBar extends MoConstraint {
         if (this.isInSearch)
             return;
         this.isInSearch = true;
-        this.tabsButton.invisible();
-        this.moreTabButton.setVisibility(View.INVISIBLE);
-        this.shareButton.setVisibility(View.VISIBLE);
-        this.copyButton.setVisibility(View.VISIBLE);
+        this.normalGroup.setVisibility(View.INVISIBLE);
+        this.searchGroup.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -169,10 +154,8 @@ public class MoTabSearchBar extends MoConstraint {
         this.isInSearch = false;
         hideSuggestions();
 
-        this.tabsButton.visible();
-        this.moreTabButton.setVisibility(View.VISIBLE);
-        this.shareButton.setVisibility(View.GONE);
-        this.copyButton.setVisibility(View.GONE);
+        this.normalGroup.setVisibility(View.VISIBLE);
+        this.searchGroup.setVisibility(View.GONE);
         this.searchText.clearFocus();
         this.searchText.setText(this.moWebView.getUrl());
     }
@@ -196,6 +179,8 @@ public class MoTabSearchBar extends MoConstraint {
         return this;
     }
 
+
+
     public ProgressBar getProgressBar() {
         return progressBar;
     }
@@ -211,11 +196,6 @@ public class MoTabSearchBar extends MoConstraint {
 
     public MoTabSearchBar setMoreTabButton(ImageButton moreTabButton) {
         this.moreTabButton = moreTabButton;
-        return this;
-    }
-
-    public MoTabSearchBar setBottomParentLayout(ViewGroup bottomParentLayout) {
-        this.bottomParentLayout = bottomParentLayout;
         return this;
     }
 
@@ -303,8 +283,6 @@ public class MoTabSearchBar extends MoConstraint {
                     // only show suggestions when user is actually editing it
                     showSuggestions(charSequence);
                     isInSearch = true;
-                    // adding dim effect
-                    dimBackgroundWorker.perform();
                 }
             }
 
@@ -496,7 +474,7 @@ public class MoTabSearchBar extends MoConstraint {
      * connects find bar and mo web view functionality
      */
     private void initMoSearchable(){
-        this.moSearchable = new MoSearchable(getContext(),parentLayout){
+        this.moSearchable = new MoSearchable(getContext(),this){
             @Override
             public void onUpFindPressed() {
                 moWebView.findPrevious();

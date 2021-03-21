@@ -205,7 +205,6 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
     private void initWebView() {
         setWebViewClient(this.client);
         setWebChromeClient(this.chromeClient);
-        setLayerType(View.LAYER_TYPE_HARDWARE, null);
         WebSettings webSettings = getSettings();
         webSettings.setJavaScriptEnabled(true);
         // allowing pinch zoom
@@ -216,12 +215,9 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         // showing inside overlay scroll bars
         setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        // dom storage
-        webSettings.setDomStorageEnabled(true);
-        // database
-        webSettings.setDatabaseEnabled(true);
-        // cookies
-        MoWebUtils.acceptThirdPartyCookies(this);
+
+        // setting the cookie based on the setting of the user
+        MoWebUtils.updateThirdPartyCookies(this);
 
         clearCache(true);
 

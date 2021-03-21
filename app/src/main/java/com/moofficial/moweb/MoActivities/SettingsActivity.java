@@ -21,7 +21,9 @@ import com.moofficial.moweb.MoActivities.History.SavedPasswordsActivity;
 import com.moofficial.moweb.MoSettingsEssentials.MoTheme.MoTheme;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
+import com.moofficial.moweb.Moweb.MoWebFeatures.MoWebFeatures;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebUtils;
 import com.moofficial.moweb.R;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -148,6 +150,13 @@ public class SettingsActivity extends AppCompatActivity {
                 MoSearchAutoComplete.updateSearchAutoComplete(activity);
             }else if(s.equals(string(R.string.history_enabled))){
                 MoHistoryManager.updateSharedPref(activity);
+            } else if (s.equals(string(R.string.cookies_enabled))) {
+                MoWebUtils.updateCookies(activity);
+                MoWebUtils.updateThirdPartyCookies(activity);
+            } else if (s.equals(string(R.string.snap_search_enabled))) {
+                MoWebFeatures.updateSnapSearch(activity);
+            } else if (s.equals(string(R.string.one_hand_web_enabled))) {
+                MoWebFeatures.updateOneHand(activity);
             }
         }
 

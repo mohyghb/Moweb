@@ -51,6 +51,7 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar.MoTabSearchBar;
 import com.moofficial.moweb.Moweb.MoTab.MoTabUtils;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
+import com.moofficial.moweb.Moweb.MoWebFeatures.MoWebFeatures;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebError.MoSSLBottomSheet;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebError.MoSSLUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebError.MoWebErrorView;
@@ -118,7 +119,14 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
     @Override
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // onAppbarLayoutHeightChanged(MoActivitySettings.MO_GOLDEN_RATIO);
+        MoAppbarUtils.onAppbarLayoutHeightChanged(getContext(), this.appBarLayout, MoActivitySettings.MO_GOLDEN_RATIO);
+    }
+
+    public void onResume() {
+        this.updateBookmark();
+        if(MoWebFeatures.oneHandEnabled) {
+
+        }
     }
 
     private void initViews() {
@@ -130,10 +138,9 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
         this.title = findViewById(R.id.mo_lib_title);
         this.subTitle = findViewById(R.id.mo_lib_subtitle);
         this.webCard = findViewById(R.id.tab_section_web_card);
-
-        MoFindBar findBar = new MoFindBar(getContext());
         this.moTabSearchBar = findViewById(R.id.tab_section_search_bar);
-        this.moTabSearchBar.setParentLayout(coordinatorLayout).setMoFindBar(findBar);
+        this.moTabSearchBar.setMoFindBar(findViewById(R.id.tab_search_bar_find_bar));
+        this.webErrorView = findViewById(R.id.tab_section_error_view);
     }
 
     protected void init() {
@@ -143,16 +150,7 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
         initToolbar();
         MoTabController.instance.setUpdateTabActivity(this);
         initPermission();
-        initWebError();
         update();
-    }
-
-    private void initWebError() {
-        this.webErrorView = new MoWebErrorView(getContext());
-//        this.coordinatorLayout.addView(this.webErrorView, MoCoordinatorUtils.getScrollingParams(
-//                new MoPaddingBuilder(getContext())
-//                        .setBottom(8)
-//                        .asDp()));
     }
 
     private void initPermission() {
@@ -208,7 +206,9 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
 
 
     private void updateTitle() {
-        this.title.setText(MoString.capFirst(this.webView.getTitle()));
+        String title = MoString.capFirst(this.webView.getTitle());
+        MoLog.print("title = " + title);
+        this.title.setText(title.isEmpty() ? "empty title" : title.trim());
     }
 
     private void updateSubtitle(){

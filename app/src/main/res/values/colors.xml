@@ -48,7 +48,7 @@
 
 
 
-    <color name="search_bar_color">@color/transparent</color>
+    <color name="search_bar_color">#F3FAFF</color>
     <color name="search_text_background">#F5F5F5</color>
 
 

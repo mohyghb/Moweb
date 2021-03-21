@@ -5,7 +5,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:colorBackground">
+    >
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/normal_search_bar_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="include,more_bar_button"/>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/searching_search_bar_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="tab_search_bar_suggestion_card_recycler,tab_search_share,tab_search_copy"/>
+
 
     <com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView
         android:id="@+id/tab_search_bar_suggestion_card_recycler"
@@ -73,7 +87,7 @@
         android:fadingEdgeLength="@dimen/mo_fading_edge_text"
         android:hint="@string/tab_search_hint"
         android:imeOptions="actionSearch"
-        android:inputType="textWebEditText"
+        android:inputType="textWebEditText|textNoSuggestions"
         android:padding="8dp"
         android:layout_marginBottom="8dp"
         app:layout_goneMarginTop="12dp"
@@ -109,30 +123,26 @@
         app:layout_constraintTop_toBottomOf="@id/tab_search_bar_suggestion_card_recycler"
         app:layout_constraintVertical_bias="1.0" />
 
-    <ImageButton
+    <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoImageButton
         android:id="@+id/tab_search_copy"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="@dimen/mo_image_button_padding"
+        android:layout_height="0dp"
         android:src="@drawable/ic_baseline_content_copy_24"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/search_bar_text"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/search_bar_text"
-        app:layout_constraintTop_toTopOf="@id/search_bar_text"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@id/tab_search_bar_suggestion_card_recycler"
+        app:layout_constraintEnd_toStartOf="@id/tab_search_share" />
 
-    <ImageButton
+    <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoImageButton
         android:id="@+id/tab_search_share"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="@dimen/mo_image_button_padding"
+        android:layout_height="0dp"
         android:src="@drawable/ic_baseline_share_24"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/search_bar_text"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/search_bar_text"
+        app:layout_constraintTop_toBottomOf="@id/tab_search_bar_suggestion_card_recycler"
         app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

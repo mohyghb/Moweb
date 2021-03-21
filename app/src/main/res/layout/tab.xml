@@ -5,8 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tab_section_coordinator_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_collapseMode="parallax">
+    android:layout_height="match_parent">
+
+
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/tab_section_appbar"
@@ -31,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="32dp"
-                android:layout_marginEnd="32dp" />
+                android:layout_marginEnd="32dp"/>
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/tab_section_toolbar"
@@ -68,12 +69,23 @@
         app:cardElevation="0dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-    <View
+    <com.moofficial.moweb.Moweb.MoWebview.MoWebError.MoWebErrorView
+        android:id="@+id/tab_section_error_view"
         android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:background="@drawable/shadow_search_bar"
-        app:layout_anchor="@id/tab_section_search_bar"
-        android:translationY="-2.5dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+    <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoFindBar
+        android:id="@+id/tab_search_bar_find_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="?android:colorBackground"
+        android:elevation="20dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:visibility="gone"
         app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"/>
 
     <com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar.MoTabSearchBar
@@ -82,7 +94,10 @@
         android:layout_height="wrap_content"
         app:layout_anchorGravity="bottom"
         android:layout_gravity="bottom"
+        android:background="?android:colorBackground"
         app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"/>
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

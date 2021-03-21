@@ -5,7 +5,7 @@
     android:id="@+id/mo_error_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/MoWhite">
+    android:background="@color/error_color">
 
 
     <TextView
@@ -31,7 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textColor="@color/MoBackground"
-        android:textSize="20sp"
+        android:textSize="18sp"
+        android:maxLines="8"
         app:layout_constraintBottom_toTopOf="@id/mo_error_advanced_button"
         app:layout_constraintEnd_toEndOf="@id/mo_error_title"
         app:layout_constraintStart_toStartOf="@id/mo_error_title"
@@ -44,12 +45,12 @@
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
         android:text="@string/advanced"
         android:textColor="@color/MoBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mo_error_description"
         app:layout_constraintEnd_toEndOf="@id/mo_error_title"
-        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="@id/mo_error_title"
         app:strokeColor="@color/MoBackground" />
 

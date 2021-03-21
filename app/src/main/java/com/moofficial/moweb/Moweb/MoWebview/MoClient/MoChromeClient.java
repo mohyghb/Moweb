@@ -67,24 +67,24 @@ public class MoChromeClient extends WebChromeClient {
     }
 
 
-    @Override
-    public void onPermissionRequest(PermissionRequest request) {
-        MoPermission permission = new MoPermission((Activity) context).setPermissions(request.getResources());
-        if(permission.checkAndRequestPermissions()){
-            request.grant(request.getResources());
-        }
-    }
-
-    @Override
-    public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
-        MoPermission permission = new MoPermission((Activity)context)
-                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION);
-        if(permission.checkAndRequestPermissions()){
-            callback.invoke(origin,true,false);
-        }else{
-            callback.invoke(origin,false,false);
-        }
-    }
+//    @Override
+//    public void onPermissionRequest(PermissionRequest request) {
+//        MoPermission permission = new MoPermission((Activity) context).setPermissions(request.getResources());
+//        if(permission.checkAndRequestPermissions()){
+//            request.grant(request.getResources());
+//        }
+//    }
+//
+//    @Override
+//    public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+//        MoPermission permission = new MoPermission((Activity)context)
+//                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION);
+//        if(permission.checkAndRequestPermissions()){
+//            callback.invoke(origin,true,false);
+//        }else{
+//            callback.invoke(origin,false,false);
+//        }
+//    }
 
 
 
