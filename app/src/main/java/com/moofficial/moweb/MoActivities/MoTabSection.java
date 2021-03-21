@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.net.http.SslError;
-import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,17 +26,14 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.moofficial.moessentials.MoEssentials.MoClipboard.MoClipboardUtils;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoPermissions.MoPermission;
 import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoActivitySettings.MoActivitySettings;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoBottomSheet.MoBottomSheet;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoFragment.MoOnBackPressed;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoBasicLayout;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewBuilder.MoPaddingBuilder;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroupUtils.MoAppbar.MoAppbarUtils;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroupUtils.MoCoordinatorUtils;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoFindBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoWrappers.MoWrapperToolbar;
@@ -55,7 +51,6 @@ import com.moofficial.moweb.Moweb.MoWebFeatures.MoWebFeatures;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebError.MoSSLBottomSheet;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebError.MoSSLUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebError.MoWebErrorView;
-import com.moofficial.moweb.Moweb.MoWebview.MoWebError.MoWebResourceErrorUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnReceivedError;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnUpdateUrlListener;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
@@ -63,7 +58,7 @@ import com.moofficial.moweb.R;
 
 @SuppressWarnings("ConstantConditions")
 public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivity,
-        MoOnBackPressed, DownloadListener, MoOnReceivedError, MoOnUpdateUrlListener {
+        MoOnBackPressed, DownloadListener, MoOnReceivedError, MoOnUpdateUrlListener, MoTabSearchBar.TabSearchBarInteractor {
 
     private static final int MAIN_MENU_REQUEST_CODE = 0;
     public static final int GO_TO_TAB_ACTIVITY_REQUEST = 1;
@@ -81,6 +76,7 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
     private MoWebErrorView webErrorView;
     private Activity activity;
     private SslErrorHandler sslErrorHandler;
+    private SslError sslError;
     private boolean isShowingError = false;
 
     private CoordinatorLayout coordinatorLayout;
@@ -140,7 +136,12 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
         this.webCard = findViewById(R.id.tab_section_web_card);
         this.moTabSearchBar = findViewById(R.id.tab_section_search_bar);
         this.moTabSearchBar.setMoFindBar(findViewById(R.id.tab_search_bar_find_bar));
+        this.moTabSearchBar.setInteractor(this);
         this.webErrorView = findViewById(R.id.tab_section_error_view);
+
+        // copying url to clipboard when user clicks on the title
+        this.title.setOnClickListener(this::onTitleSubtitleClickListener);
+        this.subTitle.setOnClickListener(this::onTitleSubtitleClickListener);
     }
 
     protected void init() {
@@ -182,6 +183,11 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
             updateToolbar();
             hideErrorView();
         }
+    }
+
+    private void onTitleSubtitleClickListener(View v) {
+        MoClipboardUtils.add(getContext(),
+                this.tab.getUrl(), getContext().getString(R.string.url_copied_clipboard));
     }
 
 
@@ -303,11 +309,16 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
                 .setTextSearch(tab.getUrl())
                 .setOnTabsButtonClicked(view -> {
                     // remove the ssl handler in case one exist
-                    this.sslErrorHandler = null;
+                    setSSL(null, null);
                     MoKeyboardUtils.hideSoftKeyboard(view);
                     onTabsButtonPressed();
                 })
                 .setNumberOfTabs(tab.isPrivate()?MoTabsManager.sizePrivate():MoTabsManager.size());
+    }
+
+    private void setSSL(SslErrorHandler o, SslError o2) {
+        this.sslErrorHandler = o;
+        this.sslError = o2;
     }
 
     /**
@@ -385,7 +396,7 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
 
     @Override
     public void onSSLErrorReceived(WebView view, SslErrorHandler handler, SslError error) {
-        this.sslErrorHandler = handler;
+        setSSL(handler, error);
         this.webErrorView.sslError();
         this.webErrorView.setTitle(MoSSLUtils.getTitle(error));
         this.webErrorView.setDescription(error.toString());
@@ -432,7 +443,7 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
         if (this.sslErrorHandler != null) {
             this.sslErrorHandler.cancel();
         }
-        this.sslErrorHandler = null;
+        setSSL(null, null);
     }
 
 
@@ -449,5 +460,10 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
         this.moTabSearchBar.setTextSearch(url);
         this.moTabSearchBar.deactivateSearch();
         this.tab.saveTab();
+    }
+
+    @Override
+    public SslError getSSLError() {
+        return this.sslError;
     }
 }

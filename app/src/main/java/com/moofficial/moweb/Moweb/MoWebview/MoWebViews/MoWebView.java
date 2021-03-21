@@ -2,6 +2,7 @@ package com.moofficial.moweb.Moweb.MoWebview.MoWebViews;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.net.http.SslCertificate;
 import android.net.http.SslError;
 import android.util.AttributeSet;
 import android.view.View;
@@ -220,6 +221,8 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         MoWebUtils.updateThirdPartyCookies(this);
 
         clearCache(true);
+
+        SslCertificate certificate = getCertificate();
 
 
     }

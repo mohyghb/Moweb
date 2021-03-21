@@ -3,6 +3,7 @@ package com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.net.http.SslError;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.transition.ChangeBounds;
@@ -51,6 +52,8 @@ import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoTabSuggestion;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebError.MoSSLCertificateView;
+import com.moofficial.moweb.Moweb.MoWebview.MoWebError.MoSecurityInformationView;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 import com.moofficial.moweb.R;
 
@@ -70,6 +73,7 @@ public class MoTabSearchBar extends MoConstraint {
     private boolean isInSearch = false;
 
     private Group normalGroup, searchGroup;
+    private TabSearchBarInteractor interactor;
 
 
     public MoTabSearchBar(Context context) {
@@ -120,8 +124,10 @@ public class MoTabSearchBar extends MoConstraint {
         initSuggestion();
     }
 
-
-
+    public MoTabSearchBar setInteractor(TabSearchBarInteractor interactor) {
+        this.interactor = interactor;
+        return this;
+    }
 
     @Override
     public int[] getAttrs() {
@@ -298,8 +304,11 @@ public class MoTabSearchBar extends MoConstraint {
             if (MotionEvent.ACTION_DOWN == event.getAction()) {
                 if(event.getRawX() <= (searchText.getLeft() +
                         searchText.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width())) {
-                    // todo show the security info to the user
-                    MoLog.print("clicked!!!");
+
+                    new MoSecurityInformationView(getContext())
+                            .sync(this.moWebView, this.interactor.getSSLError())
+                            .show();
+
                     return true;
                 }
             }
@@ -434,17 +443,16 @@ public class MoTabSearchBar extends MoConstraint {
     private void showPopupMenu() {
         View[] views = new MoMenuBuilder(getContext())
                 .rowFill(b -> {
-                    b.icon(R.drawable.ic_baseline_refresh_24,(v)-> moWebView.forceReload())
-                            .icon(tab.urlIsBookmarked()?
-                                            R.drawable.ic_baseline_bookmark_24:
-                                            R.drawable.ic_baseline_bookmark_border_24,
-                                    (v)-> tab.bookmarkTheTab())
-                            .icon(R.drawable.ic_baseline_chevron_left_24, (v) -> moWebView.goBackIfYouCan())
-                            .icon(R.drawable.ic_baseline_chevron_right_24, (v)-> moWebView.goForwardIfYouCan());
+                    b.icon(R.drawable.ic_baseline_home_24, v -> tab.goToHomepage())
+                     .icon(R.drawable.ic_baseline_refresh_24,(v)-> moWebView.forceReload())
+                     .icon(tab.urlIsBookmarked()?
+                                    R.drawable.ic_baseline_bookmark_24:
+                                    R.drawable.ic_baseline_bookmark_border_24,
+                            (v)-> tab.bookmarkTheTab())
+                     .icon(R.drawable.ic_baseline_chevron_right_24, (v)-> moWebView.goForwardIfYouCan());
                 })
                 .text(R.string.find_in_page,R.drawable.ic_baseline_search_24,view -> moSearchable.activateSpecialMode())
                 .text(R.string.bookmark_title,R.drawable.ic_baseline_bookmarks_24,view-> BookmarkActivity.startActivity(getContext()))
-                .text(R.string.home_page_title,R.drawable.ic_baseline_home_24,view -> tab.goToHomepage())
                 .text(R.string.history,R.drawable.ic_baseline_history_24,view-> HistoryActivity.launch(getContext()))
                 .text(R.string.share, R.drawable.ic_baseline_share_24, view -> tab.shareTheTab())
                 .text(R.string.downloads, R.drawable.ic_baseline_arrow_downward_24, view -> MoDownloadActivity.startActivity(getContext()))
@@ -548,6 +556,10 @@ public class MoTabSearchBar extends MoConstraint {
         Drawable secureDrawable = getDrawable(R.drawable.ic_baseline_lock_open_24);
         DrawableCompat.setTint(secureDrawable, getColor(R.color.not_secure_site_color));
         this.searchText.setCompoundDrawablesWithIntrinsicBounds(secureDrawable, null,null,null);
+    }
+
+    public interface TabSearchBarInteractor {
+        SslError getSSLError();
     }
 
 

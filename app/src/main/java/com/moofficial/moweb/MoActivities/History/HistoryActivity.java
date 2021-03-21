@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.moofficial.moessentials.MoEssentials.MoShare.MoShareUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoDialog.MoDialogs;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoListViewSync;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
@@ -21,6 +22,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoSea
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moweb.MoActivities.MoTabSection;
+import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoTab.MoOpenTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistory;
@@ -147,7 +149,7 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
     private void initMoToolbar() {
         moToolBar = new MoToolBar(this)
                 .setRightIcon(R.drawable.ic_baseline_delete_outline_24)
-                .setRightOnClickListener(view -> startActivity(new Intent(this,MoBrowsingData.class)))
+                .setRightOnClickListener(view -> performClearAll())
                 .setLeftOnClickListener(view -> onBackPressed());
     }
 
@@ -218,6 +220,20 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
                 .setOnEmptyOnHoldsListener(() -> {
                     allHistories = MoHistoryManager.getAllHistories();
                     this.updateAdapter(allHistories);
+                });
+    }
+
+    private void performClearAll() {
+        if(historyRecyclerAdapter.getItemCount() == 0) {
+            Toast.makeText(this,"There is nothing to delete",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        MoDialogs.showAlertDialog(this,
+                "Clear All",
+                "Do you want to clear your history completely?",
+                (dialogInterface, i) -> {
+                    MoHistoryManager.clear(this);
+                    updateAdapter(new ArrayList<>());
                 });
     }
 
