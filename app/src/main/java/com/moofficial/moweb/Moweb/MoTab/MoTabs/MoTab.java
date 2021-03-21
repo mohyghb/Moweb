@@ -34,6 +34,7 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoOnUpdateUrlListener;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoUrl.MoURL;
 import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
+import com.moofficial.moweb.Moweb.MoWebFeatures.MoWebFeatures;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 
@@ -184,7 +185,8 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
         moWebView = new MoWebView(context);
         moWebView.load(webViewData,context);
         moWebView.setChromeClient(new MoChromeClient(this.context))
-                 .neverOverScroll();
+                 .neverOverScroll()
+                 .setNestedScrollingEnabled(MoWebFeatures.oneHandEnabled);
         moWebView.init();
         // todo we need to set the web view for tab type
     }
@@ -277,6 +279,11 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     }
 
 
+    public void updateNestedScrollView(boolean nestedScrollingEnabled) {
+        if (this.moWebView == null)
+            return;
+        this.moWebView.setNestedScrollingEnabled(nestedScrollingEnabled);
+    }
 
 
 
@@ -469,8 +476,11 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
 
 
     // set of functions for different events of activity
-    public void onPause(){
+    public void onPause() {
+        if (moWebView == null)
+            return;
         this.moWebView.onPause();
+        MoLog.print("tab paused");
     }
     public void onResume(){
         this.moWebView.onResume();

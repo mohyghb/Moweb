@@ -5,16 +5,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="32dp"
-    android:layout_marginEnd="32dp">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/mo_lib_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:fadingEdgeLength="@dimen/mo_fade_edge_text_view"
+        android:fadingEdgeLength="20dp"
         android:ellipsize="none"
         android:fontFamily="sans-serif-thin"
         android:gravity="center"
@@ -25,14 +23,16 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Display3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.0"/>
 
     <TextView
         android:id="@+id/mo_lib_subtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:fadingEdgeLength="@dimen/mo_fade_edge_text_view"
+        android:fadingEdgeLength="20dp"
         android:gravity="center"
         android:maxLines="3"
         android:requiresFadingEdge="horizontal"
@@ -40,7 +40,9 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mo_lib_title" />
+        app:layout_constraintTop_toBottomOf="@id/mo_lib_title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.0"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

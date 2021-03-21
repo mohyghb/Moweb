@@ -3,6 +3,7 @@ package com.moofficial.moweb.Moweb.MoWebFeatures;
 import android.content.Context;
 
 import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
+import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.R;
 
 public class MoWebFeatures {
@@ -19,6 +20,8 @@ public class MoWebFeatures {
     public static void updateOneHand(Context context) {
         oneHandEnabled = MoSharedPref.get(context)
                 .getBoolean(context.getString(R.string.one_hand_web_enabled),true);
+        MoTabsManager.getTabs().forEach((t)-> t.updateNestedScrollView(oneHandEnabled));
+        MoTabsManager.getPrivateTabs().forEach((t)-> t.updateNestedScrollView(oneHandEnabled));
     }
 
 }

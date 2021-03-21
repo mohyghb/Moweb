@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (sectionViewManager.getActiveSectionKey() == SECTION_TAB) {
-            this.tabSection.updateBookmark();
+            this.tabSection.onResume();
         }
         this.tabSection.setActivity(this);
     }

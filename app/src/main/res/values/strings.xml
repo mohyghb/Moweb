@@ -199,8 +199,10 @@
     <string name="snap_search_summary">When browsing, long clicks on words will open another search window from the bottom of your screen</string>
     <string name="snap_search_enabled">Snap_search</string>
 
+
     <string name="one_hand_web">One-hand web</string>
-    <string name="one_hand_web_summary">You can pull down the browser screen to bring in the out of reach content on the web</string>
+    <string name="one_hand_web_summary">You can pull down the browser screen to bring in the out of reach content on the web.
+        Also when you scroll on the web, the search bar automatically hides</string>
     <string name="one_hand_web_enabled">one_hand_web</string>
 
 

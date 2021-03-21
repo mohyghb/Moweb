@@ -6,7 +6,6 @@ import android.net.http.SslError;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.CookieManager;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -17,7 +16,6 @@ import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoFile;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoLoadable;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
-import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
 import com.moofficial.moweb.Moweb.MoUrl.MoUrlUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoChromeClient;
 import com.moofficial.moweb.Moweb.MoWebview.MoClient.MoWebClient;
@@ -29,7 +27,7 @@ import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnReceivedError;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebInterfaces.MoOnUpdateUrlListener;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebState;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebUtils;
-import com.moofficial.moweb.R;
+
 
 
 // a better web view!
@@ -223,6 +221,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
 
         clearCache(true);
 
+
     }
 
 
@@ -375,7 +374,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
      * @param loadFromCache whether we should load this url
      *                      from cache or not
      */
-    public void loadUrl(String url,boolean loadFromCache){
+    public void loadUrl(String url,boolean loadFromCache) {
         loadUrl(loadFromCache?url:MoUrlUtils.makeUrlUnique(url));
     }
 
