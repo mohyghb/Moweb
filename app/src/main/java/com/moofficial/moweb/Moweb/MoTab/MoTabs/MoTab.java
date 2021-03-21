@@ -220,7 +220,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
      * shares the url text of this tab
      * with any other app
      */
-    public void shareTheTab(){
+    public void shareTheTab() {
         new MoShare().setText(this.url.getUrlString()).shareText(this.context);
     }
 

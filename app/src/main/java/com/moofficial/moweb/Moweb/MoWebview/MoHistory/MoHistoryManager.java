@@ -28,6 +28,18 @@ public class MoHistoryManager {
     public static boolean historyEnabled = true;
 
     /**
+     * clears all the history of the user
+     * @param context
+     */
+    public static void clear(Context context) {
+        sortedBundles.forEach((b) -> {
+            b.delete(context);
+        });
+        sortedBundles = new ArrayList<>();
+        historyBundleHashMap = new HashMap<>();
+    }
+
+    /**
      * adds the mo history to the bundle
      * only if the history is enabled
      * by the user

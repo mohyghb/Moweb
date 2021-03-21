@@ -3,6 +3,7 @@ package com.moofficial.moweb.MoActivities.MainMenu;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.transition.TransitionManager;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.View;
@@ -148,7 +149,13 @@ public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed ,M
                 .hideLeft()
                 .setMiddleIcon(R.drawable.ic_baseline_delete_24)
                 .setMiddleOnClickListener(view -> performDelete())
-                .setRightIcon(R.drawable.ic_baseline_share_24);
+                .setRightIcon(R.drawable.ic_baseline_close_24)
+                .setRightOnClickListener((view) -> {
+                    TransitionManager.beginDelayedTransition(this);
+                    if (tabSelectable.hasAction()) {
+                        tabSelectable.removeAction();
+                    }
+                });
     }
 
     //monote delete private tabs as well
@@ -159,7 +166,6 @@ public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed ,M
             tabSelectable.removeAction();
         }
     }
-
 
 
 
