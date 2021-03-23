@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tab_section_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -86,12 +84,14 @@
         app:contentInsetLeft="0dp"
         app:contentInsetRight="0dp"
         app:contentInsetStart="0dp"
-        app:contentInsetStartWithNavigation="0dp">
+        app:contentInsetStartWithNavigation="0dp"
+        app:backgroundTint="@color/transparent">
 
         <com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar.MoTabSearchBar
             android:id="@+id/tab_section_search_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:background="?android:colorBackground"/>
 
         <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoFindBar
             android:id="@+id/tab_search_bar_find_bar"
@@ -100,6 +100,7 @@
             android:elevation="20dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
+            android:background="?android:colorBackground"
             android:visibility="gone"/>
 
     </com.google.android.material.bottomappbar.BottomAppBar>

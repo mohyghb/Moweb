@@ -2,7 +2,6 @@ package com.moofficial.moweb.MoTouchPosition;
 
 import android.annotation.SuppressLint;
 import android.graphics.Point;
-import android.view.MotionEvent;
 import android.view.View;
 
 // tracks the position of touch on view

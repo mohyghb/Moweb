@@ -199,6 +199,7 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
     public void deleteSelectedItems() {
         MoTabsManager.removeSelectedTabs(this.selectedItems);
         dataSet.removeAll(selectedItems);
+        notifyEmptyState();
         notifyDataSetChanged();
     }
 }

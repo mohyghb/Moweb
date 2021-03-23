@@ -3,12 +3,10 @@ package com.moofficial.moweb.Moweb.MoWebview.MoWebError;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.net.http.SslCertificate;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 

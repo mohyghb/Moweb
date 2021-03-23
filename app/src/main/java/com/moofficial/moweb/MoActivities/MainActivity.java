@@ -1,12 +1,9 @@
 package com.moofficial.moweb.MoActivities;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.transition.Slide;
-import android.view.ContextMenu;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,8 +18,6 @@ import com.moofficial.moweb.Moweb.MoDownload.MoDownloadManager;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoWebAppLoader.MoWebAppLoader;
 import com.moofficial.moweb.R;
-
-import java.security.Permission;
 
 public class MainActivity extends AppCompatActivity {
 

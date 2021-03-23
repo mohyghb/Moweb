@@ -21,6 +21,7 @@ import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkRecyclerAdapter;
 import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkUtils;
 import com.moofficial.moweb.Moweb.MoBookmark.MoOnOpenBookmarkListener;
+import com.moofficial.moweb.Moweb.MoWebview.MoEmptyLayoutView;
 import com.moofficial.moweb.R;
 
 import java.util.ArrayList;
@@ -118,16 +119,23 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
     private void updateAdapter(ArrayList<MoBookmark> l){
         recyclerAdapter.setDataSet(l);
         recyclerAdapter.notifyDataSetChanged();
+        recyclerAdapter.notifyEmptyState();
     }
 
     private void initRecyclerView() {
-
-        recyclerAdapter = new MoBookmarkRecyclerAdapter(this, allPossibleFolders)
-                .setOpenBookmarkListener(this)
+        MoEmptyLayoutView v = new MoEmptyLayoutView(this)
+                .setIcon(R.drawable.ic_baseline_folder_open_24)
+                .setText(R.string.empty_layout_title_bookmark_folders);
+        recyclerAdapter = new MoBookmarkRecyclerAdapter(this, allPossibleFolders);
+        recyclerAdapter.setOpenBookmarkListener(this)
                 .setDisableLongClick(true)
-                .setDisableSelectColor(true);
+                .setDisableSelectColor(true)
+                .setRecyclerView(cardRecyclerView.getRecyclerView())
+                .setEmptyView(v)
+                .notifyEmptyState();
         recyclerView = MoRecyclerUtils.get(cardRecyclerView.getRecyclerView(),recyclerAdapter);
         recyclerView.show();
+        l.linearNested.addView(v, MoEmptyLayoutView.getUniversalMargin(this));
     }
 
 

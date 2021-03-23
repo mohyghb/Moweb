@@ -3,7 +3,6 @@ package com.moofficial.moweb.Moweb.MoWebview.MoWebError;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.http.SslError;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.webkit.URLUtil;
 import android.webkit.WebView;
@@ -18,9 +17,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoBottomSheet.MoBottomSheet;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewGroups.MoConstraint;
 import com.moofficial.moweb.R;
-
-import java.security.cert.CertificateExpiredException;
-import java.security.cert.CertificateNotYetValidException;
 
 public class MoSecurityInformationView extends MoConstraint {
     ImageView icon;

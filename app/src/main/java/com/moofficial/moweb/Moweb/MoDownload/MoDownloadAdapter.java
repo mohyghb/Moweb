@@ -3,7 +3,6 @@ package com.moofficial.moweb.Moweb.MoDownload;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,8 +14,6 @@ import com.moofficial.moessentials.MoEssentials.MoString.MoString;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInflatorView.MoInflaterView;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
-import com.moofficial.moweb.Moweb.MoBookmark.MoBookmark;
-import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkViewHolder;
 import com.moofficial.moweb.R;
 import com.tonyodev.fetch2.Download;
 import com.tonyodev.fetch2.Error;
@@ -27,10 +24,6 @@ import com.tonyodev.fetch2core.DownloadBlock;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Array;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MoDownloadAdapter extends MoSelectableAdapter<MoDownloadViewHolder,MoDownload>

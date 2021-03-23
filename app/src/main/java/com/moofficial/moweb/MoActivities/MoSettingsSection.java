@@ -2,12 +2,9 @@ package com.moofficial.moweb.MoActivities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.webkit.CookieManager;
 
 import androidx.preference.PreferenceManager;
 
-import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
-import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
 import com.moofficial.moweb.MoSettingsEssentials.MoTheme.MoTheme;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
@@ -15,7 +12,6 @@ import com.moofficial.moweb.Moweb.MoWebFeatures.MoWebFeatures;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoUserPassAutoFill.MoUserPassManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebUtils;
-import com.moofficial.moweb.R;
 
 public class MoSettingsSection {
 
@@ -50,7 +46,7 @@ public class MoSettingsSection {
         initTheme();
         initAutoComplete();
         initHistorySettings();
-        initPasswords();
+//        initPasswords();
         initCookies();
     }
 

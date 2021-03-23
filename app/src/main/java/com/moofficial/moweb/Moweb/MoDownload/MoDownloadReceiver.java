@@ -7,8 +7,6 @@ import android.content.Intent;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.tonyodev.fetch2.Download;
 
-import java.io.File;
-
 public class MoDownloadReceiver extends BroadcastReceiver {
 
     @SuppressWarnings("ConstantConditions")

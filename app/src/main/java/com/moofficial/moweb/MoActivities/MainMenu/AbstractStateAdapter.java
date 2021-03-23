@@ -47,6 +47,15 @@ public class AbstractStateAdapter extends MoRecyclerAdapter<AbstractViewHolder,A
     public void onBindViewHolder(@NonNull AbstractViewHolder holder, int position) {
         AbstractMainFragment item = dataSet.get(position);
         item.setTabClickListener(this.onTabClickListener);
+        if (position == 0) {
+            // normal tabs
+            holder.emptyLayoutView.setIcon(R.drawable.ic_baseline_tab_24).setText(R.string.empty_layout_title_tab);
+        } else {
+            // private tabs
+            holder.emptyLayoutView.setIcon(R.drawable.ic_baseline_vpn_lock_24)
+                    .setText(R.string.empty_layout_title_private_tab);
+
+        }
 
         MoRecyclerUtils.get(holder.recyclerView,item.getTabRecyclerAdapter())
                 .setSpanCount(2)
@@ -73,7 +82,7 @@ public class AbstractStateAdapter extends MoRecyclerAdapter<AbstractViewHolder,A
     }
 
 
-    public void performDelete(){
+    public void performDelete() {
         for(AbstractMainFragment f: dataSet) {
             f.deleteSelectedItems();
         }

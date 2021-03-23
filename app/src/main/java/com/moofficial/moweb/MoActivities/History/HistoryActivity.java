@@ -3,9 +3,7 @@ package com.moofficial.moweb.MoActivities.History;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.transition.TransitionManager;
-import android.util.Pair;
 import android.widget.Toast;
 
 import com.moofficial.moessentials.MoEssentials.MoShare.MoShareUtils;
@@ -14,7 +12,6 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoDialog.MoDialogs;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoListViewSync;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoOnSelectListener;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
@@ -22,9 +19,8 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoSea
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
 import com.moofficial.moweb.MoActivities.MoTabSection;
-import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkManager;
-import com.moofficial.moweb.Moweb.MoTab.MoOpenTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
+import com.moofficial.moweb.Moweb.MoWebview.MoEmptyLayoutView;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistory;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryRecyclerAdapter;
@@ -135,6 +131,7 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
             MoHistoryManager.remove(this,historyRecyclerAdapter.getSelectedItems(),historyRecyclerAdapter.getDataSet());
             // notify the adapter that we have changed the data set
             historyRecyclerAdapter.notifyDataSetChanged();
+            historyRecyclerAdapter.notifyEmptyState();
             // init history to make sure we have the correct history list
             initHistory();
             // if selectable is in action mode, we remove the action
@@ -170,9 +167,16 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
         allHistories = MoHistoryManager.getAllHistories();
     }
 
-    private void initAdapter(){
+    private void initAdapter() {
+        MoEmptyLayoutView v = new MoEmptyLayoutView(this)
+                .setText(R.string.empty_layout_title_history)
+                .setIcon(R.drawable.ic_baseline_history_24);
         this.historyRecyclerAdapter = new MoHistoryRecyclerAdapter(allHistories,this)
                 .setOnHistoryClicked(this);
+        this.historyRecyclerAdapter.setRecyclerView(this.cardRecyclerView.getRecyclerView())
+                .setEmptyView(v)
+                .notifyEmptyState();
+        l.linearNested.addView(v, MoEmptyLayoutView.getUniversalMargin(this));
     }
 
     private void initRecyclerView(){
@@ -209,7 +213,10 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
     private void updateAdapter(List<MoHistory> histories) {
         historyRecyclerAdapter.setDataSet(histories);
         TransitionManager.beginDelayedTransition(getGroupRootView());
-        runOnUiThread( ()-> historyRecyclerAdapter.notifyDataSetChanged());
+        runOnUiThread( ()-> {
+            historyRecyclerAdapter.notifyDataSetChanged();
+            historyRecyclerAdapter.notifyEmptyState();
+        });
     }
 
 

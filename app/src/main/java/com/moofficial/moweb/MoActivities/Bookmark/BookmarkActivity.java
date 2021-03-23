@@ -27,6 +27,7 @@ import com.moofficial.moweb.Moweb.MoBookmark.MoBookmarkRecyclerAdapter;
 import com.moofficial.moweb.Moweb.MoBookmark.MoOnOpenBookmarkListener;
 import com.moofficial.moweb.Moweb.MoTab.MoOpenTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
+import com.moofficial.moweb.Moweb.MoWebview.MoEmptyLayoutView;
 import com.moofficial.moweb.R;
 
 import java.util.ArrayList;
@@ -217,6 +218,7 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     private void updateRecyclerView() {
         TransitionManager.beginDelayedTransition(getGroupRootView());
         recyclerAdapter.notifyDataSetChanged();
+        recyclerAdapter.notifyEmptyState();
     }
 
     /**
@@ -310,6 +312,12 @@ public class BookmarkActivity extends MoSmartActivity implements MoOnOpenBookmar
     private void initRecyclerAdapter(){
         this.recyclerAdapter = new MoBookmarkRecyclerAdapter(this, getCurrentFolderBookmarks())
                 .setOpenBookmarkListener(this);
+        MoEmptyLayoutView v = new MoEmptyLayoutView(this);
+        this.recyclerAdapter.setRecyclerView(this.cardRecyclerView.getRecyclerView())
+                .setEmptyView(v)
+                .notifyEmptyState();
+
+        l.linearNested.addView(v, MoEmptyLayoutView.getUniversalMargin(this));
     }
 
     /**

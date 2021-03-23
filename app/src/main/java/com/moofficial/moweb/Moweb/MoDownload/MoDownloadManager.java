@@ -5,14 +5,11 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
-import android.os.Parcelable;
 import android.webkit.URLUtil;
 
 import androidx.core.app.NotificationCompat;
 
-import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileManagerUtils;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
-import com.moofficial.moessentials.MoEssentials.MoMultiThread.MoThread.MoOnThreadRun;
 import com.moofficial.moessentials.MoEssentials.MoMultiThread.MoThread.MoThread;
 import com.moofficial.moweb.R;
 import com.tonyodev.fetch2.Download;
@@ -22,14 +19,12 @@ import com.tonyodev.fetch2.FetchListener;
 import com.tonyodev.fetch2.NetworkType;
 import com.tonyodev.fetch2.Priority;
 import com.tonyodev.fetch2.Request;
-import com.tonyodev.fetch2core.Func;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 

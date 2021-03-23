@@ -59,4 +59,6 @@
 
     <color name="selected_item">#8064B5F6</color>
 
+    <color name="private_tab_background_color">#000D0E</color>
+
 </resources>

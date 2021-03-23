@@ -20,8 +20,16 @@ public class MoWebFeatures {
     public static void updateOneHand(Context context) {
         oneHandEnabled = MoSharedPref.get(context)
                 .getBoolean(context.getString(R.string.one_hand_web_enabled),true);
-        MoTabsManager.getTabs().forEach((t)-> t.updateNestedScrollView(oneHandEnabled));
-        MoTabsManager.getPrivateTabs().forEach((t)-> t.updateNestedScrollView(oneHandEnabled));
+        MoTabsManager.getTabs().forEach((t)-> {
+            if (t != null) {
+                t.updateNestedScrollView(oneHandEnabled);
+            }
+        });
+        MoTabsManager.getPrivateTabs().forEach((t)-> {
+            if (t!=null) {
+                t.updateNestedScrollView(oneHandEnabled);
+            }
+        });
     }
 
 }

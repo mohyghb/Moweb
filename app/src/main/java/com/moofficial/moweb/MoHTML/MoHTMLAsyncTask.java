@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import com.moofficial.moessentials.MoEssentials.MoRunnable.MoRunnable;
 import com.moofficial.moweb.MoHTML.Html.MoHtml;
 
-
 import java.io.IOException;
 
 public class MoHTMLAsyncTask extends AsyncTask<Void,Void,Void> {

@@ -1,13 +1,10 @@
 package com.moofficial.moweb.MoActivities.Download;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
-import com.moofficial.moweb.R;
 
 public class MoDownloadSettingsActivity extends MoSmartActivity {
 
