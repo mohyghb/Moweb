@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,7 +31,6 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoL
 import com.moofficial.moweb.Moweb.MoDownload.MoDownloadManager;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoTab.MoOpenTab;
-import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoTabOpenable;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import com.moofficial.moweb.Moweb.MoWebFeatures.MoWebFeatures;
 import com.moofficial.moweb.Moweb.MoWebManifest;
@@ -42,9 +40,6 @@ import com.moofficial.moweb.Moweb.MoWebview.MoHitTestResult.MoHitTestResult;
 import com.moofficial.moweb.Moweb.MoWebview.MoHitTestResult.MoSmartTextSearchView;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 import com.moofficial.moweb.R;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MoHitTestResultParser {
 

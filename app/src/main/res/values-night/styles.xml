@@ -6,10 +6,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
-<!--        <item name="android:colorBackground">@color/MoBackground</item>-->
-
-<!--        <item name="toolbarStyle">@style/MoToolbarStyle</item>-->
         <item name="android:navigationBarColor">@color/MaterialDark</item>
 
         <item name="imageButtonStyle">@style/MoImageButton_Style_Dark</item>

@@ -120,9 +120,6 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
 
     public void onResume() {
         this.updateBookmark();
-        if(MoWebFeatures.oneHandEnabled) {
-
-        }
     }
 
     private void initViews() {
@@ -142,6 +139,7 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
         // copying url to clipboard when user clicks on the title
         this.title.setOnClickListener(this::onTitleSubtitleClickListener);
         this.subTitle.setOnClickListener(this::onTitleSubtitleClickListener);
+        MoAppbarUtils.onAppbarLayoutHeightChanged(getContext(), this.appBarLayout, MoActivitySettings.MO_GOLDEN_RATIO);
     }
 
     protected void init() {

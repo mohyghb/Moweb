@@ -1,17 +1,11 @@
 package com.moofficial.moweb.Moweb.MoWebview.MoClient;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.view.View;
-import android.webkit.GeolocationPermissions;
-import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
-
-import com.moofficial.moessentials.MoEssentials.MoPermissions.MoPermission;
 
 
 public class MoChromeClient extends WebChromeClient {

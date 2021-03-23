@@ -1,20 +1,13 @@
 package com.moofficial.moweb.MoActivities.Download;
 
 import android.Manifest;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.transition.TransitionManager;
-import android.webkit.MimeTypeMap;
-import android.webkit.PermissionRequest;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.FileProvider;
 
-import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileExtension;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoPermissions.MoPermission;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoActivity.MoSmartActivity;
@@ -26,20 +19,12 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerVi
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoSearchBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardRecyclerView;
-import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoPageProgress;
 import com.moofficial.moweb.Moweb.MoDownload.MoDownload;
 import com.moofficial.moweb.Moweb.MoDownload.MoDownloadAdapter;
 import com.moofficial.moweb.Moweb.MoDownload.MoDownloadManager;
 import com.moofficial.moweb.Moweb.MoDownload.MoDownloadUtils;
-import com.moofficial.moweb.Moweb.MoWebManifest;
+import com.moofficial.moweb.Moweb.MoWebview.MoEmptyLayoutView;
 import com.moofficial.moweb.R;
-import com.tonyodev.fetch2.Download;
-import com.tonyodev.fetch2.Error;
-import com.tonyodev.fetch2.FetchListener;
-import com.tonyodev.fetch2core.DownloadBlock;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,6 +122,7 @@ public class MoDownloadActivity extends MoSmartActivity implements
                                 runOnUiThread(()-> {
                                     TransitionManager.beginDelayedTransition(getGroupRootView());
                                     this.adapter.notifyDataSetChanged();
+                                    this.adapter.notifyEmptyState();
                                     this.sync.removeAction();
                                 });
                             });
@@ -148,14 +134,22 @@ public class MoDownloadActivity extends MoSmartActivity implements
     }
 
     private void initRecycler() {
-        adapter = new MoDownloadAdapter(this, new ArrayList<>())
-                .setOnDownloadClickedListener(this)
-                .setOnDownloadCancelled(this);
         this.cardRecyclerView = new MoCardRecyclerView(this);
+        MoEmptyLayoutView v = new MoEmptyLayoutView(this)
+                .setText(R.string.empty_layout_title_downloads)
+                .setIcon(R.drawable.ic_baseline_insert_drive_file_24);
+        adapter = new MoDownloadAdapter(this, new ArrayList<>());
+        adapter.setOnDownloadClickedListener(this)
+                .setOnDownloadCancelled(this)
+                .setRecyclerView(cardRecyclerView.getRecyclerView())
+                .setEmptyView(v)
+                .notifyEmptyState();
+
         recyclerView = MoRecyclerUtils.get(this.cardRecyclerView.getRecyclerView(), this.adapter)
                 .setMaxHeight(getHeightPixels());
 
         l.linearNested.addView(this.cardRecyclerView);
+        l.linearNested.addView(v, MoEmptyLayoutView.getUniversalMargin(this));
         recyclerView.show();
     }
 
@@ -210,6 +204,7 @@ public class MoDownloadActivity extends MoSmartActivity implements
             adapter.getDataSet().remove(position);
             adapter.notifyItemRemoved(position);
             adapter.notifyItemRangeChanged(position, adapter.getItemCount());
+            adapter.notifyEmptyState();
         });
         MoLog.print("on cancelled called on " + position);
     }

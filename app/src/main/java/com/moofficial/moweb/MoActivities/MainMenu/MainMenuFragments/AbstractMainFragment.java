@@ -1,8 +1,7 @@
 package com.moofficial.moweb.MoActivities.MainMenu.MainMenuFragments;
 
 import android.content.Context;
-
-import androidx.recyclerview.widget.RecyclerView;
+import android.view.View;
 
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
@@ -30,6 +29,7 @@ public abstract class AbstractMainFragment {
 
     public AbstractMainFragment setRecyclerView(MoRecyclerView recyclerView) {
         this.recyclerView = recyclerView;
+        checkEmpty();
         return this;
     }
 
@@ -62,10 +62,22 @@ public abstract class AbstractMainFragment {
 
     public void deleteSelectedItems() {
         tabRecyclerAdapter.deleteSelectedItems();
+        checkEmpty();
     }
 
     public void notifyDataSetChanged() {
         tabRecyclerAdapter.notifyDataSetChanged();
+        checkEmpty();
+    }
+
+    private void checkEmpty() {
+        if (recyclerView == null)
+            return;
+        if (tabRecyclerAdapter.getItemCount() == 0) {
+            this.recyclerView.setVisibility(View.GONE);
+        } else {
+            this.recyclerView.setVisibility(View.VISIBLE);
+        }
     }
 
     public void notifyItemInsertedLast() {

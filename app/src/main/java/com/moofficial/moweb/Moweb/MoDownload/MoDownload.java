@@ -1,10 +1,8 @@
 package com.moofficial.moweb.Moweb.MoDownload;
 
 
-
 import androidx.annotation.NonNull;
 
-import com.moofficial.moessentials.MoEssentials.MoDate.MoDate;
 import com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileExtension;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableInterface.MoSearchableItem;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSearchable.MoSearchableUtils;
@@ -13,7 +11,7 @@ import com.tonyodev.fetch2.Download;
 
 import java.io.File;
 
-import static com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileExtension.*;
+import static com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileExtension.FileType;
 
 public class MoDownload implements MoSelectableItem, MoSearchableItem {
 

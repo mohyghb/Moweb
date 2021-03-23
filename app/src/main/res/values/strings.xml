@@ -216,4 +216,12 @@
         with this website as it might be stolen by attackers</string>
 
 
+    <!-- empty layout strings-->
+    <string name="empty_layout_title_bookmark">No bookmark found</string>
+    <string name="empty_layout_title_history">No history found</string>
+    <string name="empty_layout_title_tab">No tab found</string>
+    <string name="empty_layout_title_private_tab">No private tab found</string>
+    <string name="empty_layout_title_downloads">No file found</string>
+    <string name="empty_layout_title_bookmark_folders">No folder found</string>
+
 </resources>

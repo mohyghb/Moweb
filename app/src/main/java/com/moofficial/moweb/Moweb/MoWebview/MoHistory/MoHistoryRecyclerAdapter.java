@@ -2,7 +2,6 @@ package com.moofficial.moweb.Moweb.MoWebview.MoHistory;
 
 import android.content.Context;
 import android.util.Pair;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,12 +14,10 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
-import com.moofficial.moweb.MoActivities.History.HistoryActivity;
 import com.moofficial.moweb.Moweb.MoTab.MoOpenTab;
 import com.moofficial.moweb.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
