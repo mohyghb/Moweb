@@ -577,7 +577,8 @@ public class MoBookmarkManager {
             return;
         }
 
-        for (MoBookmark b: list) {
+        for (int i = list.size() - 1; i >=0; i--) {
+            MoBookmark b = list.get(i);
             if (b.isFolder()) {
                 remove(b.getSubFolders());
                 remove(b.getSubs());
