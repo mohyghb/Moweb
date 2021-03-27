@@ -1,35 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:gravity="center">
 
     <TextView
         android:id="@+id/mo_lib_title"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:fadingEdgeLength="20dp"
-        android:ellipsize="none"
         android:fontFamily="sans-serif-thin"
         android:gravity="center"
-        android:requiresFadingEdge="horizontal"
-        android:singleLine="true"
+        android:maxLines="1"
         android:text="@string/app_name"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.0"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Display3"/>
 
     <TextView
         android:id="@+id/mo_lib_subtitle"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:fadingEdgeLength="20dp"
@@ -37,14 +31,9 @@
         android:maxLines="3"
         android:requiresFadingEdge="horizontal"
         android:textAlignment="center"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mo_lib_title"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.0"/>
+        android:textSize="14sp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
 
 
 
