@@ -23,7 +23,7 @@ public class MoEmptyLayoutView extends MoConstraint {
     }
 
     ImageView image;
-    TextView title;
+    TextView title, description;
 
     public MoEmptyLayoutView(Context context) {
         super(context);
@@ -37,8 +37,13 @@ public class MoEmptyLayoutView extends MoConstraint {
         super(context, attrs, defStyleAttr);
     }
 
-    public MoEmptyLayoutView setText(@StringRes int res) {
+    public MoEmptyLayoutView setTitle(@StringRes int res) {
         this.title.setText(res);
+        return this;
+    }
+
+    public MoEmptyLayoutView setDescription(@StringRes int res) {
+        this.description.setText(res);
         return this;
     }
 
@@ -64,6 +69,7 @@ public class MoEmptyLayoutView extends MoConstraint {
     public void initViews() {
         title = findViewById(R.id.empty_layout_title);
         image = findViewById(R.id.empty_layout_icon);
+        description = findViewById(R.id.empty_layout_description);
     }
 
     @Override

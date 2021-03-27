@@ -169,7 +169,8 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
 
     private void initAdapter() {
         MoEmptyLayoutView v = new MoEmptyLayoutView(this)
-                .setText(R.string.empty_layout_title_history)
+                .setTitle(R.string.empty_layout_title_history)
+                .setDescription(R.string.empty_layout_description_history)
                 .setIcon(R.drawable.ic_baseline_history_24);
         this.historyRecyclerAdapter = new MoHistoryRecyclerAdapter(allHistories,this)
                 .setOnHistoryClicked(this);

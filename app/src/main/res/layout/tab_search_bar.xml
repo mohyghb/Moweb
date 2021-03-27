@@ -49,31 +49,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-
-<!--    <ImageButton-->
-<!--        android:id="@+id/tab_search_bar_info"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:background="?attr/selectableItemBackgroundBorderless"-->
-<!--        android:padding="@dimen/mo_image_button_padding"-->
-<!--        app:layout_constraintBottom_toBottomOf="@id/search_bar_text"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="@id/search_bar_text"-->
-<!--        app:layout_constraintVertical_bias="1"-->
-<!--        app:srcCompat="@drawable/ic_baseline_info_24" />-->
-
-    <!--        <View-->
-    <!--            android:id="@+id/divider"-->
-    <!--            android:layout_width="1dp"-->
-    <!--            android:layout_height="0dp"-->
-    <!--            android:layout_marginTop="12dp"-->
-    <!--            android:layout_marginBottom="12dp"-->
-    <!--            android:background="?android:attr/listDivider"-->
-    <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--            app:layout_constraintEnd_toStartOf="@id/search_bar_text"-->
-    <!--            app:layout_constraintStart_toEndOf="@id/tab_search_bar_info"-->
-    <!--            app:layout_constraintTop_toTopOf="parent" />-->
-
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/search_bar_text"
         android:layout_width="0dp"
@@ -109,8 +84,7 @@
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/more_bar_button"
-        app:layout_constraintTop_toBottomOf="@id/tab_search_bar_suggestion_card_recycler"
-        app:layout_constraintVertical_bias="1.0"/>
+        app:layout_constraintTop_toBottomOf="@id/tab_search_bar_suggestion_card_recycler"/>
 
     <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoImageButton
         android:id="@+id/more_bar_button"
