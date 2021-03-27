@@ -324,7 +324,7 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
      * to show all the tabs to the user
      */
     private void onTabsButtonPressed() {
-        tab.captureAndSaveWebViewBitmapAsync(coordinatorLayout);
+        tab.captureAndSaveWebViewBitmapAsync(webCard);
         moveToMainMenu.transition();
     }
 

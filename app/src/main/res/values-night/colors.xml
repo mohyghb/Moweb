@@ -1,34 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-
     <color name="colorPrimary">#64b5f6</color>
     <color name="colorPrimaryDark">#548CCC</color>
     <color name="colorAccent">#bbdefb</color>
-
     <color name="divider_color">@color/colorPrimaryDark</color>
-
     <color name="error_color">#cf6679</color>
     <color name="delete_item_low_transparency_color">#7ECF6679</color>
-
     <color name="setting_toolbar_background">@color/MaterialDark</color>
-
     <color name="tabs_icon_color">@color/MoWhite</color>
-
     <color name="snack_bar_text">@color/MoWhite</color>
     <color name="snack_bar_background">@color/MaterialElevatedCard</color>
-
-
     <color name="search_bar_color">@color/transparent</color>
     <color name="search_text_background">@color/MaterialGrey</color>
-
-
     <color name="download_confirmation_background">#043840</color>
-
     <color name="secure_site_color">#66BB6A</color>
     <color name="not_secure_site_color">#EF5350</color>
-
-
     <color name="selected_item">#80BBDEFB</color>
-
+    <color name="border_tab_list_mode_color">@color/colorPrimary</color>
 </resources>

@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.moofficial.moessentials.MoEssentials.MoUI.MoDynamicUnit.MoDynamicUnit;
@@ -17,6 +18,7 @@ import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerAdapters.MoSelectableAdapter;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewInterfaces.MoOnSizeChanged;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView;
+import com.moofficial.moweb.Moweb.MoTab.MoTabController.MoTabController;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoOnTabClickListener;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.R;
@@ -28,7 +30,7 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
 
     private static final float TAB_PADDING = 8f;
     private static final float TAB_PADDING_GRID_VIEW = 8f;
-    private final float SCREEN_TO_TAB_RATIO = 2.25f;
+    private final float SCREEN_TO_TAB_RATIO = 2.65f;
 
 
     private boolean isInGrid;
@@ -51,15 +53,16 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
         private ImageView background;
         private TextView url;
         private MoCardView outerCard;
-        private LinearLayout coverView;
+        private View coverView;
+        View border;
 
         public TabViewHolder(View v) {
             super(v);
             background = v.findViewById(R.id.web_view_bitmap);
             url = v.findViewById(R.id.tab_url_list_view);
             outerCard = v.findViewById(R.id.tab_mode_list_card_view);
-            outerCard.makeCardRecRound();
             coverView = v.findViewById(R.id.tab_modE_list_cover_view);
+            border = v.findViewById(R.id.tab_mode_list_border);
         }
 
     }
@@ -138,6 +141,15 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
     private void updateUI(@NonNull TabViewHolder holder, MoTab tab) {
         providePreview(holder, tab);
         setTabUrl(holder, tab);
+        toggleBorder(holder, tab);
+    }
+
+    private void toggleBorder(@NonNull TabViewHolder holder, MoTab tab) {
+        if (MoTabController.instance.currentIs(tab)) {
+            holder.border.setVisibility(View.VISIBLE);
+        } else {
+            holder.border.setVisibility(View.GONE);
+        }
     }
 
     private void onLongTabClickListener(@NonNull TabViewHolder holder, int position) {
@@ -169,27 +181,14 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
     }
 
     private void providePreview(TabViewHolder holder, MoTab tab) {
-        // if its web view is loaded, then we just use that
-        // as the preview, if not we load
-        // in the image preview that we saved
-//        holder.linearLayout.removeAllViews();
-//        if(tab.isUpToDate()){
-//            MoTabUtils.transitionToListTabMode(context,tab.getMoWebView(),holder.linearLayout);
-//        }else{
-//        if(tab.getWebViewBitmap()==null){
-//
-//        }else {
+        if (tab.getWebViewBitmap() == null) {
+            holder.background.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_public_24));
+            holder.background.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        } else {
             holder.background.setImageBitmap(tab.getWebViewBitmap());
-//            holder.background.setLayoutParams(new LinearLayout.LayoutParams(
-//                    ViewGroup.LayoutParams.MATCH_PARENT,
-//                    (int)(context.getResources().getDisplayMetrics()
-//                .heightPixels/1.5f)
-//            ));
-            holder.background.setVisibility(View.VISIBLE);
-        //}
-
-//            holder.linearLayout.addView(holder.background);
-//        }
+            holder.background.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        }
+        holder.background.setVisibility(View.VISIBLE);
     }
 
     /**
