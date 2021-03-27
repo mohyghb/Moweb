@@ -49,11 +49,14 @@ public class AbstractStateAdapter extends MoRecyclerAdapter<AbstractViewHolder,A
         item.setTabClickListener(this.onTabClickListener);
         if (position == 0) {
             // normal tabs
-            holder.emptyLayoutView.setIcon(R.drawable.ic_baseline_tab_24).setText(R.string.empty_layout_title_tab);
+            holder.emptyLayoutView.setIcon(R.drawable.ic_baseline_tab_24)
+                    .setTitle(R.string.empty_layout_title_tab)
+                    .setDescription(R.string.empty_layout_description_tab);
         } else {
             // private tabs
             holder.emptyLayoutView.setIcon(R.drawable.ic_baseline_vpn_lock_24)
-                    .setText(R.string.empty_layout_title_private_tab);
+                    .setTitle(R.string.empty_layout_title_private_tab)
+                    .setDescription(R.string.empty_layout_description_private_tab);
 
         }
 

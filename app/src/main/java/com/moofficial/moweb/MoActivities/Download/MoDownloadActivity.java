@@ -136,7 +136,8 @@ public class MoDownloadActivity extends MoSmartActivity implements
     private void initRecycler() {
         this.cardRecyclerView = new MoCardRecyclerView(this);
         MoEmptyLayoutView v = new MoEmptyLayoutView(this)
-                .setText(R.string.empty_layout_title_downloads)
+                .setTitle(R.string.empty_layout_title_downloads)
+                .setDescription(R.string.empty_layout_description_downloads)
                 .setIcon(R.drawable.ic_baseline_insert_drive_file_24);
         adapter = new MoDownloadAdapter(this, new ArrayList<>());
         adapter.setOnDownloadClickedListener(this)

@@ -125,7 +125,8 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
     private void initRecyclerView() {
         MoEmptyLayoutView v = new MoEmptyLayoutView(this)
                 .setIcon(R.drawable.ic_baseline_folder_open_24)
-                .setText(R.string.empty_layout_title_bookmark_folders);
+                .setDescription(R.string.empty_layout_description_bookmark_folders)
+                .setTitle(R.string.empty_layout_title_bookmark_folders);
         recyclerAdapter = new MoBookmarkRecyclerAdapter(this, allPossibleFolders);
         recyclerAdapter.setOpenBookmarkListener(this)
                 .setDisableLongClick(true)
