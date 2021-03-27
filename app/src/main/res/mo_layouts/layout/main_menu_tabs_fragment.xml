@@ -28,6 +28,7 @@
         app:contentInsetLeft="0dp"
         app:contentInsetRight="0dp"
         app:contentInsetStart="0dp"
+        app:elevation="0dp"
         app:contentInsetStartWithNavigation="0dp"
         app:fabAlignmentMode="center"
         app:fabAnimationMode="scale"
