@@ -233,4 +233,8 @@
         the web, but be careful because some files can be dangerous</string>
     <string name="empty_layout_description_bookmark_folders">Create folders to organize your bookmarks or other folders</string>
 
+
+    <!-- Default Settings -->
+    <string name="sharedPref_alreadySetDefault">already_set_default</string>
+
 </resources>

@@ -19,7 +19,13 @@ import com.moofficial.moweb.R;
 public class MoEmptyLayoutView extends MoConstraint {
 
     public static LinearLayout.LayoutParams getUniversalMargin(Context context) {
-        return MoMarginBuilder.getLinearParams(context, 0, 180, 0,0);
+        return MoMarginBuilder.getLinearParams(
+                context,
+                0,
+                (int)(context.getResources().getDisplayMetrics().density * 50),
+                0,
+                0
+        );
     }
 
     ImageView image;
