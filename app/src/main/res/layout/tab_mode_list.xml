@@ -1,75 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tab_mode_list_card_view"
+    style="@style/Widget.MaterialComponents.CardView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    app:cardElevation="8dp"
+    app:cardMaxElevation="0dp"
+    app:cardCornerRadius="@dimen/mo_style_card_corner_medium"
+    app:contentPadding="0dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
-    <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView
-        android:id="@+id/tab_mode_list_card_view"
-        style="@style/Widget.MaterialComponents.CardView"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/tab_mode_list_linear_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        app:cardElevation="5dp"
-        app:cardMaxElevation="0dp"
-        app:contentPadding="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/tab_mode_list_linear_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+        <TextView
+            android:id="@+id/tab_url_list_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:fontFamily="sans-serif-light"
+            android:singleLine="true"
+            android:text="TextView"
+            android:textSize="18sp"
+            style="@style/mo_view_holder_title_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-
-            <TextView
-                android:id="@+id/tab_url_list_view"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/day_night_background"
-                android:fontFamily="sans-serif-light"
-                android:singleLine="true"
-                android:text="TextView"
-                android:textSize="18sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
+        <com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:cardCornerRadius="@dimen/mo_style_card_corner_small"
+            android:layout_margin="4dp"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tab_url_list_view">
             <ImageView
                 android:id="@+id/web_view_bitmap"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:adjustViewBounds="true"
-                android:cropToPadding="true"
-                android:scaleType="centerCrop"
                 android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tab_url_list_view"
+                android:src="@drawable/ic_baseline_public_24"
                 tools:srcCompat="@color/transparent" />
-
-            <LinearLayout
-                android:id="@+id/tab_modE_list_cover_view"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        </com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView>
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView>
+        <View
+            android:id="@+id/tab_modE_list_cover_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:translationZ="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-</LinearLayout>
+        <View
+            android:id="@+id/tab_mode_list_border"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:translationZ="10dp"
+            android:background="@drawable/border_tab_list_mode"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoNormal.MoCardView>
