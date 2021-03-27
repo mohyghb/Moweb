@@ -177,7 +177,7 @@ public class MoHitTestResultParser {
         smartTextSearchView.setTitle(MoString.capFirst(selectedText))
                 .add(web)
                 .onOpenNewTab(() -> {
-                    MoOpenTab.openInNewTab(context, () -> MoSearchEngine.instance.getURL(selectedText));
+                    MoOpenTab.openInNewTab(context, web::getUrl);
                     bottomSheet.dismiss();
                 });
 

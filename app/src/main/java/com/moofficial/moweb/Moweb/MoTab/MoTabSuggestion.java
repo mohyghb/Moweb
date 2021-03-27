@@ -60,6 +60,8 @@ public class MoTabSuggestion {
 
     public void hide() {
         this.recyclerView.setVisibility(View.GONE);
+        adapter.setDataSet(new ArrayList<>());
+        adapter.notifyDataSetChanged();
     }
 
 

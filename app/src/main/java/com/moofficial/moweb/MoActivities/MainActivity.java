@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         MoLog.printRunTime("App loader",() -> MoWebAppLoader.loadApp(this));
+        MoSettingsSection.getInstance().initFeatures();
         init();
         handleLinkFromOthers(getIntent());
     }

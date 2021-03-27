@@ -75,7 +75,7 @@ public class MoSettingsSection {
         MoWebUtils.updateCookies(this.context);
     }
 
-    private void initFeatures() {
+    public void initFeatures() {
         MoWebFeatures.updateSnapSearch(this.context);
         MoWebFeatures.updateOneHand(this.context);
     }
