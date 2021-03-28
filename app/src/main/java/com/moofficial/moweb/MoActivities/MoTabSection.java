@@ -78,8 +78,6 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
     private SslErrorHandler sslErrorHandler;
     private SslError sslError;
     private boolean isShowingError = false;
-
-    private CoordinatorLayout coordinatorLayout;
     private AppBarLayout appBarLayout;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private TextView title, subTitle;
@@ -124,7 +122,6 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
 
     private void initViews() {
         inflate(getContext(), R.layout.tab, this);
-        this.coordinatorLayout = findViewById(R.id.tab_section_coordinator_layout);
         this.collapsingToolbarLayout = findViewById(R.id.tab_section_collapsing_toolbar);
         this.appBarLayout = findViewById(R.id.tab_section_appbar);
         this.toolbar = new MoWrapperToolbar(findViewById(R.id.tab_section_toolbar), findViewById(R.id.tab_section_toolbar_linear_layout));

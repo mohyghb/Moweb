@@ -523,9 +523,11 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         isPaused = true;
     }
 
-    public void onDestroy(){
+    public void onDestroy() {
+        if (getParent() != null) {
+            ((ViewGroup) getParent()).removeView(this);
+        }
         super.destroy();
-        //todo remove all the js interfaces
     }
 
     public boolean isPaused() {

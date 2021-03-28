@@ -481,6 +481,8 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
         this.moWebView.onResume();
     }
     public void onDestroy(){
+        if (moWebView == null)
+            return;
         this.moWebView.onDestroy();
     }
 

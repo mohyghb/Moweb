@@ -209,7 +209,7 @@ public class MoTabsManager {
      * something has been removed
      * @param t
      */
-    public static void delete(MoTab t) {
+    public static void delete(Context context, MoTab t) {
         t.deleteTab();
         switch (t.getType()){
             case MoTabType.TYPE_NORMAL:
@@ -219,7 +219,8 @@ public class MoTabsManager {
                 privateTabs.remove(t);
                 break;
         }
-        MoTabController.instance.notifyTabRemoved(t);
+        tabSparseArray.remove(t.getId());
+        MoTabController.instance.notifyTabRemoved(context, t);
     }
 
 
@@ -311,7 +312,7 @@ public class MoTabsManager {
      * from our database
      */
     public static void clearAllNormalTabs(Context context){
-        clearAll(tabs);
+        clearAll(context, tabs);
         save(context);
         Toast.makeText(context,context.getString(R.string.toast_closed_all_normal_tabs),Toast.LENGTH_SHORT).show();
     }
@@ -321,9 +322,9 @@ public class MoTabsManager {
      * the selected mo tabs
      * @param selected selected tabs to be removed
      */
-    public static void removeSelectedTabs(List<MoTab> selected){
+    public static void removeSelectedTabs(Context context, List<MoTab> selected){
         for(MoTab t: selected) {
-            delete(t);
+            delete(context, t);
         }
     }
 
@@ -332,7 +333,7 @@ public class MoTabsManager {
      * from our database
      */
     public static void clearAllPrivateTabs(Context context){
-        clearAll(privateTabs);
+        clearAll(context, privateTabs);
         Toast.makeText(context,context.getString(R.string.toast_closed_all_incognito_tabs),Toast.LENGTH_SHORT).show();
     }
 
@@ -340,9 +341,9 @@ public class MoTabsManager {
      * deletes all the tabs inside ts
      * @param ts
      */
-    private static void clearAll(List<MoTab> ts) {
+    private static void clearAll(Context context, List<MoTab> ts) {
         for (int i = ts.size() - 1; i >= 0; i--) {
-            delete(ts.get(i));
+            delete(context, ts.get(i));
         }
     }
 

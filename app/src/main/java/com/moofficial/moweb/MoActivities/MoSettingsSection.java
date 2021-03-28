@@ -20,7 +20,6 @@ public class MoSettingsSection {
 
 
     private Context context;
-    private SharedPreferences sharedPreferences;
 
     private static MoSettingsSection instance;
 
@@ -36,7 +35,6 @@ public class MoSettingsSection {
 
     public MoSettingsSection(Context c){
         this.context = c;
-        this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(c);
         init();
     }
 
