@@ -275,7 +275,8 @@ public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed ,M
         if(tabSelectable.hasAction()) {
             tabSelectable.removeAction();
             return true;
-        }else if(MoTabController.instance.isNotOutOfOptions()){
+        }else if(MoTabController.instance.isNotOutOfOptions()) {
+            MoTabController.instance.getUpdateTabActivity().update();
             transitionToTab.transition();
             return true;
         }

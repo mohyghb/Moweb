@@ -98,13 +98,16 @@ public class MoTabController implements MoSavable, MoLoadable {
      *  also find the current tab again because the current tab
      *  might have been removed
      */
-    public void notifyTabRemoved(MoTab t){
+    public void notifyTabRemoved(Context context, MoTab t){
         if(t.equals(currentTab)) {
             // then we are removing the current tab
             // change the current tab to the last item inside
             // the tab array or null if none exist
             MoLog.print("deleted current tab");
             updateCurrent(MoTabsManager.getLastTab(t.getType()));
+            updateTabActivity.update();
+            // need to save the index
+            save(context);
         }
     }
 
