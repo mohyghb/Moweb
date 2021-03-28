@@ -281,6 +281,7 @@ public class MoDownloadManager {
                 .build();
         fetch = Fetch.Impl.getInstance(fetchConfiguration);
         fetch.addListener(new MoRequestListener(context));
+        createNotificationChannel(context);
     }
 
     /**

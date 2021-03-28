@@ -49,8 +49,8 @@ public class MoWebAppLoader {
                 e.printStackTrace();
             }
         });
-        MoDownloadManager.setUp(context);
 
+        MoDownloadManager.setUp(context);
     }
 
 
