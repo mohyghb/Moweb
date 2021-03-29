@@ -3,82 +3,66 @@ package com.moofficial.moweb.MoActivities;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import androidx.preference.PreferenceManager;
-
 import com.moofficial.moweb.MoSettingsEssentials.MoSharedPref.MoSharedPref;
 import com.moofficial.moweb.MoSettingsEssentials.MoTheme.MoTheme;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchEngine;
 import com.moofficial.moweb.Moweb.MoWebFeatures.MoWebFeatures;
 import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistoryManager;
-import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.MoAutoFill.MoUserPassAutoFill.MoUserPassManager;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebUtils;
 import com.moofficial.moweb.R;
 
 public class MoSettingsSection {
 
 
-
-    private Context context;
-
     private static MoSettingsSection instance;
 
-    public static void init(Context c){
+    public static void init(Context c) {
         initDefaults(c);
         instance = new MoSettingsSection(c);
     }
 
-    public static MoSettingsSection getInstance(){
+    public static MoSettingsSection getInstance() {
         return instance;
     }
 
 
-    public MoSettingsSection(Context c){
-        this.context = c;
-        init();
+    public MoSettingsSection(Context c) {
+        updateAll(c);
     }
 
-    private void init() {
-        updateAll();
+    private void updateAll(Context context) {
+        initSearchEngine(context);
+        initTheme(context);
+        initAutoComplete(context);
+        initHistorySettings(context);
+        initCookies(context);
     }
 
-    private void updateAll(){
-        initSearchEngine();
-        initTheme();
-        initAutoComplete();
-        initHistorySettings();
-        initCookies();
+    private void initSearchEngine(Context context) {
+        MoSearchEngine.updateSearchEngine(context);
     }
 
-
-
-
-    private void initSearchEngine(){
-        MoSearchEngine.updateSearchEngine(this.context);
+    private void initTheme(Context context) {
+        MoTheme.updateTheme(context);
     }
 
-    private void initTheme(){
-        MoTheme.updateTheme(this.context);
+    private void initAutoComplete(Context context) {
+        MoSearchAutoComplete.updateSearchAutoComplete(context);
     }
 
-    private void initAutoComplete(){
-        MoSearchAutoComplete.updateSearchAutoComplete(this.context);
-    }
-
-    private void initHistorySettings(){
+    private void initHistorySettings(Context context) {
         MoHistoryManager.updateSharedPref(context);
     }
 
-    private void initCookies() {
-        MoWebUtils.updateCookies(this.context);
+    private void initCookies(Context context) {
+        MoWebUtils.updateCookies(context);
     }
 
-    public void initFeatures() {
-        MoWebFeatures.updateSnapSearch(this.context);
-        MoWebFeatures.updateOneHand(this.context);
+    public void initFeatures(Context context) {
+        MoWebFeatures.updateSnapSearch(context);
+        MoWebFeatures.updateOneHand(context);
     }
-
-
 
     /**
      * initializes the default values for the settings if it has not been initialized

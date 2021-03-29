@@ -8,7 +8,8 @@ import androidx.annotation.NonNull;
 
 public class MoHitHandler extends Handler {
 
-    private MoOnHandleMessage onHandleMessage = message -> {};
+    private MoOnHandleMessage onHandleMessage = message -> {
+    };
 
     public MoOnHandleMessage getOnHandleMessage() {
         return onHandleMessage;

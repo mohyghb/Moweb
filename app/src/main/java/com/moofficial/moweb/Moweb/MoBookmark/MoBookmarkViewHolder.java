@@ -14,7 +14,7 @@ import com.moofficial.moweb.R;
 public class MoBookmarkViewHolder extends RecyclerView.ViewHolder {
 
     CardView cardView;
-    TextView url,title;
+    TextView url, title;
     MoLogo imageTextLogo;
     ConstraintLayout layout;
 

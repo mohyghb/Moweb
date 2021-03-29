@@ -16,8 +16,6 @@ import static com.moofficial.moessentials.MoEssentials.MoFileManager.MoFileExten
 public class MoDownload implements MoSelectableItem, MoSearchableItem {
 
 
-
-
     private boolean selected, searched;
     private File file;
     private FileType type;
@@ -56,7 +54,7 @@ public class MoDownload implements MoSelectableItem, MoSearchableItem {
         this.download = d;
     }
 
-    public Download getDownload () {
+    public Download getDownload() {
         return this.download;
     }
 
@@ -76,7 +74,7 @@ public class MoDownload implements MoSelectableItem, MoSearchableItem {
 
     @Override
     public boolean updateSearchable(Object... objects) {
-        this.searched = MoSearchableUtils.isSearchable(true,objects,this.file.getName());
+        this.searched = MoSearchableUtils.isSearchable(true, objects, this.file.getName());
         return isSearchable();
     }
 

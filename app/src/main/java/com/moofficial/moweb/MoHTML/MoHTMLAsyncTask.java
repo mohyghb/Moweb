@@ -7,7 +7,7 @@ import com.moofficial.moweb.MoHTML.Html.MoHtml;
 
 import java.io.IOException;
 
-public class MoHTMLAsyncTask extends AsyncTask<Void,Void,Void> {
+public class MoHTMLAsyncTask extends AsyncTask<Void, Void, Void> {
 
 
     private String url;
@@ -15,18 +15,18 @@ public class MoHTMLAsyncTask extends AsyncTask<Void,Void,Void> {
     private Runnable onHtmlError;
     private String html;
 
-    public MoHTMLAsyncTask setUrl(String u){
+    public MoHTMLAsyncTask setUrl(String u) {
         this.url = u;
         return this;
     }
 
 
-    public MoHTMLAsyncTask setOnHtmlReceived(MoRunnable u){
+    public MoHTMLAsyncTask setOnHtmlReceived(MoRunnable u) {
         this.onHtmlReceived = u;
         return this;
     }
 
-    public MoHTMLAsyncTask setOnHtmlError(Runnable u){
+    public MoHTMLAsyncTask setOnHtmlError(Runnable u) {
         this.onHtmlError = u;
         return this;
     }
@@ -36,7 +36,7 @@ public class MoHTMLAsyncTask extends AsyncTask<Void,Void,Void> {
         try {
             this.html = MoHtml.getHtml(this.url);
         } catch (IOException ignore) {
-            if(this.onHtmlError!=null)
+            if (this.onHtmlError != null)
                 onHtmlError.run();
         }
         return null;
@@ -45,7 +45,7 @@ public class MoHTMLAsyncTask extends AsyncTask<Void,Void,Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if(this.onHtmlReceived!=null)
+        if (this.onHtmlReceived != null)
             onHtmlReceived.run(this.html);
     }
 }

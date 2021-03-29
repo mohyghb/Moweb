@@ -17,9 +17,8 @@ import com.moofficial.moweb.R;
 
 import java.util.List;
 
-public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkViewHolder,MoBookmark>
+public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkViewHolder, MoBookmark>
         implements MoSearchableList, MoSelectableList<MoBookmark> {
-
 
 
     private boolean disableLongClick = false;
@@ -38,9 +37,8 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
 
 
     public MoBookmarkRecyclerAdapter(Context context, List<MoBookmark> dataSet) {
-        super(context,dataSet);
+        super(context, dataSet);
     }
-
 
 
     public MoOnOpenBookmarkListener getOpenBookmarkListener() {
@@ -69,7 +67,7 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
     @NonNull
     @Override
     public MoBookmarkViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v =  MoInflaterView.inflate(R.layout.book_mark_view_holder,parent.getContext());
+        View v = MoInflaterView.inflate(R.layout.book_mark_view_holder, parent.getContext());
         v.setLayoutParams(getMatchWrapParams());
         return new MoBookmarkViewHolder(v);
     }
@@ -92,19 +90,19 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
                 h.title.setText(bookmark.getName());
                 h.imageTextLogo
                         .showLogoHideText()
-                        .setInner(ContextCompat.getDrawable(context,R.drawable.ic_baseline_folder_open_24))
+                        .setInner(ContextCompat.getDrawable(context, R.drawable.ic_baseline_folder_open_24))
                         .setText(bookmark.getName());
                 break;
         }
 
-        onClickListener(h, bookmark,i);
-        onLongClickListener(h, bookmark,i);
+        onClickListener(h, bookmark, i);
+        onLongClickListener(h, bookmark, i);
         addSelectColorToHolder(h, bookmark);
 
     }
 
     private void addSelectColorToHolder(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark) {
-        if(!disableSelectColor) {
+        if (!disableSelectColor) {
             h.imageTextLogo.onSelect(bookmark, bookmark.isFolder());
             MoSelectableUtils.applySelectedDrawable(context, R.drawable.selected_item_highlight, h.layout, bookmark);
         }
@@ -112,11 +110,11 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
 
     @Override
     public void onBindViewHolder(@NonNull MoBookmarkViewHolder holder, int position, @NonNull List<Object> payloads) {
-        if(payloads.isEmpty()) {
+        if (payloads.isEmpty()) {
             super.onBindViewHolder(holder, position, payloads);
         } else {
             // 100 percent this is the select payload
-            addSelectColorToHolder(holder,dataSet.get(position));
+            addSelectColorToHolder(holder, dataSet.get(position));
         }
     }
 
@@ -132,24 +130,22 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
         }
     }
 
-    private void activateSelectMode(int i){
-        if(!selectable.isInActionMode()){
+    private void activateSelectMode(int i) {
+        if (!selectable.isInActionMode()) {
             selectable.activateSpecialMode();
             onSelect(i);
         }
     }
 
 
-
-    private void onClickListener(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark,int i) {
+    private void onClickListener(@NonNull MoBookmarkViewHolder h, MoBookmark bookmark, int i) {
         h.cardView.setOnClickListener(view -> {
-            if(isSelecting()){
+            if (isSelecting()) {
                 onSelect(i);
-            }
-            else{
-                if(bookmark.isFolder()){
+            } else {
+                if (bookmark.isFolder()) {
                     openBookmarkListener.openFolder(bookmark);
-                }else{
+                } else {
                     openBookmarkListener.openBookmark(bookmark);
                 }
             }
@@ -161,13 +157,9 @@ public class MoBookmarkRecyclerAdapter extends MoSelectableAdapter<MoBookmarkVie
      * delete all the selected items
      */
     public void deleteSelected() {
-        MoBookmarkManager.deleteSelectedBookmarks(this.context,this.selectedItems);
+        MoBookmarkManager.deleteSelectedBookmarks(this.context, this.selectedItems);
         this.dataSet.removeAll(selectedItems);
     }
-
-
-
-
 
 
     @Override

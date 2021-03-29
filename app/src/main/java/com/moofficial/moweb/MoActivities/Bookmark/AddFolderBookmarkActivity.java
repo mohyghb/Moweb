@@ -50,18 +50,18 @@ public class AddFolderBookmarkActivity extends MoSmartActivity {
                 .setOnButtonClickListener(view -> BookmarkFolderChooserActivity.startActivityForResult(this,
                         CHOOSE_FOLDER_REQUEST_CODE))
                 .getCardView().makeCardRecRound();
-        l.linearNested.addView(folderButton, MoMarginBuilder.getLinearParams(this,8));
+        l.linearNested.addView(folderButton, MoMarginBuilder.getLinearParams(this, 8));
     }
 
     private void initEditText() {
         this.editText = new MoEditText(this).setHint(R.string.add_folder_in_bookmark_hint_dialog).actionDone()
                 .setOnEditorActionListener((textView, i, keyEvent) -> {
-                    if(i == EditorInfo.IME_ACTION_DONE) {
+                    if (i == EditorInfo.IME_ACTION_DONE) {
                         createFolder();
                     }
                     return false;
                 });
-        l.linearNested.addView(this.editText,MoMarginBuilder.getLinearParams(this,8));
+        l.linearNested.addView(this.editText, MoMarginBuilder.getLinearParams(this, 8));
     }
 
     private void initMoToolBar() {
@@ -72,7 +72,7 @@ public class AddFolderBookmarkActivity extends MoSmartActivity {
         syncTitle(moToolBar.getTitle());
     }
 
-    private void initAcceptDenyLayout(){
+    private void initAcceptDenyLayout() {
         this.acceptDenyLayout = new MoAcceptDenyLayout(this);
         this.acceptDenyLayout.setAcceptButtonText(R.string.create)
                 .setOnAcceptClickedListener(view -> createFolder())
@@ -85,9 +85,9 @@ public class AddFolderBookmarkActivity extends MoSmartActivity {
     private void createFolder() {
         String name = editText.getInputText().trim();
         MoBookmarkManager.createFolder(this, name,
-                MoBookmarkManager.getFolder(this.folderParent), editText,() -> {
-            Toast.makeText(this,
-                    String.format("Folder %s was created!",name),Toast.LENGTH_SHORT).show();
+                MoBookmarkManager.getFolder(this.folderParent), editText, () -> {
+                    Toast.makeText(this,
+                            String.format("Folder %s was created!", name), Toast.LENGTH_SHORT).show();
                     setResultAndFinish(name);
                 });
     }
@@ -99,8 +99,8 @@ public class AddFolderBookmarkActivity extends MoSmartActivity {
      */
     private void setResultAndFinish(String name) {
         Intent data = new Intent();
-        data.putExtra(EXTRA_FOLDER_NAME,name);
-        setResult(RESULT_OK,data);
+        data.putExtra(EXTRA_FOLDER_NAME, name);
+        setResult(RESULT_OK, data);
         finish();
     }
 
@@ -108,20 +108,20 @@ public class AddFolderBookmarkActivity extends MoSmartActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == CHOOSE_FOLDER_REQUEST_CODE && data!=null) {
+        if (resultCode == RESULT_OK && requestCode == CHOOSE_FOLDER_REQUEST_CODE && data != null) {
             folderParent = BookmarkFolderChooserActivity.getChosenFolder(data.getExtras());
             folderButton.setDescription(folderParent);
         }
     }
 
 
-    public static void launch(Activity a, String parent,int requestCode) {
-        Intent intent = new Intent(a,AddFolderBookmarkActivity.class);
+    public static void launch(Activity a, String parent, int requestCode) {
+        Intent intent = new Intent(a, AddFolderBookmarkActivity.class);
         intent.putExtra(EXTRA_PARENT_FOLDER, parent);
         a.startActivityForResult(intent, requestCode);
     }
 
-    public static String getExtraFolderName(Intent data){
+    public static String getExtraFolderName(Intent data) {
         return Objects.requireNonNull(data.getExtras()).getString(EXTRA_FOLDER_NAME);
     }
 

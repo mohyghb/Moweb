@@ -34,23 +34,23 @@ public class MoSavePasswordView extends MoConstraint {
     }
 
 
-    public MoSavePasswordView setOnSaveClickListener(View.OnClickListener l){
+    public MoSavePasswordView setOnSaveClickListener(View.OnClickListener l) {
         save.setOnClickListener(l);
         return this;
     }
 
-    public MoSavePasswordView setOnCloseClickListener(View.OnClickListener l){
+    public MoSavePasswordView setOnCloseClickListener(View.OnClickListener l) {
         close.setOnClickListener(l);
         return this;
     }
 
-    public MoSavePasswordView setOnNeverClickListener(View.OnClickListener l){
+    public MoSavePasswordView setOnNeverClickListener(View.OnClickListener l) {
         neverSave.setOnClickListener(l);
         return this;
     }
 
 
-    public MoSavePasswordView setPasswordText(String text){
+    public MoSavePasswordView setPasswordText(String text) {
         password.setText(text);
         return this;
     }
@@ -74,16 +74,16 @@ public class MoSavePasswordView extends MoConstraint {
     }
 
 
-
     /**
      * we get permission to save their
      * passwords
-     * @param c context for views
+     *
+     * @param c        context for views
      * @param accepted when user hits save button, this function is called
-     * @param never when the user hits this, we should
-     *             not save any other user password for the host
+     * @param never    when the user hits this, we should
+     *                 not save any other user password for the host
      */
-    public static void askUserToSave(Context c, WebView webView, Runnable accepted,Runnable never) {
+    public static void askUserToSave(Context c, WebView webView, Runnable accepted, Runnable never) {
         MoSavePasswordView savePasswordView = new MoSavePasswordView(c);
         MoPopupWindow popupWindow = new MoPopupWindow(c)
                 .setViews(savePasswordView)
@@ -96,15 +96,15 @@ public class MoSavePasswordView extends MoConstraint {
                 .build();
 
         savePasswordView
-                .setOnCloseClickListener((v)-> popupWindow.dismiss())
-                .setOnSaveClickListener((v)-> {
+                .setOnCloseClickListener((v) -> popupWindow.dismiss())
+                .setOnSaveClickListener((v) -> {
                     accepted.run();
                     popupWindow.dismiss();
                 })
-                .setOnNeverClickListener((v)-> {
+                .setOnNeverClickListener((v) -> {
                     never.run();
                     popupWindow.dismiss();
                 });
-        popupWindow.showOn(webView,0,0, Gravity.BOTTOM);
+        popupWindow.showOn(webView, 0, 0, Gravity.BOTTOM);
     }
 }

@@ -12,22 +12,18 @@ import java.net.URL;
 public class MoURL implements MoSavable, MoLoadable {
 
 
-
-
-
     private String urlString;
     private URL url;
 
-    public MoURL(String url){
+    public MoURL(String url) {
         this.urlString = url;
         try {
             this.url = new URL(this.urlString);
         } catch (MalformedURLException ignore) {
-            //ignore.printStackTrace();
         }
     }
 
-    public MoURL(String data,Context c){
+    public MoURL(String data, Context c) {
         this(data);
     }
 
@@ -50,10 +46,11 @@ public class MoURL implements MoSavable, MoLoadable {
 
     /**
      * returns true if the url is not null and valid url
+     *
      * @return
      */
-    public boolean isValid(){
-        return this.url!=null && URLUtil.isValidUrl(this.urlString);
+    public boolean isValid() {
+        return this.url != null && URLUtil.isValidUrl(this.urlString);
     }
 
     /**

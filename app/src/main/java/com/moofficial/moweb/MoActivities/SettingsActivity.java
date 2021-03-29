@@ -61,7 +61,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    public static class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener{
+    public static class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
 
         private Activity activity;
@@ -69,11 +69,12 @@ public class SettingsActivity extends AppCompatActivity {
         private Preference savePasswordsPref;
         private Preference setAsDefaultPref;
 
-        public SettingsFragment(Activity a){
+        public SettingsFragment(Activity a) {
             this.activity = a;
         }
 
-        public SettingsFragment(){}
+        public SettingsFragment() {
+        }
 
 
         private void init() {
@@ -107,7 +108,7 @@ public class SettingsActivity extends AppCompatActivity {
             this.savePasswordsPref = findPreference(string(R.string.passwords));
             if (this.savePasswordsPref != null) {
                 this.savePasswordsPref.setOnPreferenceClickListener(preference -> {
-                    MoKeyGuard.authenticateUser(getActivity(),"Authentication",
+                    MoKeyGuard.authenticateUser(getActivity(), "Authentication",
                             "Please authenticate yourself in order to access the passwords of this device");
                     return false;
                 });
@@ -141,14 +142,14 @@ public class SettingsActivity extends AppCompatActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-            if(s.equals(string(R.string.search_engine))){
+            if (s.equals(string(R.string.search_engine))) {
                 MoSearchEngine.updateSearchEngine(activity);
-            }else if(s.equals(string(R.string.theme_version))){
+            } else if (s.equals(string(R.string.theme_version))) {
                 MoTheme.updateTheme(activity);
                 requireActivity().recreate();
-            }else if(s.equals(string(R.string.auto_complete))){
+            } else if (s.equals(string(R.string.auto_complete))) {
                 MoSearchAutoComplete.updateSearchAutoComplete(activity);
-            }else if(s.equals(string(R.string.history_enabled))){
+            } else if (s.equals(string(R.string.history_enabled))) {
                 MoHistoryManager.updateSharedPref(activity);
             } else if (s.equals(string(R.string.cookies_enabled))) {
                 MoWebUtils.updateCookies(activity);
@@ -161,10 +162,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
 
-
-
-
-        private String string(int id){
+        private String string(int id) {
             return activity.getString(id);
         }
 

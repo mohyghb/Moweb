@@ -34,7 +34,7 @@ public class MoHistoryBundle implements MoFileSavable, MoLoadable {
         return this;
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return this.histories.isEmpty();
     }
 
@@ -51,23 +51,24 @@ public class MoHistoryBundle implements MoFileSavable, MoLoadable {
      * adds histories to the user suggestion search
      * when they are typing inside the box if
      * the suggestion is a good one
-     * @param search search text typed by the user
+     *
+     * @param search     search text typed by the user
      * @param suggestion a list of suggestions
      */
-    public void addSuggestions(String search, MoSuggestions suggestion){
-        for(MoHistory h: histories) {
-            if(suggestion.reachedLimit()) break;
-            h.addToSuggestionIfApplicable(search,suggestion);
+    public void addSuggestions(String search, MoSuggestions suggestion) {
+        for (MoHistory h : histories) {
+            if (suggestion.reachedLimit()) break;
+            h.addToSuggestionIfApplicable(search, suggestion);
         }
     }
 
 
-    public long getTimeInMillis(){
+    public long getTimeInMillis() {
         return this.bundleDate.getTimeInMillis();
     }
 
-    public String getKey(){
-        if(key==null){
+    public String getKey() {
+        if (key == null) {
             this.key = this.bundleDate.getDateTime().getDateAsKey(KEY_SEPARATOR);
         }
         return this.key;
@@ -78,20 +79,21 @@ public class MoHistoryBundle implements MoFileSavable, MoLoadable {
      * history is not the same as the one that is passed
      * if it is, we just increment the last history added
      * if not we just add it to the list
+     *
      * @param h history to be added
      */
-    public void add(MoHistory h){
-        if(histories.isEmpty()){
+    public void add(MoHistory h) {
+        if (histories.isEmpty()) {
             // if the histories is empty just add it
             addToHistory(h);
-        }else {
+        } else {
             // if not, check to see if the last
             // history added is the same as this one
             // if it is, don't add it, just increment the history
             MoHistory last = lastHistory();
-            if(last.isApproximateSame(h)){
+            if (last.isApproximateSame(h)) {
                 last.increment();
-            }else{
+            } else {
                 addToHistory(h);
             }
         }
@@ -100,9 +102,10 @@ public class MoHistoryBundle implements MoFileSavable, MoLoadable {
     /**
      * just add the history to the list
      * without any checking
+     *
      * @param h history to be added
      */
-    private void addToHistory(MoHistory h){
+    private void addToHistory(MoHistory h) {
         h.setParentBundle(this);
         histories.add(h);
     }
@@ -110,29 +113,32 @@ public class MoHistoryBundle implements MoFileSavable, MoLoadable {
     /**
      * saves the history bundle inside the internal
      * directory to be loaded back in later
+     *
      * @param context
      * @throws IOException
      */
-    public void save(Context context,boolean removeUnSavableAfter) throws IOException {
-        MoFileManagerUtils.write(context,this);
+    public void save(Context context, boolean removeUnSavableAfter) throws IOException {
+        MoFileManagerUtils.write(context, this);
         removeUnSavableFromList(removeUnSavableAfter);
     }
 
     /**
      * overloaded method for saving
+     *
      * @param context
      * @throws IOException
      */
     public void save(Context context) throws IOException {
-        save(context,false);
+        save(context, false);
     }
 
     /**
      * deletes the file for this bundle
+     *
      * @param context
      */
-    public void delete(Context context){
-        MoFileManagerUtils.delete(context,this);
+    public void delete(Context context) {
+        MoFileManagerUtils.delete(context, this);
     }
 
     /**
@@ -141,15 +147,16 @@ public class MoHistoryBundle implements MoFileSavable, MoLoadable {
      * if this bundle holds any other histories
      * or deletes the bundle since it does
      * not hold any more histories
+     *
      * @param context of the app
      * @throws IOException
      */
     public void update(Context context) throws IOException {
         removeUnSavableFromList(true);
-        if(this.histories.isEmpty()){
+        if (this.histories.isEmpty()) {
             // delete the bundle, since it holds no history anymore
             delete(context);
-        }else{
+        } else {
             save(context);
         }
     }
@@ -157,15 +164,16 @@ public class MoHistoryBundle implements MoFileSavable, MoLoadable {
 
     /**
      * removes all the histories of which satisfy the requirement
+     *
      * @param threshold if the history milli
      */
-    public boolean removeHistoriesFrom(Context context,long threshold) throws IOException {
-        for(int i = histories.size()-1;i>=0;i--){
+    public boolean removeHistoriesFrom(Context context, long threshold) throws IOException {
+        for (int i = histories.size() - 1; i >= 0; i--) {
             MoHistory h = histories.get(i);
-            if(h.getTimeInMillis()>=threshold) {
+            if (h.getTimeInMillis() >= threshold) {
                 // this history should be removed
                 histories.remove(i);
-            }else{
+            } else {
                 // we reached a point inside the bundle
                 // where the current history is below the threshold
                 // therefore, since the histories are sorted already
@@ -182,14 +190,13 @@ public class MoHistoryBundle implements MoFileSavable, MoLoadable {
 
 
     /**
-     *
      * @param removeUnSavableAfter if true, we remove the histories which are not
      *                             savable
      */
     private void removeUnSavableFromList(boolean removeUnSavableAfter) {
-        if(removeUnSavableAfter){
-            for(int i = histories.size()-1;i>=0;i--){
-                if(!histories.get(i).isSavable()){
+        if (removeUnSavableAfter) {
+            for (int i = histories.size() - 1; i >= 0; i--) {
+                if (!histories.get(i).isSavable()) {
                     histories.remove(i);
                 }
             }
@@ -199,10 +206,11 @@ public class MoHistoryBundle implements MoFileSavable, MoLoadable {
     /**
      * removes the bundle date from the list of
      * all histories if the bundle is empty
+     *
      * @param allHistories
      */
-    public void removeFromListIfEmpty(List<MoHistory> allHistories){
-        if(this.isEmpty()){
+    public void removeFromListIfEmpty(List<MoHistory> allHistories) {
+        if (this.isEmpty()) {
             allHistories.remove(bundleDate);
         }
     }
@@ -210,10 +218,11 @@ public class MoHistoryBundle implements MoFileSavable, MoLoadable {
 
     /**
      * the histories list can not be empty
+     *
      * @return the last history inside the list
      */
     public MoHistory lastHistory() {
-        return this.histories.get(this.histories.size()-1);
+        return this.histories.get(this.histories.size() - 1);
     }
 
 
@@ -230,7 +239,7 @@ public class MoHistoryBundle implements MoFileSavable, MoLoadable {
     @Override
     public void load(String s, Context context) {
         String[] com = MoFile.loadable(s);
-        this.bundleDate.load(com[0],context);
+        this.bundleDate.load(com[0], context);
         MoFile.setData(context, com[1], histories, (context1, s1) -> {
             MoHistory h = new MoHistory();
             h.load(s1, context1);
@@ -242,6 +251,6 @@ public class MoHistoryBundle implements MoFileSavable, MoLoadable {
 
     @Override
     public String getData() {
-        return MoFile.getData(this.bundleDate,this.histories);
+        return MoFile.getData(this.bundleDate, this.histories);
     }
 }

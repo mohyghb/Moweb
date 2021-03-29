@@ -13,7 +13,7 @@ import com.moofficial.moweb.R;
 public class MoDownloadConfirmation extends MoConstraint {
 
     private TextView description, title;
-    private Button save,close;
+    private Button save, close;
     private MoLogo logo;
 
     public MoDownloadConfirmation(Context context) {
@@ -37,13 +37,13 @@ public class MoDownloadConfirmation extends MoConstraint {
     }
 
     public MoDownloadConfirmation withName(String name) {
-        this.description.setText("Do you want to download " + name +"?");
+        this.description.setText("Do you want to download " + name + "?");
         this.logo.setText(MoString.getSignature(name));
         return this;
     }
 
     public MoDownloadConfirmation onCancel(Runnable onCancel) {
-        this.close.setOnClickListener((v)-> {
+        this.close.setOnClickListener((v) -> {
             onCancel.run();
             this.close.setEnabled(false);
         });
@@ -51,7 +51,7 @@ public class MoDownloadConfirmation extends MoConstraint {
     }
 
     public MoDownloadConfirmation setSize(long total) {
-        this.title.setText("Download (" + MoDownloadUtils.formatSize(total)+")");
+        this.title.setText("Download (" + MoDownloadUtils.formatSize(total) + ")");
         return this;
     }
 

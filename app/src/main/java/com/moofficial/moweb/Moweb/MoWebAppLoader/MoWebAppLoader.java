@@ -17,39 +17,23 @@ import java.io.IOException;
 
 public class MoWebAppLoader {
 
-    public static void loadApp(Context context){
+    public static void loadApp(Context context) {
         // init home pages
-        MoLog.printRunTime("home pages",()-> MoHomePageManager.load(context));
+        MoHomePageManager.load(context);
         // init bookmarks
-        MoLog.printRunTime("bookmarks",()-> MoBookmarkManager.load(context));
+        MoBookmarkManager.load(context);
         // init animations
         MoAnimation.initAllAnimations(context);
-
         // init tabs and tab controller
-        MoLog.printRunTime("load state ", new Runnable() {
-            @Override
-            public void run() {
-                // load back all the tabs
-                MoLog.printRunTime("tabs",()-> MoTabsManager.load(context));
-                // load the tab controller
-                MoTabController.instance.load("",context);
-
-            }
-        });
-
-
+        MoTabsManager.load(context);
+        // load the tab controller
+        MoTabController.instance.load("", context);
         // init history
-        MoLog.printRunTime("history", () -> {
-            try {
-                MoHistoryManager.load(context);
-//                for(int i = 0; i < 300;i++){
-//                    MoHistoryManager.add(this, MoSearchEngine.instance.getURL(i+""),i+"");
-//                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-
+        try {
+            MoHistoryManager.load(context);
+        } catch (IOException ignore) {
+        }
+        // setup download manager
         MoDownloadManager.setUp(context);
     }
 

@@ -43,8 +43,8 @@ public class MoUserPassAdapter extends MoSelectableAdapter<MoUserPassHolder, MoU
                 .setPassword(MoString.repeat("*", passwordLength))
                 .setHost(a.getHost())
                 .hideCopies()
-                .setOnSelectListener((v)-> {
-                    if(isSelecting()) {
+                .setOnSelectListener((v) -> {
+                    if (isSelecting()) {
                         onSelect(position);
                     } else {
                         // create a menu and let them copy stuff
@@ -52,7 +52,7 @@ public class MoUserPassAdapter extends MoSelectableAdapter<MoUserPassHolder, MoU
                     }
                 })
                 .setOnLongSelectListener(v -> {
-                    if(isNotSelecting()) {
+                    if (isNotSelecting()) {
                         startSelecting(position);
                         return true;
                     }
@@ -61,14 +61,14 @@ public class MoUserPassAdapter extends MoSelectableAdapter<MoUserPassHolder, MoU
                 .getLogo().setOuter(MoDrawableUtils.outlineCircle(context));
 
 
-        MoSelectableUtils.applySelectedColor(context,holder.layout.getCoverLayout(),a);
+        MoSelectableUtils.applySelectedColor(context, holder.layout.getCoverLayout(), a);
     }
 
     /**
      * deletes the selected items and updates the adapter
      */
     public void performDelete() {
-        MoUserPassManager.deleteSelected(context,getSelectedItems());
+        MoUserPassManager.deleteSelected(context, getSelectedItems());
         dataSet.removeAll(getSelectedItems());
         clearSelection();
     }
@@ -76,6 +76,7 @@ public class MoUserPassAdapter extends MoSelectableAdapter<MoUserPassHolder, MoU
     /**
      * if they can see this view, that means that they have been authorized already
      * since we don't launch the activity without asking them about credentials
+     *
      * @param a auto fill to copy the values from
      * @param v view to show the menu on top of
      */
@@ -83,15 +84,15 @@ public class MoUserPassAdapter extends MoSelectableAdapter<MoUserPassHolder, MoU
         MoPopUpMenu copyMenu = new MoPopUpMenu(context)
                 .setEntries(
                         new Pair<>(context.getString(R.string.copy_password), item -> {
-                            MoClipboardUtils.add(context,a.getPassword().getValue());
+                            MoClipboardUtils.add(context, a.getPassword().getValue());
                             return false;
                         }),
                         new Pair<>(context.getString(R.string.copy_username), item -> {
-                            MoClipboardUtils.add(context,a.getUsername().getValue());
+                            MoClipboardUtils.add(context, a.getUsername().getValue());
                             return false;
                         }),
                         new Pair<>(context.getString(R.string.copy_host), item -> {
-                            MoClipboardUtils.add(context,a.getHost());
+                            MoClipboardUtils.add(context, a.getHost());
                             return false;
                         })
                 );

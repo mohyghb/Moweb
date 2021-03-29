@@ -14,10 +14,7 @@ import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 public class MoWebState implements MoSavable, MoLoadable {
 
 
-    private int scrollX = 0, scrollY =0;
-
-
-
+    private int scrollX = 0, scrollY = 0;
 
 
     public int getScrollX() {
@@ -43,10 +40,11 @@ public class MoWebState implements MoSavable, MoLoadable {
      * to the web view
      * scrolls it so (scrollX,scrollY)
      * where the user left off
+     *
      * @param w web view to apply the current state to
      */
-    public void applyState(MoWebView w){
-        w.scrollTo(scrollX,scrollY);
+    public void applyState(MoWebView w) {
+        w.scrollTo(scrollX, scrollY);
     }
 
     @Override
@@ -58,6 +56,6 @@ public class MoWebState implements MoSavable, MoLoadable {
 
     @Override
     public String getData() {
-        return MoFile.getData(this.scrollX,this.scrollY);
+        return MoFile.getData(this.scrollX, this.scrollY);
     }
 }

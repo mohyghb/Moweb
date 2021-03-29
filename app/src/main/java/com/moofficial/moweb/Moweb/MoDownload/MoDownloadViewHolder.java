@@ -15,7 +15,7 @@ import com.moofficial.moweb.R;
 
 public class MoDownloadViewHolder extends RecyclerView.ViewHolder {
     public MoLogo logo;
-    public TextView name,description, speed;
+    public TextView name, description, speed;
     public MoCardView card;
     public ConstraintLayout downloadLayout;
     public ProgressBar progressBar;
@@ -41,6 +41,7 @@ public class MoDownloadViewHolder extends RecyclerView.ViewHolder {
         this.downloadLayout.setVisibility(View.VISIBLE);
         this.description.setVisibility(View.GONE);
     }
+
     public void hideDownloadLayout() {
         this.downloadLayout.setVisibility(View.GONE);
         this.description.setVisibility(View.VISIBLE);

@@ -21,20 +21,20 @@ public class MoTabSuggestion {
     private Context context;
     private MoRunnable onSuggestionClicked;
 
-    public MoTabSuggestion(Context context, MoRecyclerView v){
+    public MoTabSuggestion(Context context, MoRecyclerView v) {
         this.context = context;
         this.recyclerView = v;
     }
 
     public MoTabSuggestion init() {
-        adapter = new MoSuggestionsAdapter(new ArrayList<>(),context,this.onSuggestionClicked);
-        recyclerView = MoRecyclerUtils.get(recyclerView,adapter)
-                            .show();
+        adapter = new MoSuggestionsAdapter(new ArrayList<>(), context, this.onSuggestionClicked);
+        recyclerView = MoRecyclerUtils.get(recyclerView, adapter)
+                .show();
         return this;
     }
 
 
-    public MoTabSuggestion setOnSuggestionClicked(MoRunnable runnable){
+    public MoTabSuggestion setOnSuggestionClicked(MoRunnable runnable) {
         onSuggestionClicked = runnable;
         return this;
     }
@@ -42,10 +42,11 @@ public class MoTabSuggestion {
 
     /**
      * shows the suggestions that are inside MoSuggestions class
+     *
      * @param suggestions
      */
-    public void show(MoSuggestions suggestions){
-        if(suggestions==null || suggestions.isEmpty()) {
+    public void show(MoSuggestions suggestions) {
+        if (suggestions == null || suggestions.isEmpty()) {
             hide();
             return;
         }
@@ -56,15 +57,11 @@ public class MoTabSuggestion {
     }
 
 
-
-
     public void hide() {
         this.recyclerView.setVisibility(View.GONE);
         adapter.setDataSet(new ArrayList<>());
         adapter.notifyDataSetChanged();
     }
-
-
 
 
 }

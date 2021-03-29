@@ -39,7 +39,5 @@ public class MoDownloadReceiver extends BroadcastReceiver {
                 MoDownloadManager.resume(download.getId());
                 break;
         }
-
-
     }
 }

@@ -12,41 +12,41 @@ public class MoTouchPosition {
     private Runnable onTouchEvent, onLongClickListener;
     private Point point;
 
-    public MoTouchPosition(View v){
+    public MoTouchPosition(View v) {
         this.view = v;
         init();
     }
 
-    public MoTouchPosition setTouchEvent(Runnable r){
+    public MoTouchPosition setTouchEvent(Runnable r) {
         this.onTouchEvent = r;
         return this;
     }
 
-    public MoTouchPosition setLongClickListener(Runnable r){
+    public MoTouchPosition setLongClickListener(Runnable r) {
         this.onLongClickListener = r;
         return this;
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void init(){
+    private void init() {
         this.view.setOnTouchListener((view, motionEvent) -> {
-            point = new Point((int) motionEvent.getX(),(int) motionEvent.getY());
-            if(onTouchEvent!=null)
+            point = new Point((int) motionEvent.getX(), (int) motionEvent.getY());
+            if (onTouchEvent != null)
                 onTouchEvent.run();
             return false;
         });
         this.view.setOnLongClickListener(view -> {
-            if(onLongClickListener!=null)
+            if (onLongClickListener != null)
                 onLongClickListener.run();
             return false;
         });
     }
 
-    public int getX(){
+    public int getX() {
         return this.point.x;
     }
 
-    public int getY(){
+    public int getY() {
         return this.point.y;
     }
 

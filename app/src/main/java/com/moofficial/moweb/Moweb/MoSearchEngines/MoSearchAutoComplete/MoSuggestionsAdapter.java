@@ -23,7 +23,6 @@ public class MoSuggestionsAdapter extends MoRecyclerAdapter<MoSuggestionsAdapter
         MoSuggestion> {
 
 
-
     private MoRunnable onSuggestionClicked;
 
 
@@ -45,7 +44,7 @@ public class MoSuggestionsAdapter extends MoRecyclerAdapter<MoSuggestionsAdapter
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public MoSuggestionsAdapter(List<MoSuggestion> myDataset, Context c, MoRunnable runnable) {
-        super(c,myDataset);
+        super(c, myDataset);
         this.onSuggestionClicked = runnable;
         setHasStableIds(true);
     }
@@ -54,8 +53,8 @@ public class MoSuggestionsAdapter extends MoRecyclerAdapter<MoSuggestionsAdapter
     @NotNull
     @Override
     public MoSuggestionsAdapter.SuggestionViewHolder onCreateViewHolder(ViewGroup parent,
-                                                                 int viewType) {
-        View v = MoInflaterView.inflate(R.layout.suggestion_layout,parent.getContext());
+                                                                        int viewType) {
+        View v = MoInflaterView.inflate(R.layout.suggestion_layout, parent.getContext());
         v.setLayoutParams(getMatchWrapParams());
         return new MoSuggestionsAdapter.SuggestionViewHolder(v);
     }
@@ -67,7 +66,7 @@ public class MoSuggestionsAdapter extends MoRecyclerAdapter<MoSuggestionsAdapter
         holder.suggestion.setText(dataSet.get(position).getKey());
         holder.logo.setText(dataSet.get(position).getSearch()).medium();
         holder.layout.setOnClickListener(view -> {
-            if(onSuggestionClicked!=null)
+            if (onSuggestionClicked != null)
                 onSuggestionClicked.run(dataSet.get(position).getSearch());
         });
     }

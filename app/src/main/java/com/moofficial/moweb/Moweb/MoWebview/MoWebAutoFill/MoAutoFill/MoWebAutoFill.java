@@ -81,72 +81,73 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
     public static final String USERNAME_KEY = "username";
 
 
-    public static HashMap<String, Integer> autoCompleteTypes = new HashMap<String,Integer>(){{
+    public static HashMap<String, Integer> autoCompleteTypes = new HashMap<String, Integer>() {{
         put("off", OFF);
-        put("name",NAME);
-        put("honorific-prefix",HONORIFIC_PREFIX);
-        put("given-name",GIVEN_NAME);
-        put("additional-name",ADDITIONAL_NAME);
-        put("family-name",FAMILY_NAME);
-        put("honorific-suffix",HONORIFIC_SUFFIX);
-        put( "nickname",NICKNAME);
-        put("username",USERNAME);
-        put("email",EMAIL);
-        put("new-password",NEW_PASSWORD);
-        put("current-password",CURRENT_PASSWORD);
-        put("one-time-code",ONE_TIME_CODE);
-        put("organization-title",ORGANIZATION_TITLE);
-        put("organization",ORGANIZATION);
-        put("street-address",STREET_ADDRESS);
-        put("address-line1",ADDRESS_LINE_1);
-        put("address-line2",ADDRESS_LINE_2);
-        put("address-line3",ADDRESS_LINE_3);
-        put("address-level4",ADDRESS_LEVEL_4);
-        put("address-level3",ADDRESS_LEVEL_3);
-        put("address-level2",ADDRESS_LEVEL_2);
-        put("address-level1",ADDRESS_LEVEL_1);
-        put("country",COUNTRY);
-        put("country-name",COUNTRY_NAME);
-        put("postal-code",POSTAL_CODE);
-        put("cc-name",CC_NAME);
-        put("cc-given-name",CC_GIVEN_NAME);
-        put("cc-additional-name",CC_ADDITIONAL_NAME);
-        put("cc-family-name",CC_FAMILY_NAME);
-        put("cc-number",CC_NUMBER);
-        put("cc-exp",CC_EXP);
-        put("cc-exp-month",CC_EXP_MONTH);
-        put("cc-exp-year",CC_EXP_YEAR);
-        put("cc-csc",CC_CSC);
-        put("cc-type",CC_TYPE);
-        put("transaction-currency",TRANSACTION_CURRENCY);
-        put("transaction-amount",TRANSACTION_AMOUNT);
-        put("language",LANGUAGE);
-        put("bday",B_DAY);
-        put("bday-day",B_DAY_DAY);
-        put("bday-month",B_DAY_MONTH);
-        put("bday-year",B_DAY_YEAR);
-        put("sex",SEX);
-        put("tel",TEL);
-        put("tel-country-code",TEL_COUNTRY_CODE);
-        put("tel-national",TEL_NATIONAL);
-        put("tel-area-code",TEL_AREA_CODE);
-        put("tel-local",TEL_LOCAL);
-        put("tel-extension",TEL_EXTENSION);
-        put("impp",IMPP);
-        put("url",URL);
-        put("photo",PHOTO);
+        put("name", NAME);
+        put("honorific-prefix", HONORIFIC_PREFIX);
+        put("given-name", GIVEN_NAME);
+        put("additional-name", ADDITIONAL_NAME);
+        put("family-name", FAMILY_NAME);
+        put("honorific-suffix", HONORIFIC_SUFFIX);
+        put("nickname", NICKNAME);
+        put("username", USERNAME);
+        put("email", EMAIL);
+        put("new-password", NEW_PASSWORD);
+        put("current-password", CURRENT_PASSWORD);
+        put("one-time-code", ONE_TIME_CODE);
+        put("organization-title", ORGANIZATION_TITLE);
+        put("organization", ORGANIZATION);
+        put("street-address", STREET_ADDRESS);
+        put("address-line1", ADDRESS_LINE_1);
+        put("address-line2", ADDRESS_LINE_2);
+        put("address-line3", ADDRESS_LINE_3);
+        put("address-level4", ADDRESS_LEVEL_4);
+        put("address-level3", ADDRESS_LEVEL_3);
+        put("address-level2", ADDRESS_LEVEL_2);
+        put("address-level1", ADDRESS_LEVEL_1);
+        put("country", COUNTRY);
+        put("country-name", COUNTRY_NAME);
+        put("postal-code", POSTAL_CODE);
+        put("cc-name", CC_NAME);
+        put("cc-given-name", CC_GIVEN_NAME);
+        put("cc-additional-name", CC_ADDITIONAL_NAME);
+        put("cc-family-name", CC_FAMILY_NAME);
+        put("cc-number", CC_NUMBER);
+        put("cc-exp", CC_EXP);
+        put("cc-exp-month", CC_EXP_MONTH);
+        put("cc-exp-year", CC_EXP_YEAR);
+        put("cc-csc", CC_CSC);
+        put("cc-type", CC_TYPE);
+        put("transaction-currency", TRANSACTION_CURRENCY);
+        put("transaction-amount", TRANSACTION_AMOUNT);
+        put("language", LANGUAGE);
+        put("bday", B_DAY);
+        put("bday-day", B_DAY_DAY);
+        put("bday-month", B_DAY_MONTH);
+        put("bday-year", B_DAY_YEAR);
+        put("sex", SEX);
+        put("tel", TEL);
+        put("tel-country-code", TEL_COUNTRY_CODE);
+        put("tel-national", TEL_NATIONAL);
+        put("tel-area-code", TEL_AREA_CODE);
+        put("tel-local", TEL_LOCAL);
+        put("tel-extension", TEL_EXTENSION);
+        put("impp", IMPP);
+        put("url", URL);
+        put("photo", PHOTO);
     }};
 
 
-    public static final HashMap<String,Integer> fieldTypes = new HashMap<String,Integer>(){{
-        put("email",TYPE_EMAIL);
-        put("password",TYPE_PASSWORD);
-        put("text",TYPE_TEXT);
+    public static final HashMap<String, Integer> fieldTypes = new HashMap<String, Integer>() {{
+        put("email", TYPE_EMAIL);
+        put("password", TYPE_PASSWORD);
+        put("text", TYPE_TEXT);
     }};
 
 
-    @IntDef(value = {TYPE_EMAIL,TYPE_PASSWORD,TYPE_TEXT,TYPE_OTHER})
-    public @interface FieldType {}
+    @IntDef(value = {TYPE_EMAIL, TYPE_PASSWORD, TYPE_TEXT, TYPE_OTHER})
+    public @interface FieldType {
+    }
 
     public static final int TYPE_EMAIL = 0;
     public static final int TYPE_PASSWORD = 1;
@@ -160,9 +161,10 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
     private int autoCompleteType;
 
 
-    public MoWebAutoFill(){}
+    public MoWebAutoFill() {
+    }
 
-    public MoWebAutoFill(String id,String value,int fieldType, int autoCompleteType) {
+    public MoWebAutoFill(String id, String value, int fieldType, int autoCompleteType) {
         this.setId(id);
         this.setValue(value);
         this.fieldType = fieldType;
@@ -234,6 +236,7 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
      * applicable or give it TYPE_OTHER
      * if none of the other types make sense
      * for this type
+     *
      * @param fieldType of the auto fill
      * @return this for nested calling
      */
@@ -250,6 +253,7 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
     /**
      * sets the auto complete
      * type of this class
+     *
      * @param a
      * @return
      */
@@ -266,7 +270,7 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
 
 
     public String getAutocomplete() {
-        for(String s : autoCompleteTypes.keySet()) {
+        for (String s : autoCompleteTypes.keySet()) {
             if (autoCompleteTypes.get(s) == this.autoCompleteType) {
                 return s;
             }
@@ -285,7 +289,7 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
 
     @Override
     public String getData() {
-        return MoFile.getData(id,value, fieldType,autoCompleteType);
+        return MoFile.getData(id, value, fieldType, autoCompleteType);
     }
 
 
@@ -307,24 +311,24 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
 
 
     /**
-     *
      * @param autocomplete from input field inside js
      * @return true if the auto fill is turned off
      * for the field
      */
     @SuppressWarnings("ConstantConditions")
     public static boolean autoFillIsOff(String autocomplete) {
-        if(autocomplete==null || autocomplete.isEmpty()) {
+        if (autocomplete == null || autocomplete.isEmpty()) {
             // if the auto complete is null or empty or off
             return true;
         }
         Integer val = autoCompleteTypes.get(autocomplete);
-        return val==null || val == OFF;
+        return val == null || val == OFF;
     }
 
     /**
      * if the auto complete is a current password
-     *  or username then this is a user pass auto fill
+     * or username then this is a user pass auto fill
+     *
      * @param autocomplete
      * @return
      */
@@ -338,24 +342,26 @@ public class MoWebAutoFill implements MoSavable, MoLoadable {
             return true;
         }
         Integer val = autoCompleteTypes.get(autocomplete);
-        return  val!=null && val!= OFF && (val == CURRENT_PASSWORD || val == USERNAME || val == EMAIL);
+        return val != null && val != OFF && (val == CURRENT_PASSWORD || val == USERNAME || val == EMAIL);
     }
 
 
     /**
      * anything that is not a user password
-     *  and not add credit card as another type of auto fill
+     * and not add credit card as another type of auto fill
      * then it is a general auto complete
+     *
      * @param autocomplete
      * @return true if it is a general auto fill
      */
-    public static boolean isGeneralAutoFill(String id, String type,String autocomplete) {
-        return !isUserPassAutoFill(id,type,autocomplete) && !isCreditCardAutoFill(autocomplete);
+    public static boolean isGeneralAutoFill(String id, String type, String autocomplete) {
+        return !isUserPassAutoFill(id, type, autocomplete) && !isCreditCardAutoFill(autocomplete);
     }
 
     /**
      * if auto fill that is passed in is
      * related to credit card auto fill
+     *
      * @param autocomplete from field inside js
      * @return true if req are met
      */

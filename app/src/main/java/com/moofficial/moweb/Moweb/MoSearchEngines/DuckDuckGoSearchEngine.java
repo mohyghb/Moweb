@@ -22,15 +22,16 @@ public class DuckDuckGoSearchEngine extends MoSearchEngine {
 
 
     @Override
-    protected MoSuggestions getSuggestions(MoSuggestions suggestions,String html) {
+    protected MoSuggestions getSuggestions(MoSuggestions suggestions, String html) {
         try {
             JSONArray jsonArray = new JSONArray(html);
-            for(int i = 0;i < jsonArray.length(); i++){
+            for (int i = 0; i < jsonArray.length(); i++) {
                 String suggestion = jsonArray.getJSONObject(i).getString(PHRASE);
-                float similarity = MoString.getSimilarity(suggestion,suggestions.getSearch(),true);
-                suggestions.add(new MoSuggestion(suggestion,similarity));
+                float similarity = MoString.getSimilarity(suggestion, suggestions.getSearch(), true);
+                suggestions.add(new MoSuggestion(suggestion, similarity));
             }
-        } catch (JSONException ignore) {}
+        } catch (JSONException ignore) {
+        }
         return suggestions;
     }
 }

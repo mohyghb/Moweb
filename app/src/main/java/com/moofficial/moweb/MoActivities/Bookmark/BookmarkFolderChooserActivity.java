@@ -32,7 +32,7 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
 
     public static final String CHOSEN_FOLDER_TAG = "chosen_folder";
     public static final String EXTRA_FOLDER_NAME = "extrafoldername";
-    private  final int ADD_FOLDER_REQUEST = 1;
+    private final int ADD_FOLDER_REQUEST = 1;
 
 
     private MoRecyclerView recyclerView;
@@ -52,7 +52,7 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
         initClass();
     }
 
-    private void initUI(){
+    private void initUI() {
         setTitle(R.string.folder_chooser_title);
         initMoToolbar();
         initMoSearchbar();
@@ -61,7 +61,7 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
         l.toolbar.addToolbar(searchBar);
 
         cardRecyclerView = new MoCardRecyclerView(this);
-        l.linearNested.addView(cardRecyclerView, MoMarginBuilder.getLinearParams(this,0,8,0,0));
+        l.linearNested.addView(cardRecyclerView, MoMarginBuilder.getLinearParams(this, 0, 8, 0, 0));
 
         syncTitle(moToolBar.getTitle());
     }
@@ -83,8 +83,7 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
     }
 
 
-
-    private void initClass(){
+    private void initClass() {
         initAllPossibleFolders();
         initRecyclerView();
         initSearch();
@@ -110,13 +109,13 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
                 .setOnSearchCanceled(() -> updateAdapter(allPossibleFolders))
                 .setOnSearchFinished(list -> {
                     //noinspection unchecked
-                    runOnUiThread(() -> updateAdapter((ArrayList<MoBookmark>)list));
+                    runOnUiThread(() -> updateAdapter((ArrayList<MoBookmark>) list));
                 })
         ;
         moSearchable.setInvisible(View.GONE);
     }
 
-    private void updateAdapter(ArrayList<MoBookmark> l){
+    private void updateAdapter(ArrayList<MoBookmark> l) {
         recyclerAdapter.setDataSet(l);
         recyclerAdapter.notifyDataSetChanged();
         recyclerAdapter.notifyEmptyState();
@@ -134,20 +133,18 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
                 .setRecyclerView(cardRecyclerView.getRecyclerView())
                 .setEmptyView(v)
                 .notifyEmptyState();
-        recyclerView = MoRecyclerUtils.get(cardRecyclerView.getRecyclerView(),recyclerAdapter);
+        recyclerView = MoRecyclerUtils.get(cardRecyclerView.getRecyclerView(), recyclerAdapter);
         recyclerView.show();
         l.linearNested.addView(v, MoEmptyLayoutView.getUniversalMargin(this));
     }
-
-
 
 
     @Override
     public void openFolder(MoBookmark folder) {
         // return the folder name as data
         Intent data = new Intent();
-        data.putExtra(CHOSEN_FOLDER_TAG,folder.getName());
-        setResult(RESULT_OK,data);
+        data.putExtra(CHOSEN_FOLDER_TAG, folder.getName());
+        setResult(RESULT_OK, data);
         finish();
     }
 
@@ -158,9 +155,9 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
 
     @Override
     public void onBackPressed() {
-        if(moSearchable.hasAction()){
+        if (moSearchable.hasAction()) {
             moSearchable.removeAction();
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
@@ -169,7 +166,7 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == ADD_FOLDER_REQUEST && resultCode == RESULT_OK && data!=null){
+        if (requestCode == ADD_FOLDER_REQUEST && resultCode == RESULT_OK && data != null) {
             // we need to refresh the available folders
             TransitionManager.beginDelayedTransition(getGroupRootView());
             initAllPossibleFolders();
@@ -184,15 +181,16 @@ public class BookmarkFolderChooserActivity extends MoSmartActivity implements Mo
     /**
      * if no book marks are passed, we show
      * all the folders that are in the system
-     * @param a activity
+     *
+     * @param a    activity
      * @param code request code for activity result
-     * @param b bookmarks, can be empty and we will show all the folders
-     *          instead of choosing which folders pass the requirements
+     * @param b    bookmarks, can be empty and we will show all the folders
+     *             instead of choosing which folders pass the requirements
      */
-    public static void startActivityForResult(Activity a,int code,MoBookmark ... b){
-        Intent i = new Intent(a,BookmarkFolderChooserActivity.class);
+    public static void startActivityForResult(Activity a, int code, MoBookmark... b) {
+        Intent i = new Intent(a, BookmarkFolderChooserActivity.class);
         i.putExtra(EXTRA_FOLDER_NAME, MoBookmarkUtils.encodeBookmarks(b));
-        a.startActivityForResult(i,code);
+        a.startActivityForResult(i, code);
     }
 
 }

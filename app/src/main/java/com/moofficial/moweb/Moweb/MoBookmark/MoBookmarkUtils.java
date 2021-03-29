@@ -11,17 +11,18 @@ public class MoBookmarkUtils {
     /**
      * combines all the surface url so it
      * can be shared to others
+     *
      * @param b
      * @return
      */
-    public static String shareBookmarkText(boolean includeTitle,MoBookmark ... b){
-        return shareBookmarkText(Arrays.asList(b),includeTitle);
+    public static String shareBookmarkText(boolean includeTitle, MoBookmark... b) {
+        return shareBookmarkText(Arrays.asList(b), includeTitle);
     }
 
-    public static String shareBookmarkText(Iterable<MoBookmark> b, boolean includeTitle){
+    public static String shareBookmarkText(Iterable<MoBookmark> b, boolean includeTitle) {
         StringBuilder sb = new StringBuilder();
-        for(MoBookmark book : b){
-            book.addSubBookmarkUrlRecursive(sb,includeTitle);
+        for (MoBookmark book : b) {
+            book.addSubBookmarkUrlRecursive(sb, includeTitle);
         }
         return sb.toString().trim();
     }
@@ -29,12 +30,13 @@ public class MoBookmarkUtils {
 
     /**
      * returns the folder name of the book mark
+     *
      * @param c
      * @param b
      * @return
      */
-    public static String getFolderName(Context c, MoBookmark b){
-        return b.hasParent()?b.getParent().getName():c.getString(R.string.bookmark_title);
+    public static String getFolderName(Context c, MoBookmark b) {
+        return b.hasParent() ? b.getParent().getName() : c.getString(R.string.bookmark_title);
     }
 
     /**
@@ -42,19 +44,20 @@ public class MoBookmarkUtils {
      * an array of string
      * for each bookmark we get
      * [type,key]
+     *
      * @param bookmarks
      * @return
      */
-    public static String[] encodeBookmarks(MoBookmark ... bookmarks){
-        if(bookmarks == null || bookmarks.length == 0)
+    public static String[] encodeBookmarks(MoBookmark... bookmarks) {
+        if (bookmarks == null || bookmarks.length == 0)
             return new String[]{};
 
-        String[] encoded = new String[bookmarks.length*2];
+        String[] encoded = new String[bookmarks.length * 2];
         int i = 0;
-        for(MoBookmark b: bookmarks){
-            encoded[i] = b.getType()+"";
-            encoded[i+1] = b.getKey();
-            i+=2;
+        for (MoBookmark b : bookmarks) {
+            encoded[i] = b.getType() + "";
+            encoded[i + 1] = b.getKey();
+            i += 2;
         }
         return encoded;
     }
@@ -62,17 +65,18 @@ public class MoBookmarkUtils {
     /**
      * decodes an array of [type,string] into
      * a array of book marks
+     *
      * @param encoded
      * @return
      */
-    public static MoBookmark[] decodeBookmarks(String[] encoded){
-        if(encoded == null || encoded.length == 0)
+    public static MoBookmark[] decodeBookmarks(String[] encoded) {
+        if (encoded == null || encoded.length == 0)
             return new MoBookmark[]{};
 
-        MoBookmark[] decoded = new MoBookmark[encoded.length/2];
+        MoBookmark[] decoded = new MoBookmark[encoded.length / 2];
         int index = 0;
-        for(int i =0 ; i < encoded.length; i+=2){
-            decoded[index] = MoBookmarkManager.get(Integer.parseInt(encoded[i]),encoded[i+1]);
+        for (int i = 0; i < encoded.length; i += 2) {
+            decoded[index] = MoBookmarkManager.get(Integer.parseInt(encoded[i]), encoded[i + 1]);
             index++;
         }
         return decoded;

@@ -14,27 +14,30 @@ import com.moofficial.moessentials.MoEssentials.MoFileManager.MoIO.MoSavable;
 public class MoTabType implements MoSavable, MoLoadable {
 
 
-    @IntDef({TYPE_NORMAL,TYPE_PRIVATE})
-    public @interface TabType{}
+    @IntDef({TYPE_NORMAL, TYPE_PRIVATE})
+    public @interface TabType {
+    }
+
     public static final int TYPE_NORMAL = 0;
     public static final int TYPE_PRIVATE = 1;
 
 
-    @TabType private int type;
+    @TabType
+    private int type;
     private WebView webView;
 
-    public MoTabType(int t){
+    public MoTabType(int t) {
         this.type = t;
     }
 
-    public MoTabType(int t,WebView webView){
+    public MoTabType(int t, WebView webView) {
         type = t;
         this.webView = webView;
     }
 
-    public MoTabType(String type,Context c,WebView webView){
+    public MoTabType(String type, Context c, WebView webView) {
         this.webView = webView;
-        this.load(type,c);
+        this.load(type, c);
     }
 
     public boolean isPrivate() {
@@ -51,8 +54,8 @@ public class MoTabType implements MoSavable, MoLoadable {
 
     public void setType(@TabType int type) {
         this.type = type;
-        if(webView!=null){
-            switch (type){
+        if (webView != null) {
+            switch (type) {
                 case TYPE_NORMAL:
                     enableNormal();
                     break;
@@ -104,15 +107,14 @@ public class MoTabType implements MoSavable, MoLoadable {
      */
     @Override
     public String getData() {
-        return this.type+"";
+        return this.type + "";
     }
-
 
 
     // rs[0] = normal
     // rs[1] = incognito
-    public static void runForMultipleTypes(int type, Runnable ... rs){
-        switch (type){
+    public static void runForMultipleTypes(int type, Runnable... rs) {
+        switch (type) {
             case MoTabType.TYPE_NORMAL:
                 rs[0].run();
                 break;

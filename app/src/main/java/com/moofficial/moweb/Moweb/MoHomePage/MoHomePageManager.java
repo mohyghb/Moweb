@@ -18,16 +18,13 @@ public class MoHomePageManager {
     private static ArrayList<MoHomePage> homePages = new ArrayList<>();
     private static Integer activeHomePageIndex = NONE_ACTIVATED;
 
-    //TODO: test the correctness of active home page index;
-
     /**
-     *
      * @param url
      * @return true if this was added, false if it already was in the list
      */
-    public static boolean add(Context context,String url){
+    public static boolean add(Context context, String url) {
         MoHomePage p = new MoHomePage(url);
-        if(!homePages.contains(p)){
+        if (!homePages.contains(p)) {
             homePages.add(p);
             activateOneIfNoneIsActivated(context);
             save(context);
@@ -38,14 +35,15 @@ public class MoHomePageManager {
 
     /**
      * activates the home page at [index]
+     *
      * @param index
      */
-    public static void activate(Context c,int index){
+    public static void activate(Context c, int index) {
         activeHomePageIndex = index;
-        for(int i = 0; i < homePages.size(); i++){
-            if(i == index){
+        for (int i = 0; i < homePages.size(); i++) {
+            if (i == index) {
                 homePages.get(i).setActivated(true);
-            }else{
+            } else {
                 homePages.get(i).setActivated(false);
             }
         }
@@ -55,23 +53,24 @@ public class MoHomePageManager {
     /**
      *
      */
-    public static void activateOneIfNoneIsActivated(Context c){
-        if(activeHomePageIndex == NONE_ACTIVATED || activeHomePageIndex >= homePages.size()){
-            if(homePages.isEmpty()) {
+    public static void activateOneIfNoneIsActivated(Context c) {
+        if (activeHomePageIndex == NONE_ACTIVATED || activeHomePageIndex >= homePages.size()) {
+            if (homePages.isEmpty()) {
                 activeHomePageIndex = NONE_ACTIVATED;
-            }else{
-                activate(c,homePages.size()-1);
+            } else {
+                activate(c, homePages.size() - 1);
             }
         }
     }
 
     /**
      * deletes all the selected home pages
+     *
      * @param context
      */
-    public static void deleteAllSelected(Context context){
-        for(int i = homePages.size()-1;i>=0;i--){
-            if(homePages.get(i).isSelected()){
+    public static void deleteAllSelected(Context context) {
+        for (int i = homePages.size() - 1; i >= 0; i--) {
+            if (homePages.get(i).isSelected()) {
                 homePages.remove(i);
                 if (i == activeHomePageIndex) {
                     activeHomePageIndex = NONE_ACTIVATED;
@@ -83,43 +82,43 @@ public class MoHomePageManager {
     }
 
     /**
-     *
      * @param context
      * @param position
      */
-    public static void remove(Context context,int position){
+    public static void remove(Context context, int position) {
         homePages.remove(position);
         save(context);
     }
 
-    public static void clear(Context context){
+    public static void clear(Context context) {
         homePages.clear();
         save(context);
     }
 
     /**
-     *
      * @param context
      */
-    public static void save(Context context){
-        MoReadWrite.saveFile(FILE_NAME, MoFile.getData(homePages,activeHomePageIndex),context);
+    public static void save(Context context) {
+        MoReadWrite.saveFile(FILE_NAME, MoFile.getData(homePages, activeHomePageIndex), context);
     }
 
     /**
      * loads back in the active index
+     *
      * @param context
      */
-    public static void load(Context context){
-        if(homePages.isEmpty()){
-            String[] data = MoFile.loadable(MoReadWrite.readFile(FILE_NAME,context));
-            if(MoFile.isValidData(data)){
+    public static void load(Context context) {
+        if (homePages.isEmpty()) {
+            String[] data = MoFile.loadable(MoReadWrite.readFile(FILE_NAME, context));
+            if (MoFile.isValidData(data)) {
                 activeHomePageIndex = Integer.parseInt(data[1]);
                 String[] hps = MoFile.loadable(data[0]);
-                for(String h: hps){
-                    if(!h.isEmpty()){
-                        try{
-                            homePages.add(new MoHomePage(h,context));
-                        }catch (Exception ignore){}
+                for (String h : hps) {
+                    if (!h.isEmpty()) {
+                        try {
+                            homePages.add(new MoHomePage(h, context));
+                        } catch (Exception ignore) {
+                        }
                     }
                 }
                 activateOneIfNoneIsActivated(context);
@@ -129,10 +128,9 @@ public class MoHomePageManager {
 
 
     /**
-     *
      * @return
      */
-    public static ArrayList<MoHomePage> get(){
+    public static ArrayList<MoHomePage> get() {
         return homePages;
     }
 
@@ -140,21 +138,23 @@ public class MoHomePageManager {
     /**
      * returns the current activated home page
      * TODO: this might cause index outta bound exception be careful
+     *
      * @return
      */
-    public static MoHomePage getCurrentActivatedHomePage(){
+    public static MoHomePage getCurrentActivatedHomePage() {
         return homePages.get(activeHomePageIndex);
     }
 
     /**
      * returns the home page url that the user has set up or
      * the home page of the search engine of their choice
+     *
      * @return
      */
-    public static String getCurrentActivatedURL(){
-        if(activeHomePageIndex == NONE_ACTIVATED) {
+    public static String getCurrentActivatedURL() {
+        if (activeHomePageIndex == NONE_ACTIVATED) {
             return MoSearchEngine.instance.homePage();
-        }else{
+        } else {
             return getCurrentActivatedHomePage().getUrl();
         }
     }
@@ -163,20 +163,21 @@ public class MoHomePageManager {
     /**
      * validates whether the input is a valid
      * home page or not
+     *
      * @param c
      * @param url
      * @return
      */
-    public static MoTextValidate validate(Context c, String url){
+    public static MoTextValidate validate(Context c, String url) {
         MoTextValidate textValidate = new MoTextValidate().setValidate(false);
         MoHomePage homePage = new MoHomePage(url);
-        if(url.isEmpty()){
+        if (url.isEmpty()) {
             textValidate.setErrorMessage(c.getString(R.string.error_bookmark_empty_url));
-        }else if(homePages.contains(homePage)){
+        } else if (homePages.contains(homePage)) {
             textValidate.setErrorMessage(c.getString(R.string.already_exist_home_page));
-        }else if(homePage.isValidUrl()){
+        } else if (homePage.isValidUrl()) {
             textValidate.setErrorMessage(c.getString(R.string.malformed_url));
-        }else{
+        } else {
             textValidate.setValidate(true);
         }
         return textValidate;
@@ -184,9 +185,10 @@ public class MoHomePageManager {
 
     /**
      * applies the home page to the tab
+     *
      * @param t tab to go to the home page on
      */
-    public static void homePage(MoTab t){
+    public static void homePage(MoTab t) {
         t.search(getCurrentActivatedURL());
     }
 

@@ -27,8 +27,6 @@ import java.util.Objects;
 public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectableItem, MoSearchableItem {
 
 
-
-
     public interface MoOnUserPassClicked {
         void onClick(MoUserPassAutoFill a);
     }
@@ -42,8 +40,8 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
     private boolean selected = false;
     private long dateTime = Calendar.getInstance().getTimeInMillis();
     private boolean searched = true;
+
     /**
-     *
      * @param u username of the user's account
      * @param p password of user's account
      * @param h host to save the user password for
@@ -54,7 +52,8 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
         this.host = h;
     }
 
-    public MoUserPassAutoFill(){}
+    public MoUserPassAutoFill() {
+    }
 
     public MoWebAutoFill getUsername() {
         return username;
@@ -87,7 +86,7 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
         return dateTime;
     }
 
-    public MoUserPassAutoFill add (MoWebAutoFill autoFill) {
+    public MoUserPassAutoFill add(MoWebAutoFill autoFill) {
         if (autoFill.isPassword()) {
             // todo if the type of the password is NEW_PASSWORD,  then we can just update the ref
             //  if we have it
@@ -105,24 +104,22 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
      * chooses the top suggestion as the
      * username
      */
-    public void chooseTopSuggestionIfNoUsername(){
+    public void chooseTopSuggestionIfNoUsername() {
         if (this.username == null && !this.suggestions.isEmpty()) {
             this.username = suggestions.get(0);
         }
     }
 
     /**
-     *
      * @return true if the
      * username and password are not null
      * and host is not null or empty
      */
     public boolean isValid() {
-        return this.password!=null && this.username!=null && this.host!=null && !this.host.isEmpty();
+        return this.password != null && this.username != null && this.host != null && !this.host.isEmpty();
     }
 
     /**
-     *
      * @param c context
      * @return view showing the username and password
      * of the user's account
@@ -132,22 +129,24 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
                 .setUsername(username.getValue())
                 .setPassword(password.getValue())
                 .setHost(this.host)
-                .setOnAutoFillClickListener(()->onClick.onClick(this))
+                .setOnAutoFillClickListener(() -> onClick.onClick(this))
                 .hideCopies();
     }
 
     /**
      * fills in the password and username
      * inside the given web view
+     *
      * @param webView to fill the values in
      */
     public void fill(WebView webView) {
         new MoThread<String>()
                 .doBackground(() -> {
                     String sb = "fillUserPass('%s','%s','%s','%s');";
-                    return String.format(sb,username.getAutocomplete(),username.getValue(),
-                            password.getAutocomplete(),password.getValue()); })
-                .after(val -> webView.post( () -> webView.evaluateJavascript(val,null)))
+                    return String.format(sb, username.getAutocomplete(), username.getValue(),
+                            password.getAutocomplete(), password.getValue());
+                })
+                .after(val -> webView.post(() -> webView.evaluateJavascript(val, null)))
                 .begin();
     }
 
@@ -156,11 +155,11 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
     public void load(String s, Context context) {
         String[] c = MoFile.loadable(s);
         this.username = new MoWebAutoFill();
-        this.username.load(c[0],context);
+        this.username.load(c[0], context);
         this.password = new MoWebAutoFill();
-        this.password.load(c[1],context);
+        this.password.load(c[1], context);
         this.host = c[2];
-        this.id.load(c[3],context);
+        this.id.load(c[3], context);
         parseDateTime(c);
     }
 
@@ -172,7 +171,7 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
 
     @Override
     public String getData() {
-        return MoFile.getData(this.username,this.password,this.host,this.id,this.dateTime);
+        return MoFile.getData(this.username, this.password, this.host, this.id, this.dateTime);
     }
 
     @Override
@@ -192,7 +191,7 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
         MoUserPassAutoFill that = (MoUserPassAutoFill) o;
         boolean b = Objects.equals(username, that.username);
         boolean b1 = Objects.equals(password, that.password);
-        return  b && b1 && Objects.equals(host, that.host);
+        return b && b1 && Objects.equals(host, that.host);
     }
 
     @Override
@@ -213,7 +212,7 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
 
     @Override
     public boolean updateSearchable(Object... objects) {
-        return MoSearchableUtils.isSearchable(true,objects,this.username.getValue(),this.host);
+        return MoSearchableUtils.isSearchable(true, objects, this.username.getValue(), this.host);
     }
 
     @Override
@@ -230,11 +229,12 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
     /**
      * shows a bottom sheet in which all the
      * user pass for the host are shown
+     *
      * @param context of app
      * @param webView to find out what host is and where
-     *               the fields are for filling them in
+     *                the fields are for filling them in
      */
-    public static void showUserPassAutoFill(Context context,WebView webView) {
+    public static void showUserPassAutoFill(Context context, WebView webView) {
         String host = MoUrlUtils.getHost(webView.getUrl());
         List<MoUserPassAutoFill> autoFills = MoUserPassManager.get(host);
         if (autoFills == null)
@@ -265,7 +265,7 @@ public class MoUserPassAutoFill implements MoFileSavable, MoLoadable, MoSelectab
             // bring the keyboard up on web view when dismissed
             MoKeyboardUtils.hideSoftKeyboard(webView);
             bottomSheet.setState(BottomSheetBehavior.STATE_EXPANDED)
-                    .setOnDismissedListener(()-> MoKeyboardUtils.showKeyboard(webView,context))
+                    .setOnDismissedListener(() -> MoKeyboardUtils.showKeyboard(webView, context))
                     .build()
                     .show();
         }

@@ -17,29 +17,27 @@ public abstract class MoSearchEngine {
     public static MoSearchEngine instance;
 
 
-
-
     private String autoCompleteURL;
     private String searchURL;
     private String homePage;
 
 
-    public MoSearchEngine(String surl,String hp,String acurl){
+    public MoSearchEngine(String surl, String hp, String acurl) {
         this.searchURL = surl;
         this.homePage = hp;
         this.autoCompleteURL = acurl;
     }
 
 
-
     /**
      * returns the url combined with url of the
      * search engine
+     *
      * @param search
      * @return
      */
-    public String getURL(String search){
-        if(MoUrlUtils.isUrl(search)) {
+    public String getURL(String search) {
+        if (MoUrlUtils.isUrl(search)) {
             return search;
         }
         return searchEngineURL(search);
@@ -47,18 +45,18 @@ public abstract class MoSearchEngine {
 
 
     // returns the url of the search engine + search query
-    private String searchEngineURL(String search){
+    private String searchEngineURL(String search) {
         return this.searchURL + search;
     }
 
     // home page of the search engine
-    public String homePage(){
+    public String homePage() {
         return this.homePage;
     }
 
 
     // the url that returns auto complete for search s
-    public String suggestionURL(String s){
+    public String suggestionURL(String s) {
         return this.autoCompleteURL + s;
     }
 
@@ -67,27 +65,29 @@ public abstract class MoSearchEngine {
      * parsing the html that is returned from auto complete of the
      * respective search engine and putting them inside a mo suggestions
      * to show them to the user
-     * @param html html of auto complete from search engine
+     *
+     * @param html        html of auto complete from search engine
      * @param suggestions suggestions should be added here
      * @return suggestions
      */
-    protected abstract MoSuggestions getSuggestions(MoSuggestions suggestions,String html);
+    protected abstract MoSuggestions getSuggestions(MoSuggestions suggestions, String html);
 
     /**
      * checks to see if the html has the correct properties of being
      * parsed then passes it to the respective search engine and
      * returns those results in a mo suggestion
-     * @param html to parse for search suggestion
+     *
+     * @param html        to parse for search suggestion
      * @param suggestions populate this class for search suggestions
      * @return suggestions
      */
-    public MoSuggestions getSuggestions(String html,MoSuggestions suggestions){
-        if(html==null){
+    public MoSuggestions getSuggestions(String html, MoSuggestions suggestions) {
+        if (html == null) {
             // if no suggestion is returned by the html
             // return empty suggestions
             return suggestions;
-        }else{
-            return getSuggestions(suggestions,html);
+        } else {
+            return getSuggestions(suggestions, html);
         }
     }
 
@@ -96,13 +96,14 @@ public abstract class MoSearchEngine {
      * returns a search engine based on the
      * preference of the user set inside the settings
      * if no preference, we return GOOGLE search engine
+     *
      * @param c
      * @return
      */
-    public static MoSearchEngine getPrefSearchEngine(Context c){
+    public static MoSearchEngine getPrefSearchEngine(Context c) {
         // get shared preference one
         int searchEngine = Integer.parseInt(MoSharedPref.get(c).getString(c.getString(R.string.search_engine),
-                GOOGLE+""));
+                GOOGLE + ""));
         switch (searchEngine) {
             case GOOGLE:
                 return new GoogleSearchEngine();
@@ -113,7 +114,7 @@ public abstract class MoSearchEngine {
     }
 
 
-    public static void updateSearchEngine(Context c){
+    public static void updateSearchEngine(Context c) {
         instance = getPrefSearchEngine(c);
     }
 

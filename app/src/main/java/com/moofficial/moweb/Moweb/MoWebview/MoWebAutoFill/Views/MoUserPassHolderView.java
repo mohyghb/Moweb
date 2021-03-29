@@ -16,7 +16,7 @@ import com.moofficial.moweb.R;
 
 public class MoUserPassHolderView extends MoConstraint {
 
-    private TextView username,password,host;
+    private TextView username, password, host;
     private MoCardView cardView;
     private MoLogo logo;
     private LinearLayout coverLayout;
@@ -56,7 +56,7 @@ public class MoUserPassHolderView extends MoConstraint {
     }
 
     public MoUserPassHolderView setOnAutoFillClickListener(Runnable r) {
-        this.cardView.setOnClickListener((v)->r.run());
+        this.cardView.setOnClickListener((v) -> r.run());
         return this;
     }
 
@@ -70,7 +70,7 @@ public class MoUserPassHolderView extends MoConstraint {
         return this;
     }
 
-    public MoUserPassHolderView setOnCopyPassword(View.OnClickListener r){
+    public MoUserPassHolderView setOnCopyPassword(View.OnClickListener r) {
         this.copyPass.setOnClickListener(r);
         return this;
     }
@@ -110,9 +110,9 @@ public class MoUserPassHolderView extends MoConstraint {
         this.logo = findViewById(R.id.user_pass_logo);
         this.coverLayout = findViewById(R.id.user_pass_cover_layout);
         this.copyHost = findViewById(R.id.password_auto_fill_host_copy);
-        this.copyHost.setOnClickListener((v) -> MoClipboardUtils.add(getContext(),host.getText().toString()));
+        this.copyHost.setOnClickListener((v) -> MoClipboardUtils.add(getContext(), host.getText().toString()));
         this.copyUser = findViewById(R.id.password_auto_fill_user_copy);
-        this.copyUser.setOnClickListener((v) -> MoClipboardUtils.add(getContext(),username.getText().toString()));
+        this.copyUser.setOnClickListener((v) -> MoClipboardUtils.add(getContext(), username.getText().toString()));
         this.copyPass = findViewById(R.id.password_auto_fill_password_copy);
         // because the password would capture the touch event and not do anything
         // so we do not want that

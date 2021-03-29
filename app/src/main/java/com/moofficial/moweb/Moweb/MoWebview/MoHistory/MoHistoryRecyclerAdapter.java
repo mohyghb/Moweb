@@ -21,11 +21,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolder,MoHistory> implements
+public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolder, MoHistory> implements
         MoSelectableList<MoHistory> {
 
     private MoPopUpMenu selectedPopup;
-    private MoOnHistoryClicked onHistoryClicked  = new MoOnHistoryClicked() {
+    private MoOnHistoryClicked onHistoryClicked = new MoOnHistoryClicked() {
         @Override
         public void onHistoryClicked(MoHistory h, int position) {
 
@@ -38,8 +38,8 @@ public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolde
     };
 
 
-    public MoHistoryRecyclerAdapter(ArrayList<MoHistory> dataSet,Context c) {
-        super(c,dataSet);
+    public MoHistoryRecyclerAdapter(ArrayList<MoHistory> dataSet, Context c) {
+        super(c, dataSet);
     }
 
     public MoOnHistoryClicked getOnHistoryClicked() {
@@ -61,13 +61,13 @@ public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolde
             v = MoInflaterView.inflate(R.layout.history_date_tile, parent.getContext());
         }
         v.setLayoutParams(getMatchWrapParams());
-        return new MoHistoryHolder(v,viewType);
+        return new MoHistoryHolder(v, viewType);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MoHistoryHolder holder, int position) {
         MoHistory history = dataSet.get(position);
-        switch (holder.type){
+        switch (holder.type) {
             case MoHistory.TYPE_DATE:
                 holder.date.setText(history.getDate());
                 break;
@@ -76,15 +76,15 @@ public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolde
                 holder.dateTimeTextView.setText(history.getDate());
                 holder.titleTextView.setText(history.getTitle());
                 String s = MoString.getSignature(history.getTitle());
-                MoLog.print(s + ", isempty = " + s.isEmpty() + ", charval = " + ((int)s.charAt(0)));
+                MoLog.print(s + ", isempty = " + s.isEmpty() + ", charval = " + ((int) s.charAt(0)));
                 holder.moImageTextLogo
                         .setOuter()
                         .setText(history.getTitle())
                         .hideLogo()
                         .showText();
-                makeHistoryClickable(holder, history,position);
+                makeHistoryClickable(holder, history, position);
                 makeHistoryLongClickable(holder, position);
-                addSelectedColor(holder,history);
+                addSelectedColor(holder, history);
                 break;
         }
     }
@@ -101,17 +101,17 @@ public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolde
         if (payloads.isEmpty()) {
             super.onBindViewHolder(holder, position, payloads);
         } else {
-            addSelectedColor(holder,dataSet.get(position));
+            addSelectedColor(holder, dataSet.get(position));
         }
 
     }
 
     private void makeHistoryClickable(@NonNull MoHistoryHolder holder, MoHistory h, int position) {
         holder.cardView.setOnClickListener(view -> {
-            if(isSelecting()){
+            if (isSelecting()) {
                 onSelect(position);
-            }else {
-                onHistoryClicked.onHistoryClicked(h,position);
+            } else {
+                onHistoryClicked.onHistoryClicked(h, position);
             }
         });
     }
@@ -126,7 +126,7 @@ public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolde
                             return false;
                         }),
                         new Pair<>(context.getString(R.string.open_in_private_tab), menuItem -> {
-                            MoOpenTab.openInNewPrivateTabs(context,Collections.singletonList(dataSet.get(position)));
+                            MoOpenTab.openInNewPrivateTabs(context, Collections.singletonList(dataSet.get(position)));
                             onHistoryClicked.goBackToActivity();
                             return false;
                         }),
@@ -140,10 +140,6 @@ public class MoHistoryRecyclerAdapter extends MoSelectableAdapter<MoHistoryHolde
             return false;
         });
     }
-
-
-
-
 
 
     @Override

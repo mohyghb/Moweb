@@ -63,8 +63,6 @@ public class MoWebErrorView extends MoConstraint {
     }
 
 
-
-
     @Override
     public int getLayoutId() {
         return R.layout.mo_error_view;

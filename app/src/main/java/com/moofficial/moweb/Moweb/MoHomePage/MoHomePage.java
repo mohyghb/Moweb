@@ -16,19 +16,19 @@ public class MoHomePage implements MoSavable, MoLoadable, MoSelectableItem {
     private boolean isActivated;
     private boolean isSelected;
 
-    public MoHomePage(String url){
+    public MoHomePage(String url) {
         this.url = new MoURL(url);
     }
 
-    public MoHomePage(String s, Context context){
-        this.load(s,context);
+    public MoHomePage(String s, Context context) {
+        this.load(s, context);
     }
 
-    public boolean isValid(){
+    public boolean isValid() {
         return this.url.isValid();
     }
 
-    public String getUrl(){
+    public String getUrl() {
         return this.url.getUrlString();
     }
 
@@ -41,20 +41,20 @@ public class MoHomePage implements MoSavable, MoLoadable, MoSelectableItem {
         return this;
     }
 
-    public boolean isValidUrl(){
+    public boolean isValidUrl() {
         return this.url.isValid();
     }
 
     @Override
     public void load(String s, Context context) {
         String[] c = MoFile.loadable(s);
-        this.url = new MoURL(c[0],context);
+        this.url = new MoURL(c[0], context);
         this.isActivated = Boolean.parseBoolean(c[1]);
     }
 
     @Override
     public String getData() {
-        return MoFile.getData(this.url,this.isActivated);
+        return MoFile.getData(this.url, this.isActivated);
     }
 
 

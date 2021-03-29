@@ -27,38 +27,39 @@ public class MoStackWebHistory implements MoSavable, MoLoadable {
     private int previousAction = ACTION_NULL;
     private long lastBackPressed;
 
-    public MoStackWebHistory(){
+    public MoStackWebHistory() {
 
     }
 
-    public MoStackWebHistory(String data, Context c){
-        this.load(data,c);
+    public MoStackWebHistory(String data, Context c) {
+        this.load(data, c);
     }
 
     /**
      * adds the url to the stack of urls
      * only adds it if the current url is different
      * than the last url added
-     * @param url of the new search
+     *
+     * @param url      of the new search
      * @param isReload whether they reloaded the web view or not
      */
-    public void update(String url,boolean isReload) {
-        if(isReload)
+    public void update(String url, boolean isReload) {
+        if (isReload)
             return;
         //@SuppressWarnings("ConstantConditions")
 //        String url = webView.copyBackForwardList().getCurrentItem().getUrl();
-        if(url!=null && list.isEmpty() || !list.get(currentIndex).equals(url) && previousAction == ACTION_NULL){
-            if(currentIndex!=list.size()-1 && previousAction==ACTION_NULL){
+        if (url != null && list.isEmpty() || !list.get(currentIndex).equals(url) && previousAction == ACTION_NULL) {
+            if (currentIndex != list.size() - 1 && previousAction == ACTION_NULL) {
                 removeAfterCurrentIndex();
             }
             this.list.add(url);
-            currentIndex = this.list.size()-1;
+            currentIndex = this.list.size() - 1;
         }
         this.previousAction = ACTION_NULL;
     }
 
-    private void removeAfterCurrentIndex(){
-        for(int i = list.size()-1; i>currentIndex; i--){
+    private void removeAfterCurrentIndex() {
+        for (int i = list.size() - 1; i > currentIndex; i--) {
             list.remove(i);
         }
     }
@@ -68,10 +69,11 @@ public class MoStackWebHistory implements MoSavable, MoLoadable {
      * if the stack has more than one url, we
      * can still go back a page (if it only has one url in it,
      * that's the one that they are currently on)
+     *
      * @return true if the stack has more than one url and the web view is not null
      */
-    public boolean canGoBack(){
-        return currentIndex>0;
+    public boolean canGoBack() {
+        return currentIndex > 0;
     }
 
     /**
@@ -80,10 +82,10 @@ public class MoStackWebHistory implements MoSavable, MoLoadable {
      * into the web view
      * adds it to the popped queue
      */
-    public String goBack(){
+    public String goBack() {
         previousAction = ACTION_BACK;
         currentIndex--;
-        if(canGoBack()&& System.currentTimeMillis() - lastBackPressed <= DOUBLE_BACK_PRESS_TOLERANCE){
+        if (canGoBack() && System.currentTimeMillis() - lastBackPressed <= DOUBLE_BACK_PRESS_TOLERANCE) {
             // go back one more
             currentIndex--;
             //Toast.makeText(this.webView.getContext(),"double press",Toast.LENGTH_SHORT).show();
@@ -93,14 +95,14 @@ public class MoStackWebHistory implements MoSavable, MoLoadable {
         return getCurrentURL();
     }
 
-    public boolean canGoForward(){
-        return  currentIndex< list.size()-1;
+    public boolean canGoForward() {
+        return currentIndex < list.size() - 1;
     }
 
     /**
      * adds this to the
      */
-    public String goForward(){
+    public String goForward() {
         previousAction = ACTION_FORWARD;
         currentIndex++;
         return getCurrentURL();
@@ -111,26 +113,24 @@ public class MoStackWebHistory implements MoSavable, MoLoadable {
     /**
      * goes forward if it can
      */
-    public void goForwardIfPossible(){
-        if(canGoForward()){
+    public void goForwardIfPossible() {
+        if (canGoForward()) {
             goForward();
         }
     }
 
 
-
-
-    public String getCurrentURL(){
+    public String getCurrentURL() {
         return this.list.get(this.currentIndex);
     }
 
     @Override
     public void load(String data, Context context) {
         String[] c = MoFile.loadable(data);
-        if(MoFile.isValidData(c)){
+        if (MoFile.isValidData(c)) {
             String[] stk = MoFile.loadable(c[0]);
             this.list.addAll(Arrays.asList(stk));
-            if(c.length > 1){
+            if (c.length > 1) {
                 this.currentIndex = Integer.parseInt(c[1]);
             }
         }
@@ -138,6 +138,6 @@ public class MoStackWebHistory implements MoSavable, MoLoadable {
 
     @Override
     public String getData() {
-        return MoFile.getData(this.list,this.currentIndex);
+        return MoFile.getData(this.list, this.currentIndex);
     }
 }

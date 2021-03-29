@@ -36,10 +36,7 @@ import com.moofficial.moweb.R;
 import java.util.Arrays;
 
 @SuppressWarnings("ConstantConditions")
-public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed ,MoOnTabClickListener{
-
-
-
+public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed, MoOnTabClickListener {
 
     protected MoMainMenuBottomBar moToolBar;
     protected MoPopUpMenu morePopUpMenu;
@@ -103,8 +100,7 @@ public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed ,M
     }
 
 
-
-    public void init(){
+    public void init() {
         initUI();
         initClass();
     }
@@ -123,8 +119,6 @@ public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed ,M
     }
 
 
-
-
     private void initViewPager() {
         pager2 = findViewById(R.id.main_menu_view_pager);
         abstractStateAdapter = new AbstractStateAdapter(getActivity(),
@@ -134,7 +128,7 @@ public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed ,M
         pager2.setAdapter(abstractStateAdapter);
     }
 
-    private void initBottomAppbar(){
+    private void initBottomAppbar() {
         bottomAppBar = findViewById(R.id.main_menu_toolbar);
     }
 
@@ -168,9 +162,6 @@ public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed ,M
     }
 
 
-
-
-
     private void initTabSelectable() {
         this.tabSelectable = new MoSelectable<>(getContext(), (ViewGroup) this,
                 abstractStateAdapter.get())
@@ -190,9 +181,6 @@ public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed ,M
                 .setTabsNumber(MoTabsManager.size())
                 .syncWithViewPager2(pager2);
     }
-
-
-
 
 
     private void createNewTab() {
@@ -250,17 +238,15 @@ public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed ,M
 
     public void setToCurrentPage() {
         MoTab t = MoTabController.instance.getCurrent();
-        if(t==null) return;
-        pager2.setCurrentItem(t.isPrivate()?1:0);
+        if (t == null) return;
+        pager2.setCurrentItem(t.isPrivate() ? 1 : 0);
         this.abstractStateAdapter.scrollTo(t);
     }
 
 
-
-
     @Override
     public void onTabClickListener(MoTab t, View sharedView, int index) {
-        MoTabController.instance.setNewTab(getContext(),t);
+        MoTabController.instance.setNewTab(getContext(), t);
         transitionToTab.transition();
     }
 
@@ -272,10 +258,10 @@ public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed ,M
 
     @Override
     public boolean onBackPressed() {
-        if(tabSelectable.hasAction()) {
+        if (tabSelectable.hasAction()) {
             tabSelectable.removeAction();
             return true;
-        }else if(MoTabController.instance.isNotOutOfOptions()) {
+        } else if (MoTabController.instance.isNotOutOfOptions()) {
             MoTabController.instance.getUpdateTabActivity().update();
             transitionToTab.transition();
             return true;

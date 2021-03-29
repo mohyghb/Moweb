@@ -6,12 +6,6 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
 import java.util.List;
 
 public class NormalMainFragment extends AbstractMainFragment{
-
-
-
-
-
-
     @Override
     List<MoTab> getTabs() {
         return MoTabsManager.getTabs();

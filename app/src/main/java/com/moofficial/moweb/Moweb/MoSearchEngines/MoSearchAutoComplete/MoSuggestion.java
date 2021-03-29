@@ -9,23 +9,26 @@ import com.moofficial.moweb.Moweb.MoWebview.MoHistory.MoHistory;
 // api
 public class MoSuggestion {
 
-    @IntDef({TYPE_HISTORY,TYPE_SEARCH_ENGINE})
-    public @interface SuggestionType{}
+    @IntDef({TYPE_HISTORY, TYPE_SEARCH_ENGINE})
+    public @interface SuggestionType {
+    }
+
     public static final int TYPE_HISTORY = 0;
     public static final int TYPE_SEARCH_ENGINE = 1;
 
     private float similarity;
-    @SuggestionType private int type;
+    @SuggestionType
+    private int type;
     private MoHistory history;
     private String searchEngineSuggestion;
 
-    public MoSuggestion(MoHistory history,float similarity){
+    public MoSuggestion(MoHistory history, float similarity) {
         this.history = history;
         this.type = TYPE_HISTORY;
         this.similarity = similarity;
     }
 
-    public MoSuggestion(String searchEngineSuggestion,float similarity) {
+    public MoSuggestion(String searchEngineSuggestion, float similarity) {
         this.searchEngineSuggestion = searchEngineSuggestion;
         this.type = TYPE_SEARCH_ENGINE;
         this.similarity = similarity;
@@ -49,15 +52,15 @@ public class MoSuggestion {
 
     // key to search the suggestion inside a hash map
     public String getKey() {
-        if(type == TYPE_HISTORY) {
+        if (type == TYPE_HISTORY) {
             return history.getTitle();
         } else {
             return searchEngineSuggestion;
         }
     }
 
-    public String getSearch(){
-        if(type == TYPE_HISTORY) {
+    public String getSearch() {
+        if (type == TYPE_HISTORY) {
             return history.getUrl();
         } else {
             return searchEngineSuggestion;

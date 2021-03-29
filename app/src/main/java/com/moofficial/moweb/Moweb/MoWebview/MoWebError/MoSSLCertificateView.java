@@ -47,15 +47,16 @@ public class MoSSLCertificateView extends MoConstraint {
 
         return this;
     }
+
     public MoSSLCertificateView addSpace() {
         TextView v = new TextView(getContext());
-        linearLayout.addView(v,MoMarginBuilder.getLinearParams(getContext(), 0));
+        linearLayout.addView(v, MoMarginBuilder.getLinearParams(getContext(), 0));
         return this;
     }
 
     public MoSSLCertificateView populateIssue(String issueType, SslCertificate.DName dName) {
         SpannableStringBuilder s = new SpannableStringBuilder()
-                .append(issueType, new StyleSpan(Typeface.BOLD),Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                .append(issueType, new StyleSpan(Typeface.BOLD), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         TextView tv = new TextView(getContext());
         tv.setText(s);
         this.linearLayout.addView(tv);
@@ -71,7 +72,7 @@ public class MoSSLCertificateView extends MoConstraint {
             return this;
         }
         SpannableStringBuilder s = new SpannableStringBuilder()
-                .append(title, new StyleSpan(Typeface.BOLD),Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                .append(title, new StyleSpan(Typeface.BOLD), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 .append("\n")
                 .append(description);
         TextView tv = new TextView(getContext());

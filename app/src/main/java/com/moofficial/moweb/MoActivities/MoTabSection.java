@@ -47,7 +47,6 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabSearchBar.MoTabSearchBar;
 import com.moofficial.moweb.Moweb.MoTab.MoTabUtils;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.MoTab;
 import com.moofficial.moweb.Moweb.MoTab.MoTabsManager;
-import com.moofficial.moweb.Moweb.MoWebFeatures.MoWebFeatures;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebError.MoSSLBottomSheet;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebError.MoSSLUtils;
 import com.moofficial.moweb.Moweb.MoWebview.MoWebError.MoWebErrorView;
@@ -63,7 +62,6 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
     private static final int MAIN_MENU_REQUEST_CODE = 0;
     public static final int GO_TO_TAB_ACTIVITY_REQUEST = 1;
     public static final int DOWNLOAD_PERMISSION_REQUEST = 2;
-
 
 
     private MoTabSearchBar moTabSearchBar;
@@ -164,10 +162,10 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
     @Override
     public void update() {
         MoLog.print("updating tab section");
-        if(MoTabController.instance.isOutOfOptions()) {
+        if (MoTabController.instance.isOutOfOptions()) {
             // if we are out of options, make a new tab
-            MoTabsManager.addTab(getContext(), MoSearchEngine.instance.homePage(),false);
-        }else {
+            MoTabsManager.addTab(getContext(), MoSearchEngine.instance.homePage(), false);
+        } else {
             // only perform update when the new tab is different than the old tab
             removePreviousTab();
             updateTab();
@@ -197,7 +195,7 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
      * and the current tab is not the same as the new one
      */
     private void removePreviousTab() {
-        if(webView != null) {
+        if (webView != null) {
             // then remove it from web view when updating
             webView.removeListeners();
             webCard.removeView(webView);
@@ -212,7 +210,7 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
         this.title.setText(title.isEmpty() ? "empty title" : title.trim());
     }
 
-    private void updateSubtitle(){
+    private void updateSubtitle() {
         this.subTitle.setText(this.webView.getUrl());
     }
 
@@ -220,9 +218,9 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
     private void updateWebView() {
         webCard.removeAllViews();
         this.webView = tab.getMoWebView();
-        MoTabUtils.transitionToInTabMode(webView,webCard,
+        MoTabUtils.transitionToInTabMode(webView, webCard,
                 new CardView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
+                        ViewGroup.LayoutParams.MATCH_PARENT));
         this.webView.setOnLongClickListener(view -> {
             webView.getHitTestResultParser().createDialogOrSmartText(getContext());
             return false;
@@ -285,11 +283,10 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
     }
 
     public void updateBookmark() {
-        this.moToolBar.setMiddleIcon(tab.urlIsBookmarked()?
-                R.drawable.ic_baseline_bookmark_24:
+        this.moToolBar.setMiddleIcon(tab.urlIsBookmarked() ?
+                R.drawable.ic_baseline_bookmark_24 :
                 R.drawable.ic_baseline_bookmark_border_24);
     }
-
 
 
     /**
@@ -308,7 +305,7 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
                     MoKeyboardUtils.hideSoftKeyboard(view);
                     onTabsButtonPressed();
                 })
-                .setNumberOfTabs(tab.isPrivate()?MoTabsManager.sizePrivate():MoTabsManager.size());
+                .setNumberOfTabs(tab.isPrivate() ? MoTabsManager.sizePrivate() : MoTabsManager.size());
     }
 
     private void setSSL(SslErrorHandler o, SslError o2) {
@@ -330,7 +327,7 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
         if (this.moTabSearchBar.isInSearch()) {
             this.moTabSearchBar.deactivateSearch();
             return true;
-        }else if (isShowingError) {
+        } else if (isShowingError) {
             hideErrorView();
             return true;
         } else {
@@ -344,8 +341,8 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
         String s = MimeTypeMap.getFileExtensionFromUrl(url);
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(s);
         String name = URLUtil.guessFileName(url,
-                contentDisposition, mimeType).replace(" ","");
-        if(permission.checkAndRequestPermissions()) {
+                contentDisposition, mimeType).replace(" ", "");
+        if (permission.checkAndRequestPermissions()) {
             if (MoDownloadManager.alreadyHasFile(url, contentDisposition, mimeType)) {
                 Toast.makeText(getContext(), "File has already been downloaded!", Toast.LENGTH_SHORT).show();
             } else {
@@ -362,13 +359,14 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
 
     /**
      * asks the user whether they want to download the file or not
-     * @param name of the download
+     *
+     * @param name   of the download
      * @param thread that runs the download when started
      */
-    private void downloadConfirmationBottomSheet(String name, long contentLength,Thread thread) {
+    private void downloadConfirmationBottomSheet(String name, long contentLength, Thread thread) {
         MoDownloadConfirmation confirmation = new MoDownloadConfirmation(getContext());
         MoBottomSheet popupWindow = new MoBottomSheet(getContext());
-        confirmation.onCancel(popupWindow::dismiss).onSave(()-> {
+        confirmation.onCancel(popupWindow::dismiss).onSave(() -> {
             // start download and dismiss dialog
             thread.start();
             popupWindow.dismiss();
@@ -381,15 +379,6 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
     }
 
     @Override
-    public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-//        this.webErrorView.normalError()
-//                .setTitle(MoWebResourceErrorUtils.getTitle(error))
-//                .setDescription("Unfortunately we are not able to load " + view.getUrl() +
-//                        ". The error description is as follows: " + error.getDescription().toString());
-//        this.showErrorView();
-    }
-
-    @Override
     public void onSSLErrorReceived(WebView view, SslErrorHandler handler, SslError error) {
         setSSL(handler, error);
         this.webErrorView.sslError();
@@ -399,12 +388,12 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
             MoBottomSheet sheet = new MoBottomSheet(getContext());
             MoSSLBottomSheet ssl = new MoSSLBottomSheet(getContext());
             ssl.setDescription("Are you sure you wanna proceed? The site seems to be dangerous")
-                    .onDecline(()-> {
+                    .onDecline(() -> {
                         sheet.dismiss();
                         handler.cancel();
                         hideErrorView();
                     })
-                    .onProceed(()-> {
+                    .onProceed(() -> {
                         sheet.dismiss();
                         handler.proceed();
                         hideErrorView();
@@ -423,7 +412,6 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
     }
 
     public void showErrorView() {
-        // todo a case where the user presses the tab button and goes to another tab
         this.isShowingError = true;
         this.webView.setVisibility(View.GONE);
         this.webErrorView.setVisibility(View.VISIBLE);

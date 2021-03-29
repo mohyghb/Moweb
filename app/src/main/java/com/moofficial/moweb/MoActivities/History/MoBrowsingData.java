@@ -30,7 +30,6 @@ public class MoBrowsingData extends MoSmartActivity {
         initCheckBoxes();
         initToolbar();
         addExtendedFloatingActionButton();
-
     }
 
     private void initCheckBoxes() {
@@ -103,8 +102,6 @@ public class MoBrowsingData extends MoSmartActivity {
             // clear cookies
             MoWebUtils.clearCookies();
         }
-
-
     }
 
 }

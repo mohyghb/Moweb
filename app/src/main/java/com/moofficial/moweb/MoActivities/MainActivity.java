@@ -22,7 +22,6 @@ import com.moofficial.moweb.R;
 public class MainActivity extends AppCompatActivity {
 
     public static final int HISTORY_FROM_MAIN_MENU_REQUEST = 2;
-
     private final int SECTION_TAB = 0;
     private final int SECTION_MAIN_MENU = 1;
 
@@ -37,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
         MoSettingsSection.init(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        MoLog.printRunTime("App loader",() -> MoWebAppLoader.loadApp(this));
-        MoSettingsSection.getInstance().initFeatures();
+        MoWebAppLoader.loadApp(this);
+        MoSettingsSection.getInstance().initFeatures(this);
         init();
         handleLinkFromOthers(getIntent());
     }
@@ -47,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         MoDownloadManager.onDestroy();
-        // todo on destroy tab
     }
 
     @Override
@@ -68,13 +66,14 @@ public class MainActivity extends AppCompatActivity {
     /**
      * this method handles links that are opened
      * with our app from other sources
+     *
      * @param intent that is sent to open this app
      */
     private void handleLinkFromOthers(Intent intent) {
         Uri startIntentData = intent.getData();
-        if(startIntentData!=null) {
+        if (startIntentData != null) {
             String intentUrl = startIntentData.toString();
-            if (intentUrl.contains("http://")||intentUrl.contains("https://")) {
+            if (intentUrl.contains("http://") || intentUrl.contains("https://")) {
                 MoTabsManager.addTab(this, intentUrl, false);
                 moveToTabFragment();
             }
@@ -87,11 +86,10 @@ public class MainActivity extends AppCompatActivity {
         initSectionManager();
     }
 
-
     private void initSectionManager() {
         this.sectionViewManager = new MoSectionViewManager(findViewById(R.id.main_activity_frame))
-                .addSection(SECTION_TAB,this.tabSection)
-                .addSection(SECTION_MAIN_MENU,mainMenuFragment)
+                .addSection(SECTION_TAB, this.tabSection)
+                .addSection(SECTION_MAIN_MENU, mainMenuFragment)
                 .setActiveSection(SECTION_TAB)
                 .setTransitionIn(new Slide())
                 .setTransitionOut(new Slide());
@@ -143,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == HISTORY_FROM_MAIN_MENU_REQUEST && resultCode == MoTabSection.GO_TO_TAB_ACTIVITY_REQUEST){
+        if (requestCode == HISTORY_FROM_MAIN_MENU_REQUEST && resultCode == MoTabSection.GO_TO_TAB_ACTIVITY_REQUEST) {
             // the user has opened something from the history activity
             // therefore, we need to transition to the tab
             // we need to call update because if we don't
@@ -157,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         boolean consumed = false;
-        switch (sectionViewManager.getActiveSectionKey()){
+        switch (sectionViewManager.getActiveSectionKey()) {
             case SECTION_TAB:
                 consumed = tabSection.onBackPressed();
                 break;
@@ -165,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                 consumed = mainMenuFragment.onBackPressed();
                 break;
         }
-        if(!consumed){
+        if (!consumed) {
             super.onBackPressed();
         }
     }

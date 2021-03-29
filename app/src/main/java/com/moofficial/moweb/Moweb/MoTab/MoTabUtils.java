@@ -11,26 +11,21 @@ import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 public class MoTabUtils {
 
     @SuppressLint("ClickableViewAccessibility")
-    public static void transitionToInTabMode(MoWebView m, ViewGroup viewGroup, ViewGroup.LayoutParams lp){
+    public static void transitionToInTabMode(MoWebView m, ViewGroup viewGroup, ViewGroup.LayoutParams lp) {
         m.moveWebViewTo(viewGroup, lp);
         m.onResume();
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    public static void transitionToListTabMode(Context c, MoWebView m, ViewGroup viewGroup){
+    public static void transitionToListTabMode(Context c, MoWebView m, ViewGroup viewGroup) {
         m.setOnTouchListener((view, motionEvent) -> true);
         m.moveWebViewTo(viewGroup, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         ));
-        m.setLayerType(View.LAYER_TYPE_SOFTWARE,null);
+        m.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         m.pauseTimers();
     }
-
-
-
-
-
 
 
 }

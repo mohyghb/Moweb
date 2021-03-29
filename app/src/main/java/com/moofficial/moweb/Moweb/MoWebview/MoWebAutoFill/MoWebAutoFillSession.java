@@ -44,13 +44,14 @@ public class MoWebAutoFillSession {
      * on the params passed
      * if id or value is empty or null do
      * not add them
+     *
      * @param id
      * @param value
      * @param type
      */
     @SuppressWarnings("ConstantConditions")
-    public void add (@NonNull String id, @NonNull String value, String type, String autoComplete) {
-        if(id == null || id.isEmpty() || value == null || value.isEmpty())
+    public void add(@NonNull String id, @NonNull String value, String type, String autoComplete) {
+        if (id == null || id.isEmpty() || value == null || value.isEmpty())
             return;
         if (autoFills.containsKey(id)) {
             // then we already have it, update the reference
@@ -79,14 +80,14 @@ public class MoWebAutoFillSession {
     public void processAndClearSession(Context c) {
         // don't do anything if
         // the map is empty
-        if(autoFills.isEmpty())
+        if (autoFills.isEmpty())
             return;
         String url = webView.getUrl();
         // it is okay to save general auto-fills without confirmation
         saveGeneralAutoFill(c);
         // we need permission for user pass auto fill
         if (MoUserPassManager.enabled) {
-            saveUserPassAutoFill(c,url);
+            saveUserPassAutoFill(c, url);
         }
         // new session
         clearSession();
@@ -95,9 +96,9 @@ public class MoWebAutoFillSession {
     /**
      * ask the user if they want to save it or not
      */
-    private void saveUserPassAutoFill(Context c,String url) {
+    private void saveUserPassAutoFill(Context c, String url) {
         String host = MoUrlUtils.getHost(url);
-        if(MoUserPassManager.neverSave(host)) {
+        if (MoUserPassManager.neverSave(host)) {
             MoLog.print("avoided saving user name password for " + host);
             return;
         }
@@ -116,38 +117,41 @@ public class MoWebAutoFillSession {
 
     /**
      * save password and username
-     * @param c context needed for saving
+     *
+     * @param c                context needed for saving
      * @param userPassAutoFill instance to save
      */
     private void saveUsernamePassword(Context c, MoUserPassAutoFill userPassAutoFill) {
         try {
             MoUserPassManager.add(c, userPassAutoFill);
-            Toast.makeText(c,"Password saved!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(c, "Password saved!", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(c,"Error in saving password",Toast.LENGTH_SHORT).show();
+            Toast.makeText(c, "Error in saving password", Toast.LENGTH_SHORT).show();
         }
     }
 
     /**
      * they don't want to get this ever again on this site
-     * @param c context for saving
+     *
+     * @param c                context for saving
      * @param userPassAutoFill to get the host from
      */
     private void neverSaveUserPassForThisHost(Context c, MoUserPassAutoFill userPassAutoFill) {
-        MoUserPassManager.neverSave(c,userPassAutoFill.getHost());
+        MoUserPassManager.neverSave(c, userPassAutoFill.getHost());
     }
 
     /**
      * save general auto-fills like name, last name
      * automatically, todo currently the credit card is
-     *                   considered to be general THAT'S NOT GOOD change it
+     * considered to be general THAT'S NOT GOOD change it
+     *
      * @param c
      */
     private void saveGeneralAutoFill(Context c) {
         MoLinkedAutoFills linkedAutoFills = extractGeneralAutoFill();
         try {
-            MoGeneralAutoFillManager.add(c,linkedAutoFills);
+            MoGeneralAutoFillManager.add(c, linkedAutoFills);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -160,7 +164,7 @@ public class MoWebAutoFillSession {
      */
     private MoUserPassAutoFill extractUserPassword(String host) {
         MoUserPassAutoFill passAutoFill = new MoUserPassAutoFill();
-        for (MoWebAutoFill autoFill: autoFills.values()) {
+        for (MoWebAutoFill autoFill : autoFills.values()) {
             passAutoFill.add(autoFill);
         }
         passAutoFill.chooseTopSuggestionIfNoUsername();
@@ -171,8 +175,9 @@ public class MoWebAutoFillSession {
     /**
      * extract general auto-fills and create a link
      * todo, when you add a general auto-fill, then you should remove it
-     *  since it is definitely not used inside pass word extraction
+     * since it is definitely not used inside pass word extraction
      * between them
+     *
      * @return linked auto fills
      */
     private MoLinkedAutoFills extractGeneralAutoFill() {
@@ -185,7 +190,6 @@ public class MoWebAutoFillSession {
         }
         return linkedAutoFills;
     }
-
 
 
     /**

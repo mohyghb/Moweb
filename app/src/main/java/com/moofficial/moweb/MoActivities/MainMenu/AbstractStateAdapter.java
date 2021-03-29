@@ -28,12 +28,10 @@ public class AbstractStateAdapter extends MoRecyclerAdapter<AbstractViewHolder,A
         super(c, dataSet);
     }
 
-
     public AbstractStateAdapter setOnTabClickListener(MoOnTabClickListener onTabClickListener) {
         this.onTabClickListener = onTabClickListener;
         return this;
     }
-
 
     @NonNull
     @Override
@@ -66,7 +64,6 @@ public class AbstractStateAdapter extends MoRecyclerAdapter<AbstractViewHolder,A
                 .show();
         item.setRecyclerView(holder.recyclerView);
     }
-
 
     public MoTabRecyclerAdapter[] get() {
         MoTabRecyclerAdapter[] ab = new MoTabRecyclerAdapter[dataSet.size()];

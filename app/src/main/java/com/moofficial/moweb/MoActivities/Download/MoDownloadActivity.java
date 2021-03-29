@@ -108,18 +108,18 @@ public class MoDownloadActivity extends MoSmartActivity implements
         this.mainToolbar = new MoToolBar(this)
                 .hideMiddle()
                 .setRightIcon(R.drawable.ic_baseline_search_24)
-                .setLeftOnClickListener((v)->onBackPressed());
+                .setLeftOnClickListener((v) -> onBackPressed());
         this.selectableToolbar = new MoToolBar(this)
                 .showCheckBox()
                 .hideLeft()
                 .showRight()
                 .hideMiddle()
                 .setRightIcon(R.drawable.ic_baseline_delete_outline_24)
-                .setRightOnClickListener((v)-> {
+                .setRightOnClickListener((v) -> {
                     MoDownloadManager.delete(this.adapter.getSelectedItems(),
                             () -> {
                                 this.adapter.getDataSet().removeAll(this.adapter.getSelectedItems());
-                                runOnUiThread(()-> {
+                                runOnUiThread(() -> {
                                     TransitionManager.beginDelayedTransition(getGroupRootView());
                                     this.adapter.notifyDataSetChanged();
                                     this.adapter.notifyEmptyState();
@@ -179,10 +179,9 @@ public class MoDownloadActivity extends MoSmartActivity implements
         this.sync = new MoListViewSync(getGroupRootView(), this.selectable, this.searchable);
         this.sync.setPutOnHold(true)
                 .setSharedElements(this.mainToolbar)
-                .setOnEmptyOnHoldsListener(()-> this.adapter.update(this,
+                .setOnEmptyOnHoldsListener(() -> this.adapter.update(this,
                         MoDownloadManager.getDownloads(), getGroupRootView()));
     }
-
 
     @Override
     public void onBackPressed() {
@@ -201,7 +200,7 @@ public class MoDownloadActivity extends MoSmartActivity implements
 
     @Override
     public void onDownloadCancelled(int position) {
-        recyclerView.post(()-> {
+        recyclerView.post(() -> {
             adapter.getDataSet().remove(position);
             adapter.notifyItemRemoved(position);
             adapter.notifyItemRangeChanged(position, adapter.getItemCount());
@@ -209,7 +208,6 @@ public class MoDownloadActivity extends MoSmartActivity implements
         });
         MoLog.print("on cancelled called on " + position);
     }
-
 
     public static void startActivity(Context context) {
         context.startActivity(new Intent(context, MoDownloadActivity.class));
