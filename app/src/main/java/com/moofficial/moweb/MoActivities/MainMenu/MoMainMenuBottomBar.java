@@ -15,10 +15,10 @@ import com.moofficial.moweb.R;
 
 public class MoMainMenuBottomBar extends MoConstraint {
 
-    private ImageButton more,add;
+    private ImageButton more, add;
     private TabLayout tabLayout;
     private MoTabsButton tabsButton;
-    private Runnable addNormalTab,addPrivateTab;
+    private Runnable addNormalTab, addPrivateTab;
     private ViewPager2 pager2;
 
     public MoMainMenuBottomBar(Context context) {
@@ -49,30 +49,30 @@ public class MoMainMenuBottomBar extends MoConstraint {
         return this;
     }
 
-    public MoMainMenuBottomBar setMoreClickListener(View.OnClickListener l){
+    public MoMainMenuBottomBar setMoreClickListener(View.OnClickListener l) {
         more.setOnClickListener(l);
         return this;
     }
 
-    public MoMainMenuBottomBar setTabsNumber(int number){
+    public MoMainMenuBottomBar setTabsNumber(int number) {
         tabsButton.setNumberOfTabs(number);
         return this;
     }
 
-    public MoMainMenuBottomBar setOnTabsClickListener(View.OnClickListener l){
+    public MoMainMenuBottomBar setOnTabsClickListener(View.OnClickListener l) {
         tabsButton.setOnTabsButtonClicked(l);
         return this;
     }
 
 
-    public MoMainMenuBottomBar syncWithViewPager2(ViewPager2 pager2){
+    public MoMainMenuBottomBar syncWithViewPager2(ViewPager2 pager2) {
         this.pager2 = pager2;
         new TabLayoutMediator(this.tabLayout, pager2, (tab, position) -> {
-            if(position == 0){
+            if (position == 0) {
                 // this is the normal tabs section
-               // tab.setIcon(R.drawable.ic_baseline_language_24).setText("Normal");
+                // tab.setIcon(R.drawable.ic_baseline_language_24).setText("Normal");
                 tab.setCustomView(tabsButton);
-            }else{
+            } else {
                 // this is the private tabs section
                 tab.setIcon(R.drawable.ic_baseline_vpn_lock_24);
             }
@@ -86,9 +86,9 @@ public class MoMainMenuBottomBar extends MoConstraint {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                if(position == 0) {
+                if (position == 0) {
                     tabsButton.showActivated();
-                }else {
+                } else {
                     tabsButton.showDeactivated();
                 }
             }
@@ -113,10 +113,10 @@ public class MoMainMenuBottomBar extends MoConstraint {
     private void initAdd() {
         add = findViewById(R.id.mo_bottom_tool_bar_add);
         this.add.setOnClickListener(view -> {
-            if(pager2.getCurrentItem() == 0){
+            if (pager2.getCurrentItem() == 0) {
                 // add normal tab
                 addNormalTab.run();
-            }else{
+            } else {
                 addPrivateTab.run();
             }
         });

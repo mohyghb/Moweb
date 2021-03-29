@@ -11,17 +11,15 @@ public class MoSuggestions {
     // does not prevent the add method from adding
     // suggestions to the list
     private int limit = 5;
-    private ArrayList<MoSuggestion> suggestions=  new ArrayList<>();
+    private ArrayList<MoSuggestion> suggestions = new ArrayList<>();
     private HashSet<String> duplicates = new HashSet<>();
     // what they are searching
     private String search;
 
 
-
-    public MoSuggestions(String search){
+    public MoSuggestions(String search) {
         this.search = search;
     }
-
 
 
     public List<MoSuggestion> getSuggestions() {
@@ -36,6 +34,7 @@ public class MoSuggestions {
     /**
      * adds the suggestion s to the list
      * of suggestions if it is not a duplicate
+     *
      * @param s suggestion to be added
      * @return true if we have to stop adding
      * since the suggestion list has reached to the limit
@@ -44,7 +43,7 @@ public class MoSuggestions {
         if (reachedLimit())
             return true;
         String key = s.getKey();
-        if(!duplicates.contains(key)) {
+        if (!duplicates.contains(key)) {
             this.suggestions.add(s);
             this.duplicates.add(key);
         }
@@ -54,10 +53,11 @@ public class MoSuggestions {
     /**
      * adds all the suggestions inside the
      * suggestions object to this suggestions
+     *
      * @param suggestions to be added
      */
-    public void addAll(MoSuggestions suggestions){
-        for(MoSuggestion s: suggestions.suggestions){
+    public void addAll(MoSuggestions suggestions) {
+        for (MoSuggestion s : suggestions.suggestions) {
             boolean b = add(s);
             if (b) {
                 break;
@@ -70,7 +70,7 @@ public class MoSuggestions {
      * similarity
      */
     public void sortBySimilarityToSearch() {
-        Collections.sort(this.suggestions,new MoSuggestionComparator());
+        Collections.sort(this.suggestions, new MoSuggestionComparator());
     }
 
     // monote trim the suggestions
@@ -78,7 +78,6 @@ public class MoSuggestions {
     //  factoring the time in (time they accessed it matters)
 
     /**
-     *
      * @return whether we have added enough suggestions
      * to have equal or higher than the limit size
      */
@@ -89,15 +88,16 @@ public class MoSuggestions {
     /**
      * returns true if we already have this
      * suggestion in our list
+     *
      * @param suggestion to check whether we have it or not
      * @return true if the suggestion is a duplicate
      */
-    public boolean has(String suggestion){
+    public boolean has(String suggestion) {
         return duplicates.contains(suggestion);
     }
 
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return this.suggestions.isEmpty();
     }
 

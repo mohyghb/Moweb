@@ -27,7 +27,6 @@ import java.util.Objects;
 import static com.moofficial.moweb.MoActivities.Bookmark.BookmarkFolderChooserActivity.getChosenFolder;
 
 
-
 public class EditBookmarkActivity extends MoSmartActivity {
 
     public static final String EXTRA_URL = "extra_url";
@@ -36,7 +35,7 @@ public class EditBookmarkActivity extends MoSmartActivity {
 
     private MoToolBar moToolBar;
     private MoBookmark editBookmark;
-    private MoEditText titleInput,urlInput;
+    private MoEditText titleInput, urlInput;
     private MoButton folderButton;
     private MoAcceptDenyLayout acceptDenyLayout;
     private String originalKey;
@@ -53,7 +52,7 @@ public class EditBookmarkActivity extends MoSmartActivity {
         Bundle b = getIntent().getExtras();
         this.originalKey = Objects.requireNonNull(b).getString(EXTRA_URL);
         if (originalKey == null) {
-            this.originalKey  = b.getString(EXTRA_NAME);
+            this.originalKey = b.getString(EXTRA_NAME);
             editBookmark = MoBookmarkManager.getFolder(this.originalKey);
         } else {
             editBookmark = MoBookmarkManager.getBookmark(this.originalKey);
@@ -77,8 +76,8 @@ public class EditBookmarkActivity extends MoSmartActivity {
         initFolder();
 
         // adding the content to nested linear layout
-        l.linearNested.addView(titleInput, MoMarginBuilder.getLinearParams(this,8));
-        l.linearNested.addView(folderButton, MoMarginBuilder.getLinearParams(this,0,8,0,0));
+        l.linearNested.addView(titleInput, MoMarginBuilder.getLinearParams(this, 8));
+        l.linearNested.addView(folderButton, MoMarginBuilder.getLinearParams(this, 0, 8, 0, 0));
 
     }
 
@@ -91,16 +90,16 @@ public class EditBookmarkActivity extends MoSmartActivity {
                     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
                     }
+
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        //todo the fucntion below does not work when the values are null
                         try {
                             MoBookmarkManager.validateEditInputs(EditBookmarkActivity.this,
                                     editBookmark,
                                     titleInput,
                                     urlInput,
                                     originalKey);
-                        }catch(NullPointerException e) {
+                        } catch (NullPointerException e) {
                             // ignore
                         }
                     }
@@ -112,8 +111,8 @@ public class EditBookmarkActivity extends MoSmartActivity {
                 });
         titleInput.actionDone().getTextInputEditText()
                 .setOnEditorActionListener((textView, i, keyEvent) -> {
-                    if(i == EditorInfo.IME_ACTION_DONE) {
-                       onSavePressed();
+                    if (i == EditorInfo.IME_ACTION_DONE) {
+                        onSavePressed();
                     }
                     return false;
                 });
@@ -121,7 +120,7 @@ public class EditBookmarkActivity extends MoSmartActivity {
 
     private void initEditUrl() {
         urlInput = new MoEditText(this);
-        if(!editBookmark.isFolder()){
+        if (!editBookmark.isFolder()) {
             urlInput.setHint(R.string.url_hint)
                     .setText(editBookmark.getUrl())
                     .singleLine()
@@ -136,7 +135,7 @@ public class EditBookmarkActivity extends MoSmartActivity {
                             MoBookmarkManager.validateEditInputs(EditBookmarkActivity.this,
                                     editBookmark,
                                     titleInput,
-                                    urlInput,originalKey);
+                                    urlInput, originalKey);
                         }
 
                         @Override
@@ -144,21 +143,20 @@ public class EditBookmarkActivity extends MoSmartActivity {
 
                         }
                     });
-                    // todo test this to make sure aht it works
             urlInput.inputTypeText().actionNext().getTextInputEditText()
                     .setOnEditorActionListener((textView, i, keyEvent) -> {
-                        if(i == EditorInfo.IME_ACTION_NEXT) {
+                        if (i == EditorInfo.IME_ACTION_NEXT) {
                             titleInput.requestFocus();
-                            l.appBarLayout.setExpanded(false,true);
+                            l.appBarLayout.setExpanded(false, true);
                         }
                         return false;
                     });
-            l.linearNested.addView(urlInput, MoMarginBuilder.getLinearParams(this,8));
+            l.linearNested.addView(urlInput, MoMarginBuilder.getLinearParams(this, 8));
         }
     }
 
     private void initFolder() {
-        newFolderName = MoBookmarkUtils.getFolderName(this,editBookmark);
+        newFolderName = MoBookmarkUtils.getFolderName(this, editBookmark);
         folderButton = new MoButton(this)
                 .setTitle("Parent folder")
                 .setIcon(R.drawable.ic_baseline_folder_24)
@@ -170,12 +168,12 @@ public class EditBookmarkActivity extends MoSmartActivity {
                 });
     }
 
-    private void initAcceptDeny(){
+    private void initAcceptDeny() {
         this.acceptDenyLayout = new MoAcceptDenyLayout(this);
         this.acceptDenyLayout.setAcceptButtonText(R.string.save)
-                             .setOnAcceptClickedListener(view -> onSavePressed())
-                             .setOnDenyClickedListener(view -> onCanceledPressed())
-                             .getCardView().makeTransparent();
+                .setOnAcceptClickedListener(view -> onSavePressed())
+                .setOnDenyClickedListener(view -> onCanceledPressed())
+                .getCardView().makeTransparent();
 
         l.linearBottom.addView(this.acceptDenyLayout);
     }
@@ -190,13 +188,13 @@ public class EditBookmarkActivity extends MoSmartActivity {
      * otherwise we show them the error
      */
     private void onSavePressed() {
-        if(MoBookmarkManager.validateEditInputs(this,editBookmark,titleInput,
-                urlInput,originalKey)){
+        if (MoBookmarkManager.validateEditInputs(this, editBookmark, titleInput,
+                urlInput, originalKey)) {
             MoBookmarkManager.editBookmarkAndSave(this,
                     editBookmark,
                     originalKey,
                     titleInput.getInputText(),
-                    editBookmark.isFolder()?"":urlInput.getInputText(),
+                    editBookmark.isFolder() ? "" : urlInput.getInputText(),
                     newFolderName);
             setResultOkay();
             finish();
@@ -204,23 +202,22 @@ public class EditBookmarkActivity extends MoSmartActivity {
     }
 
 
-    private void initToolbar(){
+    private void initToolbar() {
         this.moToolBar = new MoToolBar(this)
-                .setLeftOnClickListener((v)-> onBackPressed())
+                .setLeftOnClickListener((v) -> onBackPressed())
                 .onlyTitleAndLeftButtonVisible();
         l.toolbar.addToolbar(moToolBar);
     }
 
-    private void initClass(){}
+    private void initClass() {
+    }
 
 
-
-
-    private void setResultCanceled(){
+    private void setResultCanceled() {
         setResult(RESULT_CANCELED);
     }
 
-    private void setResultOkay(){
+    private void setResultOkay() {
         setResult(RESULT_OK);
     }
 
@@ -228,14 +225,14 @@ public class EditBookmarkActivity extends MoSmartActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
+        switch (requestCode) {
             case CHOOSE_FOLDER_REQUEST_CODE:
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     if (data != null) {
                         //noinspection ConstantConditions
                         this.newFolderName = getChosenFolder(data.getExtras());
-                        Toast.makeText(this,"Folder was changed to "
-                                +newFolderName,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Folder was changed to "
+                                + newFolderName, Toast.LENGTH_SHORT).show();
                         folderButton.setDescription(this.newFolderName);
                     }
                 }
@@ -243,18 +240,15 @@ public class EditBookmarkActivity extends MoSmartActivity {
         }
     }
 
-
-
-    public static void startActivityForResult(Activity a, MoBookmark b,int code){
-        Intent i = new Intent(a,EditBookmarkActivity.class);
-        if(b.isFolder()){
-            i.putExtra(EXTRA_NAME,b.getName());
-        }else{
-            i.putExtra(EXTRA_URL,b.getUrl());
+    public static void startActivityForResult(Activity a, MoBookmark b, int code) {
+        Intent i = new Intent(a, EditBookmarkActivity.class);
+        if (b.isFolder()) {
+            i.putExtra(EXTRA_NAME, b.getName());
+        } else {
+            i.putExtra(EXTRA_URL, b.getUrl());
         }
-        a.startActivityForResult(i,code);
+        a.startActivityForResult(i, code);
     }
-
 
 
 }

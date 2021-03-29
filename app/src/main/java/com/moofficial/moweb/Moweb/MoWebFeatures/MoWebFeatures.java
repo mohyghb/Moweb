@@ -14,19 +14,19 @@ public class MoWebFeatures {
 
     public static void updateSnapSearch(Context context) {
         snapSearchEnabled = MoSharedPref.get(context)
-                .getBoolean(context.getString(R.string.snap_search_enabled),true);
+                .getBoolean(context.getString(R.string.snap_search_enabled), true);
     }
 
     public static void updateOneHand(Context context) {
         oneHandEnabled = MoSharedPref.get(context)
-                .getBoolean(context.getString(R.string.one_hand_web_enabled),true);
-        MoTabsManager.getTabs().forEach((t)-> {
+                .getBoolean(context.getString(R.string.one_hand_web_enabled), true);
+        MoTabsManager.getTabs().forEach((t) -> {
             if (t != null) {
                 t.updateNestedScrollView(oneHandEnabled);
             }
         });
-        MoTabsManager.getPrivateTabs().forEach((t)-> {
-            if (t!=null) {
+        MoTabsManager.getPrivateTabs().forEach((t) -> {
+            if (t != null) {
                 t.updateNestedScrollView(oneHandEnabled);
             }
         });

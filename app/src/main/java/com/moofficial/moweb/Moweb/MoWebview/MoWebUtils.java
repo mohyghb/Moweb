@@ -32,9 +32,10 @@ public class MoWebUtils {
 
     /**
      * request write to external storage permission
+     *
      * @param activity
      */
-    public static void requestWritePermission(Activity activity){
+    public static void requestWritePermission(Activity activity) {
         // if we dont already have the permission
         if (!hasWritePermission(activity)) {
             //requesting permission
@@ -46,6 +47,7 @@ public class MoWebUtils {
     /**
      * return true if we have the
      * write into external storage permission
+     *
      * @param context
      * @return
      */
@@ -57,6 +59,7 @@ public class MoWebUtils {
 
     /**
      * enables or disables the desktop mode for a web view
+     *
      * @param webView
      * @param enabled
      */
@@ -67,8 +70,7 @@ public class MoWebUtils {
             newUserAgent = webSettings.getUserAgentString()
                     .replace("Mobile", "eliboM")
                     .replace("Android", "diordnA");
-        }
-        else {
+        } else {
             newUserAgent = webSettings.getUserAgentString()
                     .replace("eliboM", "Mobile")
                     .replace("diordnA", "Android");
@@ -81,10 +83,11 @@ public class MoWebUtils {
 
     /**
      * returns true if the web view is in desktop mode
+     *
      * @param webView
      * @return
      */
-    public static boolean isInDesktopMode(WebView webView){
+    public static boolean isInDesktopMode(WebView webView) {
         return !webView.getSettings().getUserAgentString().contains("Mobile");
     }
 
@@ -99,13 +102,13 @@ public class MoWebUtils {
         c.flush();
     }
 
-    public static void clearCachedImages(Context context){
+    public static void clearCachedImages(Context context) {
         // we need to remove it from both mo_images and the cached images
     }
 
     public static void updateCookies(Context context) {
         boolean accept = MoSharedPref.get(context)
-                .getBoolean(context.getString(R.string.cookies_enabled),false);
+                .getBoolean(context.getString(R.string.cookies_enabled), false);
         MoLog.print("general cookie has been set to " + accept);
         CookieManager.getInstance().setAcceptCookie(accept);
     }
@@ -114,12 +117,12 @@ public class MoWebUtils {
         new MoThread<String>().doBackground(() -> {
             CookieManager cookieManager = CookieManager.getInstance();
             boolean accept = MoSharedPref.get(context)
-                    .getBoolean(context.getString(R.string.cookies_enabled),false);
+                    .getBoolean(context.getString(R.string.cookies_enabled), false);
             MoLog.print("updating all cookies to " + accept);
             MoTabsManager.getTabs().forEach((MoTab t) -> {
-                if(t!=null && t.getWebView() != null) {
+                if (t != null && t.getWebView() != null) {
                     WebView v = t.getWebView();
-                    v.post(()-> cookieManager.setAcceptThirdPartyCookies(v, accept));
+                    v.post(() -> cookieManager.setAcceptThirdPartyCookies(v, accept));
                 }
             });
             return null;
@@ -129,7 +132,7 @@ public class MoWebUtils {
     public static void updateThirdPartyCookies(WebView v) {
         CookieManager cookieManager = CookieManager.getInstance();
         boolean accept = MoSharedPref.get(v.getContext())
-                .getBoolean(v.getContext().getString(R.string.cookies_enabled),false);
+                .getBoolean(v.getContext().getString(R.string.cookies_enabled), false);
         cookieManager.setAcceptThirdPartyCookies(v, accept);
     }
 

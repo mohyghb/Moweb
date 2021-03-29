@@ -18,11 +18,12 @@ public class MoGeneralAutoFillManager {
     /**
      * add the auto-fill to the
      * map and save it
+     *
      * @param context context of the app for saving
-     * @param a auto-fill to be added
+     * @param a       auto-fill to be added
      * @throws IOException
      */
-    public static synchronized void add(Context context,MoLinkedAutoFills a) throws IOException {
+    public static synchronized void add(Context context, MoLinkedAutoFills a) throws IOException {
         if (a.isNotEmpty()) {
             addAutoFill(a);
             a.save(context);
@@ -34,6 +35,7 @@ public class MoGeneralAutoFillManager {
      * adds the auto fill to list of
      * auto-fills inside the map
      * for the host of that auto-fill
+     *
      * @param linkedAutoFills to be added to our auto-fills
      */
     @SuppressWarnings("ConstantConditions")
@@ -45,6 +47,7 @@ public class MoGeneralAutoFillManager {
     /**
      * loads all the auto-fills into
      * the map of auto-fills
+     *
      * @param context context
      */
     public static void load(Context context) {
@@ -52,7 +55,7 @@ public class MoGeneralAutoFillManager {
             // only load when it is empty
             MoFileManager.readAllDirFilesAsync(context, GENERAL_AUTO_FILL_DIR, (s, i) -> {
                 MoLinkedAutoFills linked = new MoLinkedAutoFills();
-                linked.load(s,context);
+                linked.load(s, context);
                 addAutoFill(linked);
             });
         }
@@ -61,12 +64,12 @@ public class MoGeneralAutoFillManager {
 
     /**
      * return the auto-fill for the host
+     *
      * @return list of auto-fills for the given host
      */
     public static List<MoLinkedAutoFills> get() {
         return autoFills;
     }
-
 
 
 }

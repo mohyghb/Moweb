@@ -40,19 +40,19 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSe
     private boolean isSelected;
     private boolean isSearched = true;
 
-    public MoBookmark(String url,String name){
+    public MoBookmark(String url, String name) {
         this.name = name;
         this.url = new MoURL(url);
         this.date = new MoDate();
     }
 
-    public MoBookmark(String name,int type){
+    public MoBookmark(String name, int type) {
         this.name = name;
         this.type = type;
     }
 
-    public MoBookmark(String d,Context c){
-        this.load(d,c);
+    public MoBookmark(String d, Context c) {
+        this.load(d, c);
     }
 
 
@@ -70,7 +70,7 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSe
         return this;
     }
 
-    public boolean containsSubFolder(MoBookmark b){
+    public boolean containsSubFolder(MoBookmark b) {
         return this.subFolders.contains(b);
     }
 
@@ -102,7 +102,7 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSe
     }
 
     public String getUrl() {
-        if(this.url == null){
+        if (this.url == null) {
             return "";
         }
         return url.getUrlString();
@@ -132,7 +132,6 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSe
     }
 
 
-
     public boolean isSearched() {
         return isSearched;
     }
@@ -142,19 +141,19 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSe
         return this;
     }
 
-    public int size(){
+    public int size() {
         return this.subs.size();
     }
 
 
-    public void add(MoBookmark b){
+    public void add(MoBookmark b) {
         b.setParent(this);
         this.subs.add(b);
         addToRespectiveList(b);
     }
 
     private void addToRespectiveList(MoBookmark b) {
-        switch (b.getType()){
+        switch (b.getType()) {
             case FOLDER:
                 subFolders.add(b);
                 break;
@@ -175,13 +174,13 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSe
      * from its parent
      */
     public void removeFromParent() {
-         if(this.parent!=null){
-             parent.remove(this);
-         }
+        if (this.parent != null) {
+            parent.remove(this);
+        }
     }
 
     private void removeFromRespectiveList(MoBookmark b) {
-        switch (b.getType()){
+        switch (b.getType()) {
             case FOLDER:
                 subFolders.remove(b);
                 break;
@@ -194,24 +193,32 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSe
     /**
      * returns the key used inside the maps
      * to identify different bookmark types
+     *
      * @return
      */
-    public String getKey(){
-        if(this.isFolder()){
+    public String getKey() {
+        if (this.isFolder()) {
             return name;
-        }else{
+        } else {
             return getUrl();
         }
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return subs.isEmpty();
     }
-    public boolean hasParent(){ return this.parent!=null;}
-    public boolean isFolder(){
+
+    public boolean hasParent() {
+        return this.parent != null;
+    }
+
+    public boolean isFolder() {
         return this.type == FOLDER;
     }
-    public boolean isBookmark(){return this.type==BOOKMARK;}
+
+    public boolean isBookmark() {
+        return this.type == BOOKMARK;
+    }
 
 
 //    public void clear() {
@@ -233,17 +240,18 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSe
      * that are available under the subs of this bookmark to
      * the string builder. if include title is true, we also include the title
      * inside the string builder
-     * @param sb string builder, keeping all the information inside one object
+     *
+     * @param sb           string builder, keeping all the information inside one object
      * @param includeTitle whether or not we should include the title of bookmark
      */
-    public void addSubBookmarkUrlRecursive(StringBuilder sb,boolean includeTitle) {
+    public void addSubBookmarkUrlRecursive(StringBuilder sb, boolean includeTitle) {
         if (this.isBookmark()) {
             addBookmarkUrl(sb, includeTitle, this);
         } else {
-            for(MoBookmark b: subs) {
+            for (MoBookmark b : subs) {
                 switch (b.getType()) {
                     case FOLDER:
-                        b.addSubBookmarkUrlRecursive(sb,includeTitle);
+                        b.addSubBookmarkUrlRecursive(sb, includeTitle);
                         break;
                     case BOOKMARK:
                         addBookmarkUrl(sb, includeTitle, b);
@@ -254,7 +262,7 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSe
     }
 
     private void addBookmarkUrl(StringBuilder sb, boolean includeTitle, MoBookmark b) {
-        if(includeTitle) {
+        if (includeTitle) {
             sb.append(b.getName()).append("\n");
         }
         sb.append(b.getUrl()).append("\n");
@@ -263,14 +271,15 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSe
     /**
      * removes all the sub folders of this folder
      * from this folder
+     *
      * @param set set of folders
      */
-    public void removeAllTheSubFoldersRecursive(HashSet<MoBookmark> set){
+    public void removeAllTheSubFoldersRecursive(HashSet<MoBookmark> set) {
         // base case
-        if(subFolders.isEmpty() || !isFolder()){
+        if (subFolders.isEmpty() || !isFolder()) {
             return;
         }
-        for(MoBookmark folder:subFolders){
+        for (MoBookmark folder : subFolders) {
             folder.removeAllTheSubFoldersRecursive(set);
             set.remove(folder);
         }
@@ -281,13 +290,13 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSe
         if (this == o) return true;
         if (!(o instanceof MoBookmark)) return false;
         MoBookmark that = (MoBookmark) o;
-        if(that.type == this.type && this.name.equals(that.name)){
-            if(type == BOOKMARK){
+        if (that.type == this.type && this.name.equals(that.name)) {
+            if (type == BOOKMARK) {
                 return getUrl().equals(that.getUrl());
-            }else{
+            } else {
                 return true;
             }
-        }else{
+        } else {
             return false;
         }
 
@@ -295,34 +304,34 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSe
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUrl(),this.name,this.type);
+        return Objects.hash(getUrl(), this.name, this.type);
     }
 
     @Override
     public void load(String s, Context context) {
-        try{
+        try {
             String[] c = MoFile.loadable(s);
-            url = new MoURL(c[0],context);
-            date = new MoDate(c[1],context);
+            url = new MoURL(c[0], context);
+            date = new MoDate(c[1], context);
             name = c[2];
             type = Integer.parseInt(c[3]);
             loadSubBookmarks(context, c[4]);
-        }catch(Exception ignore){}
+        } catch (Exception ignore) {
+        }
 
     }
 
     private void loadSubBookmarks(Context context, String data) {
         String[] d = MoFile.loadable(data);
-        if(MoFile.isValidData(d)){
-            MoBookmarkManager.loadInto(context,d,this);
+        if (MoFile.isValidData(d)) {
+            MoBookmarkManager.loadInto(context, d, this);
         }
     }
 
     @Override
     public String getData() {
-        return MoFile.getData(url,date,name,type, subs);
+        return MoFile.getData(url, date, name, type, subs);
     }
-
 
 
     // selectable
@@ -348,12 +357,12 @@ public class MoBookmark implements MoSavable, MoLoadable, MoSelectableItem, MoSe
 
     @Override
     public boolean updateSearchable(Object... objects) {
-        switch (type){
+        switch (type) {
             case FOLDER:
-                this.isSearched = MoSearchableUtils.isSearchable(true,objects,this.name);
+                this.isSearched = MoSearchableUtils.isSearchable(true, objects, this.name);
                 break;
             case BOOKMARK:
-                this.isSearched = MoSearchableUtils.isSearchable(true,objects,this.name,this.url.getUrlString());
+                this.isSearched = MoSearchableUtils.isSearchable(true, objects, this.name, this.url.getUrlString());
                 break;
         }
 

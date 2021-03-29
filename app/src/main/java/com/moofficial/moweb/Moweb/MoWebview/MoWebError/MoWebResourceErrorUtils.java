@@ -18,7 +18,7 @@ public class MoWebResourceErrorUtils {
             case WebViewClient.ERROR_TIMEOUT:
                 return "Time out error";
             case WebViewClient.ERROR_CONNECT:
-              return "Connection error";
+                return "Connection error";
             case WebViewClient.ERROR_FAILED_SSL_HANDSHAKE:
                 return "SSL handshake error";
             case WebViewClient.ERROR_FILE:

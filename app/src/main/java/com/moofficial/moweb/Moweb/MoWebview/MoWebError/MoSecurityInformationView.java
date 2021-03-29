@@ -45,7 +45,7 @@ public class MoSecurityInformationView extends MoConstraint {
             title.setTextColor(getColor(R.color.not_secure_site_color));
             description.setText(R.string.connection_is_not_secure_description);
         }
-        details.setOnClickListener((v)-> new MoSSLCertificateView(getContext())
+        details.setOnClickListener((v) -> new MoSSLCertificateView(getContext())
                 .setSslCertificate(view.getCertificate())
                 .populate()
                 .show());

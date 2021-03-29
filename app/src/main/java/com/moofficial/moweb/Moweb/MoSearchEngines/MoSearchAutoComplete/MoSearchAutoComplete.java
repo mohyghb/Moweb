@@ -10,8 +10,8 @@ public class MoSearchAutoComplete {
     public static boolean enabled = true;
 
 
-    public static void updateSearchAutoComplete(Context c){
-        enabled = MoSharedPref.get(c).getBoolean(c.getString(R.string.auto_complete),true);
+    public static void updateSearchAutoComplete(Context c) {
+        enabled = MoSharedPref.get(c).getBoolean(c.getString(R.string.auto_complete), true);
     }
 
 }

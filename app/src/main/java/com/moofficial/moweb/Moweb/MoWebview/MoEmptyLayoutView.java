@@ -22,7 +22,7 @@ public class MoEmptyLayoutView extends MoConstraint {
         return MoMarginBuilder.getLinearParams(
                 context,
                 0,
-                (int)(context.getResources().getDisplayMetrics().density * 50),
+                (int) (context.getResources().getDisplayMetrics().density * 50),
                 0,
                 0
         );

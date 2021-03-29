@@ -46,11 +46,6 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
     private MoSearchBar searchBar;
     private MoSearchable searchable;
 
-    // toolbar
-    private MoPopUpMenu morePopUp;
-
-
-
     private ArrayList<MoHistory> allHistories;
 
     @Override
@@ -59,7 +54,7 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
         initClass();
     }
 
-    private void initUI(){
+    private void initUI() {
         setTitle(R.string.history);
         initRecyclerCardView();
         initSearchBar();
@@ -75,14 +70,12 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
         l.linearNested.addView(cardRecyclerView);
     }
 
-
-
     private void setupToolbars() {
-        syncTitle(moToolBar.getTitle(),selectBar.getTitle());
-        setupMultipleToolbars(moToolBar,moToolBar,selectBar,searchBar);
+        syncTitle(moToolBar.getTitle(), selectBar.getTitle());
+        setupMultipleToolbars(moToolBar, moToolBar, selectBar, searchBar);
     }
 
-    private void initSearchBar(){
+    private void initSearchBar() {
         this.searchBar = new MoSearchBar(this);
         this.searchBar.setSearchHint(R.string.history_search_hint);
     }
@@ -106,12 +99,12 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
     private void performShareSelected() {
         if (nothingHasBeenSelected()) return;
         MoShareUtils.share(HistoryActivity.this,
-                historyRecyclerAdapter.getSelectedItems(),true);
+                historyRecyclerAdapter.getSelectedItems(), true);
     }
 
     private boolean nothingHasBeenSelected() {
-        if(historyRecyclerAdapter.selectionIsEmpty()) {
-            Toast.makeText(this,R.string.empty_selection_message,Toast.LENGTH_SHORT).show();
+        if (historyRecyclerAdapter.selectionIsEmpty()) {
+            Toast.makeText(this, R.string.empty_selection_message, Toast.LENGTH_SHORT).show();
             return true;
         }
         return false;
@@ -124,22 +117,22 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
      * toasts the error message if something goes wrong
      */
     private void performDeleteHistory() {
-        if(nothingHasBeenSelected()) return;
+        if (nothingHasBeenSelected()) return;
         try {
             TransitionManager.beginDelayedTransition(getGroupRootView());
             // remove it from files, and the data set shown inside the recycler adapter
-            MoHistoryManager.remove(this,historyRecyclerAdapter.getSelectedItems(),historyRecyclerAdapter.getDataSet());
+            MoHistoryManager.remove(this, historyRecyclerAdapter.getSelectedItems(), historyRecyclerAdapter.getDataSet());
             // notify the adapter that we have changed the data set
             historyRecyclerAdapter.notifyDataSetChanged();
             historyRecyclerAdapter.notifyEmptyState();
             // init history to make sure we have the correct history list
             initHistory();
             // if selectable is in action mode, we remove the action
-            if(selectable.isInActionMode()){
+            if (selectable.isInActionMode()) {
                 sync.removeAction();
             }
         } catch (IOException e) {
-            Toast.makeText(this,e.getMessage(),Toast.LENGTH_LONG).show();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -150,7 +143,7 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
                 .setLeftOnClickListener(view -> onBackPressed());
     }
 
-    private void initClass(){
+    private void initClass() {
         initHistory();
         initAdapter();
         initRecyclerView();
@@ -158,9 +151,6 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
         initSearchable();
         initSync();
     }
-
-
-
 
 
     private void initHistory() {
@@ -172,7 +162,7 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
                 .setTitle(R.string.empty_layout_title_history)
                 .setDescription(R.string.empty_layout_description_history)
                 .setIcon(R.drawable.ic_baseline_history_24);
-        this.historyRecyclerAdapter = new MoHistoryRecyclerAdapter(allHistories,this)
+        this.historyRecyclerAdapter = new MoHistoryRecyclerAdapter(allHistories, this)
                 .setOnHistoryClicked(this);
         this.historyRecyclerAdapter.setRecyclerView(this.cardRecyclerView.getRecyclerView())
                 .setEmptyView(v)
@@ -180,19 +170,19 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
         l.linearNested.addView(v, MoEmptyLayoutView.getUniversalMargin(this));
     }
 
-    private void initRecyclerView(){
-        this.historyRecyclerView = MoRecyclerUtils.get(this.cardRecyclerView.getRecyclerView(),this.historyRecyclerAdapter)
+    private void initRecyclerView() {
+        this.historyRecyclerView = MoRecyclerUtils.get(this.cardRecyclerView.getRecyclerView(), this.historyRecyclerAdapter)
                 .setMaxHeight(getHeightPixels());
         this.historyRecyclerView.show();
     }
 
-    private void initSelectable(){
-        this.selectable = new MoSelectable<>(this,getGroupRootView(),this.historyRecyclerAdapter)
+    private void initSelectable() {
+        this.selectable = new MoSelectable<>(this, getGroupRootView(), this.historyRecyclerAdapter)
                 .setCounterView(l.title)
                 .setSelectAllCheckBox(selectBar.getCheckBox())
                 .addUnNormalViews(selectBar)
                 .setAllItemsAreSelectable(false)
-                .setOnEmptySelectionListener(()-> sync.removeAction())
+                .setOnEmptySelectionListener(() -> sync.removeAction())
                 .setOnCanceledListener(() -> historyRecyclerAdapter.getSelectedItems().clear());
     }
 
@@ -214,15 +204,15 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
     private void updateAdapter(List<MoHistory> histories) {
         historyRecyclerAdapter.setDataSet(histories);
         TransitionManager.beginDelayedTransition(getGroupRootView());
-        runOnUiThread( ()-> {
+        runOnUiThread(() -> {
             historyRecyclerAdapter.notifyDataSetChanged();
             historyRecyclerAdapter.notifyEmptyState();
         });
     }
 
 
-    private void initSync(){
-        this.sync = new MoListViewSync(getGroupRootView(),this.selectable,this.searchable)
+    private void initSync() {
+        this.sync = new MoListViewSync(getGroupRootView(), this.selectable, this.searchable)
                 .setPutOnHold(true)
                 .setSharedElements(moToolBar)
                 .setOnEmptyOnHoldsListener(() -> {
@@ -232,8 +222,8 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
     }
 
     private void performClearAll() {
-        if(historyRecyclerAdapter.getItemCount() == 0) {
-            Toast.makeText(this,"There is nothing to delete",Toast.LENGTH_SHORT).show();
+        if (historyRecyclerAdapter.getItemCount() == 0) {
+            Toast.makeText(this, "There is nothing to delete", Toast.LENGTH_SHORT).show();
             return;
         }
         MoDialogs.showAlertDialog(this,
@@ -246,39 +236,40 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
     }
 
 
-
     @Override
     public void onBackPressed() {
-        if(this.sync.hasAction()){
+        if (this.sync.hasAction()) {
             this.sync.removeAction();
-        }else{
+        } else {
             super.onBackPressed();
         }
     }
 
     /**
      * launches the activity for
+     *
      * @param c context
      */
-    public static void launch(Context c){
-        Intent i = new Intent(c,HistoryActivity.class);
+    public static void launch(Context c) {
+        Intent i = new Intent(c, HistoryActivity.class);
         c.startActivity(i);
     }
 
     /**
      * launches the activity for result
+     *
      * @param c activity
      */
-    public static void launch(Activity c, int requestCode){
-        Intent i = new Intent(c,HistoryActivity.class);
-        c.startActivityForResult(i,requestCode);
+    public static void launch(Activity c, int requestCode) {
+        Intent i = new Intent(c, HistoryActivity.class);
+        c.startActivityForResult(i, requestCode);
     }
 
 
     @Override
     public void onHistoryClicked(MoHistory h, int position) {
         // we need to go back to tab activity in case we are inside another activity
-        MoTabController.instance.openUrlInCurrentTab(this,h.getUrl(),true);
+        MoTabController.instance.openUrlInCurrentTab(this, h.getUrl(), true);
         goBackToTabActivity();
     }
 

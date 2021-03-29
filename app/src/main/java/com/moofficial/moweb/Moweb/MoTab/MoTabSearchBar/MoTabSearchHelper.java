@@ -14,7 +14,7 @@ import com.moofficial.moweb.R;
 public class MoTabSearchHelper extends MoConstraint {
 
     private TextView text;
-    private ImageButton copy,share;
+    private ImageButton copy, share;
 
     public MoTabSearchHelper(Context context) {
         super(context);
@@ -59,11 +59,11 @@ public class MoTabSearchHelper extends MoConstraint {
     }
 
     private void defaultCopy() {
-        this.copy.setOnClickListener((v)-> MoClipboardUtils.add(getContext(),this.text.getText().toString()));
+        this.copy.setOnClickListener((v) -> MoClipboardUtils.add(getContext(), this.text.getText().toString()));
     }
 
     private void defaultShare() {
-        this.share.setOnClickListener((v)-> MoShareUtils.share(getContext(), this.text.getText().toString()));
+        this.share.setOnClickListener((v) -> MoShareUtils.share(getContext(), this.text.getText().toString()));
     }
 
 

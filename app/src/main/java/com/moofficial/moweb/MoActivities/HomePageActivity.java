@@ -26,8 +26,6 @@ import com.moofficial.moweb.R;
 
 public class HomePageActivity extends MoSmartActivity {
 
-    private final int ADD_IME = 20;
-
     private MoRecyclerView recyclerView;
     private MoHomePageRecyclerAdapter recyclerAdapter;
     private MoDeletable<MoHomePage> moListDelete;

@@ -11,16 +11,16 @@ public class MoUrlUtils {
     public static final String UNIQUE_URL_SANDWICH = "moweb";
     private static final Pattern UNIQUE_URL_REGEX = Pattern.compile("([?&])?moweb\\d*moweb");
 
-    public static boolean isUrl(String s){
+    public static boolean isUrl(String s) {
         return URLUtil.isValidUrl(s);
     }
 
-    public static String getBaseUrl(String u){
+    public static String getBaseUrl(String u) {
         return getBaseUrl(new MoURL(u));
     }
 
 
-    public static String getBaseUrl(MoURL url){
+    public static String getBaseUrl(MoURL url) {
         return url.getUrl().getProtocol() + "://" + url.getUrl().getHost();
     }
 
@@ -31,11 +31,12 @@ public class MoUrlUtils {
      * url
      * This was created to make sure that we use network to load the
      * url when changing the desktop mode, rather than getting it from cache
+     *
      * @param url
      * @return
      */
     public static String makeUrlUnique(String url) {
-        if(url==null){
+        if (url == null) {
             return "";
         }
         // we remove any uniqueness to it first and change the url
@@ -45,14 +46,15 @@ public class MoUrlUtils {
         unique.append(url);
         prepareFieldAddition(url, unique);
         unique.append(UNIQUE_URL_SANDWICH)
-              .append(System.currentTimeMillis())
-              .append(UNIQUE_URL_SANDWICH);
+                .append(System.currentTimeMillis())
+                .append(UNIQUE_URL_SANDWICH);
         return unique.toString();
     }
 
     /**
      * removing the uniqueness that we gave
      * the url inside the above function (url unique)
+     *
      * @param url to remove uniqueness from
      * @return url without being unique
      */
@@ -63,14 +65,14 @@ public class MoUrlUtils {
     /**
      * when you want to add another argument to the
      * url, we use this algorithm to allow it
-     * @param url to add another field to
+     *
+     * @param url    to add another field to
      * @param unique string builder
      */
     private static void prepareFieldAddition(String url, StringBuilder unique) {
         if (url.contains("?")) {
             unique.append('&');
-        }
-        else {
+        } else {
             if (url.lastIndexOf('/') <= 7) {
                 unique.append('/');
             }
@@ -80,6 +82,7 @@ public class MoUrlUtils {
 
     /**
      * get the host of the url
+     *
      * @param url to get the host for
      * @return the host of the given url
      * or empty if the url is malformed

@@ -32,12 +32,12 @@ public class MoSSLBottomSheet extends MoConstraint {
     }
 
     public MoSSLBottomSheet onDecline(Runnable r) {
-        this.decline.setOnClickListener((v)->r.run());
+        this.decline.setOnClickListener((v) -> r.run());
         return this;
     }
 
     public MoSSLBottomSheet onProceed(Runnable r) {
-        this.proceed.setOnClickListener((v)->r.run());
+        this.proceed.setOnClickListener((v) -> r.run());
         return this;
     }
 

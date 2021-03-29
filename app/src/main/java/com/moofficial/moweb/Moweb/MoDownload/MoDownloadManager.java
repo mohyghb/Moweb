@@ -49,6 +49,7 @@ public class MoDownloadManager {
 
     /**
      * updates the progress for download
+     *
      * @param d
      */
     public static void update(Download d) {
@@ -61,6 +62,7 @@ public class MoDownloadManager {
     /**
      * adds the item to the set of
      * currently items being downloaded
+     *
      * @param d item currently being downloaded
      */
     public static void add(Context c, Download d) {
@@ -69,14 +71,15 @@ public class MoDownloadManager {
             createNotificationGroup(c);
         }
         DOWNLOADING_MAP.put(d.getFile(), d);
-        MoLog.print("adding notification "+ d.getId());
+        MoLog.print("adding notification " + d.getId());
     }
 
     /**
      * removes the item to the set of
      * currently items being downloaded
+     *
      * @param d item currently being
-     *         downloaded or finished downloading
+     *          downloaded or finished downloading
      */
     public static void remove(Context context, Download d) {
         DOWNLOADING_MAP.remove(d.getFile());
@@ -85,11 +88,12 @@ public class MoDownloadManager {
             getNotificationManager(context).cancel(GROUP_ID);
         }
         getNotificationManager(context).cancel(d.getId());
-        MoLog.print("removing notification "+ d.getId());
+        MoLog.print("removing notification " + d.getId());
     }
 
     /**
      * pauses the download with the id passed in
+     *
      * @param id to pause download for
      */
     public static void pause(int id) {
@@ -100,6 +104,7 @@ public class MoDownloadManager {
 
     /**
      * resumes the download for the id passed in
+     *
      * @param id to resume download for
      */
     public static void resume(int id) {
@@ -110,6 +115,7 @@ public class MoDownloadManager {
 
     /**
      * cancels the download for the id passed in
+     *
      * @param d to cancel download for
      */
     public static void cancel(Context c, Download d) {
@@ -127,6 +133,7 @@ public class MoDownloadManager {
     /**
      * registers a listener for the download manager so you
      * can observe incoming updates for download
+     *
      * @param listener to be added
      */
     public static void registerListener(FetchListener listener) {
@@ -138,6 +145,7 @@ public class MoDownloadManager {
 
     /**
      * removes the listener
+     *
      * @param listener to be removed
      */
     public static void unregisterListener(FetchListener listener) {
@@ -152,6 +160,7 @@ public class MoDownloadManager {
     /**
      * returns the downloads inside the
      * specified download dir of the user
+     *
      * @return list of files
      */
     public static List<MoDownload> getDownloads() {
@@ -172,11 +181,12 @@ public class MoDownloadManager {
 
     /**
      * deletes the files that are
+     *
      * @param downloadsToDelete
      */
     public static void delete(Iterable<MoDownload> downloadsToDelete, Runnable onDone) {
         new MoThread<Void>().doBackground(() -> {
-            for (MoDownload download: downloadsToDelete) {
+            for (MoDownload download : downloadsToDelete) {
                 download.delete();
             }
             onDone.run();
@@ -187,6 +197,7 @@ public class MoDownloadManager {
 
     /**
      * creates a notification group for downloads
+     *
      * @param context
      */
     private static void createNotificationGroup(Context context) {
@@ -206,6 +217,7 @@ public class MoDownloadManager {
      * creates a notification channel for API 26+
      * so that the user can disable or modify it to their
      * liking
+     *
      * @param c context needed
      */
     public static void createNotificationChannel(Context c) {
@@ -220,11 +232,12 @@ public class MoDownloadManager {
     }
 
     public static void enqueueDownload(String url) {
-        enqueueDownload(url, "","","");
+        enqueueDownload(url, "", "", "");
     }
 
     /**
      * creates a download request based on the information passed in
+     *
      * @param url
      * @param contentDisposition
      * @param finalMimeType
@@ -247,7 +260,7 @@ public class MoDownloadManager {
             MoLog.print("enqeue for download " + request1.toString());
         }, error -> {
             //Error while enqueuing download
-            MoLog.print("error while enquing download "+ error.toString());
+            MoLog.print("error while enquing download " + error.toString());
         });
     }
 
@@ -259,11 +272,10 @@ public class MoDownloadManager {
     @NotNull
     private static String getPath(String url, String contentDisposition, String finalMimeType) {
         return getDir().getPath() + "/" + URLUtil.guessFileName(url,
-                    contentDisposition, finalMimeType).replace(" ","");
+                contentDisposition, finalMimeType).replace(" ", "");
     }
 
     /**
-     * todo add option so that user can change this
      * @return the download directory
      */
     public static File getDir() {
@@ -272,6 +284,7 @@ public class MoDownloadManager {
 
     /**
      * sets up the listener for downloads
+     *
      * @param context
      */
     public static void setUp(Context context) {

@@ -4,7 +4,6 @@
     xmlns:dist="http://schemas.android.com/apk/distribution">
 
     <dist:module dist:instant="true" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -20,16 +19,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MoActivities.Download.MoDownloadSettingsActivity"></activity>
-
         <meta-data android:name="android.webkit.WebView.EnableSafeBrowsing"
             android:value="true" />
-
         <receiver
             android:name=".Moweb.MoDownload.MoDownloadReceiver"
             android:enabled="true"
             android:exported="false" />
-
         <activity android:name=".MoActivities.History.SavedPasswordsActivity" />
         <activity android:name=".MoActivities.History.MoBrowsingData" />
         <activity android:name=".MoActivities.Bookmark.AddFolderBookmarkActivity" />
@@ -52,13 +47,7 @@
                 <data android:scheme="http"/>
                 <data android:scheme="https"/>
             </intent-filter>
-        </activity> <!-- <activity android:name=".MoActivities.MainMenu.MainMenuActivity"> -->
-        <!-- </activity> &lt;!&ndash; <activity &ndash;&gt; -->
-        <!-- android:name=".MoActivities.MoTabActivity" -->
-        <!-- android:alwaysRetainTaskState="true" -->
-        <!-- android:windowSoftInputMode="adjustPan" -->
-        <!-- android:configChanges="orientation|screenSize"> -->
-        <!-- </activity> -->
+        </activity>
         <activity android:name=".MoActivities.Bookmark.BookmarkFolderChooserActivity" />
         <activity android:name=".MoActivities.Bookmark.EditBookmarkActivity" />
         <activity
@@ -70,8 +59,6 @@
             android:label="@string/title_activity_settings" />
         <activity android:name=".MoActivities.History.HistoryActivity" /> <!-- <activity -->
         <!-- android:name=".MoActivities.MainActivity"/> -->
-        <service android:name=".Moweb.MoServices.MoSaverBackgroundService" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.moofficial.fileprovider"

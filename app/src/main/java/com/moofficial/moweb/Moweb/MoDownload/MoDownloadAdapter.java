@@ -26,12 +26,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class MoDownloadAdapter extends MoSelectableAdapter<MoDownloadViewHolder,MoDownload>
-    implements FetchListener {
+public class MoDownloadAdapter extends MoSelectableAdapter<MoDownloadViewHolder, MoDownload>
+        implements FetchListener {
 
     private final int NOT_FOUND_INDEX = -1;
-    private OnDownloadClickedListener onDownloadClickedListener = download -> {};
-    private OnDownloadCancelled onDownloadCancelled = position -> {};
+    private OnDownloadClickedListener onDownloadClickedListener = download -> {
+    };
+    private OnDownloadCancelled onDownloadCancelled = position -> {
+    };
 
     public MoDownloadAdapter(Context c, List<MoDownload> dataSet) {
         super(c, dataSet);
@@ -50,7 +52,7 @@ public class MoDownloadAdapter extends MoSelectableAdapter<MoDownloadViewHolder,
     @NonNull
     @Override
     public MoDownloadViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v =  MoInflaterView.inflate(R.layout.download_view_holder,parent.getContext());
+        View v = MoInflaterView.inflate(R.layout.download_view_holder, parent.getContext());
         v.setLayoutParams(getMatchWrapParams());
         return new MoDownloadViewHolder(v);
     }
@@ -62,10 +64,10 @@ public class MoDownloadAdapter extends MoSelectableAdapter<MoDownloadViewHolder,
         holder.description.setText(download.getSize());
         onClickListener(holder, position, download);
         onLongClickListener(holder, position);
-        addSelectColorToHolder(holder,download);
+        addSelectColorToHolder(holder, download);
         handleLogo(holder, download);
         holder.hideDownloadLayout();
-        updateDownloadingHolder(holder,position, download.getDownload());
+        updateDownloadingHolder(holder, position, download.getDownload());
         MoLog.print("Download " + position);
     }
 
@@ -92,13 +94,13 @@ public class MoDownloadAdapter extends MoSelectableAdapter<MoDownloadViewHolder,
 
     private void updateDownloadingHolder(@NonNull MoDownloadViewHolder holder,
                                          int position, Download download) {
-        if (download != null ) {
-            updateDownloadingHolder(holder,position,download, download.getStatus());
+        if (download != null) {
+            updateDownloadingHolder(holder, position, download, download.getStatus());
         }
     }
 
     private void updateDownloadingHolder(@NonNull MoDownloadViewHolder holder,
-                                         int position,Download download, Status status) {
+                                         int position, Download download, Status status) {
         if (download == null)
             return;
 
@@ -122,10 +124,10 @@ public class MoDownloadAdapter extends MoSelectableAdapter<MoDownloadViewHolder,
                 holder.speed.setText(MoDownloadUtils.readableSpeed(download.getDownloadedBytesPerSecond()));
                 if (status == Status.PAUSED) {
                     holder.pause.setIcon(R.drawable.ic_baseline_play_arrow_24);
-                    holder.pause.setOnClickListener((v)-> MoDownloadManager.resume(download.getId()));
+                    holder.pause.setOnClickListener((v) -> MoDownloadManager.resume(download.getId()));
                 } else {
                     holder.pause.setIcon(R.drawable.ic_baseline_pause_24);
-                    holder.pause.setOnClickListener((v)-> MoDownloadManager.pause(download.getId()));
+                    holder.pause.setOnClickListener((v) -> MoDownloadManager.pause(download.getId()));
                 }
                 break;
             case COMPLETED:
@@ -136,7 +138,7 @@ public class MoDownloadAdapter extends MoSelectableAdapter<MoDownloadViewHolder,
                 onDownloadCancelled.onDownloadCancelled(position);
                 break;
         }
-        holder.cancel.setOnClickListener((v)-> {
+        holder.cancel.setOnClickListener((v) -> {
             MoDownloadManager.cancel(this.context, download);
             onDownloadCancelled.onDownloadCancelled(position);
         });
@@ -151,7 +153,7 @@ public class MoDownloadAdapter extends MoSelectableAdapter<MoDownloadViewHolder,
             Object o = payloads.get(0);
             if (o instanceof Object[]) {
                 Object[] loads = (Object[]) o;
-                updateDownloadingHolder(holder,position, (Download) loads[0], (Status)loads[1]);
+                updateDownloadingHolder(holder, position, (Download) loads[0], (Status) loads[1]);
             } else {
                 addSelectColorToHolder(holder, dataSet.get(position));
             }
@@ -189,7 +191,7 @@ public class MoDownloadAdapter extends MoSelectableAdapter<MoDownloadViewHolder,
 
     public int getCorrespondingPosition(Download download) {
         String path = download.getFile();
-        for (int i =0; i < this.dataSet.size(); i++) {
+        for (int i = 0; i < this.dataSet.size(); i++) {
             if (this.dataSet.get(i).getFile().getPath().equals(path)) {
                 return i;
             }

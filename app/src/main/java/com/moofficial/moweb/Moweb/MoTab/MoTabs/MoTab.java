@@ -39,14 +39,14 @@ import java.util.Objects;
 public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSearchableItem {
 
 
-
     private MoTabId tabId = new MoTabId();
     private MoTab parentTab;
     protected MoWebView moWebView;
     private MoURL url;
     private MoBitmap moBitmap = new MoTabBitmap().setOptimized(false);
     private MoTabType tabType = new MoTabType(MoTabType.TYPE_NORMAL);
-    private MoOnTabBookmarkChanged onTabBookmarkChanged = isBookmarked -> {};
+    private MoOnTabBookmarkChanged onTabBookmarkChanged = isBookmarked -> {
+    };
     private Context context;
     private boolean captureImage = true;
     private boolean isSelected = false;
@@ -66,21 +66,21 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
         this.context = context;
     }
 
-    public MoTab(String searchText,Context context){
-        this(context,MoSearchEngine.instance.getURL(searchText));
+    public MoTab(String searchText, Context context) {
+        this(context, MoSearchEngine.instance.getURL(searchText));
     }
 
     // for loading back tabs from saved files
-    public MoTab(Context context){
+    public MoTab(Context context) {
         initContextView(context);
     }
 
-    public MoTab setCaptureImage(boolean b){
+    public MoTab setCaptureImage(boolean b) {
         this.captureImage = b;
         return this;
     }
 
-    public void setParentTab(MoTab t){
+    public void setParentTab(MoTab t) {
         this.parentTab = t;
     }
 
@@ -136,7 +136,6 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     }
 
 
-
     public MoTabId getTabId() {
         return tabId;
     }
@@ -163,25 +162,21 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     /**
      * init the whole class
      */
-    public void init(){
-        if(wasInitAlready)
+    public void init() {
+        if (wasInitAlready)
             return;
         initWebView();
         wasInitAlready = true;
     }
 
 
-
-
-
-
     //@SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
     protected void initWebView() {
         moWebView = new MoWebView(context);
-        moWebView.load(webViewData,context);
+        moWebView.load(webViewData, context);
         moWebView.setChromeClient(new MoChromeClient(this.context))
-                 .neverOverScroll()
-                 .setNestedScrollingEnabled(MoWebFeatures.oneHandEnabled);
+                .neverOverScroll()
+                .setNestedScrollingEnabled(MoWebFeatures.oneHandEnabled);
         moWebView.init();
         // todo we need to set the web view for tab type
     }
@@ -191,23 +186,21 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     }
 
 
-
     /**
      * bookmarks or un-bookmarks this url
      * that the tab is currently showing
      */
-    public void bookmarkTheTab(){
+    public void bookmarkTheTab() {
         boolean b = MoBookmarkManager.addOrRemoveIfWasAddedAlready(this.context,
-                this.url.getUrlString(),this.moWebView.getTitle());
+                this.url.getUrlString(), this.moWebView.getTitle());
         this.onTabBookmarkChanged.onChanged(b);
     }
 
     /**
-     *
      * @return true if the tab's url
      * is inside the bookmarked urls database
      */
-    public boolean urlIsBookmarked(){
+    public boolean urlIsBookmarked() {
         return MoBookmarkManager.has(getUrl());
     }
 
@@ -224,7 +217,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
      * searches the current universal
      * home page for this tab
      */
-    public void goToHomepage(){
+    public void goToHomepage() {
         search(MoHomePageManager.getCurrentActivatedURL());
     }
 
@@ -232,15 +225,16 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
      * when the user presses back on main screen
      * if there is a parent tab, and this web view can not go back, go to
      * that parent tab
+     *
      * @return true if the on back pressed method was consumed
      * by the tab and false if it did nothing
      */
-    public boolean onBackPressed(){
-        if(this.moWebView.canGoBack()) {
+    public boolean onBackPressed() {
+        if (this.moWebView.canGoBack()) {
             this.moWebView.goBack();
-        } else if(parentTab!=null) {
+        } else if (parentTab != null) {
             // we can go back to the parent tab
-            MoTabsManager.selectTab(context,this.parentTab);
+            MoTabsManager.selectTab(context, this.parentTab);
         } else {
             return false;
         }
@@ -251,6 +245,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     /**
      * updates the textView of the url
      * as well as the url itself
+     *
      * @param u update this.url to u
      */
     public void updateUrl(String u) {
@@ -259,17 +254,16 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     }
 
 
-
-
     /**
      * does a search and handles all the U.I changes
+     *
      * @param search string of search (can be url or just search text
      *               we handle both cases)
      */
     public void search(String search) {
         // load it inside the web view (do not use cache for loading any url)
         // we only use cache for pressing back or other changes
-        this.moWebView.loadUrl(MoSearchEngine.instance.getURL(search),false);
+        this.moWebView.loadUrl(MoSearchEngine.instance.getURL(search), false);
         this.isUpToDate = true;
     }
 
@@ -281,48 +275,50 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     }
 
 
-
     public WebView getWebView() {
         return moWebView;
     }
+
     public String getUrl() {
         return url.getUrlString();
     }
-    public long getId(){
+
+    public long getId() {
         return this.tabId.getId();
     }
-    public String getTransitionName(){
+
+    public String getTransitionName() {
         return this.tabId.stringify();
     }
 
 
-
     // returns a bitmap of the web view background
-    public Bitmap getWebViewBitmap(){
+    public Bitmap getWebViewBitmap() {
         return this.moBitmap.getBitmap();
     }
 
 
     /**
-     *
      * @param type must be one of {MoTabType.TYPE_NORMAL,MoTabType.TYPE_INCOGNITO}
      */
-    public void setType(int type){
+    public void setType(int type) {
         tabType.setType(type);
     }
 
 
-    public int getType(){
+    public int getType() {
         return this.tabType.getType();
     }
 
     public boolean isCaptureImage() {
         return captureImage;
     }
+
     public boolean isPrivate() {
         return this.tabType.isPrivate();
     }
-    public boolean isNormal(){
+
+    public boolean isNormal() {
         return this.tabType.isNormal();
     }
 
@@ -330,11 +326,12 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
      * makes sure that you can take screen
      * shots inside normal tabs and you can't inside
      * private tabs
+     *
      * @param a activity to apply the window rule to
      */
-    public void applyWindowRules(Activity a){
+    public void applyWindowRules(Activity a) {
         // todo
-       // a.getWindow().setStatusBarContrastEnforced();
+        // a.getWindow().setStatusBarContrastEnforced();
     }
 
     /**
@@ -344,7 +341,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
      */
     public void updateWebViewIfNotUpdated() {
         // loading the url if it has not been loaded yet
-        if(!this.isUpToDate) {
+        if (!this.isUpToDate) {
             this.isUpToDate = true;
             moWebView.loadUrl(this.url.getUrlString());
             MoLog.print("not up to date");
@@ -355,16 +352,17 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     /**
      * captures a bitmap preview of the web view
      * and saves it async to boost the performance
+     *
      * @param v view to capture the bitmap for
      */
-    public void captureAndSaveWebViewBitmapAsync(View v){
+    public void captureAndSaveWebViewBitmapAsync(View v) {
         // needs to be outside of async b/c the capture bitmap should
         // occur on web view thread not async
-        this.moBitmap.captureBitmap(v,this.url.getUrlString());
+        this.moBitmap.captureBitmap(v, this.url.getUrlString());
         AsyncTask.execute(() -> {
             try {
                 // save it if the bitmap is not null
-                if(moBitmap.getBitmap()!=null) {
+                if (moBitmap.getBitmap() != null) {
                     moBitmap.saveBitmap(context);
                 }
             } catch (IOException e) {
@@ -376,23 +374,22 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     /**
      * deletes the bitmap for this tab
      */
-    public void deleteWebViewBitmap(Context context){
+    public void deleteWebViewBitmap(Context context) {
         moBitmap.deleteBitmap(context);
     }
 
 
     /**
-     *  saves the tab inside its own
-     *  unique file
+     * saves the tab inside its own
+     * unique file
      */
     public void saveTab() {
         new MoThread<String>().doBackground(() -> {
             synchronized (MoTab.this) {
                 try {
                     MoLog.print("tab saving " + tabId.stringify());
-                    MoFileManagerUtils.write(context,MoTab.this);
-                }
-                catch (IOException e) {
+                    MoFileManagerUtils.write(context, MoTab.this);
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -407,7 +404,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
         if (moWebView != null) {
             this.moWebView.onDestroy();
         }
-        MoFileManagerUtils.delete(context,this);
+        MoFileManagerUtils.delete(context, this);
         deleteWebViewBitmap(context);
     }
 
@@ -415,7 +412,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     /**
      * returns the website or baseUrl of this tab's url
      */
-    public String getBaseUrl(){
+    public String getBaseUrl() {
         return MoUrlUtils.getBaseUrl(this.url);
     }
 
@@ -442,12 +439,11 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     @Override
     public void load(String data, Context context) {
         String[] c = MoFile.loadable(data);
-        this.url = new MoURL(c[0],context);
-        this.moBitmap.load(c[1],context);
+        this.url = new MoURL(c[0], context);
+        this.moBitmap.load(c[1], context);
         this.webViewData = c[2];
-        this.tabId.load(c[3],context);
+        this.tabId.load(c[3], context);
     }
-
 
 
     /**
@@ -456,7 +452,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
      */
     @Override
     public String getData() {
-        return MoFile.getData(this.url,this.moBitmap,this.moWebView,this.tabId);
+        return MoFile.getData(this.url, this.moBitmap, this.moWebView, this.tabId);
     }
 
     @Override
@@ -477,10 +473,12 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
         this.moWebView.onPause();
         MoLog.print("tab paused");
     }
-    public void onResume(){
+
+    public void onResume() {
         this.moWebView.onResume();
     }
-    public void onDestroy(){
+
+    public void onDestroy() {
         if (moWebView == null)
             return;
         this.moWebView.onDestroy();
@@ -488,7 +486,8 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
 
     public void removeListeners() {
         this.setProgressBar(null);
-        this.setOnTabBookmarkChanged(isBookmarked -> {});
+        this.setOnTabBookmarkChanged(isBookmarked -> {
+        });
     }
 
 
@@ -515,7 +514,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
 
     @Override
     public boolean updateSearchable(Object... objects) {
-        this.isSearched = MoSearchableUtils.isSearchable(true,objects,
+        this.isSearched = MoSearchableUtils.isSearchable(true, objects,
                 getUrl());
         return this.isSearched;
     }

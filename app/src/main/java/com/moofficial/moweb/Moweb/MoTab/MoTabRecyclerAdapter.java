@@ -25,7 +25,7 @@ import com.moofficial.moweb.R;
 
 import java.util.List;
 
-public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapter.TabViewHolder,MoTab>
+public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapter.TabViewHolder, MoTab>
         implements MoSelectableList<MoTab> {
 
     private static final float TAB_PADDING = 8f;
@@ -35,7 +35,8 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
 
     private boolean isInGrid;
 
-    private MoOnTabClickListener onTabClickListener = (t, v,index) -> {};
+    private MoOnTabClickListener onTabClickListener = (t, v, index) -> {
+    };
 
     public MoOnTabClickListener getOnTabClickListener() {
         return onTabClickListener;
@@ -45,7 +46,6 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
         this.onTabClickListener = onTabClickListener;
         return this;
     }
-
 
 
     public static class TabViewHolder extends RecyclerView.ViewHolder {
@@ -68,21 +68,19 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MoTabRecyclerAdapter(List<MoTab> dataSet,Context c,boolean isInGrid) {
-        super(c,dataSet);
+    public MoTabRecyclerAdapter(List<MoTab> dataSet, Context c, boolean isInGrid) {
+        super(c, dataSet);
 
         this.isInGrid = isInGrid;
         setHasStableIds(true);
     }
 
 
-
-
     @NonNull
     @Override
     public TabViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View v = MoInflaterView.inflate(R.layout.tab_mode_list,parent.getContext());
+        View v = MoInflaterView.inflate(R.layout.tab_mode_list, parent.getContext());
         //new MoPaddingBuilder(this.isInGrid?TAB_PADDING_GRID_VIEW:TAB_PADDING).apply(v);
         v.setLayoutParams(getRecyclerParams(RecyclerView.LayoutParams.MATCH_PARENT,
                 RecyclerView.LayoutParams.WRAP_CONTENT));
@@ -96,34 +94,34 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
         positionTab(holder);
         onTabClickListener(holder, position, tab);
         updateUI(holder, tab);
-        MoSelectableUtils.applySelectedColor(context,holder.coverView,tab);
+        MoSelectableUtils.applySelectedColor(context, holder.coverView, tab);
         onLongTabClickListener(holder, position);
 
         holder.background.setTransitionName(tab.getTransitionName());
     }
 
     private void positionTab(@NonNull TabViewHolder holder) {
-        int height = (int)(context.getResources().getDisplayMetrics()
-                .heightPixels/ SCREEN_TO_TAB_RATIO);
+        int height = (int) (context.getResources().getDisplayMetrics()
+                .heightPixels / SCREEN_TO_TAB_RATIO);
 //        int width = (int)(context.getResources().getDisplayMetrics()
 //                .widthPixels/SCREEN_TO_TAB_RATIO);
-        LinearLayout.LayoutParams p =new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 height);
         int padding = MoDynamicUnit.convertDpToPixels(this.context, TAB_PADDING_GRID_VIEW);
-        p.setMargins(padding,padding,padding,padding);
+        p.setMargins(padding, padding, padding, padding);
         holder.outerCard.setLayoutParams(p);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TabViewHolder holder, int position, @NonNull List<Object> payloads) {
-        if(payloads.isEmpty()){
+        if (payloads.isEmpty()) {
             super.onBindViewHolder(holder, position, payloads);
         } else {
             // we run partial efficient update
             // the payload that is coming for sure we know it is
             // from the mo selectable class
             // so just update the selectable color
-            String payload = (String)payloads.get(0);
+            String payload = (String) payloads.get(0);
             if (MoOnSizeChanged.ON_SIZE_CHANGED.equals(payload)) {
                 positionTab(holder);
             } else {
@@ -135,6 +133,7 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
 
     /**
      * methods for updating the ui
+     *
      * @param holder
      * @param tab
      */
@@ -154,7 +153,7 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
 
     private void onLongTabClickListener(@NonNull TabViewHolder holder, int position) {
         holder.outerCard.setOnLongClickListener(view -> {
-            if(isNotSelecting()){
+            if (isNotSelecting()) {
                 startSelecting(position);
                 return true;
             }
@@ -172,10 +171,10 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
     private void onTabClickListener(TabViewHolder holder, int position, MoTab tab) {
         // going inside the tab or selecting it to be removed or shared ...
         holder.outerCard.setOnClickListener(view -> {
-            if(isSelecting()){
+            if (isSelecting()) {
                 onSelect(position);
-            }else {
-                onTabClickListener.onTabClickListener(tab,holder.outerCard,position);
+            } else {
+                onTabClickListener.onTabClickListener(tab, holder.outerCard, position);
             }
         });
     }

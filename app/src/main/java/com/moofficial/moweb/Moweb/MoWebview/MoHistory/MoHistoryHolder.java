@@ -14,7 +14,7 @@ import com.moofficial.moweb.R;
 public class MoHistoryHolder extends RecyclerView.ViewHolder {
 
     // history
-    TextView urlTextView,dateTimeTextView,titleTextView;
+    TextView urlTextView, dateTimeTextView, titleTextView;
     MoLogo moImageTextLogo;
     CardView cardView;
     LinearLayout linearLayout;
@@ -24,14 +24,14 @@ public class MoHistoryHolder extends RecyclerView.ViewHolder {
 
     int type;
 
-    public MoHistoryHolder(@NonNull View itemView,int type) {
+    public MoHistoryHolder(@NonNull View itemView, int type) {
         super(itemView);
         this.type = type;
         init();
     }
 
-    private void init(){
-        switch (type){
+    private void init() {
+        switch (type) {
             case MoHistory.TYPE_DATE:
                 initDateTile();
                 break;
@@ -41,7 +41,7 @@ public class MoHistoryHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    private void initHistory(){
+    private void initHistory() {
         urlTextView = itemView.findViewById(R.id.history_url);
         dateTimeTextView = itemView.findViewById(R.id.history_date_time);
         titleTextView = itemView.findViewById(R.id.history_title);
@@ -51,11 +51,9 @@ public class MoHistoryHolder extends RecyclerView.ViewHolder {
     }
 
 
-    private void initDateTile(){
+    private void initDateTile() {
         date = itemView.findViewById(R.id.date_tile);
     }
-
-
 
 
 }

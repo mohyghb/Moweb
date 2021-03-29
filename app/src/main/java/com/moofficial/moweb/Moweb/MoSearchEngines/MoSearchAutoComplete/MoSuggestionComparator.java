@@ -7,11 +7,11 @@ public class MoSuggestionComparator implements Comparator<MoSuggestion> {
     public int compare(MoSuggestion moSuggestion, MoSuggestion t1) {
         float sim1 = moSuggestion.getSimilarity();
         float sim2 = t1.getSimilarity();
-        if(sim1==sim2){
+        if (sim1 == sim2) {
             return 0;
-        }else if(sim1>sim2){
+        } else if (sim1 > sim2) {
             return -1;
-        }else{
+        } else {
             return 1;
         }
     }

@@ -16,17 +16,18 @@ import com.moofficial.moweb.R;
 
 import java.util.List;
 
-public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageViewHolder,MoHomePage>
+public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageViewHolder, MoHomePage>
         implements MoListDeletable<MoHomePage> {
 
 
     private final String PAYLOAD_UPDATE_LOGO = "logo";
 
-    private Runnable onDeleteListener = ()->{};
+    private Runnable onDeleteListener = () -> {
+    };
 
 
     public MoHomePageRecyclerAdapter(Context context, List<MoHomePage> dataSet) {
-        super(context,dataSet);
+        super(context, dataSet);
     }
 
 
@@ -37,30 +38,30 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
 
     private void activateThisHomePage(int position) {
         MoHomePageManager.activate(context, position);
-        notifyItemRangeChanged(0, getItemCount(),PAYLOAD_UPDATE_LOGO);
+        notifyItemRangeChanged(0, getItemCount(), PAYLOAD_UPDATE_LOGO);
     }
 
     private void pressCard(@NonNull MoHomePageViewHolder holder, int position) {
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                 // activate deactivate select or choosing this home page
-                if(isSelecting()){
+                // activate deactivate select or choosing this home page
+                if (isSelecting()) {
                     onSelect(position);
-                }else{
+                } else {
                     activateThisHomePage(position);
                 }
             }
         });
     }
 
-    private void longPressCard(@NonNull MoHomePageViewHolder holder,int position) {
+    private void longPressCard(@NonNull MoHomePageViewHolder holder, int position) {
         holder.cardView.setOnLongClickListener(view -> {
             // this is to activate the delete mode
-            if(isNotSelecting()) {
-               startSelecting(position);
-               onDeleteListener.run();
-               notifyDataSetChanged();
+            if (isNotSelecting()) {
+                startSelecting(position);
+                onDeleteListener.run();
+                notifyDataSetChanged();
             }
             return false;
         });
@@ -69,7 +70,7 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
     @NonNull
     @Override
     public MoHomePageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v =  MoInflaterView.inflate(R.layout.home_page_view_holder,parent.getContext());
+        View v = MoInflaterView.inflate(R.layout.home_page_view_holder, parent.getContext());
         v.setLayoutParams(getMatchWrapParams());
         return new MoHomePageViewHolder(v);
     }
@@ -81,13 +82,13 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
         holder.urlTextView.setText(homePage.getUrl());
         handleLogo(holder, homePage);
         pressCard(holder, position);
-        longPressCard(holder,position);
-        applySelected(holder,position);
+        longPressCard(holder, position);
+        applySelected(holder, position);
     }
 
     private void handleLogo(@NonNull MoHomePageViewHolder holder, MoHomePage homePage) {
-        if(isNotSelecting()) {
-            if(homePage.isActivated()) {
+        if (isNotSelecting()) {
+            if (homePage.isActivated()) {
                 holder.moLogo.setOuter(new MoDrawableBuilder(this.context)
                         .oval()
                         .withColor(holder.moLogo.getColorRes())
@@ -106,13 +107,13 @@ public class MoHomePageRecyclerAdapter extends MoSelectableAdapter<MoHomePageVie
 
     @Override
     public void onBindViewHolder(@NonNull MoHomePageViewHolder holder, int position, @NonNull List<Object> payloads) {
-        if(payloads.isEmpty()) {
+        if (payloads.isEmpty()) {
             super.onBindViewHolder(holder, position, payloads);
-        }else{
-            String payload = (String)payloads.get(0);
-            switch (payload){
+        } else {
+            String payload = (String) payloads.get(0);
+            switch (payload) {
                 case PAYLOAD_UPDATE_LOGO:
-                    handleLogo(holder,dataSet.get(position));
+                    handleLogo(holder, dataSet.get(position));
                     break;
                 case MoSelectable.PAYLOAD_SELECTED_ITEM:
                     applySelected(holder, position);

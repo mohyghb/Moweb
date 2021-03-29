@@ -15,21 +15,23 @@ import java.util.HashMap;
  */
 public class MoLinkedAutoFills implements MoFileSavable, MoLoadable {
 
-    private HashMap<Integer,MoWebAutoFill> linkedAutoFills = new HashMap<>();
+    private HashMap<Integer, MoWebAutoFill> linkedAutoFills = new HashMap<>();
     private MoWebAutoFillId id = new MoWebAutoFillId();
 
     /**
      * adds an auto-fill field to the
      * linked auto fills list
+     *
      * @param a auto-fill data
      */
-    public void add (MoWebAutoFill a) {
-        linkedAutoFills.put(a.getAutoCompleteType(),a);
+    public void add(MoWebAutoFill a) {
+        linkedAutoFills.put(a.getAutoCompleteType(), a);
     }
 
     /**
      * removes the type of 'type'
      * from the auto-fills
+     *
      * @param type of the auto-fill
      */
     public void remove(Integer type) {
@@ -39,6 +41,7 @@ public class MoLinkedAutoFills implements MoFileSavable, MoLoadable {
     public boolean isEmpty() {
         return linkedAutoFills.isEmpty();
     }
+
     public boolean isNotEmpty() {
         return !this.isEmpty();
     }
@@ -56,7 +59,7 @@ public class MoLinkedAutoFills implements MoFileSavable, MoLoadable {
     @Override
     public void load(String s, Context context) {
         String[] c = MoFile.loadable(s);
-        this.id.load(c[0],context);
+        this.id.load(c[0], context);
         MoFile.setData(context, c[1], new ArrayList<>(), (context1, m) -> {
             MoWebAutoFill autoFill = new MoWebAutoFill();
             autoFill.load(m, context1);
@@ -67,9 +70,8 @@ public class MoLinkedAutoFills implements MoFileSavable, MoLoadable {
 
     @Override
     public String getData() {
-        return MoFile.getData(id,this.linkedAutoFills.values());
+        return MoFile.getData(id, this.linkedAutoFills.values());
     }
-
 
 
 }

@@ -15,7 +15,6 @@ import com.moofficial.moweb.R;
 public class MoTabsButton extends MoConstraint {
 
     private TextView tabsButton;
-    private ConstraintLayout layout;
 
     public MoTabsButton(Context context) {
         super(context);
@@ -29,34 +28,34 @@ public class MoTabsButton extends MoConstraint {
         super(context, attrs, defStyleAttr);
     }
 
-    public MoTabsButton setNumberOfTabs(int s){
-        if(s>99){
+    public MoTabsButton setNumberOfTabs(int s) {
+        if (s > 99) {
             tabsButton.setText(R.string.a_lot_of_tabs);
             this.tabsButton.setTextSize(12f);
-        }else{
+        } else {
             this.tabsButton.setText(String.valueOf(s));
             this.tabsButton.setTextSize(14f);
         }
         return this;
     }
 
-    public MoTabsButton setOnTabsButtonClicked(View.OnClickListener l){
+    public MoTabsButton setOnTabsButtonClicked(View.OnClickListener l) {
         this.setOnClickListener(l);
         return this;
     }
 
 
-    public void changeColor(@ColorRes int borderColor, @ColorRes int textColor){
+    public void changeColor(@ColorRes int borderColor, @ColorRes int textColor) {
         tabsButton.setBackgroundTintList(getContext().getColorStateList(borderColor));
         tabsButton.setTextColor(getContext().getColor(textColor));
     }
 
     public void showActivated() {
-        changeColor(R.color.colorPrimary,R.color.colorPrimary);
+        changeColor(R.color.colorPrimary, R.color.colorPrimary);
     }
 
     public void showDeactivated() {
-        changeColor(R.color.MoInverseColor,R.color.MoInverseColor);
+        changeColor(R.color.MoInverseColor, R.color.MoInverseColor);
     }
 
     @Override
@@ -67,7 +66,6 @@ public class MoTabsButton extends MoConstraint {
     @Override
     public void initViews() {
         this.tabsButton = findViewById(R.id.tabs_button);
-        this.layout = findViewById(R.id.tabs_button_layout);
         showDeactivated();
     }
 

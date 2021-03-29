@@ -10,26 +10,14 @@ import com.moofficial.moweb.Moweb.MoTab.MoTabId.MoTabId;
 public class MoControl implements MoSavable, MoLoadable {
 
 
-
     private MoTabId tabId = new MoTabId();
 
 
-    public MoControl(String data,Context c){
-        this.load(data,c);
+    public MoControl(String data, Context c) {
+        this.load(data, c);
     }
 
-    public MoControl() {}
-
-
-
-
-    // construction not working as intended
-    public void notifyRemovedIndex(){
-//        if(this.index > 0) {
-//            // only decrement it if it is higher than 0
-//            // else it is set to zero and handled by other classes
-//            this.index--;
-//        }
+    public MoControl() {
     }
 
     /**
@@ -40,7 +28,7 @@ public class MoControl implements MoSavable, MoLoadable {
      */
     @Override
     public void load(String data, Context context) {
-        tabId.load(data,context);
+        tabId.load(data, context);
     }
 
     /**

@@ -18,21 +18,13 @@ public class MoWebClient extends WebViewClient {
     private static final String FALL_BACK_URL = "browser_fallback_url";
 
 
-
-
-   //private MoRunnable r;
-
     public MoWebClient() {
         super();
     }
 
 
-
-
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-        //MoLog.print("should ovveride " + request.getUrl() + "====" + request.getMethod()  +"-=====" + request.isForMainFrame());
-
         String url = request.getUrl().toString();
         if (url.startsWith(HTTP)) return false;//open web links as usual
         //try to find browse activity to handle uri
@@ -71,9 +63,6 @@ public class MoWebClient extends WebViewClient {
         }
         return true;//do nothing in other cases
     }
-
-
-
 
 
 }

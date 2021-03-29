@@ -31,16 +31,15 @@ public class MoRequestListener extends MoContext implements FetchListener {
     public final static String TAG = MoRequestListener.class.getSimpleName();
 
 
-
     public MoRequestListener(Context c) {
         super(c);
     }
 
 
-
     /**
      * updates the notification for with the
      * id passed as param
+     *
      * @param id
      * @param n
      */
@@ -73,7 +72,7 @@ public class MoRequestListener extends MoContext implements FetchListener {
 
         switch (status) {
             case ADDED:
-                n.setProgress(100,progress,true)
+                n.setProgress(100, progress, true)
                         .setOngoing(true)
                         .setCategory(Notification.CATEGORY_PROGRESS);
                 break;
@@ -81,18 +80,18 @@ public class MoRequestListener extends MoContext implements FetchListener {
             case DOWNLOADING:
             case PAUSED:
                 boolean paused = status == Status.PAUSED;
-                n.setProgress(max, progress,false)
-                       .setCategory(Notification.CATEGORY_PROGRESS)
-                       .setOngoing(true)
-                       .addAction(R.drawable.ic_baseline_pause_24,
-                        paused? getString(R.string.download_notification_resume):getString(R.string.download_notification_pause),
-                               getPendingIntent(paused? MoDownloadManager.ACTION_RESUME_DOWNLOAD:
-                                               MoDownloadManager.ACTION_PAUSE_DOWNLOAD,
-                                       download))
-                       .addAction(R.drawable.ic_baseline_cancel_24,
-                        getString(R.string.download_notification_cancel),getPendingIntent(MoDownloadManager.ACTION_CANCEL_DOWNLOAD,
-                                       download))
-                       .setContentText(progress + "%")
+                n.setProgress(max, progress, false)
+                        .setCategory(Notification.CATEGORY_PROGRESS)
+                        .setOngoing(true)
+                        .addAction(R.drawable.ic_baseline_pause_24,
+                                paused ? getString(R.string.download_notification_resume) : getString(R.string.download_notification_pause),
+                                getPendingIntent(paused ? MoDownloadManager.ACTION_RESUME_DOWNLOAD :
+                                                MoDownloadManager.ACTION_PAUSE_DOWNLOAD,
+                                        download))
+                        .addAction(R.drawable.ic_baseline_cancel_24,
+                                getString(R.string.download_notification_cancel), getPendingIntent(MoDownloadManager.ACTION_CANCEL_DOWNLOAD,
+                                        download))
+                        .setContentText(progress + "%")
                         .setSubText(MoDownloadUtils.readableSpeed(download.getDownloadedBytesPerSecond()));
                 break;
             case COMPLETED:
@@ -102,12 +101,13 @@ public class MoRequestListener extends MoContext implements FetchListener {
                 break;
         }
 
-        notifyNotification(id,n.build());
+        notifyNotification(id, n.build());
     }
 
     /**
      * when the user dismisses the notification
      * this is called
+     *
      * @return pending intent for broadcasting
      */
     private PendingIntent getPendingIntent(String action, Download d) {
@@ -120,31 +120,27 @@ public class MoRequestListener extends MoContext implements FetchListener {
     }
 
 
-
-
-
-
     @Override
     public void onAdded(@NotNull Download download) {
         MoDownloadManager.add(context, download);
         updateNotification(download);
-        MoLog.print("on added " + download.getId() );
+        MoLog.print("on added " + download.getId());
     }
 
     @Override
     public void onCancelled(@NotNull Download download) {
-        MoLog.print("on cancelled " + download.getId() );
+        MoLog.print("on cancelled " + download.getId());
     }
 
     @Override
     public void onCompleted(@NotNull Download download) {
         updateNotification(download);
-        MoLog.print("on completed " + download.getId() );
+        MoLog.print("on completed " + download.getId());
     }
 
     @Override
     public void onDeleted(@NotNull Download download) {
-        MoLog.print("on deleted " + download.getId() );
+        MoLog.print("on deleted " + download.getId());
     }
 
     @Override
@@ -154,13 +150,13 @@ public class MoRequestListener extends MoContext implements FetchListener {
 
     @Override
     public void onError(@NotNull Download download, @NotNull Error error, @Nullable Throwable throwable) {
-        MoLog.print("on error " + download.getId() );
+        MoLog.print("on error " + download.getId());
     }
 
     @Override
     public void onPaused(@NotNull Download download) {
         updateNotification(download);
-        MoLog.print("on paused " + download.getId() );
+        MoLog.print("on paused " + download.getId());
     }
 
     @Override

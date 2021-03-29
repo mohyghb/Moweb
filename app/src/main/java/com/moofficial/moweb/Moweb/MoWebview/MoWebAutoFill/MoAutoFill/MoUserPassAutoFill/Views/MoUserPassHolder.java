@@ -8,6 +8,7 @@ import com.moofficial.moweb.Moweb.MoWebview.MoWebAutoFill.Views.MoUserPassHolder
 public class MoUserPassHolder extends RecyclerView.ViewHolder {
 
     public MoUserPassHolderView layout;
+
     public MoUserPassHolder(@NonNull MoUserPassHolderView itemView) {
         super(itemView);
         layout = itemView;

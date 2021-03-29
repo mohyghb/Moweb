@@ -49,7 +49,7 @@ public class MoTabSearchBar extends MoConstraint {
 
     private MoTabsButton tabsButton;
     private ProgressBar progressBar;
-    private ImageButton moreTabButton,copyButton,shareButton;
+    private ImageButton moreTabButton, copyButton, shareButton;
     private EditText searchText;
     private MoFindBar moFindBar;
     private MoBottomSheet bottomSheet;
@@ -155,24 +155,21 @@ public class MoTabSearchBar extends MoConstraint {
     }
 
 
-
-
-    public MoTabSearchBar setTextSearch(String s){
+    public MoTabSearchBar setTextSearch(String s) {
         this.searchText.setText(s);
         return this;
     }
 
 
-    public MoTabSearchBar setNumberOfTabs(int s){
+    public MoTabSearchBar setNumberOfTabs(int s) {
         tabsButton.setNumberOfTabs(s);
         return this;
     }
 
-    public MoTabSearchBar setOnTabsButtonClicked(View.OnClickListener l){
+    public MoTabSearchBar setOnTabsButtonClicked(View.OnClickListener l) {
         this.tabsButton.setOnTabsButtonClicked(l);
         return this;
     }
-
 
 
     public ProgressBar getProgressBar() {
@@ -227,12 +224,11 @@ public class MoTabSearchBar extends MoConstraint {
     }
 
 
-
     public MoTab getTab() {
         return tab;
     }
 
-    public MoTabSearchBar clearEditTextFocus(){
+    public MoTabSearchBar clearEditTextFocus() {
         searchText.clearFocus();
         return this;
     }
@@ -254,7 +250,7 @@ public class MoTabSearchBar extends MoConstraint {
      * this progress view should be passed to the
      * chrome web client of the desired web view
      */
-    private void initProgressBar(){
+    private void initProgressBar() {
         this.progressBar.setMax(100);
         this.progressBar.setIndeterminate(false);
 
@@ -265,15 +261,16 @@ public class MoTabSearchBar extends MoConstraint {
      * search edit text init
      */
     @SuppressLint("ClickableViewAccessibility")
-    private void initSearchText(){
+    private void initSearchText() {
         //search text
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(searchText.hasFocus()) {
+                if (searchText.hasFocus()) {
                     // only show suggestions when user is actually editing it
                     showSuggestions(charSequence);
                     isInSearch = true;
@@ -281,7 +278,8 @@ public class MoTabSearchBar extends MoConstraint {
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {}
+            public void afterTextChanged(Editable editable) {
+            }
         });
 
 
@@ -290,7 +288,7 @@ public class MoTabSearchBar extends MoConstraint {
 
 
             if (MotionEvent.ACTION_DOWN == event.getAction()) {
-                if(event.getRawX() <= (searchText.getLeft() +
+                if (event.getRawX() <= (searchText.getLeft() +
                         searchText.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width())) {
 
                     new MoSecurityInformationView(getContext())
@@ -302,22 +300,18 @@ public class MoTabSearchBar extends MoConstraint {
             }
 
 
-            if(MotionEvent.ACTION_DOWN == event.getAction()) {
+            if (MotionEvent.ACTION_DOWN == event.getAction()) {
                 activateSearch();
             }
             return searchText.performClick();
         });
 
 
-
-
-
         searchText.setOnFocusChangeListener((view, b) -> {
-            if(!b) {
+            if (!b) {
                 deactivateSearch();
             }
         });
-
 
 
         searchText.setOnEditorActionListener((textView, i, keyEvent) -> {
@@ -336,8 +330,8 @@ public class MoTabSearchBar extends MoConstraint {
                 .setOnSuggestionClicked(new MoRunnable() {
                     @Override
                     public <T> void run(T... args) {
-                        String suggestion = (String)args[0];
-                        if(suggestion != null) {
+                        String suggestion = (String) args[0];
+                        if (suggestion != null) {
                             tab.search(suggestion);
                             MoKeyboardUtils.hideSoftKeyboard(searchText);
                         }
@@ -348,6 +342,7 @@ public class MoTabSearchBar extends MoConstraint {
 
     /**
      * hides the suggestions
+     *
      * @return this
      */
     public MoTabSearchBar hideSuggestions() {
@@ -367,10 +362,11 @@ public class MoTabSearchBar extends MoConstraint {
      * shows auto complete text when user is typing
      * their search or URL (this is obtained using the
      * current engine's auto-complete feature)
+     *
      * @param charSequence search text of user
      */
     private void showSuggestions(CharSequence charSequence) {
-        if(MoSearchAutoComplete.enabled) {
+        if (MoSearchAutoComplete.enabled) {
             // only provide them with search suggestions if they want them
             // add the suggestions from history
             String search = charSequence.toString();
@@ -389,9 +385,9 @@ public class MoTabSearchBar extends MoConstraint {
                         // getting suggestion from search engine
                         MoSuggestions s = new MoSuggestions(search);
                         // getting suggestions from search engine
-                        MoSearchEngine.instance.getSuggestions((String)args[0],s);
+                        MoSearchEngine.instance.getSuggestions((String) args[0], s);
                         // getting suggestions from history
-                        MoHistoryManager.addSuggestionsFromHistory(charSequence.toString().toLowerCase(),s);
+                        MoHistoryManager.addSuggestionsFromHistory(charSequence.toString().toLowerCase(), s);
                         // sort the suggestions
                         s.sortBySimilarityToSearch();
                         // show suggestions
@@ -415,12 +411,12 @@ public class MoTabSearchBar extends MoConstraint {
 
 
     public void initShareButton() {
-        this.shareButton.setOnClickListener((v)-> MoShareUtils.share(getContext(),
+        this.shareButton.setOnClickListener((v) -> MoShareUtils.share(getContext(),
                 this.searchText.getText().toString()));
     }
 
     public void initCopyButton() {
-        this.copyButton.setOnClickListener((v)-> MoClipboardUtils.add(getContext(),
+        this.copyButton.setOnClickListener((v) -> MoClipboardUtils.add(getContext(),
                 this.searchText.getText().toString()));
     }
 
@@ -432,24 +428,24 @@ public class MoTabSearchBar extends MoConstraint {
         View[] views = new MoMenuBuilder(getContext())
                 .rowFill(b -> {
                     b.icon(R.drawable.ic_baseline_home_24, v -> tab.goToHomepage())
-                     .icon(R.drawable.ic_baseline_refresh_24,(v)-> moWebView.forceReload())
-                     .icon(tab.urlIsBookmarked()?
-                                    R.drawable.ic_baseline_bookmark_24:
-                                    R.drawable.ic_baseline_bookmark_border_24,
-                            (v)-> tab.bookmarkTheTab())
-                     .icon(R.drawable.ic_baseline_chevron_right_24, (v)-> moWebView.goForwardIfYouCan());
+                            .icon(R.drawable.ic_baseline_refresh_24, (v) -> moWebView.forceReload())
+                            .icon(tab.urlIsBookmarked() ?
+                                            R.drawable.ic_baseline_bookmark_24 :
+                                            R.drawable.ic_baseline_bookmark_border_24,
+                                    (v) -> tab.bookmarkTheTab())
+                            .icon(R.drawable.ic_baseline_chevron_right_24, (v) -> moWebView.goForwardIfYouCan());
                 })
-                .text(R.string.find_in_page,R.drawable.ic_baseline_search_24,view -> moSearchable.activateSpecialMode())
-                .text(R.string.bookmark_title,R.drawable.ic_baseline_bookmarks_24,view-> BookmarkActivity.startActivity(getContext()))
-                .text(R.string.history,R.drawable.ic_baseline_history_24,view-> HistoryActivity.launch(getContext()))
+                .text(R.string.find_in_page, R.drawable.ic_baseline_search_24, view -> moSearchable.activateSpecialMode())
+                .text(R.string.bookmark_title, R.drawable.ic_baseline_bookmarks_24, view -> BookmarkActivity.startActivity(getContext()))
+                .text(R.string.history, R.drawable.ic_baseline_history_24, view -> HistoryActivity.launch(getContext()))
                 .text(R.string.share, R.drawable.ic_baseline_share_24, view -> tab.shareTheTab())
                 .text(R.string.downloads, R.drawable.ic_baseline_arrow_downward_24, view -> MoDownloadActivity.startActivity(getContext()))
                 .text(R.string.settings, R.drawable.ic_baseline_settings_24, view -> SettingsActivity.launch(getContext()))
-                .text(R.string.desktop_mode,moWebView.isInDesktopMode()?
-                        R.drawable.ic_baseline_check_box_24:R.drawable.ic_baseline_check_box_outline_blank_24 ,
+                .text(R.string.desktop_mode, moWebView.isInDesktopMode() ?
+                                R.drawable.ic_baseline_check_box_24 : R.drawable.ic_baseline_check_box_outline_blank_24,
                         view -> moWebView.enableReverseMode())
                 .textsWith(16)
-                .iconsWith(0,8,0,0)
+                .iconsWith(0, 8, 0, 0)
                 .allWith((v) -> bottomSheet.dismiss())
                 .build()
                 .asArray();
@@ -457,20 +453,18 @@ public class MoTabSearchBar extends MoConstraint {
         bottomSheet = new MoBottomSheet(getContext())
                 .setState(BottomSheetBehavior.STATE_EXPANDED)
                 .add(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT),views)
+                        ViewGroup.LayoutParams.WRAP_CONTENT), views)
                 .build()
                 .show();
     }
-
-
 
 
     /**
      * this enables the find bar to function as expected
      * connects find bar and mo web view functionality
      */
-    private void initMoSearchable(){
-        this.moSearchable = new MoSearchable(getContext(),this){
+    private void initMoSearchable() {
+        this.moSearchable = new MoSearchable(getContext(), this) {
             @Override
             public void onUpFindPressed() {
                 moWebView.findPrevious();
@@ -485,7 +479,7 @@ public class MoTabSearchBar extends MoConstraint {
                 .setOnSearchListener(s -> {
                     this.moWebView.findAllAsync(s, (index, size, finishedFinding) -> {
                         //disable or enable the buttons based on the index and size
-                        this.moSearchable.updateUpDownFindButtons(index,size);
+                        this.moSearchable.updateUpDownFindButtons(index, size);
                     });
                 })
                 .setOnSearchCanceled(() -> {
@@ -506,8 +500,8 @@ public class MoTabSearchBar extends MoConstraint {
      * destroy the search tab bar
      * object
      */
-    public void onDestroy(){
-        if (tab!=null) {
+    public void onDestroy() {
+        if (tab != null) {
             tab.removeListeners();
         }
         tab = null;
@@ -517,6 +511,7 @@ public class MoTabSearchBar extends MoConstraint {
     /**
      * updates whether the current website they are accessing is
      * secure or not
+     *
      * @param url of the site the web view is currently showing
      */
     public void updateSecureWebsite(String url) {
@@ -533,7 +528,7 @@ public class MoTabSearchBar extends MoConstraint {
      */
     public void secureWebsite() {
         Drawable secureDrawable = getDrawable(R.drawable.ic_baseline_lock_24);
-        this.searchText.setCompoundDrawablesWithIntrinsicBounds(secureDrawable, null,null,null);
+        this.searchText.setCompoundDrawablesWithIntrinsicBounds(secureDrawable, null, null, null);
     }
 
     /**
@@ -543,7 +538,7 @@ public class MoTabSearchBar extends MoConstraint {
     public void insecureWebsite() {
         Drawable secureDrawable = getDrawable(R.drawable.ic_baseline_lock_open_24);
         DrawableCompat.setTint(secureDrawable, getColor(R.color.not_secure_site_color));
-        this.searchText.setCompoundDrawablesWithIntrinsicBounds(secureDrawable, null,null,null);
+        this.searchText.setCompoundDrawablesWithIntrinsicBounds(secureDrawable, null, null, null);
     }
 
     public interface TabSearchBarInteractor {
