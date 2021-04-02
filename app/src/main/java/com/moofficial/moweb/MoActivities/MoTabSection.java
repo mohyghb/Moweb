@@ -435,13 +435,13 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
         if (url.equals(this.tab.getUrl())) {
             return;
         }
-        updateTitle();
-        updateSubtitle();
-        updateToolbar();
         this.tab.updateUrl(url);
         this.moTabSearchBar.updateSecureWebsite(url);
         this.moTabSearchBar.setTextSearch(url);
         this.moTabSearchBar.deactivateSearch();
+        updateTitle();
+        updateSubtitle();
+        updateToolbar();
         this.tab.saveTab();
     }
 
