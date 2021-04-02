@@ -54,6 +54,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
     private boolean isSearched = false;
     private boolean isUpToDate = false;
     private String webViewData = "";
+    private String title;
 
 
     public MoTab(Context context, String url) {
@@ -82,11 +83,6 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
 
     public void setParentTab(MoTab t) {
         this.parentTab = t;
-    }
-
-
-    public MoTab getParentTab() {
-        return parentTab;
     }
 
     public MoWebView getMoWebView() {
@@ -261,6 +257,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
      *               we handle both cases)
      */
     public void search(String search) {
+        this.title = search;
         // load it inside the web view (do not use cache for loading any url)
         // we only use cache for pressing back or other changes
         this.moWebView.loadUrl(MoSearchEngine.instance.getURL(search), false);
@@ -281,6 +278,10 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
 
     public String getUrl() {
         return url.getUrlString();
+    }
+
+    public String getTitle() {
+        return this.title == null || this.title.isEmpty() ? this.getUrl() : this.title;
     }
 
     public long getId() {
@@ -443,6 +444,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
         this.moBitmap.load(c[1], context);
         this.webViewData = c[2];
         this.tabId.load(c[3], context);
+        this.title = c[4];
     }
 
 
@@ -452,7 +454,7 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
      */
     @Override
     public String getData() {
-        return MoFile.getData(this.url, this.moBitmap, this.moWebView, this.tabId);
+        return MoFile.getData(this.url, this.moBitmap, this.moWebView, this.tabId, this.title);
     }
 
     @Override

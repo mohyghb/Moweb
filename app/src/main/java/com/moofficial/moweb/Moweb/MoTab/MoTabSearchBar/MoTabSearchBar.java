@@ -171,46 +171,8 @@ public class MoTabSearchBar extends MoConstraint {
         return this;
     }
 
-
-    public ProgressBar getProgressBar() {
-        return progressBar;
-    }
-
-    public MoTabSearchBar setProgressBar(ProgressBar progressBar) {
-        this.progressBar = progressBar;
-        return this;
-    }
-
-    public ImageButton getMoreTabButton() {
-        return moreTabButton;
-    }
-
-    public MoTabSearchBar setMoreTabButton(ImageButton moreTabButton) {
-        this.moreTabButton = moreTabButton;
-        return this;
-    }
-
-    public MoTabSearchBar setSearchText(TextInputEditText searchText) {
-        this.searchText = searchText;
-        return this;
-    }
-
-    public MoFindBar getMoFindBar() {
-        return moFindBar;
-    }
-
     public MoTabSearchBar setMoFindBar(MoFindBar moFindBar) {
         this.moFindBar = moFindBar;
-        return this;
-    }
-
-
-    public MoSearchable getMoSearchable() {
-        return moSearchable;
-    }
-
-    public MoTabSearchBar setMoSearchable(MoSearchable moSearchable) {
-        this.moSearchable = moSearchable;
         return this;
     }
 
@@ -315,10 +277,7 @@ public class MoTabSearchBar extends MoConstraint {
 
 
         searchText.setOnEditorActionListener((textView, i, keyEvent) -> {
-            tab.search(textView.getText().toString());
-            searchText.clearFocus();
-            // hide the keyboard when the search button is clicked
-            MoKeyboardUtils.hideSoftKeyboard(textView);
+            search(textView.getText().toString());
             return false;
         });
 
@@ -332,12 +291,18 @@ public class MoTabSearchBar extends MoConstraint {
                     public <T> void run(T... args) {
                         String suggestion = (String) args[0];
                         if (suggestion != null) {
-                            tab.search(suggestion);
-                            MoKeyboardUtils.hideSoftKeyboard(searchText);
+                            search(suggestion);
                         }
                     }
                 }).init();
         hideSuggestions();
+    }
+
+    private void search(String text) {
+        tab.search(text);
+        searchText.clearFocus();
+        // hide the keyboard when the search button is clicked
+        MoKeyboardUtils.hideSoftKeyboard(searchText);
     }
 
     /**
