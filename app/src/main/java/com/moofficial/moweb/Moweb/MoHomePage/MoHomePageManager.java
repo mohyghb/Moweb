@@ -137,11 +137,8 @@ public class MoHomePageManager {
 
     /**
      * returns the current activated home page
-     * TODO: this might cause index outta bound exception be careful
-     *
-     * @return
      */
-    public static MoHomePage getCurrentActivatedHomePage() {
+    private static MoHomePage getCurrentActivatedHomePage() {
         return homePages.get(activeHomePageIndex);
     }
 
@@ -152,7 +149,7 @@ public class MoHomePageManager {
      * @return
      */
     public static String getCurrentActivatedURL() {
-        if (activeHomePageIndex == NONE_ACTIVATED) {
+        if (activeHomePageIndex == NONE_ACTIVATED || activeHomePageIndex >= homePages.size()) {
             return MoSearchEngine.instance.homePage();
         } else {
             return getCurrentActivatedHomePage().getUrl();
@@ -175,8 +172,6 @@ public class MoHomePageManager {
             textValidate.setErrorMessage(c.getString(R.string.error_bookmark_empty_url));
         } else if (homePages.contains(homePage)) {
             textValidate.setErrorMessage(c.getString(R.string.already_exist_home_page));
-        } else if (homePage.isValidUrl()) {
-            textValidate.setErrorMessage(c.getString(R.string.malformed_url));
         } else {
             textValidate.setValidate(true);
         }
