@@ -205,9 +205,7 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
 
 
     private void updateTitle() {
-        String title = MoString.capFirst(this.webView.getTitle());
-        MoLog.print("title = " + title);
-        this.title.setText(title.isEmpty() ? "empty title" : title.trim());
+        this.title.setText(MoString.capFirst(this.tab.getTitle()));
     }
 
     private void updateSubtitle() {
