@@ -251,7 +251,6 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
      * of the tab by changing its fields
      */
     private void initSearchBar() {
-
         this.moTabSearchBar.init();
     }
 

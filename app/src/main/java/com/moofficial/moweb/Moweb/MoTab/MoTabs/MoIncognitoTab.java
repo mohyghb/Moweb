@@ -33,10 +33,4 @@ public class MoIncognitoTab extends MoTab {
         // no saving the tab
         MoLog.print("private tab id: " + this.getTabId().stringify());
     }
-
-    @Override
-    public void applyWindowRules(Activity a) {
-        // to make sure the user can not take screen shots
-        a.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
-    }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
@@ -174,7 +175,6 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
                 .neverOverScroll()
                 .setNestedScrollingEnabled(MoWebFeatures.oneHandEnabled);
         moWebView.init();
-        // todo we need to set the web view for tab type
     }
 
     public void setProgressBar(ProgressBar p) {
@@ -321,18 +321,6 @@ public class MoTab implements MoFileSavable, MoLoadable, MoSelectableItem, MoSea
 
     public boolean isNormal() {
         return this.tabType.isNormal();
-    }
-
-    /**
-     * makes sure that you can take screen
-     * shots inside normal tabs and you can't inside
-     * private tabs
-     *
-     * @param a activity to apply the window rule to
-     */
-    public void applyWindowRules(Activity a) {
-        // todo
-        // a.getWindow().setStatusBarContrastEnforced();
     }
 
     /**

@@ -227,8 +227,8 @@
         You can also organize them in folders or edit them</string>
     <string name="empty_layout_description_history">We could not find any history around here. You can enable or disable history tracking inside the settings</string>
     <string name="empty_layout_description_tab">Hmm no tab found. If you want to search the web just click the plus sign on the bottom of your screen and you are ready to go!</string>
-    <string name="empty_layout_description_private_tab">When you are in private tabs, the websites that you visit are not saved into your history,
-        taking screen shots is disabled, and tabs are not saved. Be careful as this does not mean other search engines are not tracking your data</string>
+    <string name="empty_layout_description_private_tab">When you are in private tabs, the websites that you visit are not saved into your history and tabs are not saved after you close the app.
+        Be careful as this does not mean other search engines are not tracking your data</string>
     <string name="empty_layout_description_downloads">Seems like you have no downloads here. You can download different files from
         the web, but be careful because some files can be dangerous</string>
     <string name="empty_layout_description_bookmark_folders">Create folders to organize your bookmarks or other folders</string>
