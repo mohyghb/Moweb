@@ -20,7 +20,7 @@ import java.io.IOException;
 public class MoTabController implements MoSavable, MoLoadable {
 
     private static final String FILE_NAME = "mo_main_tab_file";
-    public static MoTabController instance = new MoTabController();
+    public static MoTabController  instance = new MoTabController();
 
 
     private MoTabId currentTabId = new MoTabId();
@@ -105,9 +105,10 @@ public class MoTabController implements MoSavable, MoLoadable {
             // then we are removing the current tab
             // change the current tab to the last item inside
             // the tab array or null if none exist
-            MoLog.print("deleted current tab");
             updateCurrent(MoTabsManager.getLastTab(t.getType()));
-            updateTabActivity.update();
+            if(isNotOutOfOptions()) {
+                updateTabActivity.update();
+            }
             // need to save the index
             save(context);
         }
