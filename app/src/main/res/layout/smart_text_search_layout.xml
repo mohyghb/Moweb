@@ -17,7 +17,9 @@
             android:id="@+id/bottom_sheet_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="24dp"
             android:textSize="24sp"
             android:layout_gravity="center"
             style="@style/mo_fading_edge_text_view"
@@ -46,19 +48,13 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_baseline_open_in_new_24"
             android:layout_gravity="center"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/bottom_sheet_title"
             app:layout_constraintBottom_toBottomOf="@id/bottom_sheet_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="1.0"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@drawable/mo_rounded_background"
-        android:backgroundTint="@color/MoInverseColor"/>
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -84,7 +80,4 @@
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
-
-
-
 </LinearLayout>
