@@ -214,12 +214,12 @@ public class MoHitTestResultParser {
 
     // copies the link text in clip board
     private void copyLinkText() {
-        MoClipboardUtils.add(context, title, "Link Text");
+        MoClipboardUtils.add(context, title, context.getString(R.string.link_text_copied));
     }
 
     // copies the link address
     private void copyLinkAddress() {
-        MoClipboardUtils.add(context, url, "Link Address");
+        MoClipboardUtils.add(context, url, context.getString(R.string.link_address_copied));
     }
 
     // opens this url in new tab
@@ -228,7 +228,7 @@ public class MoHitTestResultParser {
     }
 
     private void openInNewIncognitoTab() {
-        MoTabsManager.addPrivateTab((Activity) context, url, true);
+        MoTabsManager.addPrivateTab(context, url, true);
     }
 
     private void downloadLink() {
