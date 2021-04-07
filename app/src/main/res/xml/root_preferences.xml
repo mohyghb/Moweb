@@ -51,7 +51,7 @@
             android:key="@string/cookies_enabled"
             app:title="@string/cookies_title"
             app:summary="@string/cookies_summary"
-            app:defaultValue="false"
+            app:defaultValue="true"
             app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 

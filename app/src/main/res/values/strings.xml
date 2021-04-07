@@ -103,12 +103,12 @@
     <!--auto-complete-->
     <string name="auto_complete">auto_complete_pref</string>
     <string name="auto_complete_title">Search Auto-Complete</string>
-    <string name="auto_complete_summary">Enable/Disable auto complete when typing into search bar</string>
+    <string name="auto_complete_summary">Show suggestions while searching</string>
 
     <!--enable history-->
     <string name="history_enabled">history_enabled_pref</string>
     <string name="history_enabled_title">History</string>
-    <string name="history_enabled_summary">Enable/Disable history for your browsing</string>
+    <string name="history_enabled_summary">Track history for normal tabs</string>
     <string name="history_search_hint">Search title, url, or date…</string>
 
     <!--home page settings-->
@@ -169,7 +169,8 @@
     <string name="ssl_decline">Go Back to safety (Recommended)</string>
 
     <string name="cookies_title">Cookies</string>
-    <string name="cookies_summary">If enabled, websites can remember stateful information about your browsing activity.</string>
+    <string name="cookies_summary">If enabled, websites can remember stateful information about your browsing activity.
+        *Note that turning off this feature could cause some problems when browsing</string>
     <string name="cookies_enabled">Cookies_enabled</string>
 
     <string name="snap_search">Snap search</string>

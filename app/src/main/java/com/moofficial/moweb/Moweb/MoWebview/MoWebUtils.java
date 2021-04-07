@@ -20,30 +20,6 @@ import com.moofficial.moweb.R;
 
 public class MoWebUtils {
 
-    private static final String desktop_mode = "Mozilla/5.0 (X11; Linux x86_64)" +
-            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36";
-
-    private static final String mobile_mode = "Mozilla/5.0 (Linux; U; Android 4.4; en-" +
-            "us; Nexus 4 Build/JOP24G) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile" +
-            "Safari/534.30";
-
-    public static final int WRITE_EXTERNAL_PERMISSION_CODE = 1;
-    public static final String SOME_FEATURES_DISABLED = "Some features are disabled";
-
-    /**
-     * request write to external storage permission
-     *
-     * @param activity
-     */
-    public static void requestWritePermission(Activity activity) {
-        // if we dont already have the permission
-        if (!hasWritePermission(activity)) {
-            //requesting permission
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_PERMISSION_CODE);
-        }
-    }
-
-
     /**
      * return true if we have the
      * write into external storage permission
@@ -134,10 +110,5 @@ public class MoWebUtils {
         boolean accept = MoSharedPref.get(v.getContext())
                 .getBoolean(v.getContext().getString(R.string.cookies_enabled), false);
         cookieManager.setAcceptThirdPartyCookies(v, accept);
-    }
-
-
-    private static String run() {
-        return null;
     }
 }
