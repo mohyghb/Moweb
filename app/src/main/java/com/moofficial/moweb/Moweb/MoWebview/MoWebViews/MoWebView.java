@@ -201,10 +201,6 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         MoWebUtils.updateThirdPartyCookies(this);
 
         clearCache(true);
-
-        SslCertificate certificate = getCertificate();
-
-
     }
 
 
