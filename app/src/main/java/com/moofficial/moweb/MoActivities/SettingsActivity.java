@@ -1,13 +1,16 @@
 package com.moofficial.moweb.MoActivities;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -17,6 +20,7 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.moofficial.moessentials.MoEssentials.MoKeyGuard.MoKeyGuard;
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoDialog.MoDialogs;
 import com.moofficial.moweb.MoActivities.History.SavedPasswordsActivity;
 import com.moofficial.moweb.MoSettingsEssentials.MoTheme.MoTheme;
 import com.moofficial.moweb.Moweb.MoSearchEngines.MoSearchAutoComplete.MoSearchAutoComplete;
@@ -68,6 +72,7 @@ public class SettingsActivity extends AppCompatActivity {
         private Preference homePagePref;
         private Preference savePasswordsPref;
         private Preference setAsDefaultPref;
+        private Preference clearCookies;
 
         public SettingsFragment(Activity a) {
             this.activity = a;
@@ -80,6 +85,24 @@ public class SettingsActivity extends AppCompatActivity {
         private void init() {
             initHomePagePref();
             initSavePasswordPref();
+            initSetAsDefault();
+            initClearCookies();
+        }
+
+        private void initClearCookies() {
+            this.clearCookies = findPreference(string(R.string.clear_cookies_title));
+            if (this.clearCookies != null) {
+                this.clearCookies.setOnPreferenceClickListener((p) -> {
+                    MoDialogs.showAlertDialog(activity, R.string.clear_cookies_title, R.string.clear_cookies_dialogMessage, (di, ps) -> {
+                        MoWebUtils.clearCookies();
+                        Toast.makeText(activity, R.string.clear_cookies_successfulToast, Toast.LENGTH_SHORT).show();
+                    });
+                    return false;
+                });
+            }
+        }
+
+        private void initSetAsDefault() {
             this.setAsDefaultPref = findPreference(string(R.string.set_as_default_key));
             if (this.setAsDefaultPref != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

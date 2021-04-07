@@ -53,6 +53,12 @@
             app:summary="@string/cookies_summary"
             app:defaultValue="true"
             app:iconSpaceReserved="false"/>
+
+        <Preference
+            android:key="@string/clear_cookies_title"
+            app:title="@string/clear_cookies_title"
+            app:summary="@string/clear_cookies_summary"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 
     <PreferenceCategory app:title="Smart features" app:iconSpaceReserved="false">

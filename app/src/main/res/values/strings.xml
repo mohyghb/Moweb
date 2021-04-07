@@ -111,6 +111,16 @@
     <string name="history_enabled_summary">Track history for normal tabs</string>
     <string name="history_search_hint">Search title, url, or date…</string>
 
+    <string name="cookies_title">Cookies</string>
+    <string name="cookies_summary">If enabled, websites can remember stateful information about your browsing activity.
+        *Note that turning off this feature could cause some problems when browsing</string>
+    <string name="cookies_enabled">Cookies_enabled</string>
+
+    <string name="clear_cookies_title">Clear cookies</string>
+    <string name="clear_cookies_summary">Clear stateful information that websites have stored on your device</string>
+    <string name="clear_cookies_dialogMessage">Are you sure that you would like to clear your cookies?</string>
+    <string name="clear_cookies_successfulToast">Cookies have been successfully cleared!</string>
+
     <!--home page settings-->
     <string name="home_page">home_page_pref</string>
     <string name="home_page_hint_edit_text">Add home page</string>
@@ -124,7 +134,6 @@
     <string name="already_exist_home_page">You have already added this homepage</string>
     <string name="malformed_url">URL is not recognizable</string>
     <string name="add_home_page">Add Homepage</string>
-
 
     <!--passwords-->
 
@@ -167,11 +176,6 @@
     <!--ssl advanced-->
     <string name="ssl_proceed">Take the risk and continue</string>
     <string name="ssl_decline">Go Back to safety (Recommended)</string>
-
-    <string name="cookies_title">Cookies</string>
-    <string name="cookies_summary">If enabled, websites can remember stateful information about your browsing activity.
-        *Note that turning off this feature could cause some problems when browsing</string>
-    <string name="cookies_enabled">Cookies_enabled</string>
 
     <string name="snap_search">Snap search</string>
     <string name="snap_search_summary">When browsing, long clicks on words will open another search window from the bottom of your screen</string>
