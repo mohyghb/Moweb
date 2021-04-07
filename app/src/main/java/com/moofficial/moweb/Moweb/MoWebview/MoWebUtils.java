@@ -1,14 +1,9 @@
 package com.moofficial.moweb.Moweb.MoWebview;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-
-import androidx.core.app.ActivityCompat;
 
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
 import com.moofficial.moessentials.MoEssentials.MoMultiThread.MoThread.MoThread;
@@ -19,19 +14,6 @@ import com.moofficial.moweb.Moweb.MoWebview.MoWebViews.MoWebView;
 import com.moofficial.moweb.R;
 
 public class MoWebUtils {
-
-    /**
-     * return true if we have the
-     * write into external storage permission
-     *
-     * @param context
-     * @return
-     */
-    public static boolean hasWritePermission(Context context) {
-        int permissionCheck = ActivityCompat.checkSelfPermission(context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        return permissionCheck == PackageManager.PERMISSION_GRANTED;
-    }
-
 
     /**
      * enables or disables the desktop mode for a web view
@@ -76,10 +58,6 @@ public class MoWebUtils {
         CookieManager c = CookieManager.getInstance();
         c.removeAllCookies(null);
         c.flush();
-    }
-
-    public static void clearCachedImages(Context context) {
-        // we need to remove it from both mo_images and the cached images
     }
 
     public static void updateCookies(Context context) {
