@@ -63,7 +63,11 @@
     <string name="Settings">Settings</string>
     <string name="History">History</string>
     <string name="Clear_All_Normal_Tabs">Close All Tabs</string>
+    <string name="Clear_All_Normal_Tabs_Description">Are you sure you want to close all of your normal tabs? This Action can not be undone</string>
+    <string name="Clear_All_Normal_Tabs_Empty">You currently have no normal tabs!</string>
     <string name="Clear_All_Incognito_Tabs">Close All Private Tabs</string>
+    <string name="Clear_All_Incognito_Tabs_Description">Are you sure you want to close all of your private tabs? This Action can not be undone</string>
+    <string name="Clear_All_Incognito_Tabs_Empty">You currently have no private tabs!</string>
     <string name="NewTab">New Tab</string>
     <string name="NewIncognitoTab">New Private Tab</string>
 

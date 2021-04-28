@@ -8,12 +8,14 @@ import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoDialog.MoDialogs;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoFragment.MoOnBackPressed;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoOnEmptySelectionListener;
@@ -211,14 +213,34 @@ public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed, M
                     return false;
                 }),
                 new Pair<>(getContext().getString(R.string.Clear_All_Normal_Tabs), menuItem -> {
-                    MoTabsManager.clearAllNormalTabs(getActivity());
-                    abstractStateAdapter.notifyDataSetChanged(0);
-                    updateNumberOfTabs();
+                    if (MoTabsManager.getTabs().isEmpty()) {
+                        Toast.makeText(getContext(), R.string.Clear_All_Normal_Tabs_Empty, Toast.LENGTH_SHORT).show();
+                    } else {
+                        MoDialogs.showAlertDialog (
+                                getContext(),
+                                R.string.Clear_All_Normal_Tabs,
+                                R.string.Clear_All_Normal_Tabs_Description,
+                                (dialogInterface, i) -> {
+                                    MoTabsManager.clearAllNormalTabs(getActivity());
+                                    abstractStateAdapter.notifyDataSetChanged(0);
+                                    updateNumberOfTabs();
+                                });
+                    }
                     return false;
                 }),
                 new Pair<>(getContext().getString(R.string.Clear_All_Incognito_Tabs), menuItem -> {
-                    MoTabsManager.clearAllPrivateTabs(getActivity());
-                    abstractStateAdapter.notifyDataSetChanged(1);
+                    if (MoTabsManager.getPrivateTabs().isEmpty()) {
+                        Toast.makeText(getContext(), R.string.Clear_All_Incognito_Tabs_Empty, Toast.LENGTH_SHORT).show();
+                    } else {
+                        MoDialogs.showAlertDialog (
+                                getContext(),
+                                R.string.Clear_All_Incognito_Tabs,
+                                R.string.Clear_All_Incognito_Tabs_Description,
+                                (dialogInterface, i) -> {
+                                    MoTabsManager.clearAllPrivateTabs(getActivity());
+                                    abstractStateAdapter.notifyDataSetChanged(1);
+                                });
+                    }
                     return false;
                 })
         );
