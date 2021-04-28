@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -196,7 +197,7 @@ public class MoWebView extends MoNestedWebView implements MoSavable, MoLoadable 
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         // showing inside overlay scroll bars
         setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-
+        webSettings.setDomStorageEnabled(true);
         // setting the cookie based on the setting of the user
         MoWebUtils.updateThirdPartyCookies(this);
 
