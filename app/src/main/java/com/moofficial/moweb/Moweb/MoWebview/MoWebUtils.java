@@ -86,7 +86,7 @@ public class MoWebUtils {
     public static void updateThirdPartyCookies(WebView v) {
         CookieManager cookieManager = CookieManager.getInstance();
         boolean accept = MoSharedPref.get(v.getContext())
-                .getBoolean(v.getContext().getString(R.string.cookies_enabled), false);
+                .getBoolean(v.getContext().getString(R.string.cookies_enabled), true);
         cookieManager.setAcceptThirdPartyCookies(v, accept);
     }
 }
