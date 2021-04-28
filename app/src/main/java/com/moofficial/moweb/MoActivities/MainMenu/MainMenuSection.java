@@ -16,6 +16,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoFragment.MoOnBackPressed;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectable;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoInteractable.MoSelectable.MoSelectableInterface.MoOnEmptySelectionListener;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoLayouts.MoEmptyLayout;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoPopUpMenu.MoPopUpMenu;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViews.MoBars.MoToolBar;
@@ -168,6 +169,7 @@ public class MainMenuSection extends MoEmptyLayout implements MoOnBackPressed, M
                 .setCounterView(tabSelectableToolbar.getTitle())
                 .setSelectAllCheckBox(tabSelectableToolbar.getCheckBox())
                 .addUnNormalViews(this.tabSelectableToolbar)
+                .setOnEmptySelectionListener(() -> tabSelectable.removeAction())
                 .addNormalViews(this.moToolBar);
     }
 
