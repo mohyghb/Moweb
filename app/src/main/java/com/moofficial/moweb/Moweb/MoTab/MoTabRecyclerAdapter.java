@@ -79,11 +79,7 @@ public class MoTabRecyclerAdapter extends MoSelectableAdapter<MoTabRecyclerAdapt
     @NonNull
     @Override
     public TabViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        View v = MoInflaterView.inflate(R.layout.tab_mode_list, parent.getContext());
-        //new MoPaddingBuilder(this.isInGrid?TAB_PADDING_GRID_VIEW:TAB_PADDING).apply(v);
-        v.setLayoutParams(getRecyclerParams(RecyclerView.LayoutParams.MATCH_PARENT,
-                RecyclerView.LayoutParams.WRAP_CONTENT));
+        View v = MoInflaterView.inflate(R.layout.tab_mode_list, parent,parent.getContext());
         return new TabViewHolder(v);
     }
 
