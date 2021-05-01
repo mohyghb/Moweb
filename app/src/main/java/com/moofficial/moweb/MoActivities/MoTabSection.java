@@ -205,7 +205,12 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
 
 
     private void updateTitle() {
-        this.title.setText(MoString.capFirst(this.tab.getTitle()));
+        // sometimes the title could show null as it's string value, so we need to avoid getting that
+        String title = this.tab.getTitle();
+        if (title.toLowerCase().equals("null")) {
+            title = this.tab.getUrl();
+        }
+        this.title.setText(MoString.capFirst(title));
     }
 
     private void updateSubtitle() {

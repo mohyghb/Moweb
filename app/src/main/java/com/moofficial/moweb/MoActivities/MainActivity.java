@@ -1,6 +1,7 @@
 package com.moofficial.moweb.MoActivities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.transition.Slide;
@@ -110,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
                 .setActivity(this)
                 .init();
     }
-
 
     void moveToTabFragment() {
         sectionViewManager.setActiveSection(SECTION_TAB);

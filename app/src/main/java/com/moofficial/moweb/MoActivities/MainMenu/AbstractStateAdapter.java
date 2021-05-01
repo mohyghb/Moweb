@@ -36,8 +36,7 @@ public class AbstractStateAdapter extends MoRecyclerAdapter<AbstractViewHolder,A
     @NonNull
     @Override
     public AbstractViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View a = MoInflaterView.inflate(R.layout.abstract_main_fragment,context);
-        a.setLayoutParams(getRecyclerParams(RecyclerView.LayoutParams.MATCH_PARENT,RecyclerView.LayoutParams.MATCH_PARENT));
+        View a = MoInflaterView.inflate(R.layout.abstract_main_fragment, parent, context);
         return new AbstractViewHolder(a);
     }
 

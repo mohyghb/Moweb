@@ -1,10 +1,13 @@
 package com.moofficial.moweb.MoActivities.MainMenu.MainMenuFragments;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.view.View;
 
 import com.moofficial.moessentials.MoEssentials.MoLog.MoLog;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerUtils;
 import com.moofficial.moessentials.MoEssentials.MoUI.MoRecyclerView.MoRecyclerView;
+import com.moofficial.moessentials.MoEssentials.MoUI.MoView.MoViewInterfaces.MoOnConfigurationChanged;
 import com.moofficial.moweb.Moweb.MoTab.MoTabExceptions.MoTabNotFoundException;
 import com.moofficial.moweb.Moweb.MoTab.MoTabRecyclerAdapter;
 import com.moofficial.moweb.Moweb.MoTab.MoTabs.Interfaces.MoOnTabClickListener;
@@ -30,13 +33,13 @@ public abstract class AbstractMainFragment {
     public AbstractMainFragment setRecyclerView(MoRecyclerView recyclerView) {
         this.recyclerView = recyclerView;
         checkEmpty();
+        this.recyclerView.setDynamicallyCalculateSpanCount(true);
         return this;
     }
 
     public MoTabRecyclerAdapter getTabRecyclerAdapter() {
         return tabRecyclerAdapter;
     }
-
 
 
     public AbstractMainFragment initTabAdapter(Context context) {
@@ -46,7 +49,7 @@ public abstract class AbstractMainFragment {
     }
 
     public void scrollTo(MoTab t) {
-        if (this.recyclerView!=null) {
+        if (this.recyclerView != null) {
             try {
                 int i = MoTabsManager.getIndexOf(t);
                 if (i < this.tabRecyclerAdapter.getItemCount()) {
@@ -57,7 +60,6 @@ public abstract class AbstractMainFragment {
             }
         }
     }
-
 
 
     public void deleteSelectedItems() {
