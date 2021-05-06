@@ -16,9 +16,14 @@
         <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="imageButtonStyle">@style/MoImageButton_Style_Light</item>
         <!--Prevent multi_touch-->
         <item name="android:windowEnableSplitTouch">false</item>
         <item name="android:splitMotionEvents">false</item>
+    </style>
+
+    <style name="MoImageButton_Style_Light" parent="Widget.AppCompat.ImageButton">
+        <item name="android:tint">@color/MoBlack</item>
     </style>
 
     <style name="MoListStyle" parent="Widget.AppCompat.ListView">
