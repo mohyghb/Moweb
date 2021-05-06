@@ -130,6 +130,7 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
         this.moTabSearchBar.setMoFindBar(findViewById(R.id.tab_search_bar_find_bar));
         this.moTabSearchBar.setInteractor(this);
         this.webErrorView = findViewById(R.id.tab_section_error_view);
+        this.title.setText(R.string.app_name);
 
         // copying url to clipboard when user clicks on the title
         this.title.setOnClickListener(this::onTitleSubtitleClickListener);
@@ -171,7 +172,6 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
             updateTab();
             updateWebView();
             updateSearchBar();
-            updateTitle();
             updateSubtitle();
             updateToolbar();
             hideErrorView();
@@ -201,16 +201,6 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
             webCard.removeView(webView);
         }
         moTabSearchBar.onDestroy();
-    }
-
-
-    private void updateTitle() {
-        // sometimes the title could show null as it's string value, so we need to avoid getting that
-        String title = this.tab.getTitle();
-        if (title.toLowerCase().equals("null")) {
-            title = this.tab.getUrl();
-        }
-        this.title.setText(MoString.capFirst(title));
     }
 
     private void updateSubtitle() {
@@ -441,7 +431,6 @@ public class MoTabSection extends CoordinatorLayout implements MoUpdateTabActivi
         this.moTabSearchBar.updateSecureWebsite(url);
         this.moTabSearchBar.setTextSearch(url);
         this.moTabSearchBar.deactivateSearch();
-        updateTitle();
         updateSubtitle();
         updateToolbar();
         this.tab.saveTab();

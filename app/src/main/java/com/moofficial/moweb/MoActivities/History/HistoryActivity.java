@@ -119,7 +119,6 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
     private void performDeleteHistory() {
         if (nothingHasBeenSelected()) return;
         try {
-            TransitionManager.beginDelayedTransition(getGroupRootView());
             // remove it from files, and the data set shown inside the recycler adapter
             MoHistoryManager.remove(this, historyRecyclerAdapter.getSelectedItems(), historyRecyclerAdapter.getDataSet());
             // notify the adapter that we have changed the data set
@@ -199,11 +198,11 @@ public class HistoryActivity extends MoSmartActivity implements MoOnHistoryClick
                 .setClearSearch(searchBar.getRightButton())
                 .setSearchTextView(searchBar.getEditText())
                 .addUnNormalViews(searchBar);
+        this.searchable.setTransitionIn(null).setTransitionOut(null);
     }
 
     private void updateAdapter(List<MoHistory> histories) {
         historyRecyclerAdapter.setDataSet(histories);
-        TransitionManager.beginDelayedTransition(getGroupRootView());
         runOnUiThread(() -> {
             historyRecyclerAdapter.notifyDataSetChanged();
             historyRecyclerAdapter.notifyEmptyState();

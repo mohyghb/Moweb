@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
      * @param intent that is sent to open this app
      */
     private void handleLinkFromOthers(Intent intent) {
+        MoLog.print("handling link from others");
         Uri startIntentData = intent.getData();
         if (startIntentData != null) {
             String intentUrl = startIntentData.toString();
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 MoTabsManager.addTab(this, intentUrl, false);
                 moveToTabFragment();
             }
+            intent.setData(null);
         }
     }
 
