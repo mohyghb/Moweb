@@ -1,4 +1,4 @@
-# Moweb - Surf the web like never before
+# [Moweb](https://play.google.com/store/apps/details?id=com.moofficial.moweb&hl=en&gl=US) - Surf the web like never before
 An Android browser that changes the way you browse!
 
 <img src="https://user-images.githubusercontent.com/37986616/121459662-888e4280-c960-11eb-8b06-15de2834bd1a.jpeg" width="150">  <img src="https://user-images.githubusercontent.com/37986616/121459725-a360b700-c960-11eb-9c01-aa99cda54dfe.jpeg" width="150">
